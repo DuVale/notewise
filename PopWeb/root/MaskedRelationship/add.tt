@@ -1,0 +1,25 @@
+
+
+<p>[%message%]</p>
+<form action="[% base _ 'maskedrelationship/do_add' %]" method="post">
+    <table border=0 cellpadding=0 cellspacing=0>
+    
+        
+        <tr>
+            <td>relationship</td>
+            <td><input name="relationship" type="text" />
+</td>
+        </tr>
+    
+        
+        <tr>
+            <td>container</td>
+            <td><input name="container" type="text" />
+</td>
+        </tr>
+    
+    </table>
+    <input type="submit" value="Add"/>
+<form/>
+<br/>
+<a href="[% base _ 'maskedrelationship/list' %]">List</a>

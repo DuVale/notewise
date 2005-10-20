@@ -1,0 +1,65 @@
+
+
+
+[% USE table_class = Class('PopWeb::M::CDBI::ContainedObject') %]
+<table>
+    <tr>
+    
+    
+        
+        <th>collapsed</th>
+    
+        
+        <th>y</th>
+    
+        
+        <th>container_object</th>
+    
+        
+        <th>zoomlevel</th>
+    
+        
+        <th>x</th>
+    
+        
+        <th>contained_object</th>
+    
+        <th/>
+    </tr>
+    [% FOR object = table_class.retrieve_all %]
+        <tr>
+        
+            
+            <td>[% object.collapsed %]</td>
+        
+            
+            <td>[% object.y %]</td>
+        
+            
+            <td>[% object.container_object %]</td>
+        
+            
+            <td>[% object.zoomlevel %]</td>
+        
+            
+            <td>[% object.x %]</td>
+        
+            
+            <td>[% object.contained_object %]</td>
+        
+            <td>
+                <a href="[% base _ 'containedobject/view/' _ object.id %]">
+                    View
+                </a>
+                <a href="[% base _ 'containedobject/edit/' _ object.id %]">
+                    Edit
+
+                </a>
+                <a href="[% base _ 'containedobject/destroy/' _ object.id %]">
+                    Destroy
+                </a>
+            </td>
+        </tr>
+    [% END %]
+</table>
+<a href="[% base _ 'containedobject/add' %]">Add</a>

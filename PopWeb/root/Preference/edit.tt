@@ -1,0 +1,19 @@
+
+
+<p>[%message%]</p>
+<form action="[% base _ 'preference/do_edit/' _ item.id %]"
+    method="post">
+    <table border=0 cellpadding=0 cellspacing=0>
+    
+        
+        
+        <tr>
+            <td>prefvalue</td>
+            <td>[% item.to_field('prefvalue').as_XML %]</td>
+        </tr>
+    
+    </table>
+    <input type="submit" value="Edit"/>
+<form/>
+<br/>
+<a href="[% base _ 'preference/list' %]">List</a>

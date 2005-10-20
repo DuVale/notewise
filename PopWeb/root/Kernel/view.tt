@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <script type="text/javascript" src="/js/prototype.js"></script>
+        <script type="text/javascript" src="/js/rico.js"></script>
+        <script type="text/javascript" src="/js/test.js"></script>
+        <script type="text/javascript" src="/js/controls.js"></script>
+        <script type="text/javascript" src="/js/effects.js"></script>
+        <script type="text/javascript" src="/js/dragdrop.js"></script>
+        <style>
+            #search {
+                float: right;
+                margin: 5px;
+            }
+
+            #search input {
+                border: 1px solid black;
+            }
+
+            #outerframe {
+                border: 0px solid black;
+                width:800px;
+            }
+            .section {
+                border-left: 1px solid black;
+                border-right: 1px solid black;
+                clear: both;
+            }
+            .section.expanded {
+                height: 100px;
+            }
+            .section .header {
+                background: #21bbf4;
+                border-top: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .section span {
+                cursor: default;
+            }
+
+            #kernel0 {
+                border: 0px;
+                position: static;
+                width: 800px;
+                height: 600px;
+            }
+            #kernel2 {
+                left: 400px;
+                top: 200px;
+            }
+            #kernel1 {
+                position: absolute;
+                left: 200px;
+                top: 200px;
+            }
+            #background {
+                border: 1px solid black;
+                width: 788px;
+                height: 568px;
+                top: 5px;
+            }
+            #namefield0 {
+                width: 200px;
+                left: 300px;
+            }
+            .kernel {
+                border: 1px solid #2f9bff;
+                background: blue;
+                width: 100px;
+                height: 100px;
+                position: absolute;
+            }
+            .kernel .namefield {
+                border: 0px solid white;
+                background: none;
+                color: white;
+                position: relative;
+                left: 0px;
+                top: 5px;
+                width: 78px;
+                height: 20px;
+                text-align: center;
+                float:left;
+            }
+            .kernel .body {
+                background: white;
+                width: 90px;
+                height: 65px;
+                position: relative;
+                left: 5px;
+                top: 0px;
+                clear: both;
+            }
+            .leftgrippie, .rightgrippie {
+                background: #CCC;
+                width: 10px;
+                height: 30px;
+            }
+            .leftgrippie {
+                float: left;
+            }
+            .rightgrippie {
+                float: right;
+            }
+
+            .corner {
+                position: absolute;
+                top: 80px;
+                left: 83px;
+                background: url('/images/corner.gif');
+                width: 15px;
+                height: 15px;
+            }
+            div.auto_complete {
+              width: 350px;
+              background: #0ff;
+              z-index:100;
+            }
+            div.auto_complete ul {
+              border:1px solid #888;
+              margin:0;
+              padding:0;
+              width:100%;
+              list-style-type:none;
+            }
+            div.auto_complete ul li {
+              margin:0;
+              padding:3px;
+            }
+            div.auto_complete ul li.selected { 
+              background-color: #ffb; 
+            }
+            div.auto_complete ul strong.highlight { 
+              color: #800; 
+              margin:0;
+              padding:0;
+            }
+        </style>
+        <script>
+            // Prevent a drag on the text field from moving the object
+            var i=0;
+            var onMouseDownTextFieldListener = function(e) {
+                dndMgr._terminateEvent(e);
+            };
+
+            var updateName = function (e) {
+               var targ;
+               if (e.target) targ = e.target;
+               else if (e.srcElement) targ = e.srcElement;
+               if (targ.nodeType == 3) // defeat Safari bug
+                    targ = targ.parentNode;
+               window.status = "got blur: "+(i++)+" value: "+targ.value;
+               ajaxEngine.sendRequest( 'updateKernel',
+                                       'id=2',
+                                       'name='+targ.value );
+            };
+        </script>
+    </head>
+    <body>
+        <div id="outerframe">
+
+            <div>
+                <div id="search">
+                    Search: <input autocomplete="off" id="searchfield" name="s">
+                    <div class="auto_complete" id="searchresults"></div>
+                </div>
+                <script>
+                new Ajax.Autocompleter('searchfield', 'searchresults', '/ac', {frequency: .2});
+                </script>
+            </div>
+            <div id="parents" class="section">
+                <div class="header">
+                <span onclick="if(this.innerHTML == 'V'){this.innerHTML='&gt;'; document.getElementById('parents').className='section';} else {this.innerHTML='V'; document.getElementById('parents').className='section expanded';}">&gt;</span>
+                    Parents
+                </div>
+            </div>
+            <div id="relationships" class="section">
+                <div class="header">
+                <span onclick="if(this.innerHTML == 'V'){this.innerHTML='&gt;'; document.getElementById('relationships').className='section';} else {this.innerHTML='V'; document.getElementById('relationships').className='section expanded';}">&gt;</span>
+                Relationships
+                </div>
+            </div>
+            <div id="kernel0" class="kernel">
+                <input type="text" id="namefield0" class="namefield" value="[% kernel.name %]"/>
+                <div class="body" id="background">
+
+                    [% FOR vkernel = visible_kernels %]
+                        [%INCLUDE 'Kernel/kernel.tt'%]
+                    [%END%]
+                </div>
+            </div>
+        </div>
+
+        <script>
+            dndMgr.registerDropZone( new CustomDropzone('background') );
+
+        </script>
+    </body>
+</html>

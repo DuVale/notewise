@@ -1,0 +1,37 @@
+
+
+
+[% USE table_class = Class('PopWeb::M::CDBI::RelationshipType') %]
+<table>
+    <tr>
+    
+    
+        
+        <th>relationship_type</th>
+    
+        
+        <th/>
+    </tr>
+    [% FOR object = table_class.retrieve_all %]
+        <tr>
+        
+            
+            <td>[% object.relationship_type %]</td>
+        
+            
+            <td>
+                <a href="[% base _ 'relationshiptype/view/' _ object.id %]">
+                    View
+                </a>
+                <a href="[% base _ 'relationshiptype/edit/' _ object.id %]">
+                    Edit
+
+                </a>
+                <a href="[% base _ 'relationshiptype/destroy/' _ object.id %]">
+                    Destroy
+                </a>
+            </td>
+        </tr>
+    [% END %]
+</table>
+<a href="[% base _ 'relationshiptype/add' %]">Add</a>

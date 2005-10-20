@@ -1,0 +1,48 @@
+
+
+<p>[%message%]</p>
+<form action="[% base _ 'containedobject/do_edit/' _ item.id %]"
+    method="post">
+    <table border=0 cellpadding=0 cellspacing=0>
+    
+        
+        <tr>
+            <td>collapsed</td>
+            <td>[% item.to_field('collapsed').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>y</td>
+            <td>[% item.to_field('y').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>container_object</td>
+            <td>[% item.to_field('container_object').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>zoomlevel</td>
+            <td>[% item.to_field('zoomlevel').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>x</td>
+            <td>[% item.to_field('x').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>contained_object</td>
+            <td>[% item.to_field('contained_object').as_XML %]</td>
+        </tr>
+    
+    </table>
+    <input type="submit" value="Edit"/>
+<form/>
+<br/>
+<a href="[% base _ 'containedobject/list' %]">List</a>

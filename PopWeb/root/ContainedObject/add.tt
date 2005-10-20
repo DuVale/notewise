@@ -1,0 +1,46 @@
+
+<p>[%message%]</p>
+<form action="[% base _ 'containedobject/do_add' %]" method="post">
+    <table border=0 cellpadding=0 cellspacing=0>
+        
+        <tr>
+            <td>collapsed</td>
+            <td><input name="collapsed"/></td>
+        </tr>
+    
+        
+        <tr>
+            <td>y</td>
+            <td><input name="y"/></td>
+        </tr>
+    
+        
+        <tr>
+            <td>container_object</td>
+            <td><input name="container_object"/></td>
+        </tr>
+    
+        
+        <tr>
+            <td>zoomlevel</td>
+            <td><input name="zoomlevel"/></td>
+        </tr>
+    
+        
+        <tr>
+            <td>x</td>
+            <td><input name="x"/></td>
+        </tr>
+    
+        
+        <tr>
+            <td>contained_object</td>
+            <td><input name="contained_object"/></td>
+        </tr>
+    
+        
+    </table>
+    <input type="submit" value="Add"/>
+<form/>
+<br/>
+<a href="[% base _ 'kernel/list' %]">List</a>

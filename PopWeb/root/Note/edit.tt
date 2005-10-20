@@ -1,0 +1,67 @@
+
+
+<p>[%message%]</p>
+<form action="[% base _ 'note/do_edit/' _ item.id %]"
+    method="post">
+    <table border=0 cellpadding=0 cellspacing=0>
+    
+        
+        <tr>
+            <td>w</td>
+            <td>[% item.to_field('w').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>source</td>
+            <td>[% item.to_field('source').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>content</td>
+            <td>[% item.to_field('content').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>x</td>
+            <td>[% item.to_field('x').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>container</td>
+            <td>[% item.to_field('container').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>created</td>
+            <td>[% item.to_field('created').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>y</td>
+            <td>[% item.to_field('y').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>lastmodified</td>
+            <td>[% item.to_field('lastmodified').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>h</td>
+            <td>[% item.to_field('h').as_XML %]</td>
+        </tr>
+    
+        
+    </table>
+    <input type="submit" value="Edit"/>
+<form/>
+<br/>
+<a href="[% base _ 'note/list' %]">List</a>

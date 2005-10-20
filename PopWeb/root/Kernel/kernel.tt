@@ -1,0 +1,29 @@
+<div id="kernel[%vkernel.contained_kernel.id%]" class="kernel">
+    <div class="leftgrippie"></div>
+    <input type="text" id="namefield[%vkernel.contained_kernel.id%]" class="namefield" value="[%vkernel.contained_kernel.name%]"/>
+    <div class="rightgrippie"/></div>
+    <div class="body">
+    </div>
+    <div class="corner">
+    </div>
+</div>
+<script>
+    var kernel = document.getElementById('kernel[%vkernel.contained_kernel.id%]');
+    kernel.style.left="[%vkernel.x%]px";
+    kernel.style.top="[%vkernel.y%]px";
+    dndMgr.registerDraggable( new CustomDraggable('kernel[%vkernel.contained_kernel.id%]') );
+
+    var namefield = document.getElementById('namefield[%vkernel.contained_kernel.id%]');
+    if ( typeof document.implementation != "undefined" &&
+         document.implementation.hasFeature("HTML",   "1.0") &&
+         document.implementation.hasFeature("Events", "2.0") &&
+         document.implementation.hasFeature("CSS",    "2.0") ) {
+        namefield.addEventListener("mousedown", onMouseDownTextFieldListener, false);
+        namefield.addEventListener("blur", updateName, false);
+    }
+    else {
+        namefield.attachEvent("onmousedown", onMouseDownTextFieldListener);
+        namefield.attachEvent("onblur", updateName);
+      }
+</script>
+

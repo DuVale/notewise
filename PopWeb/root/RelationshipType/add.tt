@@ -1,0 +1,19 @@
+
+
+<p>[%message%]</p>
+<form action="[% base _ 'relationshiptype/do_add' %]" method="post">
+    <table border=0 cellpadding=0 cellspacing=0>
+    
+        
+        <tr>
+            <td>relationship_type</td>
+            <td><textarea cols="22" name="relationship_type" rows="3"></textarea>
+</td>
+        </tr>
+    
+        
+    </table>
+    <input type="submit" value="Add"/>
+<form/>
+<br/>
+<a href="[% base _ 'relationshiptype/list' %]">List</a>

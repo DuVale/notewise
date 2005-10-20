@@ -1,0 +1,42 @@
+
+
+<p>[%message%]</p>
+<form action="[% base _ 'relationship/do_edit/' _ item.id %]"
+    method="post">
+    <table border=0 cellpadding=0 cellspacing=0>
+    
+        
+        <tr>
+            <td>relationship_id</td>
+            <td>[% item.to_field('relationship_id').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>part2</td>
+            <td>[% item.to_field('part2').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>type</td>
+            <td>[% item.to_field('type').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>nav</td>
+            <td>[% item.to_field('nav').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>part1</td>
+            <td>[% item.to_field('part1').as_XML %]</td>
+        </tr>
+    
+    </table>
+    <input type="submit" value="Edit"/>
+<form/>
+<br/>
+<a href="[% base _ 'relationship/list' %]">List</a>

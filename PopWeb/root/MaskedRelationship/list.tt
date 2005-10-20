@@ -1,0 +1,41 @@
+
+
+
+[% USE table_class = Class('PopWeb::M::CDBI::MaskedRelationship') %]
+<table>
+    <tr>
+    
+    
+        
+        <th>relationship</th>
+    
+        
+        <th>container</th>
+    
+        <th/>
+    </tr>
+    [% FOR object = table_class.retrieve_all %]
+        <tr>
+        
+            
+            <td>[% object.relationship %]</td>
+        
+            
+            <td>[% object.container %]</td>
+        
+            <td>
+                <a href="[% base _ 'maskedrelationship/view/' _ object.id %]">
+                    View
+                </a>
+                <a href="[% base _ 'maskedrelationship/edit/' _ object.id %]">
+                    Edit
+
+                </a>
+                <a href="[% base _ 'maskedrelationship/destroy/' _ object.id %]">
+                    Destroy
+                </a>
+            </td>
+        </tr>
+    [% END %]
+</table>
+<a href="[% base _ 'maskedrelationship/add' %]">Add</a>

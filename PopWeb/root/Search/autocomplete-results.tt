@@ -1,0 +1,5 @@
+<ul>
+[%- FOR kernel = kernels -%]
+<li><a href="/kernel/view/[%kernel.id%]">[%kernel.name%]</a></li>
+[%- END -%]
+</ul>

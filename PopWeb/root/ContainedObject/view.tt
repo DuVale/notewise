@@ -1,0 +1,43 @@
+
+
+<table border=0 cellpadding=0 cellspacing=0>
+    
+        
+        <tr>
+            <td>collapsed</td>
+            <td>[% item.collapsed %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>y</td>
+            <td>[% item.y %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>container_object</td>
+            <td>[% item.container_object %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>zoomlevel</td>
+            <td>[% item.zoomlevel %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>x</td>
+            <td>[% item.x %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>contained_object</td>
+            <td>[% item.contained_object %]</td>
+        </tr>
+    
+</table>
+<a href="[% base _ 'containedobject/edit/' _ item.id %]">Edit</a>
+<a href="[% base _ 'containedobject/list' %]">List</a>
