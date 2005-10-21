@@ -990,7 +990,7 @@ Rico.DragAndDrop.prototype = {
       //this.adjustedForDraggableSize = false;
 
       this.interestedInMotionEvents = this.hasSelection();
-//      this._terminateEvent(e);
+      this._terminateEvent(e);
    },
 
    updateSelection: function( draggable, extendSelection ) {

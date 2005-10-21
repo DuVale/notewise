@@ -12,6 +12,7 @@ PopWeb->config( name => 'PopWeb',
               );
 
 PopWeb->setup( qw/Static::Simple/ );
+PopWeb->config->{static}->{ignore_extensions} = [];
 
 =head1 NAME
 

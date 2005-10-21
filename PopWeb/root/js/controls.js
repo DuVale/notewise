@@ -208,7 +208,7 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
     var element = Event.findElement(event, 'LI');
     this.index = element.autocompleteIndex;
     this.select_entry();
-    Event.stop(event);
+//    Event.stop(event);
   },
   
   onBlur: function(event) {

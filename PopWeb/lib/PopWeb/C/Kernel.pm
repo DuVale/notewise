@@ -137,24 +137,12 @@ sub view : Local {
     $c->stash->{template} = 'Kernel/view.tt';
 }
 
-sub xml : Local {
-    my ( $self, $c, $id ) = @_;
-    my $kernel = PopWeb::M::CDBI::Kernel->retrieve($id);
-    $c->res->output($kernel->to_xml);
-}
-
-sub xml_hash : Local {
-    my ( $self, $c, $id ) = @_;
-    my $kernel = PopWeb::M::CDBI::Kernel->retrieve($id);
-    use Data::Dumper;
-    $c->res->output("<pre>".Dumper($kernel->to_xml_hash_deep)."</pre>");
-}
-
 =item do_update
 
 Like do_edit, but intended for ajax/REST apps.
 
 =cut
+
 sub do_update : Local {
     my ( $self, $c, $id ) = @_;
     if (!defined $id){

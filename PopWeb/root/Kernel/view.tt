@@ -5,6 +5,7 @@
         <script type="text/javascript" src="/js/prototype.js"></script>
         <script type="text/javascript" src="/js/rico.js"></script>
         <script type="text/javascript" src="/js/test.js"></script>
+        <script type="text/javascript" src="/js/kernel.js"></script>
         <script type="text/javascript" src="/js/controls.js"></script>
         <script type="text/javascript" src="/js/effects.js"></script>
         <script type="text/javascript" src="/js/dragdrop.js"></script>
@@ -195,6 +196,37 @@
         <script>
             dndMgr.registerDropZone( new CustomDropzone('background') );
 
+//        var kernel2 = Kernel.retrieve(10);
+        var background = document.getElementById('background');
+
+        var i = 42;
+        function addKernel(e){
+            window.status="added kernel";
+            var kernel = new Kernel(i++);
+            kernel.realize(background);
+
+            var posx = 0;
+            var posy = 0;
+            if (!e) var e = window.event;
+            if (e.pageX || e.pageY)
+            {
+                    posx = e.pageX;
+                    posy = e.pageY;
+            }
+            else if (e.clientX || e.clientY)
+            {
+                    posx = e.clientX + document.body.scrollLeft;
+                    posy = e.clientY + document.body.scrollTop;
+            }
+
+            kernel.setX(posx-background.offsetLeft);
+            kernel.setY(posy-background.offsetTop);
+            document.getElementById('debugfield').value=background.innerHTML;
+        }
+
+        document.addEventListener("dblclick", addKernel, false);
+
         </script>
+        <textarea  id="debugfield" cols="40" rows="20"></textarea>
     </body>
 </html>
