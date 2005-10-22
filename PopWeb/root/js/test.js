@@ -1,14 +1,13 @@
-var CustomDraggable = Class.create();
+var KernelDraggable = Class.create();
 
-ajaxEngine.registerRequest('updateKernel', '/kernel/do_update');
 ajaxEngine.registerRequest('updateContainedObject', '/containedobject/do_update');
 
-CustomDraggable.prototype = (new Rico.Draggable()).extend( {
+KernelDraggable.prototype = (new Rico.Draggable()).extend( {
 
-   initialize: function( htmlElement, name ) {
+   initialize: function( htmlElement, kernel ) {
       this.type        = 'Custom';
       this.htmlElement = $(htmlElement);
-      this.name        = name;
+      this.kernel        = kernel;
    },
 
    startDrag: function() {
@@ -18,10 +17,14 @@ CustomDraggable.prototype = (new Rico.Draggable()).extend( {
        var x = this.htmlElement.style.left;
        var y = this.htmlElement.style.top;
        ajaxEngine.sendRequest( 'updateContainedObject',
-                               'contained_id=2',
+                               'contained_id='+this.kernel.id,
                                'container_id=1',
                                'x='+x,
                                'y='+y);
+   },
+
+   duringDrag: function() {
+       window.status = "duringDrag called: "+this.htmlElement.style.left+"x"+this.htmlElement.style.top;
    },
 
    cancelDrag: function() {

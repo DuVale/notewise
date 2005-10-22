@@ -1110,6 +1110,8 @@ Rico.DragAndDrop.prototype = {
       var dragObjectStyle = this.dragElement.style;
       dragObjectStyle.left = (e.screenX - this.startx) + "px"
       dragObjectStyle.top  = (e.screenY - this.starty) + "px";
+      for ( var i = 0 ; i < this.currentDragObjects.length ; i++ )
+         this.currentDragObjects[i].duringDrag();
    },
 
    _updateDropZonesHover: function(e) {
@@ -1351,6 +1353,9 @@ Rico.Draggable.prototype = {
    },
 
    startDrag: function() {
+   },
+
+   duringDrag: function() {
    },
 
    cancelDrag: function() {

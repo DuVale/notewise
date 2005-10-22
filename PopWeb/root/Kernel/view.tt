@@ -202,7 +202,7 @@
         var i = 42;
         function addKernel(e){
             window.status="added kernel";
-            var kernel = new Kernel(i++);
+            var kernel = Kernel.create();
             kernel.realize(background);
 
             var posx = 0;
@@ -221,7 +221,6 @@
 
             kernel.setX(posx-background.offsetLeft);
             kernel.setY(posy-background.offsetTop);
-            document.getElementById('debugfield').value=background.innerHTML;
         }
 
         document.addEventListener("dblclick", addKernel, false);
