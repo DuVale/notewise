@@ -5,8 +5,8 @@
         <script type="text/javascript" src="/js/prototype.js"></script>
         <script type="text/javascript" src="/js/rico.js"></script>
         <script type="text/javascript" src="/js/test.js"></script>
-        <script type="text/javascript" src="/js/kernel.js"></script>
         <script type="text/javascript" src="/js/visiblekernel.js"></script>
+        <script type="text/javascript" src="/js/kernel.js"></script>
         <script type="text/javascript" src="/js/controls.js"></script>
         <script type="text/javascript" src="/js/effects.js"></script>
         <script type="text/javascript" src="/js/dragdrop.js"></script>
@@ -47,6 +47,15 @@
                 width: 800px;
                 height: 600px;
             }
+            #kernel2 {
+                left: 400px;
+                top: 200px;
+            }
+            #kernel1 {
+                position: absolute;
+                left: 200px;
+                top: 200px;
+            }
             #background {
                 border: 1px solid black;
                 width: 788px;
@@ -57,14 +66,14 @@
                 width: 200px;
                 left: 300px;
             }
-            .vkernel {
+            .kernel {
                 border: 1px solid #2f9bff;
                 background: blue;
                 width: 100px;
                 height: 100px;
                 position: absolute;
             }
-            .vkernel .namefield {
+            .kernel .namefield {
                 border: 0px solid white;
                 background: none;
                 color: white;
@@ -76,7 +85,7 @@
                 text-align: center;
                 float:left;
             }
-            .vkernel .body {
+            .kernel .body {
                 background: white;
                 width: 90px;
                 height: 65px;
@@ -130,94 +139,64 @@
               padding:0;
             }
         </style>
-        <script>
-            // Prevent a drag on the text field from moving the object
-            var i=0;
-            var onMouseDownTextFieldListener = function(e) {
-                dndMgr._terminateEvent(e);
-            };
-
-            var updateName = function (e) {
-               var targ;
-               if (e.target) targ = e.target;
-               else if (e.srcElement) targ = e.srcElement;
-               if (targ.nodeType == 3) // defeat Safari bug
-                    targ = targ.parentNode;
-               window.status = "got blur: "+(i++)+" value: "+targ.value;
-               ajaxEngine.sendRequest( 'updateKernel',
-                                       'id=2',
-                                       'name='+targ.value );
-            };
-        </script>
     </head>
     <body>
-        <div id="outerframe">
-
-            <div>
-                <div id="search">
-                    Search: <input autocomplete="off" id="searchfield" name="s">
-                    <div class="auto_complete" id="searchresults"></div>
-                </div>
-                <script>
-                new Ajax.Autocompleter('searchfield', 'searchresults', '/ac', {frequency: .2});
-                </script>
-            </div>
-            <div id="parents" class="section">
-                <div class="header">
-                <span onclick="if(this.innerHTML == 'V'){this.innerHTML='&gt;'; document.getElementById('parents').className='section';} else {this.innerHTML='V'; document.getElementById('parents').className='section expanded';}">&gt;</span>
-                    Parents
-                </div>
-            </div>
-            <div id="relationships" class="section">
-                <div class="header">
-                <span onclick="if(this.innerHTML == 'V'){this.innerHTML='&gt;'; document.getElementById('relationships').className='section';} else {this.innerHTML='V'; document.getElementById('relationships').className='section expanded';}">&gt;</span>
-                Relationships
-                </div>
-            </div>
-            <div id="kernel0" class="vkernel">
-                <input type="text" id="namefield0" class="namefield" value="[% kernel.name %]"/>
-                <div class="body" id="background">
-
-                    [% FOR vkernel = visible_kernels %]
-                        [%INCLUDE 'Kernel/kernel.tt'%]
-                    [%END%]
-                </div>
-            </div>
+        <div id="kernel">
+            <ul>
+            <li>some</li>
+            <li>stuff</li>
+            <li>here</li>
+            </ul>
         </div>
-
+        Retrieved data:<br/>
         <script>
-        var viewKernelId=[%kernel.id%];
-        dndMgr.registerDropZone( new CustomDropzone('background') );
+//        function time(){
+//            var date = new Date();
+//            return date.getTime();
+//        }
+//        var kernelHTML = document.getElementById('kernel');
+//
+//        var kernel = new Kernel(5,document.kernelHTML);
+//        document.write("id: ",kernel.id);
+//        document.write('<br/>');
+//        var starttime = time();
+//        var kernel2 = Kernel.retrieve(10);
+//        document.write('time: '+(time()-starttime)+'millis');
+//        document.write('<br/>');
+//        document.write('name: '+kernel2.name);
+//        document.write('<br/>');
+//        document.write('created: '+kernel2.created);
+//        document.write('<br/>');
+//        document.write('lastModified: '+kernel2.lastModified);
+//        document.write('<br/>');
+//        document.write('source: '+kernel2.source);
+//        document.write('<br/>');
+//        document.write('uri: '+kernel2.uri);
 
-        var background = document.getElementById('background');
+        var vkernel = VisibleKernel.create(1,100,200,300,0);
+        document.write('x: '+vkernel.x);
+        document.write('<br/>');
+        document.write('y: '+vkernel.y);
+        document.write('<br/>');
+        document.write('name: '+vkernel.kernel.name);
+        document.write('<br/>');
+        document.write('kernel_id: '+vkernel.kernel.id);
+        document.write('<br/>');
 
-        var i = 42;
-        function addKernel(e){
+        vkernel.kernel.setName("fred");
+        vkernel.kernel.setName("fred");
 
-            var posx = 0;
-            var posy = 0;
-            if (!e) var e = window.event;
-            if (e.pageX || e.pageY)
-            {
-                    posx = e.pageX;
-                    posy = e.pageY;
-            }
-            else if (e.clientX || e.clientY)
-            {
-                    posx = e.clientX + document.body.scrollLeft;
-                    posy = e.clientY + document.body.scrollTop;
-            }
+        var vkernel = VisibleKernel.retrieve(1,vkernel.kernel.id);
+        document.write('x: '+vkernel.x);
+        document.write('<br/>');
+        document.write('y: '+vkernel.y);
+        document.write('<br/>');
+        document.write('name: '+vkernel.kernel.name);
+        document.write('<br/>');
+        document.write('kernel_id: '+vkernel.kernel.id);
+        document.write('<br/>');
 
-            var x = posx-background.offsetLeft;
-            var y = posy-background.offsetTop;
-            var vkernel = VisibleKernel.create(viewKernelId,x,y,100,1);
-            vkernel.realize(background);
-
-            window.status="added kernel";
-        }
-
-        document.addEventListener("dblclick", addKernel, false);
-
+        document.write('done');
         </script>
     </body>
 </html>

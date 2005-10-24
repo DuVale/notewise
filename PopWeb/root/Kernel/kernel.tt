@@ -1,6 +1,7 @@
-<div id="kernel[%vkernel.contained_kernel.id%]" class="kernel">
+[% id = vkernel.container_kernel.id _ '/' _ vkernel.contained_kernel.id %]
+<div id="vkernel[%id%]" class="vkernel">
     <div class="leftgrippie"></div>
-    <input type="text" id="namefield[%vkernel.contained_kernel.id%]" class="namefield" value="[%vkernel.contained_kernel.name%]"/>
+    <input type="text" id="namefield[%id%]" class="namefield" value="[%vkernel.contained_kernel.name%]"/>
     <div class="rightgrippie"/></div>
     <div class="body">
     </div>
@@ -8,9 +9,13 @@
     </div>
 </div>
 <script>
-    var kernelDiv = document.getElementById('kernel[%vkernel.contained_kernel.id%]');
-    var kernel = new Kernel([%vkernel.contained_kernel.id%],kernelDiv);
-    kernel.setX([%vkernel.x%]);
-    kernel.setY([%vkernel.y%]);
+    var kernelDiv = document.getElementById('vkernel[%id%]');
+    var kernel = new Kernel([%vkernel.contained_kernel%]);
+    kernel.name = '[%vkernel.contained_kernel.name%]';
+    var vkernel = new VisibleKernel([%vkernel.container_kernel.id%],[%vkernel.contained_kernel.id%],kernelDiv,kernel);
+    vkernel.setX([%vkernel.x%]);
+    vkernel.setY([%vkernel.y%]);
+    vkernel.setZoomlevel([%vkernel.zoomlevel%]);
+    vkernel.setCollapsed([%vkernel.collapsed%]);
 </script>
 

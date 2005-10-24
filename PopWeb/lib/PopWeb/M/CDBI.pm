@@ -15,7 +15,12 @@ __PACKAGE__->config(
 
 sub to_xml {
     my $self = shift;
-    return XMLout({kernel=>$self->to_xml_hash_deep},KeepRoot=>1);
+    my $label = shift;
+    if ($label){
+        return XMLout({$label => $self->to_xml_hash_deep},KeepRoot=>1);
+    } else {
+        return XMLout($self->to_xml_hash_deep,KeepRoot=>1);
+    }
 }
 
 =head1 NAME
