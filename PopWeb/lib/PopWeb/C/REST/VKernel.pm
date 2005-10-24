@@ -5,7 +5,7 @@ use base 'Catalyst::Base';
 
 =head1 NAME
 
-PopWeb::C::REST::ContainedObject - Catalyst controller for REST interface for contained objects
+PopWeb::C::REST::ContainedObject - Catalyst controller for REST interface for visible kernels
 
 =head1 SYNOPSIS
 
@@ -19,7 +19,9 @@ Catalyst component.
 
 =over 4
 
-=item default
+=item xml
+
+Retrieve an xml version of this vkernel (includes the xml for the contained kernel as well).
 
 =cut
 
@@ -38,7 +40,9 @@ sub xml_hash : Private {
 }
 
 =item add
-    Creates a new containedobject/visiblekernel.  Will create a new kernel as well, if a contained_object is not specified. Otherwise it will use the object of that id.
+
+    Creates a new containedobject/visiblekernel.  Will create a new kernel as well, if a contained_object is not specified. Otherwise it will use the object of that id.  Takes any column of contained_object or kernel as parameters. Must include at least a container_object id
+
 =cut
 sub add : Local {
     my ( $self, $c ) = @_;
@@ -63,6 +67,11 @@ sub add : Local {
     }
 }
 
+=item add
+
+Updates this visible kernel.  Takes url arguments container_object id and contained_object id and cgi params x,y,zoomlevel,collapsed
+
+=cut
 sub update : Local {
     my ( $self, $c, $container_object, $contained_object) = @_;
     $c->form( optional => [ PopWeb::M::CDBI::ContainedObject->columns ],
