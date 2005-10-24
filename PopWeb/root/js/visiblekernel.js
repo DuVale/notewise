@@ -1,7 +1,5 @@
 var VisibleKernel = Class.create();
 
-ajaxEngine.registerRequest('updateKernel', '/kernel/do_update');
-
 VisibleKernel.prototype = {
 
     initialize: function(container_id,contained_id,htmlElement,kernel) {
@@ -62,7 +60,7 @@ VisibleKernel.prototype = {
     },
 
     setY: function(y) {
-        this.x=y;
+        this.y=y;
         this.htmlElement.style.top = y+"px";
     },
 
@@ -126,7 +124,6 @@ VisibleKernel.create = function (container_id, x,y,zoomlevel,collapsed) {
     var vkernel = new VisibleKernel();
     var request = new Ajax.Request('/rest/vkernel/add/',{ asynchronous: false, parameters: 'container_object='+container_id+'&x='+x+'&y='+y+'&zoomlevel='+zoomlevel+'&collapsed='+collapsed });
     vkernel.populate(request.transport.responseXML);
-    alert(request.transport.responseText);
     return vkernel;
 }
 
@@ -159,4 +156,3 @@ KernelDraggable.prototype = (new Rico.Draggable()).extend( {
    }
 
 } );
-
