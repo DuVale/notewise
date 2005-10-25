@@ -36,7 +36,8 @@
         assertEquals('300',vkernel.zoomlevel);
         assertEquals('0',vkernel.collapsed);
         assert('container id is not null',vkernel.container_id > 0);
-        assert('contained id is not null',vkernel.kernel.id > 0);
+        assert('kernel id is not null',vkernel.kernel.id > 0);
+        assertEquals('test id',vkernel.container_id+'/'+vkernel.kernel.id,vkernel.id);
     }
 
     function testRealize() {
@@ -61,6 +62,9 @@
         assertEquals('test y','500',vkernel.y);
         assertEquals('test zoomlevel','600',vkernel.zoomlevel);
         assertEquals('test collapsed','1',vkernel.collapsed);
+        assert('container id is not null',vkernel.container_id > 0);
+        assert('kernel id is not null',vkernel.kernel.id > 0);
+        assertEquals('test id',vkernel.container_id+'/'+vkernel.kernel.id,vkernel.id);
     }
 
     function tearDown() {
