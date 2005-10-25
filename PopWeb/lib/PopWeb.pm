@@ -36,7 +36,7 @@ Catalyst based application.
 
 sub default : Private {
     my ( $self, $c ) = @_;
-    $c->res->output('Default app action');
+    $c->stash->{template}='home.tt';
 }
 
 sub end : Private {

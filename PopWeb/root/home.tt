@@ -1,0 +1,13 @@
+<h1>PopWeb</h1>
+
+<p>You might want to do one of the following things:</p>
+
+<ul>
+    <li><a href="/kernel/view/1">View Kernel 1</a></li>
+    <li>Run some client side unit tests:
+        <ul>
+            <li><a href="/test/jsunit/testRunner.html?testPage=/test/testKernel.html&autoRun=true">Run kernel tests</a></li>
+            <li><a href="/test/jsunit/testRunner.html">Run other tests</a></li>
+        </ul>
+    </li>
+</ul>
