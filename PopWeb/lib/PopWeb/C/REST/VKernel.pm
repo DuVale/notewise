@@ -69,7 +69,7 @@ sub add : Local {
 
 =item add
 
-Updates this visible kernel.  Takes url arguments container_object id and contained_object id and cgi params x,y,zoomlevel,collapsed
+Updates this visible kernel.  Takes url arguments container_object id and contained_object id and cgi params x,y,width,height,collapsed
 
 =cut
 sub update : Local {

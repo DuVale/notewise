@@ -22,8 +22,13 @@
     
         
         <tr>
-            <td>zoomlevel</td>
-            <td>[% item.zoomlevel %]</td>
+            <td>width</td>
+            <td>[% item.width %]</td>
+        </tr>
+
+        <tr>
+            <td>height</td>
+            <td>[% item.height %]</td>
         </tr>
     
         

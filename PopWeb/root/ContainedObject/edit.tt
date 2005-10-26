@@ -25,8 +25,12 @@
     
         
         <tr>
-            <td>zoomlevel</td>
-            <td>[% item.to_field('zoomlevel').as_XML %]</td>
+            <td>width</td>
+            <td>[% item.to_field('width').as_XML %]</td>
+        </tr>
+        <tr>
+            <td>height</td>
+            <td>[% item.to_field('height').as_XML %]</td>
         </tr>
     
         

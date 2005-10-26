@@ -22,8 +22,12 @@
     
         
         <tr>
-            <td>zoomlevel</td>
-            <td><input name="zoomlevel"/></td>
+            <td>width</td>
+            <td><input name="width"/></td>
+        </tr>
+        <tr>
+            <td>height</td>
+            <td><input name="height"/></td>
         </tr>
     
         

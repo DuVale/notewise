@@ -5,7 +5,7 @@
     <div class="rightgrippie"/></div>
     <div class="body">
     </div>
-    <div class="corner">
+    <div class="corner" id="vkcorner[%id%]">
     </div>
 </div>
 <script>
@@ -15,7 +15,9 @@
     var vkernel = new VisibleKernel([%vkernel.container_kernel.id%],[%vkernel.contained_kernel.id%],kernelDiv,kernel);
     vkernel.setX([%vkernel.x%]);
     vkernel.setY([%vkernel.y%]);
-    vkernel.setZoomlevel([%vkernel.zoomlevel%]);
+    vkernel.setWidth([%vkernel.width%]);
+    vkernel.setHeight([%vkernel.height%]);
     vkernel.setCollapsed([%vkernel.collapsed%]);
+    vkernel.layout();
 </script>
 

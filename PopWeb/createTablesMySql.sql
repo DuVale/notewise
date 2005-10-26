@@ -83,7 +83,8 @@ CREATE TABLE IF NOT EXISTS contained_object (
     contained_object MEDIUMINT UNSIGNED NOT NULL,
     x SMALLINT,
     y SMALLINT,
-    zoomlevel SMALLINT,
+    width SMALLINT,
+    height SMALLINT,
     collapsed TINYINT,
     -- Note: MySQL "BOOLEAN" type is just a synonym for TINYINT(1).  As in C,
     --   zero is false, nonzero is true.

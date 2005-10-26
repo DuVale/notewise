@@ -16,7 +16,8 @@
         <th>container_object</th>
     
         
-        <th>zoomlevel</th>
+        <th>width</th>
+        <th>height</th>
     
         
         <th>x</th>
@@ -39,7 +40,8 @@
             <td>[% object.container_object %]</td>
         
             
-            <td>[% object.zoomlevel %]</td>
+            <td>[% object.width %]</td>
+            <td>[% object.height %]</td>
         
             
             <td>[% object.x %]</td>
