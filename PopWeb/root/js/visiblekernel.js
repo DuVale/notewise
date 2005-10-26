@@ -75,7 +75,7 @@ VisibleKernel.prototype = {
     // performs internal visual layout of the html elements for this kernel
     layout: function(){
         var body = (this.htmlElement.getElementsByClassName('body'))[0];
-        body.style.height = (this.height - 32)+'px';
+        body.style.height = (this.height - 34)+'px';
 
         var corner = (this.htmlElement.getElementsByClassName('corner'))[0];
         corner.style.left = (this.width - corner.clientWidth)+'px';
@@ -99,7 +99,7 @@ VisibleKernel.prototype = {
             var body = document.getElementsByTagName('body')[0];
             body.appendChild(VisibleKernel.textSizingBox);
             VisibleKernel.textSizingBox.style.position = 'absolute';
-//            VisibleKernel.textSizingBox.style.left = '-500px';
+            VisibleKernel.textSizingBox.style.left = '-500px';
         }
         VisibleKernel.textSizingBox.style.fontSize = size;
         window.status = "fontSize: "+ size;
@@ -187,8 +187,6 @@ VisibleKernel.create = function (container_id,x,y,width,height,collapsed) {
     return vkernel;
 }
 
-
-ajaxEngine.registerRequest('updateContainedObject', '/containedobject/do_update');
 
 var KernelDraggable = Class.create();
 KernelDraggable.prototype = (new Rico.Draggable()).extend( {
