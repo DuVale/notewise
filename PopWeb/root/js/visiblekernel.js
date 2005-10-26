@@ -28,7 +28,7 @@ VisibleKernel.prototype = {
            +"<div class=\"corner\">"
            +"</div>";
         this.namefield = document.getElementById('namefield'+this.id);
-        this.namefield.value = this.name;
+        this.namefield.value = this.kernel.name;
         this.setX(this.x);
         this.setY(this.y);
         this.registerHandlers();

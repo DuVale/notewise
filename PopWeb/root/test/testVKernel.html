@@ -35,6 +35,7 @@
         assertEquals('200',vkernel.y);
         assertEquals('300',vkernel.zoomlevel);
         assertEquals('0',vkernel.collapsed);
+        assertEquals('',vkernel.kernel.name);
         assert('container id is not null',vkernel.container_id > 0);
         assert('kernel id is not null',vkernel.kernel.id > 0);
         assertEquals('test id',vkernel.container_id+'/'+vkernel.kernel.id,vkernel.id);
