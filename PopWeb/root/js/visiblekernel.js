@@ -4,7 +4,6 @@ VisibleKernel.prototype = {
 
     initialize: function(container_id,contained_id,htmlElement,kernel) {
         this.container_id = container_id;
-        this.contained_id = contained_id;
         this.id = container_id+'/'+contained_id;
         this.htmlElement = htmlElement;
         this.kernel = kernel;
@@ -101,6 +100,7 @@ VisibleKernel.prototype = {
             // pass on the population opportunity to the kernel
             this.kernel.populate(kernelXML);
         }
+        this.id = this.container_id+'/'+this.kernel.id;
     },
 
     sync: function(xml){
