@@ -1,11 +1,11 @@
 //TODO
-// - when fields is called, see if there are any existing fields.  If so, remove the accessors for those.  Then add the accessors for the new fields.  Update the fields list.  The primary key field needs to get stored elsewhere
+// X when fields is called, see if there are any existing fields.  If so, remove the accessors for those.  Then add the accessors for the new fields.  Update the fields list.  The primary key field needs to get stored elsewhere
 // - write the following REST functions:
 //     - insert
 //     - update
 //     - retrieve
 //     - delete
-// - write id
+// X write id
 
 // TODO Future
 // Allow support for multiple primary key fields
@@ -16,8 +16,8 @@ JSDBI.prototype = {
     },
 
     id: function () {
-        // TODO 
-        document.write('JSDBI.id called<br>');
+        // call the accessor for the primary key (gross syntax, I know)
+        return this[this.__primaryKey]();
     },
 
     setup: function () {
@@ -45,7 +45,6 @@ JSDBI.url = function (url) {
 // array of field names.
 JSDBI.fields = function (fields) {
     if(fields){
-
         if(this.prototype.__fields && this.prototype.__fields.length > 0){
             // we had previous fields, so delete all the previous accessors
             for(var i=0; i<fields.length;i++){
@@ -55,18 +54,12 @@ JSDBI.fields = function (fields) {
 
         // create all the new accessors
         for(var i=0; i<fields.length;i++){
-            // XXX I think I'm accidentally creating a closure here, but not sure how to fix it
             var field = fields[i];
-            this.prototype[field] = function (value) {
-                var thisfield = field;
-                alert(thisfield);
-                if(value){
-                    this['__'+thisfield] = value;
-                } else {
-                    return this['__'+thisfield];
-                }
-            };
+            this.prototype[field] = this.__createAccessor(field);
         }
+
+        // save the primary key
+        this.prototype.__primaryKey = fields[0];
 
         // set the list of accessors
         this.prototype.__fields = fields;
@@ -74,6 +67,19 @@ JSDBI.fields = function (fields) {
         return this.prototype.__fields;
     }
 };
+
+// This creates nifty closures for us
+JSDBI.__createAccessor = function (field){
+    return function (value) {
+        var thisfield = field;
+        if(value){
+            this['__'+thisfield] = value;
+        } else {
+            return this['__'+thisfield];
+        }
+    };
+}
+
 
 
 // ################
@@ -122,6 +128,8 @@ artist.artistid(12);
 document.write("name: "+artist.name());
 document.write("<br/>");
 document.write("artistid: "+artist.artistid());
+document.write("<br/>");
+document.write("id: "+artist.id());
 document.write("<br/>");
 for(prop in artist){
     document.write("property: "+prop);
