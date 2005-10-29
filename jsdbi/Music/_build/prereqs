@@ -1,8 +1,0 @@
-{
-          'build_requires' => {},
-          'conflicts' => {},
-          'requires' => {
-                          'Catalyst' => '5.10'
-                        },
-          'recommends' => {}
-        }
