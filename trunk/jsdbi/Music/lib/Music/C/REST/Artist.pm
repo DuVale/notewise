@@ -31,6 +31,10 @@ sub default : Private {
 sub artist : Path('/rest/artist') {
     my ( $self, $c) = @_;
 
+    use Data::Dumper;
+    warn "*** Catalyst version: $Catalyst::VERSION";
+    warn Dumper($c);
+
     my $method = $c->req->method;
     if($method eq 'GET'){
         $c->forward('view');
@@ -49,7 +53,7 @@ sub view : Private {
     my $artist = Music::M::CDBI::Artist->retrieve($id);
     unless($artist){
         $c->response->status(404);
-        $c->output('');
+        $c->req->output('ERROR');
         return;
     }
     my %artist_hash;

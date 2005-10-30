@@ -5,6 +5,7 @@ BEGIN { $ENV{CATALYST_ENGINE} ||= 'CGI' }
 use strict;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
+use lib "$FindBin::Bin/../../perl/lib";
 use Music;
 
 Music->run;
