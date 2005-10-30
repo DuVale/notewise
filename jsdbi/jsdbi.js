@@ -280,6 +280,7 @@ document.write("<br/>");
 document.write("paramList: "+artist2.__getParams());
 document.write("<br/>");
 
+artist2.destroy();
 
 document.write("<h3>Properties</h3>");
 for(prop in artist){
