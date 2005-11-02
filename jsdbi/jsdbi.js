@@ -158,9 +158,7 @@ JSDBI.retrieve = function (id) {
 
 // Creates a new object on the server.  Accepts an associative array (object) of values for the new object.
 JSDBI.insert = function (values) {
-    // XXX I think the following line is buggy, as we don't really know what class to instantiate
     var object = new this();
-    object.name('foo');
     for(key in values){
         var value = values[key];
         object[key](value);
@@ -173,7 +171,6 @@ JSDBI.insert = function (values) {
     object.__populate(request.transport.responseXML);
     return object;
 };
-
 
 // ################
 
@@ -286,4 +283,4 @@ document.write("<h3>Properties</h3>");
 for(prop in artist){
     document.write("property: "+prop);
     document.write("<br/>");
-}
+}    
