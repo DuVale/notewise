@@ -1,12 +1,13 @@
 // TODO my todo list
 // X when fields is called, see if there are any existing fields.  If so, remove the accessors for those.  Then add the accessors for the new fields.  Update the fields list.  The primary key field needs to get stored elsewhere
-// - write the following REST functions:
-//     - insert
-//     - update
-//     - retrieve
-//     - delete
+// X write the following REST functions:
+//     X insert
+//     X update
+//     X retrieve
+//     X delete
 // X write id
-// do something about errors from the server
+// - do something about errors from the server
+// - default elementTag to last piece of url
 
 // TODO future todo list
 // Allow support for multiple primary key fields
@@ -17,11 +18,13 @@ JSDBI.prototype = {
         // TODO not sure I actually need to do anything here, but it's possible
     },
 
+    // Returns the primary key for this object
     id: function () {
         // call the accessor for the primary key (gross syntax, I know)
         return this[this.__primaryKey]();
     },
 
+    // Sends any updated fields in the object to the server.
     update: function() {
         var params = this.__getParams();
         var request = new Ajax.Request(this.__url+'/'+this.id(),
@@ -31,7 +34,8 @@ JSDBI.prototype = {
         return;
     },
 
-    //  XXX it won't let me name this delete - come up with something else
+    // Deletes this object from the server.
+    //  XXX it won't let me name this delete - is destroy a good name?
     destroy: function() {
         var request = new Ajax.Request(this.__url+'/'+this.id(),
                                             { method: 'delete',
@@ -39,6 +43,7 @@ JSDBI.prototype = {
         return;
     },
 
+    // Takes in an xml element or document, and populates the fields for this object from it
     __populate: function(xml) {
         if(xml.constructor == '[XMLDocument]'){
             var elements = xml.getElementsByTagName(this.__docTag);
@@ -72,12 +77,10 @@ JSDBI.prototype = {
 // These are class methods, and thus, aren't included in the prototype.  This
 // means they can't be called on instantiated objects
 
-// TODO change these accessors to just use the closure generator
-
 // gets/sets the base REST url for this class.  All actions are performed
 // against this url.  If the object is specific to an already existing object,
-// then the object primary key fields are appended to the url, separated by
-// slashes, ie: http://localhost/rest/artist/1 or http://localhost/rest/track/1/2
+// then the object primary key field is appended to the url, separated by
+// a slash, ie: http://localhost/rest/artist/1
 JSDBI.url = function (url) {
     if(url){
         return this.prototype.__url = url;
@@ -86,6 +89,9 @@ JSDBI.url = function (url) {
     }
 };
 
+// gets/sets the base xml tag for the xml documents returned from the server
+// for this class.  Defaults to 'response'
+JSDBI.prototype.__docTag = 'response';
 JSDBI.docTag = function (docTag) {
     if(docTag){
         return this.prototype.__docTag = docTag;
@@ -94,6 +100,11 @@ JSDBI.docTag = function (docTag) {
     }
 };
 
+// gets/sets the  xml tag for the elements that represent this object in xml
+// documents returned from the server.  Defaults to the last segment of the url
+// (Ie, the url http://localhost/rest/artist will result in the elementTag
+// 'artist'
+// TODO setup default
 JSDBI.elementTag = function (elementTag) {
     if(elementTag){
         return this.prototype.__elementTag = elementTag;
@@ -188,7 +199,6 @@ Music.DBI.prototype = (new JSDBI()).extend( {
     }
 });
 
-Music.DBI.url('http://home.scottyallen.com/jsdbi/Music/script/music_cgi.cgi/rest/artist');
 Music.DBI.docTag('response');
 
 // ################
@@ -198,33 +208,14 @@ Music.Artist.extend(Music.DBI);
 Music.Artist.prototype = (new Music.DBI()).extend( {
     initialize: function () {
     },
-
-    intro: function () {
-    }
 });
 
 // basic class setup
 Music.Artist.fields(['artistid', 'name']);
+Music.DBI.url('http://home.scottyallen.com/jsdbi/Music/script/music_cgi.cgi/rest/artist');
 Music.Artist.elementTag('artist');
 
 // #################################################################
-
-document.write("Music.Artist.url: "+Music.Artist.url());
-document.write("<br/>");
-document.write("Music.Artist.fields: "+Music.Artist.fields());
-document.write("<br/>");
-var artist = new Music.Artist();
-artist.name('fred');
-artist.artistid(12);
-
-document.write("name: "+artist.name());
-document.write("<br/>");
-document.write("artistid: "+artist.artistid());
-document.write("<br/>");
-document.write("id: "+artist.id());
-document.write("<br/>");
-document.write("paramList: "+artist.__getParams());
-document.write("<br/>");
 
 document.write("**Insert**");
 document.write("<br/>");
@@ -232,7 +223,7 @@ var artist2 = Music.Artist.insert({name: 'Billy'});
 var artistid = artist2.id();
 document.write("name: "+artist2.name());
 document.write("<br/>");
-document.write("artist2id: "+artist2.artistid());
+document.write("artistid: "+artist2.artistid());
 document.write("<br/>");
 document.write("id: "+artist2.id());
 document.write("<br/>");
@@ -244,7 +235,7 @@ document.write("<br/>");
 artist2 = Music.Artist.retrieve(artistid);
 document.write("name: "+artist2.name());
 document.write("<br/>");
-document.write("artist2id: "+artist2.artistid());
+document.write("artistid: "+artist2.artistid());
 document.write("<br/>");
 document.write("id: "+artist2.id());
 document.write("<br/>");
@@ -278,9 +269,4 @@ document.write("paramList: "+artist2.__getParams());
 document.write("<br/>");
 
 artist2.destroy();
-
-document.write("<h3>Properties</h3>");
-for(prop in artist){
-    document.write("property: "+prop);
-    document.write("<br/>");
-}    
+document.write("**Deleted**");
