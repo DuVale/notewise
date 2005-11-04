@@ -1,18 +1,72 @@
-// TODO my todo list
-// X when fields is called, see if there are any existing fields.  If so, remove the accessors for those.  Then add the accessors for the new fields.  Update the fields list.  The primary key field needs to get stored elsewhere
-// X write the following REST functions:
-//     X insert
-//     X update
-//     X retrieve
-//     X delete
-// X write id
-// - do something about errors from the server
-// - default elementTag to last piece of url
+// This javascript module presents a simple CRUD interface for REST web services.
+// Requires Prototype.js 1.3.1 - http://prototype.conio.net/
+//
+// Use it like the following:
+//
+//      // Basic class setup
+//      Music.Artist = Class.create();
+//      Music.Artist.extend(JSDBI);
+//      Music.Artist.prototype = (new JSDBI()).extend( {
+//          initialize: function () {
+//          },
+//      });
+//      
+//      Music.Artist.fields(['artistid', 'name']);
+//      Music.Artist.url('http://someserver/rest/artist');
+//      Music.Artist.elementTag('artist'); //optional
+//     
+//      // In the calling code
+//      
+//      var artist = Music.Artist.insert({name: 'Billy'});
+//      var artistid = artist.id();
+//      
+//      artist = Music.Artist.retrieve(artistid);
+//      document.write("name: "+artist.name());
+//      
+//      artist.name('Fred');
+//      artist.update();
+//      
+//      artist.destroy();
+//
+// The REST interface must use a single url endpoint, with primary keys for the
+// objects appended to the end of the url, like http://localhost/rest/artist/1
+// where 1 is the primary key of the artist requested.  Retrieve and create
+// will be called on the base url (http://localhost/rest/artist) and update and
+// delete will be called on the object's url (http://localhost/rest/artist/1).
+//
+// Actions are mapped onto the REST interface in the following manner:
+// retrieve - HTTP GET
+// insert - HTTP PUT (accepts CGI params for field values)
+// update - HTTP POST (accepts CGI params for field values)
+// delete - HTTP DELETE
+//
+// Assuming the docTag set to 'response' and the elementTag is set to 'artist',
+// the xml returned from the server should look like:
+//
+// <response>
+//    <artist name="Fred" artistid="80"/>
+// </response>
+//
+//
+// Copyright (C) 2005 Scotty Allen <scotty@scottyallen.com>
+//
+// This code is freely distributable under the terms of an MIT-style license.
+//
+// Inspired heavily by Class::DBI - http://search.cpan.org/~tmtm/Class-DBI/lib/Class/DBI.pm
+// Thanks to Scott Williams, Chris Whipple, and Jon Raphelson for letting me bounce ideas off them
 
-// TODO future todo list
-// Allow support for multiple primary key fields
+// TODO current list
+//  Handle errors from the server
+
+// TODO future list
+//  Allow support for multiple primary key fields
+//  Allow support for server push updating
+//  Allow for other field types than strings (like arrays and more complex data structures)
+//  Allow for more flexible definition of the REST interface
+
 // #################################################################
 var JSDBI = Class.create();
+JSDBI.Version = '0.1-beta';
 JSDBI.prototype = {
     initialize: function () {
         // TODO not sure I actually need to do anything here, but it's possible
@@ -83,6 +137,11 @@ JSDBI.prototype = {
 // a slash, ie: http://localhost/rest/artist/1
 JSDBI.url = function (url) {
     if(url){
+        // set default elementTag if it's not already set
+        if((this.elementTag()) === undefined){
+            var chunks = url.split('/');
+            this.elementTag(chunks[chunks.length-1]);
+        }
         return this.prototype.__url = url;
     } else {
         return this.prototype.__url;
@@ -104,7 +163,6 @@ JSDBI.docTag = function (docTag) {
 // documents returned from the server.  Defaults to the last segment of the url
 // (Ie, the url http://localhost/rest/artist will result in the elementTag
 // 'artist'
-// TODO setup default
 JSDBI.elementTag = function (elementTag) {
     if(elementTag){
         return this.prototype.__elementTag = elementTag;
@@ -183,90 +241,3 @@ JSDBI.insert = function (values) {
     return object;
 };
 
-// ################
-
-// ***** Setup ******
-var Music = {
-    Version: '0.1-alpha'
-};
-
-// ################
-
-Music.DBI = Class.create();
-Music.DBI.extend(JSDBI);
-Music.DBI.prototype = (new JSDBI()).extend( {
-    initialize: function () {
-    }
-});
-
-Music.DBI.docTag('response');
-
-// ################
-
-Music.Artist = Class.create();
-Music.Artist.extend(Music.DBI);
-Music.Artist.prototype = (new Music.DBI()).extend( {
-    initialize: function () {
-    },
-});
-
-// basic class setup
-Music.Artist.fields(['artistid', 'name']);
-Music.DBI.url('http://home.scottyallen.com/jsdbi/Music/script/music_cgi.cgi/rest/artist');
-Music.Artist.elementTag('artist');
-
-// #################################################################
-
-document.write("**Insert**");
-document.write("<br/>");
-var artist2 = Music.Artist.insert({name: 'Billy'});
-var artistid = artist2.id();
-document.write("name: "+artist2.name());
-document.write("<br/>");
-document.write("artistid: "+artist2.artistid());
-document.write("<br/>");
-document.write("id: "+artist2.id());
-document.write("<br/>");
-document.write("paramList: "+artist2.__getParams());
-document.write("<br/>");
-
-document.write("**Retrieve**");
-document.write("<br/>");
-artist2 = Music.Artist.retrieve(artistid);
-document.write("name: "+artist2.name());
-document.write("<br/>");
-document.write("artistid: "+artist2.artistid());
-document.write("<br/>");
-document.write("id: "+artist2.id());
-document.write("<br/>");
-document.write("paramList: "+artist2.__getParams());
-document.write("<br/>");
-
-artist2.name('Fred');
-artist2.update();
-
-document.write("**Update**");
-document.write("<br/>");
-document.write("name: "+artist2.name());
-document.write("<br/>");
-document.write("artistid: "+artist2.artistid());
-document.write("<br/>");
-document.write("id: "+artist2.id());
-document.write("<br/>");
-document.write("paramList: "+artist2.__getParams());
-document.write("<br/>");
-
-artist2 = Music.Artist.retrieve(artistid);
-document.write("**ReRetrieved**");
-document.write("<br/>");
-document.write("name: "+artist2.name());
-document.write("<br/>");
-document.write("artistid: "+artist2.artistid());
-document.write("<br/>");
-document.write("id: "+artist2.id());
-document.write("<br/>");
-document.write("paramList: "+artist2.__getParams());
-document.write("<br/>");
-
-artist2.destroy();
-document.write("**Deleted**");

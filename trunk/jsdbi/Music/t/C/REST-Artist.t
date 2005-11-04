@@ -1,4 +1,4 @@
-use Test::More tests => 12;
+use Test::More tests => 13;
 use_ok( Catalyst::Test, 'Music' );
 use_ok('Music::C::REST::Artist');
 
@@ -42,6 +42,11 @@ $mech->content_is(
   <artist name=\"U3\" artistid=\"$artistid\" />
 </response>
 ");
+
+# Test updating an object that doesn't exist
+$req = new_request('POST', "http://localhost/rest/artist/0", {name=>'U3'});
+$mech->request($req);
+is($mech->status,404,'Status of POST is 404 on nonexistant object');
 
 # Test delete an object
 $req = new HTTP::Request('DELETE', "http://localhost/rest/artist/$artistid");
