@@ -31,10 +31,6 @@ sub default : Private {
 sub artist : Path('/rest/artist') {
     my ( $self, $c) = @_;
 
-    use Data::Dumper;
-    warn "*** Catalyst version: $Catalyst::VERSION";
-    warn Dumper($c);
-
     my $method = $c->req->method;
     if($method eq 'GET'){
         $c->forward('view');
@@ -85,10 +81,16 @@ sub update : Private {
     $c->form( optional => [ Music::M::CDBI::Artist->columns ] );
     if ($c->form->has_missing) {
         $c->res->status(400); # Bad Request
+        $c->res->output('ERROR');
     } elsif ($c->form->has_invalid) {
         $c->res->status(400); # Bad Request
+        $c->res->output('ERROR');
     } else {
         my $artist = Music::M::CDBI::Artist->retrieve($id);
+        unless($artist){
+            $c->res->status(404); # Not found
+            return $c->res->output('ERROR');
+        }
         $artist->update_from_form( $c->form );
         $c->res->status(200); # OK
     	return $c->forward('view',[$id]);
@@ -108,7 +110,6 @@ sub delete : Private {
     $c->res->output('OK');
 }
 
-# TODO add 404s to update
 =back
 
 
