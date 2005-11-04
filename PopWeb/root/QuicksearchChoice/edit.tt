@@ -13,6 +13,12 @@
     
         
         <tr>
+            <td>user</td>
+            <td>[% item.to_field('user').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
             <td>chosenkernel</td>
             <td>[% item.to_field('chosenkernel').as_XML %]</td>
         </tr>

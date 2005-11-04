@@ -1,11 +1,14 @@
 CREATE TABLE IF NOT EXISTS object_id (
     id MEDIUMINT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT,
+    user MEDIUMINT UNSIGNED,
     type ENUM('kernel','note','relationship') NOT NULL,
-    PRIMARY KEY (id)
+    INDEX userIndex (user),
+    PRIMARY KEY (id),
+    FOREIGN KEY (user) REFERENCES user (id)
 ) ENGINE = MYISAM;
 
 CREATE TABLE IF NOT EXISTS kernel (
-    id MEDIUMINT UNSIGNED UNIQUE NOT NULL,
+    object_id MEDIUMINT UNSIGNED NOT NULL,
     name TINYTEXT,
     uri TINYTEXT,
     source TEXT,
@@ -15,13 +18,13 @@ CREATE TABLE IF NOT EXISTS kernel (
     FULLTEXT INDEX kernelnames (name),
     INDEX kernelModified (lastModified),
     INDEX kernelViewed (lastViewed),
-    KEY (id),
+    KEY (object_id),
     -- "KEY" doubles as "INDEX" in MySQL evidently...
-    --  PRIMARY KEY (name(255))
     KEY (name(255)),
+    PRIMARY KEY (object_id),
     -- The PRIMARY KEY declaration guarantees uniqueness; MySQL doesn't like
     --   the UNIQUE keyword explicitly on the name field.
-    FOREIGN KEY (id) REFERENCES object_id(id)
+    FOREIGN KEY (object_id) REFERENCES object_id(id)
     -- Warning: Foreign keys not honored in MyISAM tables!  (And we can't use
     --   InnoDB tables because they have no full text search, and are optimized
     --   for OLTP, not retrieval-only.)
@@ -29,7 +32,7 @@ CREATE TABLE IF NOT EXISTS kernel (
 
 CREATE TABLE IF NOT EXISTS note (
     container MEDIUMINT UNSIGNED NOT NULL,
-    id MEDIUMINT UNSIGNED UNIQUE NOT NULL,
+    object_id MEDIUMINT UNSIGNED NOT NULL,
     content TEXT NOT NULL,
     source TEXT,
     created DATETIME NOT NULL,
@@ -40,35 +43,35 @@ CREATE TABLE IF NOT EXISTS note (
     h SMALLINT,
     FULLTEXT INDEX notes (content),
     INDEX containerNotes (container),
-    PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES object_id(id),
+    PRIMARY KEY (object_id),
+    FOREIGN KEY (object_id) REFERENCES object_id(id),
     FOREIGN KEY (container) REFERENCES object_id(id)
 ) ENGINE = MYISAM;
 
 CREATE TABLE IF NOT EXISTS relationship_type (
-    id SMALLINT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT,
+    type_id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
     relationship_type TINYTEXT,
-    PRIMARY KEY (id),
+    PRIMARY KEY (type_id),
     KEY (relationship_type(255))
     -- (See above note for PRIMARY KEY declaration.)
 ) ENGINE = MYISAM;
 
 CREATE TABLE IF NOT EXISTS relationship (
-    relationship_id MEDIUMINT UNSIGNED UNIQUE NOT NULL,
+    relationship_id MEDIUMINT UNSIGNED NOT NULL,
     part1 MEDIUMINT UNSIGNED NOT NULL,
     part2 MEDIUMINT UNSIGNED NOT NULL,
     nav ENUM('fromleft','fromright','bi','non') NOT NULL,
     type SMALLINT UNSIGNED,
     INDEX part1relIndex (part1),
     INDEX part2relIndex (part2),
-    PRIMARY KEY (part1, part2, type),
+    PRIMARY KEY (relationship_id),
     FOREIGN KEY (rel_id) REFERENCES object_id(id),
     FOREIGN KEY (part1) REFERENCES object_id(id),
     FOREIGN KEY (part2) REFERENCES object_id(id),
     FOREIGN KEY (reltypeId) REFERENCES relationship_type(reltypeId)
 ) ENGINE = MYISAM;
 
-CREATE TABLE masked_relationship (
+CREATE TABLE IF NOT EXISTS masked_relationship (
     relationship INT NOT NULL,
     container INT NOT NULL,
     PRIMARY KEY (relationship, container),
@@ -96,17 +99,31 @@ CREATE TABLE IF NOT EXISTS contained_object (
 ) ENGINE = MYISAM;
 
 CREATE TABLE IF NOT EXISTS preference (
+    user MEDIUMINT UNSIGNED,
     prefkey TINYTEXT NOT NULL,
     prefvalue TEXT,
-    PRIMARY KEY (prefkey(255))
+    INDEX userIndex (user),
+    PRIMARY KEY (prefkey(255),user),
+    FOREIGN KEY (user) REFERENCES user (id)
 );
 
-CREATE TABLE quicksearch_choice (
+CREATE TABLE IF NOT EXISTS quicksearch_choice (
+    user MEDIUMINT UNSIGNED,
     exactSearchString VARCHAR(255) NOT NULL,
     chosenKernel INT NOT NULL,
     numberOfTimes INT NOT NULL,
     lastChosen TIMESTAMP NOT NULL,
     INDEX searchStringIndex (exactSearchString),
-    PRIMARY KEY (exactSearchString, chosenKernel),
-    FOREIGN KEY (chosenKernel) REFERENCES kernel(id)
+    INDEX userIndex (user),
+    PRIMARY KEY (exactSearchString, chosenKernel, user),
+    FOREIGN KEY (chosenKernel) REFERENCES kernel(id),
+    FOREIGN KEY (user) REFERENCES user (id)
+);
+
+-- XXX is there any reason to have users also use object ids, like kernel and notes?
+CREATE TABLE IF NOT EXISTS user (
+    id MEDIUMINT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT,
+    name varchar(255) not null,
+    email varchar(255) unique not null,
+    password varchar(100) not null
 );

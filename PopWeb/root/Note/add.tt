@@ -6,11 +6,6 @@
     
         
         <tr>
-            <td>id</td>
-            <td><input name="id" type="text" />
-        </td>
-
-        <tr>
             <td>w</td>
             <td><input name="w" type="text" />
 </td>

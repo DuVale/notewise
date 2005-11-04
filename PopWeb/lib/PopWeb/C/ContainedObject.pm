@@ -136,24 +136,6 @@ sub view : Local {
     $c->stash->{template} = 'ContainedObject/view.tt';
 }
 
-sub do_update : Local {
-    my ( $self, $c ) = @_;
-
-    my $contained_id = $c->req->params->{contained_id};
-    my $container_id = $c->req->params->{container_id};
-
-    $c->form( optional => [ PopWeb::M::CDBI::ContainedObject->columns ] );
-    if ($c->form->has_missing) {
-	$c->res->output('<ajax-response></ajax-response>');
-    } elsif ($c->form->has_invalid) {
-	$c->res->output('<ajax-response></ajax-response>');
-    } else {
-	PopWeb::M::CDBI::ContainedObject->retrieve(contained_object=>$contained_id,container_object=>$container_id)->update_from_form( $c->form );
-	$c->res->content_type('text/xml');
-	$c->res->output("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<ajax-response></ajax-response>");
-    }
-}
-
 =back
 
 =head1 AUTHOR

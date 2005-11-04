@@ -10,6 +10,12 @@
     
         
         <tr>
+            <td>width</td>
+            <td>[% item.width %]</td>
+        </tr>
+    
+        
+        <tr>
             <td>y</td>
             <td>[% item.y %]</td>
         </tr>
@@ -22,17 +28,6 @@
     
         
         <tr>
-            <td>width</td>
-            <td>[% item.width %]</td>
-        </tr>
-
-        <tr>
-            <td>height</td>
-            <td>[% item.height %]</td>
-        </tr>
-    
-        
-        <tr>
             <td>x</td>
             <td>[% item.x %]</td>
         </tr>
@@ -41,6 +36,12 @@
         <tr>
             <td>contained_object</td>
             <td>[% item.contained_object %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>height</td>
+            <td>[% item.height %]</td>
         </tr>
     
 </table>

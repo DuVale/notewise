@@ -7,6 +7,9 @@
     
     
         
+        <th>user</th>
+    
+        
         <th>type</th>
     
         
@@ -14,6 +17,9 @@
     </tr>
     [% FOR object = table_class.retrieve_all %]
         <tr>
+        
+            
+            <td>[% object.user %]</td>
         
             
             <td>[% object.type %]</td>

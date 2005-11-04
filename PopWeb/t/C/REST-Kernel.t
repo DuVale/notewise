@@ -1,33 +1,46 @@
 
-use Test::More tests => 11;
+use Test::More tests => 14;
 use_ok( Catalyst::Test, 'PopWeb' );
 use_ok('PopWeb::C::REST::Kernel');
 
-ok( request('rest/kernel')->is_success );
 
-my $req = request('/rest/kernel/add?name=harrypotter&uri=myuri&source=mysource&created=2005-01-01 01:02:03');
-ok( $req->is_success );
+use Test::WWW::Mechanize::Catalyst 'PopWeb';
+use_ok('PopWeb::C::REST::VKernel');
 
-my ($kernel_id) = $req->content =~ /<kernel.+id="(\d+)"/;
-ok( $req->is_success );
-ok( $req->content =~ m#<kernel name="harrypotter" created="2005-01-01 01:02:03" id="$kernel_id" lastModified="\d+" source="mysource" uri="myuri">
+my $mech = Test::WWW::Mechanize::Catalyst->new;
+# login
+my $user = PopWeb::M::CDBI::User->create({email=>'test@tester.scottyallen.com',
+                                          password=>'password',
+                                          name=>'automated testing account'});
+$mech->get_ok('http://localhost/?email=test@tester.scottyallen.com&password=password');
+my $user_id=$user->id;
+
+$mech->get_ok('rest/kernel');
+
+$mech->get_ok('/rest/kernel/add?name=harrypotter&uri=myuri&source=mysource&created=2005-01-01 01:02:03');
+
+my ($kernel_id) = $mech->content =~ /<kernel.+id="(\d+)"/;
+
+$mech->content_like(qr#<kernel name="harrypotter" created="2005-01-01 01:02:03" id="$kernel_id" lastModified="\d+" source="mysource" uri="myuri">
 \s+<containedObjects>
 \s+</containedObjects>
 </kernel># );
 
-$req = request("/rest/kernel/xml/$kernel_id");
-ok( $req->is_success );
-ok( $req->content =~ m#<kernel name="harrypotter" created="2005-01-01 01:02:03" id="$kernel_id" lastModified="\d+" source="mysource" uri="myuri">
+$mech->get_ok("/rest/kernel/xml/$kernel_id");
+$mech->content_like(qr#<kernel name="harrypotter" created="2005-01-01 01:02:03" id="$kernel_id" lastModified="\d+" source="mysource" uri="myuri">
 \s+<containedObjects>
 \s+</containedObjects>
 </kernel># );
 
-$req = request("/rest/kernel/update/$kernel_id?name=fred&uri=anotheruri&source=anothersource&created=2004-02-03 02:03:04");
-ok( $req->is_success );
+$mech->get_ok("/rest/kernel/update/$kernel_id?name=fred&uri=anotheruri&source=anothersource&created=2004-02-03 02:03:04");
+$mech->content_lacks('ERROR');
+$mech->content_lacks('FORBIDDEN');
 
-$req = request("/rest/kernel/xml/$kernel_id");
-ok( $req->is_success );
-ok( $req->content =~ m#<kernel name="fred" created="2004-02-03 02:03:04" id="$kernel_id" lastModified="\d+" source="anothersource" uri="anotheruri">
+$mech->get_ok("/rest/kernel/xml/$kernel_id");
+$mech->content_like(qr#<kernel name="fred" created="2004-02-03 02:03:04" id="$kernel_id" lastModified="\d+" source="anothersource" uri="anotheruri">
 \s+<containedObjects>
 \s+</containedObjects>
 </kernel># );
+
+$user->delete;
+PopWeb::M::CDBI::Kernel->retrieve($kernel_id)->delete;

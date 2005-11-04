@@ -6,18 +6,12 @@
     
         
         <tr>
-            <td>relationship_id</td>
-            <td><input name="relationship_id" type="text" />
-</td>
-        </tr>
-    
-        
-        <tr>
             <td>part2</td>
             <td><input name="part2" type="text" />
 </td>
         </tr>
     
+        
         
         <tr>
             <td>type</td>

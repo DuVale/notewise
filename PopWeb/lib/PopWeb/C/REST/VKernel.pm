@@ -35,7 +35,6 @@ sub xml : Local {
 sub xml_hash : Private {
     my ( $self, $c, $id ) = @_;
     my $kernel = PopWeb::M::CDBI::Kernel->retrieve($id);
-    use Data::Dumper;
     $c->res->output("<pre>".Dumper($kernel->to_xml_hash_deep)."</pre>");
 }
 
@@ -53,9 +52,21 @@ sub add : Local {
     } elsif ($c->form->has_invalid) {
         $c->res->output->("ERROR");
     } else {
-        $c->form( optional => [ PopWeb::M::CDBI::ContainedObject->columns, PopWeb::M::CDBI::Kernel->columns ] );
+        $c->form( optional => [ PopWeb::M::CDBI::ContainedObject->columns, PopWeb::M::CDBI::Kernel->columns] );
+
+        # check permissions
+        my $container_object=PopWeb::M::CDBI::Kernel->retrieve($c->form->valid('container_object'));
+        if ($container_object->user->id != $c->req->{user_id}){
+            return $c->res->output('FORBIDDEN');
+        }
+
         unless($c->req->params->{contained_object}){
-            my $kernel = PopWeb::M::CDBI::Kernel->create_from_form( $c->form );
+            my %create_hash;
+            foreach my $column (PopWeb::M::CDBI::Kernel->columns){
+                $create_hash{$column} = $c->form->valid($column);
+            }
+            $create_hash{user}=$c->req->{user_id};
+            my $kernel = PopWeb::M::CDBI::Kernel->create( \%create_hash );
             $c->req->params->{contained_object}=$kernel->id;
         }
 
@@ -90,8 +101,14 @@ sub update : Local {
     } elsif ($c->form->has_invalid) {
 	$c->res->output('ERROR');
     } else {
+        # check permissions
+        my $container=PopWeb::M::CDBI::Kernel->retrieve($c->form->valid('container_object'));
+        if ($container->user->id != $c->req->{user_id}){
+            return $c->res->output('FORBIDDEN');
+        }
+
+        # do the update
         my $contained_object = PopWeb::M::CDBI::ContainedObject->retrieve(container_object=>$container_object,contained_object=>$contained_object);
-        use Data::Dumper;
         $contained_object->update_from_form( $c->form );
 	$c->res->output('OK');
     }

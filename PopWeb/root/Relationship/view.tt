@@ -4,16 +4,11 @@
     
         
         <tr>
-            <td>relationship_id</td>
-            <td>[% item.relationship_id %]</td>
-        </tr>
-    
-        
-        <tr>
             <td>part2</td>
             <td>[% item.part2 %]</td>
         </tr>
     
+        
         
         <tr>
             <td>type</td>

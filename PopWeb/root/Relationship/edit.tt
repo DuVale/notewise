@@ -7,16 +7,11 @@
     
         
         <tr>
-            <td>relationship_id</td>
-            <td>[% item.to_field('relationship_id').as_XML %]</td>
-        </tr>
-    
-        
-        <tr>
             <td>part2</td>
             <td>[% item.to_field('part2').as_XML %]</td>
         </tr>
     
+        
         
         <tr>
             <td>type</td>

@@ -10,6 +10,9 @@
         <th>lastchosen</th>
     
         
+        <th>user</th>
+    
+        
         <th>chosenkernel</th>
     
         
@@ -25,6 +28,9 @@
         
             
             <td>[% object.lastchosen %]</td>
+        
+            
+            <td>[% object.user %]</td>
         
             
             <td>[% object.chosenkernel %]</td>

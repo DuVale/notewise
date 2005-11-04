@@ -4,13 +4,27 @@ use strict;
 use warnings;
 use DateTime;
 
+__PACKAGE__->has_a(object_id => 'PopWeb::M::CDBI::ObjectId');
+
 __PACKAGE__->add_trigger(before_create => \&create_id);
 __PACKAGE__->add_trigger(before_create => \&add_created_date);
 
+__PACKAGE__->columns(TEMP => qw/user/);
+sub user {
+    my $self=shift;
+    if ($self->object_id){
+        # gets called after object is created and has an object_id
+        return $self->object_id->user(@_);
+    } else {
+        # only gets called by before_create triggers
+        return $self->{user};
+    }
+}
+
 sub create_id {
     my $self=shift;
-    my $object_id = PopWeb::M::CDBI::ObjectId->create({type=>'kernel'});
-    $self->_attribute_store(id => $object_id->id);
+    my $object_id = PopWeb::M::CDBI::ObjectId->create({user=>$self->user,type=>'kernel'});
+    $self->_attribute_store(object_id => $object_id->id);
 }
 
 sub add_created_date {
@@ -25,7 +39,8 @@ sub add_created_date {
 sub to_xml_hash_shallow {
     my $self = shift;
     return {
-            id => $self->id,
+            id => $self->object_id->id,
+            user => $self->id->user->id,
             name => $self->name,
             uri => $self->uri,
             source => $self->source,
@@ -40,7 +55,7 @@ sub to_xml_hash_deep {
     my @contained_notes = map $_->to_xml_hash, $self->notes;
     my @contained_relationships; #= $self->visible_relationships;
     return {kernel=>{
-                id => $self->id,
+                id => $self->object_id->id,
                 name => $self->name,
                 uri => $self->uri,
                 source => $self->source,

@@ -7,6 +7,11 @@
     
     
         
+        <th>user</th>
+    
+        
+        <th>prefkey</th>
+    
         
         <th>prefvalue</th>
     
@@ -16,6 +21,11 @@
         <tr>
         
             
+            <td>[% object.user %]</td>
+        
+            
+            <td>[% object.prefkey %]</td>
+        
             
             <td>[% object.prefvalue %]</td>
         

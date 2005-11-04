@@ -13,6 +13,12 @@
     
         
         <tr>
+            <td>width</td>
+            <td>[% item.to_field('width').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
             <td>y</td>
             <td>[% item.to_field('y').as_XML %]</td>
         </tr>
@@ -25,16 +31,6 @@
     
         
         <tr>
-            <td>width</td>
-            <td>[% item.to_field('width').as_XML %]</td>
-        </tr>
-        <tr>
-            <td>height</td>
-            <td>[% item.to_field('height').as_XML %]</td>
-        </tr>
-    
-        
-        <tr>
             <td>x</td>
             <td>[% item.to_field('x').as_XML %]</td>
         </tr>
@@ -43,6 +39,12 @@
         <tr>
             <td>contained_object</td>
             <td>[% item.to_field('contained_object').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
+            <td>height</td>
+            <td>[% item.to_field('height').as_XML %]</td>
         </tr>
     
     </table>

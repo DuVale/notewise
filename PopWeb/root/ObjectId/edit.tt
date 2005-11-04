@@ -7,6 +7,12 @@
     
         
         <tr>
+            <td>user</td>
+            <td>[% item.to_field('user').as_XML %]</td>
+        </tr>
+    
+        
+        <tr>
             <td>type</td>
             <td>[% item.to_field('type').as_XML %]</td>
         </tr>

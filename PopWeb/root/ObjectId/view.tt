@@ -4,6 +4,12 @@
     
         
         <tr>
+            <td>user</td>
+            <td>[% item.user %]</td>
+        </tr>
+    
+        
+        <tr>
             <td>type</td>
             <td>[% item.type %]</td>
         </tr>

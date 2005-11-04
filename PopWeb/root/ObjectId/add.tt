@@ -6,6 +6,13 @@
     
         
         <tr>
+            <td>user</td>
+            <td><select name="user"><option value="50">50</option><option value="51">51</option></select>
+</td>
+        </tr>
+    
+        
+        <tr>
             <td>type</td>
             <td><input name="type" type="text" />
 </td>

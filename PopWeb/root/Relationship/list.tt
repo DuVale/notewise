@@ -7,11 +7,9 @@
     
     
         
-        <th>relationship_id</th>
-    
-        
         <th>part2</th>
     
+        
         
         <th>type</th>
     
@@ -27,11 +25,9 @@
         <tr>
         
             
-            <td>[% object.relationship_id %]</td>
-        
-            
             <td>[% object.part2 %]</td>
         
+            
             
             <td>[% object.type %]</td>
         

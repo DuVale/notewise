@@ -1,0 +1,49 @@
+
+
+
+[% USE table_class = Class('PopWeb::M::CDBI::User') %]
+<table>
+    <tr>
+    
+    
+        
+        <th>email</th>
+    
+        
+        <th>password</th>
+    
+        
+        <th>name</th>
+    
+        
+        <th/>
+    </tr>
+    [% FOR object = table_class.retrieve_all %]
+        <tr>
+        
+            
+            <td>[% object.email %]</td>
+        
+            
+            <td>[% object.password %]</td>
+        
+            
+            <td>[% object.name %]</td>
+        
+            
+            <td>
+                <a href="[% base _ 'user/view/' _ object.id %]">
+                    View
+                </a>
+                <a href="[% base _ 'user/edit/' _ object.id %]">
+                    Edit
+
+                </a>
+                <a href="[% base _ 'user/destroy/' _ object.id %]">
+                    Destroy
+                </a>
+            </td>
+        </tr>
+    [% END %]
+</table>
+<a href="[% base _ 'user/add' %]">Add</a>

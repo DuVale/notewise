@@ -45,7 +45,12 @@ sub add : Local {
     } elsif ($c->form->has_invalid) {
         $c->res->output->("ERROR");
     } else {
-	my $kernel = PopWeb::M::CDBI::Kernel->create_from_form( $c->form );
+        my %create_hash;
+        foreach my $column (PopWeb::M::CDBI::Kernel->columns){
+            $create_hash{$column} = $c->form->valid($column);
+        }
+        $create_hash{user}=$c->req->{user_id};
+        my $kernel = PopWeb::M::CDBI::Kernel->create( \%create_hash );
     	return $c->forward('xml',[$kernel->id]);
     }
 }
@@ -61,7 +66,13 @@ sub update : Local {
     } elsif ($c->form->has_invalid) {
 	$c->res->output('ERROR');
     } else {
-	PopWeb::M::CDBI::Kernel->retrieve($id)->update_from_form( $c->form );
+	my $kernel = PopWeb::M::CDBI::Kernel->retrieve($id);
+        # TODO figure out how to unit test these permissons
+        if ($kernel->user->id != $c->{user_id}){
+            $c->res->output('FORBIDDEN');
+        }
+
+        $kernel->update_from_form( $c->form );
 	$c->res->output('OK');
     }
 }
