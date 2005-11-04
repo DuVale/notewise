@@ -47,7 +47,7 @@ VisibleKernel.prototype = {
         dndMgr.registerDraggable( new KernelCornerDraggable('vkcorner'+this.id, this) );
         this.registerEventListener(this.namefield,'mousedown', this.onMouseDownTextFieldListener.bindAsEventListener(this));
         this.registerEventListener(this.namefield,'blur', this.updateName.bindAsEventListener(this));
-        this.registerEventListener(this.namefield,'keypress', this.layout.bind(this));
+        this.registerEventListener(this.namefield,'keyup', this.layout.bind(this));
     },
 
     // event should be of the form 'mousedown' not 'onmousedown'.
@@ -83,12 +83,20 @@ VisibleKernel.prototype = {
 
         // XXX move this out to another method to improve resize performance
         this.namefield.style.width = this.getNameFieldWidth()+'px';
+
+        // scroll the text field all the way to the left again - apparently
+        // setting the value of a text input field again causes it to properly
+        // scroll all the way to the left
+        this.namefield.value = this.namefield.value;
     },
 
     // returns the desired width of the name field.  Usually the width of the text in the field, but bounded by the minimum width
     getNameFieldWidth: function(){
         // TODO make 20 into a constant - min namefield width
-        return Math.max(this.getTextWidth(this.namefield.value,this.getStyle(this.namefield,'font-size'))+15,20);
+        // XXX this gets called before the key press actually affects the value
+        // of the field
+        window.status = "namefield value is: "+this.namefield.value;
+        return Math.max(this.getTextWidth(this.namefield.value,this.getStyle(this.namefield,'font-size'))*1.15+10,20);
     },
 
     getTextWidth: function(text,size){
@@ -102,7 +110,6 @@ VisibleKernel.prototype = {
             VisibleKernel.textSizingBox.style.left = '-500px';
         }
         VisibleKernel.textSizingBox.style.fontSize = size;
-        window.status = "fontSize: "+ size;
         VisibleKernel.textSizingBox.firstChild.data = text;
         return VisibleKernel.textSizingBox.offsetWidth;
     },
