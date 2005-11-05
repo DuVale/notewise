@@ -95,7 +95,6 @@ VisibleKernel.prototype = {
         // TODO make 20 into a constant - min namefield width
         // XXX this gets called before the key press actually affects the value
         // of the field
-        window.status = "namefield value is: "+this.namefield.value;
         return Math.max(this.getTextWidth(this.namefield.value,this.getStyle(this.namefield,'font-size'))*1.15+10,20);
     },
 
@@ -226,33 +225,49 @@ var i =0;
 
 var KernelCornerDraggable = Class.create();
 KernelCornerDraggable.prototype = (new Rico.Draggable()).extend( {
-   initialize: function( htmlElement, vkernel ) {
-      this.type        = 'Custom';
-      this.htmlElement = $(htmlElement);
-      this.vkernel        = vkernel;
-   },
+    initialize: function( htmlElement, vkernel ) {
+        this.type        = 'Custom';
+        this.htmlElement = $(htmlElement);
+        this.vkernel        = vkernel;
+    },
+ 
+    startDrag: function() {
+    },
+ 
+    endDrag: function() {
+         this.vkernel.sync();
+    },
+ 
+    duringDrag: function() {
+        var cornerWidth = this.htmlElement.clientWidth;
+        var cornerHeight = this.htmlElement.clientHeight;
+        var w = Number(chopPx(this.htmlElement.style.left)) + cornerWidth;
+        var h = Number(chopPx(this.htmlElement.style.top)) + cornerHeight;
 
-   startDrag: function() {
-   },
-
-   endDrag: function() {
-       this.vkernel.sync();
-   },
-
-   duringDrag: function() {
-       var w = Number(chopPx(this.htmlElement.style.left)) + this.htmlElement.clientWidth;
-       var h = Number(chopPx(this.htmlElement.style.top)) + this.htmlElement.clientHeight;
-       this.vkernel.setWidth(w);
-       this.vkernel.setHeight(h);
-       this.vkernel.layout();
-   },
-
-   cancelDrag: function() {
-   },
-
-   select: function() {
-   }
-
+        // set limits on size
+        var minWidth=100;
+        var minHeight=100;
+        if(w < minWidth){
+            this.htmlElement.style.left=(minWidth-cornerWidth)+'px';
+            this.vkernel.setWidth(minWidth);
+        } else {
+            this.vkernel.setWidth(w);
+        }
+        if(h < minHeight){
+            this.htmlElement.style.top=(minHeight-cornerHeight)+'px';
+            this.vkernel.setHeight(minHeight);
+        } else {
+            this.vkernel.setHeight(h);
+        }
+        this.vkernel.layout();
+    },
+ 
+    cancelDrag: function() {
+    },
+ 
+    select: function() {
+    }
+ 
 } );
 
 var CustomDropzone = Class.create();
