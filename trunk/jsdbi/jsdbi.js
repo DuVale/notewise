@@ -56,6 +56,7 @@
 // Thanks to Scott Williams, Chris Whipple, and Jon Raphelson for letting me bounce ideas off them
 
 // TODO current list
+//  Add dosc for multiple primary keys
 //  Handle errors from the server
 
 // TODO future list
@@ -71,9 +72,8 @@ JSDBI.prototype = {
     initialize: function () {
     },
 
-    // Returns the primary key for this object
+    // Returns the primary key(s) for this object
     id: function () {
-        // call the accessor for the primary key (gross syntax, I know)
         if(this.__primaryKeys){
             var ids = new Array;
             for(var i=0;i<this.__primaryKeys.length;i++){
