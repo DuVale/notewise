@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS relationship (
     INDEX part1relIndex (part1),
     INDEX part2relIndex (part2),
     PRIMARY KEY (relationship_id),
-    FOREIGN KEY (rel_id) REFERENCES object_id(id),
+    FOREIGN KEY (relationship_id) REFERENCES object_id(id),
     FOREIGN KEY (part1) REFERENCES object_id(id),
     FOREIGN KEY (part2) REFERENCES object_id(id),
     FOREIGN KEY (reltypeId) REFERENCES relationship_type(reltypeId)
