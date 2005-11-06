@@ -59,7 +59,6 @@
 //  Handle errors from the server
 
 // TODO future list
-//  Allow support for multiple primary key fields
 //  Allow support for server push updating
 //  Allow for other field types than strings (like arrays and more complex data structures)
 //  Allow for more flexible definition of the REST interface
@@ -76,7 +75,12 @@ JSDBI.prototype = {
     id: function () {
         // call the accessor for the primary key (gross syntax, I know)
         if(this.__primaryKeys){
-            // TODO return a list of the primary keys of the object
+            var ids = new Array;
+            for(var i=0;i<this.__primaryKeys.length;i++){
+                var keyName=this.__primaryKeys[i]
+                ids.push(this[keyName]());
+            }
+            return ids;
         } else {
             var primaryKey = this.fields()[0];
             return this[primaryKey]();
@@ -86,32 +90,30 @@ JSDBI.prototype = {
     // Sends any updated fields in the object to the server.
     update: function() {
         var params = this.__getParams();
-        var url;
-        if(typeof this.id() == 'number'
-           || typeof this.id() == 'string'){
-            url = this.__url+'/'+this.id();
-        } else if (typeof this.id() == 'object'){
-            // TODO create url for primary keys
-        }
-        var request = new Ajax.Request(url, { method: 'post',
-                                              parameters: params,
-                                              asynchronous: false} );
+        var request = new Ajax.Request(this.url(), { method: 'post',
+                                                     parameters: params,
+                                                     asynchronous: true} );
         return;
     },
 
     // Deletes this object from the server.
     //  XXX it won't let me name this delete - is destroy a good name?
     destroy: function() {
+        var request = new Ajax.Request(this.url(), { method: 'delete',
+                                                     asynchronous: false} );
+        return;
+    },
+
+    // Returns the server url for this object (for updating and deleting)
+    url: function() {
         var url;
         if(typeof this.id() == 'number'
            || typeof this.id() == 'string'){
             url = this.__url+'/'+this.id();
-        } else if (typeof id == 'object'){
-            // TODO create url for primary keys
+        } else if (typeof this.id() == 'object'){
+            url = this.__url+'/'+this.id().join('/');
         }
-        var request = new Ajax.Request(url, { method: 'delete',
-                                              asynchronous: false} );
-        return;
+        return url;
     },
 
     // Takes in an xml element or document, and populates the fields for this object from it
@@ -250,7 +252,11 @@ JSDBI.retrieve = function (id) {
        || typeof id == 'string' ){
         url = this.url()+'/'+id;
     } else if (typeof id == 'object'){
-        // TODO create url for primary keys
+        url = this.__url;
+        for(var i=0;i<this.__primaryKeys.length;i++){
+            var keyName=this.__primaryKeys[i]
+            url = url+'/'+id[keyName];
+        }
     } else {
         alert("couldn't match type of id: "+typeof id);
     }
