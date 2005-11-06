@@ -63,26 +63,37 @@
 //  Allow support for server push updating
 //  Allow for other field types than strings (like arrays and more complex data structures)
 //  Allow for more flexible definition of the REST interface
+//  Allow hydration of fields (relationships)
 
 // #################################################################
 var JSDBI = Class.create();
-JSDBI.Version = '0.1-beta';
+JSDBI.Version = '0.2';
 JSDBI.prototype = {
     initialize: function () {
-        // TODO not sure I actually need to do anything here, but it's possible
     },
 
     // Returns the primary key for this object
     id: function () {
         // call the accessor for the primary key (gross syntax, I know)
-        return this[this.__primaryKey]();
+        if(this.__primaryKeys){
+            // TODO return a list of the primary keys of the object
+        } else {
+            var primaryKey = this.fields()[0];
+            return this[primaryKey]();
+        }
     },
 
     // Sends any updated fields in the object to the server.
     update: function() {
         var params = this.__getParams();
-        var request = new Ajax.Request(this.__url+'/'+this.id(),
-                                            { method: 'post',
+        var url;
+        if(typeof this.id() == 'number'
+           || typeof this.id() == 'string'){
+            url = this.__url+'/'+this.id();
+        } else if (typeof this.id() == 'object'){
+            // TODO create url for primary keys
+        }
+        var request = new Ajax.Request(url, { method: 'post',
                                               parameters: params,
                                               asynchronous: false} );
         return;
@@ -91,8 +102,14 @@ JSDBI.prototype = {
     // Deletes this object from the server.
     //  XXX it won't let me name this delete - is destroy a good name?
     destroy: function() {
-        var request = new Ajax.Request(this.__url+'/'+this.id(),
-                                            { method: 'delete',
+        var url;
+        if(typeof this.id() == 'number'
+           || typeof this.id() == 'string'){
+            url = this.__url+'/'+this.id();
+        } else if (typeof id == 'object'){
+            // TODO create url for primary keys
+        }
+        var request = new Ajax.Request(url, { method: 'delete',
                                               asynchronous: false} );
         return;
     },
@@ -125,6 +142,11 @@ JSDBI.prototype = {
             paramList = paramList + escape(fieldName)+'='+escape(this[fieldName]());
         }
         return paramList;
+    },
+
+    // returns the names of the fields for this object
+    fields: function() {
+        return this.__fields;
     }
 };
 
@@ -177,7 +199,7 @@ JSDBI.fields = function (fields) {
     if(fields){
         if(this.prototype.__fields && this.prototype.__fields.length > 0){
             // we had previous fields, so delete all the previous accessors
-            for(var i=0; i<this.prototype__fields.length;i++){
+            for(var i=0; i<this.prototype.__fields.length;i++){
                 delete this.prototype[this.prototype.__fields[i]];
             }
         }
@@ -188,15 +210,22 @@ JSDBI.fields = function (fields) {
             this.prototype[field] = this.__createAccessor(field);
         }
 
-        // save the primary key
-        this.prototype.__primaryKey = fields[0];
-
         // set the list of accessors
         return this.prototype.__fields = fields;
     } else {
         return this.prototype.__fields;
     }
 };
+
+// This may optionally be used to specify multiple primary keys.  You should
+// also include these fields in the general list of fields.
+JSDBI.primaryKeys = function (keyNames) {
+    if(keyNames){
+        return this.prototype.__primaryKeys = keyNames;
+    } else {
+        return this.prototype.__primaryKeys;
+    }
+}
 
 // This creates nifty closures for us
 JSDBI.__createAccessor = function (field){
@@ -216,7 +245,15 @@ JSDBI.retrieve = function (id) {
     // amazingly
     var object = new this();
 
-    var url = this.url()+'/'+id;
+    var url;
+    if(typeof id == 'number'
+       || typeof id == 'string' ){
+        url = this.url()+'/'+id;
+    } else if (typeof id == 'object'){
+        // TODO create url for primary keys
+    } else {
+        alert("couldn't match type of id: "+typeof id);
+    }
     var request = new Ajax.Request(url,
                                    { method: 'get',
                                      asynchronous: false } );
