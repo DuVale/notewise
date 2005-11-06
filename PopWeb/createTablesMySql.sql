@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS relationship (
     FOREIGN KEY (relationship_id) REFERENCES object_id(id),
     FOREIGN KEY (part1) REFERENCES object_id(id),
     FOREIGN KEY (part2) REFERENCES object_id(id),
-    FOREIGN KEY (reltypeId) REFERENCES relationship_type(reltypeId)
+    FOREIGN KEY (type) REFERENCES relationship_type(type_id)
 ) ENGINE = MYISAM;
 
 CREATE TABLE IF NOT EXISTS masked_relationship (
