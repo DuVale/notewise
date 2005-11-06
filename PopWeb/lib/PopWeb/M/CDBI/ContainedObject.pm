@@ -14,6 +14,7 @@ sub to_xml_hash_deep {
         height=>$self->height,
         collapsed=>$self->collapsed,
         container_id=>$self->container_object->id,
+        contained_id=>$self->contained_object->id,
         kernel=>[$self->contained_object->object->to_xml_hash_shallow],
     };
 }

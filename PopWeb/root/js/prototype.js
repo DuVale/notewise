@@ -227,7 +227,8 @@ Ajax.Request.prototype = (new Ajax.Base()).extend({
       this.setRequestHeaders();
 
       var body = this.options.postBody ? this.options.postBody : parameters;
-      this.transport.send(this.options.method == 'post' ? body : null);
+      this.transport.send((this.options.method == 'post'
+                           || this.options.method == 'put') ? body : null);
 
     } catch (e) {
     }
@@ -236,9 +237,10 @@ Ajax.Request.prototype = (new Ajax.Base()).extend({
   setRequestHeaders: function() {
     var requestHeaders = 
       ['X-Requested-With', 'XMLHttpRequest',
-       'X-Prototype-Version', Prototype.Version];
+       'X-Prototype-Version', Prototype.version];
 
-    if (this.options.method == 'post') {
+    if (this.options.method == 'post' ||
+        this.options.method == 'put') {
       requestHeaders.push('Content-type', 
         'application/x-www-form-urlencoded');
 

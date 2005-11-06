@@ -13,11 +13,11 @@
     var kernel = new Kernel([%vkernel.contained_kernel%]);
     kernel.name = '[%vkernel.contained_kernel.name%]';
     var vkernel = new VisibleKernel([%vkernel.container_kernel.id%],[%vkernel.contained_kernel.id%],kernelDiv,kernel);
-    vkernel.setX([%vkernel.x%]);
-    vkernel.setY([%vkernel.y%]);
-    vkernel.setWidth([%vkernel.width%]);
-    vkernel.setHeight([%vkernel.height%]);
-    vkernel.setCollapsed([%vkernel.collapsed%]);
+    vkernel.x([%vkernel.x%]);
+    vkernel.y([%vkernel.y%]);
+    vkernel.width([%vkernel.width%]);
+    vkernel.height([%vkernel.height%]);
+    vkernel.collapsed([%vkernel.collapsed%]);
     vkernel.layout();
 </script>
 

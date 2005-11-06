@@ -5,7 +5,7 @@ use base 'Catalyst::Base';
 
 =head1 NAME
 
-PopWeb::C::REST::Kernel - Catalyst component
+PopWeb::C::REST::Kernel - REST Controller Component
 
 =head1 SYNOPSIS
 
@@ -13,72 +13,92 @@ See L<PopWeb>
 
 =head1 DESCRIPTION
 
-Catalyst component.
-
-=head1 METHODS
-
-=over 4
-
-=item default
+REST Controller Component.
 
 =cut
 
-sub xml : Local {
-    my ( $self, $c, $id ) = @_;
-    my $kernel = PopWeb::M::CDBI::Kernel->retrieve($id);
-    $c->res->content_type('text/xml');
-    $c->res->output($kernel->to_xml);
+sub default : Private {
+    my ( $self, $c) = @_;
+    $c->res->output('Congratulations, PopWeb::C::REST::Kernel is on Catalyst!');
 }
 
-sub xml_hash : Private {
-    my ( $self, $c, $id ) = @_;
-    my $kernel = PopWeb::M::CDBI::Kernel->retrieve($id);
-    use Data::Dumper;
-    $c->res->output("<pre>".Dumper($kernel->to_xml_hash_deep)."</pre>");
-}
+sub kernel : Path('/rest/kernel') {
+    my ( $self, $c) = @_;
 
-sub add : Local {
-    my ( $self, $c ) = @_;
-    $c->form( optional => [ PopWeb::M::CDBI::Kernel->columns ] );
-    if ($c->form->has_missing) {
-        $c->res->output->("ERROR");
-    } elsif ($c->form->has_invalid) {
-        $c->res->output->("ERROR");
-    } else {
-        my %create_hash;
-        foreach my $column (PopWeb::M::CDBI::Kernel->columns){
-            $create_hash{$column} = $c->form->valid($column);
-        }
-        $create_hash{user}=$c->req->{user_id};
-        my $kernel = PopWeb::M::CDBI::Kernel->create( \%create_hash );
-    	return $c->forward('xml',[$kernel->id]);
+    my $method = $c->req->method;
+    if($method eq 'GET'){
+        $c->forward('view');
+    } elsif($method eq 'PUT'){
+        $c->forward('add');
+    } elsif($method eq 'POST'){
+        $c->forward('update');
+    } elsif($method eq 'DELETE'){
+        $c->forward('delete');
     }
 }
 
-sub update : Local {
-    my ( $self, $c, $id ) = @_;
-    if (!defined $id){
-        $id = $c->req->params->{id};
+sub view : Private {
+    my ( $self, $c, $id) = @_;
+
+    my $kernel = PopWeb::M::CDBI::Kernel->retrieve($id);
+    unless($kernel){
+        $c->response->status(404);
+        $c->res->output('ERROR');
+        return;
     }
+    $c->stash->{kernel}=$kernel->to_xml_hash_deep;
+    $c->forward('PopWeb::V::XML');
+}
+
+sub add : Private {
+    my ( $self, $c) = @_;
+
     $c->form( optional => [ PopWeb::M::CDBI::Kernel->columns ] );
     if ($c->form->has_missing) {
-	$c->res->output('ERROR');
+        $c->res->status(400); # Bad Request
     } elsif ($c->form->has_invalid) {
-	$c->res->output('ERROR');
+        $c->res->status(400); # Bad Request
     } else {
-	my $kernel = PopWeb::M::CDBI::Kernel->retrieve($id);
-        # TODO figure out how to unit test these permissons
-        if ($kernel->user->id != $c->{user_id}){
-            $c->res->output('FORBIDDEN');
-        }
+        my $kernel = PopWeb::M::CDBI::Kernel->create_from_form( $c->form );
+        $c->res->status(201); # Created
+    	return $c->forward('view',[$kernel->id]);
+    }
+}
 
+sub update : Private {
+    my ( $self, $c, $id) = @_;
+
+    $c->form( optional => [ PopWeb::M::CDBI::Kernel->columns ] );
+    if ($c->form->has_missing) {
+        $c->res->status(400); # Bad Request
+        $c->res->output('ERROR');
+    } elsif ($c->form->has_invalid) {
+        $c->res->status(400); # Bad Request
+        $c->res->output('ERROR');
+    } else {
+        my $kernel = PopWeb::M::CDBI::Kernel->retrieve($id);
+        unless($kernel){
+            $c->res->status(404); # Not found
+            return $c->res->output('ERROR');
+        }
         $kernel->update_from_form( $c->form );
-	$c->res->output('OK');
+        $c->res->status(200); # OK
+    	return $c->forward('view',[$id]);
     }
 }
 
-=back
+sub delete : Private {
+    my ( $self, $c, $id) = @_;
 
+    my $kernel = PopWeb::M::CDBI::Kernel->retrieve($id);
+    if($kernel){
+        $kernel->delete();
+        $c->res->status(200);
+    } else {
+        $c->res->status(404);
+    }
+    $c->res->output('OK');
+}
 
 =head1 AUTHOR
 
@@ -86,7 +106,8 @@ Scotty Allen
 
 =head1 LICENSE
 
-Copyright Scotty Allen.  All rights reserved.
+This library is free software . You can redistribute it and/or modify
+it under the same terms as perl itself.
 
 =cut
 
