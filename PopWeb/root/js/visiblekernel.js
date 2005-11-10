@@ -75,6 +75,9 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         this.namefield = document.getElementById('namefield'+this.idString());
         this.body = document.getElementById('body'+this.idString());
         this.corner = document.getElementById('vkcorner'+this.idString());
+        this.relationshipbutton = (this.htmlElement.getElementsByClassName('relationshipbutton'))[0];
+        this.expandbutton = (this.htmlElement.getElementsByClassName('expandbutton'))[0];
+        this.removebutton = (this.htmlElement.getElementsByClassName('removebutton'))[0];
     },
 
     // Kills the event so it doesn't propogate up the component hierarchy
@@ -91,15 +94,47 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         // setup the namefield actions
         this.registerEventListener(this.namefield,'blur', this.updateName.bindAsEventListener(this));
         this.registerEventListener(this.namefield,'keyup', this.layoutNamefield.bind(this));
+        this.registerEventListener(this.namefield,
+                                   'mousedown',
+                                   this.mouseDownHandler.bindAsEventListener(this));
 
         // setup the click handlers
-        this.registerEventListener(this.htmlElement,'mousedown', this.mouseDownHandler.bindAsEventListener(this));
+        this.registerEventListener(this.htmlElement,
+                                   'mousedown',
+                                   this.mouseDownHandler.bindAsEventListener(this));
         this.registerEventListener(this.body,'dblclick', this.addNewKernel.bindAsEventListener(this));
-        this.registerEventListener(this.body,'mousedown', this.clearSelectionAndTerminate.bindAsEventListener(this));
+        
+        // setup the relationship button
+        this.registerEventListener(this.relationshipbutton,
+                                   'mousedown',
+                                   this.startCreateRelationship.bindAsEventListener(this));
+
+        // Setup action terminators
+        this.registerEventListener(this.body,
+                                   'mousedown',
+                                   this.clearSelectionAndTerminate.bindAsEventListener(this));
         // drag in namefield should select text, not drag object
-        this.registerEventListener(this.namefield,'mousedown', this.clearSelectionAndTerminate.bindAsEventListener(this));
+        this.registerEventListener(this.namefield,
+                                   'mousedown',
+                                   this.terminateEvent.bindAsEventListener(this));
         // double click in namefield should select text, not create kernel
-        this.registerEventListener(this.namefield,'dblclick', this.clearSelectionAndTerminate.bindAsEventListener(this));
+        this.registerEventListener(this.namefield,
+                                   'dblclick',
+                                   this.clearSelectionAndTerminate.bindAsEventListener(this));
+        // dragging on any of the buttons shouldn't drag the object
+        this.registerEventListener(this.relationshipbutton,
+                                   'mousedown',
+                                   this.terminateEvent.bindAsEventListener(this));
+        this.registerEventListener(this.expandbutton,
+                                   'mousedown',
+                                   this.terminateEvent.bindAsEventListener(this));
+        this.registerEventListener(this.removebutton,
+                                   'mousedown',
+                                   this.terminateEvent.bindAsEventListener(this));
+    },
+
+    startCreateRelationship: function(e){
+        newRelationship.startDrag(e,this);
     },
 
     clearSelectionAndTerminate: function(e){
