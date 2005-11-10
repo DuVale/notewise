@@ -49,7 +49,7 @@
             }
             #background {
                 border: 1px solid black;
-                width: 794;
+                width: 794px;
                 height: 564px;
                 top: 0px;
             }
@@ -62,6 +62,44 @@
                 height: 100px;
                 position: absolute;
                 background: blue;
+                z-index: 1;
+            }
+
+            .vkernel.selected {
+                border: 3px solid #21bbff;
+            }
+
+            .expandbutton,
+            .removebutton,
+            .relationshipbutton {
+                background: blue;
+                color: white;
+                display: none;
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                padding: 0px;
+            }
+
+            .expandbutton {
+                left: -30px;
+                top: 0px;
+            }
+
+            .removebutton{
+                right: -30px;
+                top: 0px;
+            }
+
+            .relationshipbutton {
+                margin-left: 48%;
+                top: -30px;
+            }
+
+            .vkernel.selected > .expandbutton,
+            .vkernel.selected > .removebutton,
+            .vkernel.selected > .relationshipbutton {
+                display: block;
             }
 
             .vkernel .namefield {
@@ -89,7 +127,7 @@
             }
             .leftgrippie, .rightgrippie {
                 background: url('/images/gripper.png');
-              z-index:0;
+                z-index:0;
                 width: 10px;
                 height: 30px;
                 position: absolute;
@@ -113,6 +151,7 @@
                 width: 15px;
                 height: 15px;
                 cursor: se-resize;
+                z-index:0;
             }
             div.auto_complete {
               width: 350px;
@@ -226,10 +265,13 @@
                                                 height: 100,
                                                 collapsed: 1});
             vkernel.realize(background);
-
         }
 
-        document.addEventListener("dblclick", addKernel, false);
+        function clearSelection () {
+            SelectionManager.clearSelection();
+        }
+        document.getElementById('background').addEventListener("dblclick", addKernel, false);
+        document.addEventListener("mousedown", clearSelection, false);
 
         </script>
     </body>

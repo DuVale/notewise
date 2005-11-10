@@ -1,9 +1,12 @@
 [% id = vkernel.container_kernel.id _ '/' _ vkernel.contained_kernel.id %]
 <div id="vkernel[%id%]" class="vkernel">
+    <input type=button value="-" class="expandbutton"/>
+    <input type=button value='X' class="removebutton"/>
+    <input type=button value='R' class="relationshipbutton"/>
     <div class="leftgrippie"></div>
     <input type="text" id="namefield[%id%]" class="namefield" value="[%vkernel.contained_kernel.name%]"/>
     <div class="rightgrippie"/></div>
-    <div class="body">
+    <div class="body" id="body[%id%]">
     </div>
     <div class="corner" id="vkcorner[%id%]">
     </div>

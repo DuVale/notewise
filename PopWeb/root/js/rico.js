@@ -1137,31 +1137,40 @@ Rico.DragAndDrop.prototype = {
    },
 
    _mouseUpHandler: function(e) {
-      if ( ! this.hasSelection() )
+//       alert("mouse up handler");
+      if ( ! this.hasSelection() ){
+          //alert("don't have selection");
          return;
+      }
 
       var nsEvent = e.which != undefined;
-      if ( (nsEvent && e.which != 1) || (!nsEvent && e.button != 1))
+      if ( (nsEvent && e.which != 1) || (!nsEvent && e.button != 1)){
+          //alert("bad event");
          return;
+      }
 
       this.interestedInMotionEvents = false;
 
       if ( this.dragElement == null ) {
+          //alert("no drag element");
          this._terminateEvent(e);
          return;
       }
 
-      if ( this._placeDraggableInDropZone(e) )
+      if ( this._placeDraggableInDropZone(e) ){
+          //alert("completing drag operation");
          this._completeDropOperation(e);
-      else {
+      } else {
+          //alert("cancel drag operation");
          this._terminateEvent(e);
          new Effect.Position( this.dragElement,
                               this.origPos.x,
                               this.origPos.y,
-                              200,
+                              100,
                               20,
                               { complete : this._doCancelDragProcessing.bind(this) } );
       }
+      //alert("end of mouse up handler");
    },
 
    _completeDropOperation: function(e) {
@@ -1274,12 +1283,12 @@ Rico.DragAndDrop.prototype = {
       else if ( e.cancelBubble != undefined )
          e.cancelBubble = true;
 
-        /*
+    /*
       if ( e.preventDefault != undefined )
          e.preventDefault();
       else
          e.returnValue = false;
-         */
+    */
    },
 
    initializeEventHandlers: function() {

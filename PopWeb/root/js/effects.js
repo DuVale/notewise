@@ -23,7 +23,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-Effect = {}
+//Effect = {}
 Effect2 = Effect; // deprecated
 
 /* ------------- transitions ------------- */
