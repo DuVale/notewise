@@ -226,7 +226,7 @@
                 <input type="text" id="namefield0" class="namefield" value="[% kernel.name %]"/>
                 <div class="body" id="background">
 
-                    [% FOR vkernel = visible_kernels %]
+                    [% FOR vkernel = kernels %]
                         [%INCLUDE 'Kernel/kernel.tt'%]
                     [%END%]
                 </div>
