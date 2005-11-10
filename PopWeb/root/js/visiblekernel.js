@@ -19,6 +19,10 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         this.contained_object(contained_object);
         this.htmlElement = htmlElement;
         this.kernel = kernel;
+        // listeners that get notified when this visible kernel moves
+        this.__moveListeners = new Array();
+        // listeners that get notified when this visible kernel changes size
+        this.__sizeListeners = new Array();
         if(this.htmlElement){
             this.setup();
         }
@@ -27,6 +31,13 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     setup: function () {
         this.fetchElements();
         this.registerHandlers();
+        // XXX debug
+        this.addMoveListener(function(kernel,x,y){
+            window.status = "got move: "+x+"x"+y;
+        });
+        this.addSizeListener(function(kernel,w,h){
+            window.status = "got resize: "+w+"x"+h;
+        });
     },
 
     idString: function() {
@@ -85,6 +96,10 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         this.registerEventListener(this.htmlElement,'mousedown', this.mouseDownHandler.bindAsEventListener(this));
         this.registerEventListener(this.body,'dblclick', this.addNewKernel.bindAsEventListener(this));
         this.registerEventListener(this.body,'mousedown', this.clearSelectionAndTerminate.bindAsEventListener(this));
+        // drag in namefield should select text, not drag object
+        this.registerEventListener(this.namefield,'mousedown', this.clearSelectionAndTerminate.bindAsEventListener(this));
+        // double click in namefield should select text, not create kernel
+        this.registerEventListener(this.namefield,'dblclick', this.clearSelectionAndTerminate.bindAsEventListener(this));
     },
 
     clearSelectionAndTerminate: function(e){
@@ -199,6 +214,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     },
     // Just sets the internal x coordinate
     setX: function(x) {
+        this.notifyMoveListeners(x,this.y());
         return VisibleKernel.superclass.prototype.x.call(this, x);
     },
 
@@ -206,25 +222,29 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     x: function(x) {
         if(x && this.htmlElement){
             this.htmlElement.style.left = x+"px";
+            this.notifyMoveListeners(x,this.y());
         }
         return VisibleKernel.superclass.prototype.x.call(this, x);
     },
 
     // Just sets the internal y coordinate
-    setY: function(x) {
-        return VisibleKernel.superclass.prototype.y.call(this, x);
+    setY: function(y) {
+        this.notifyMoveListeners(this.x(),y);
+        return VisibleKernel.superclass.prototype.y.call(this, y);
     },
 
     // Sets the y coordinate and moves the object accordingly
     y: function(y) {
         if(y && this.htmlElement){
             this.htmlElement.style.top = y+"px";
+            this.notifyMoveListeners(this.x(),y);
         }
         return VisibleKernel.superclass.prototype.y.call(this, y);
     },
 
     // Just sets the internal width
     setWidth: function(width) {
+        this.notifySizeListeners(width,this.height());
         return VisibleKernel.superclass.prototype.width.call(this, width);
     },
 
@@ -232,12 +252,14 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     width: function(width) {
         if(width && this.htmlElement){
             this.htmlElement.style.width = width+"px";
+            this.notifySizeListeners(width,this.height());
         }
         return VisibleKernel.superclass.prototype.width.call(this, width);
     },
 
     // Just sets the internal height
     setHeight: function(height) {
+        this.notifySizeListeners(this.width(),height);
         return VisibleKernel.superclass.prototype.height.call(this, height);
     },
 
@@ -245,8 +267,31 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     height: function(height) {
         if(height && this.htmlElement){
             this.htmlElement.style.height = height+"px";
+            this.notifySizeListeners(this.width(),height);
         }
         return VisibleKernel.superclass.prototype.height.call(this, height);
+    },
+
+    // Adds a movement listener.  The notify method will called whenever this visible kernel moves, with the parameters this object, newX, and new Y
+    addMoveListener: function (notifyMethod){
+        this.__moveListeners.push(notifyMethod);
+    },
+
+    // Adds a size listener.  The notify method will called whenever this visible kernel is resized, with the parameters this object, new width, and new height
+    addSizeListener: function (notifyMethod){
+        this.__sizeListeners.push(notifyMethod);
+    },
+
+    notifyMoveListeners: function (x,y){
+        for(var i=0;i<this.__moveListeners.length;i++){
+            this.__moveListeners[i](this,x,y);
+        }
+    },
+
+    notifySizeListeners: function (width, height){
+        for(var i=0;i<this.__sizeListeners.length;i++){
+            this.__sizeListeners[i](this,width,height);
+        }
     },
 
     updateName: function (e) {
