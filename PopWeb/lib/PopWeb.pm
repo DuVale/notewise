@@ -44,7 +44,7 @@ Catalyst based application.
 sub default : Private {
     my ( $self, $c ) = @_;
     $c->stash->{template}='home.tt';
-    $c->stash->{kernels}=[PopWeb::M::CDBI::Kernel->retrieve_all];
+    $c->stash->{kernels}=[map $_->object, PopWeb::M::CDBI::ObjectId->search(type=>'kernel')];
 }
 
 sub end : Private {
