@@ -421,7 +421,6 @@ CustomDropzone.prototype = (new Rico.Dropzone()).extend( {
 
    accept: function(draggableObjects) {
        for(var i=0;i<draggableObjects.length;i++){
-           alert("accepting "+draggableObjects[i].htmlElement.id+" onto "+this.htmlElement.id);
            if(draggableObjects[i].type != 'Kernel'){
                continue;
            }
@@ -438,15 +437,8 @@ CustomDropzone.prototype = (new Rico.Dropzone()).extend( {
                var newX = pos.x-parentPos.x;
                var newY = pos.y-parentPos.y;
 
-               //alert("Reparenting to element with id "+this.htmlElement.id);
                this.htmlElement.appendChild(htmlElement);
 
-               if(!this.htmlElement){
-                   alert("No htmlElement for drop target!");
-               }
-               if(newX <0 || newY < 0){
-                   alert("negative coords from "+pos.x+"x"+pos.y+" to "+newX+"x"+newY);
-               }
                draggableObjects[i].vkernel.y(pos.y-parentPos.y);
                draggableObjects[i].vkernel.x(pos.x-parentPos.x);
            }
