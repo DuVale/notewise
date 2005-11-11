@@ -109,6 +109,11 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
                                    'mousedown',
                                    this.startCreateRelationship.bindAsEventListener(this));
 
+        // setup the remove button
+        this.registerEventListener(this.removebutton,
+                                   'click',
+                                   this.destroy.bind(this));
+
         // Setup action terminators
         this.registerEventListener(this.body,
                                    'mousedown',
@@ -180,7 +185,15 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
                                             height: 100,
                                             collapsed: 1});
         vkernel.realize(this.body);
+        vkernel.select();
+        vkernel.namefield.focus();
         this.terminateEvent(e);
+    },
+
+    // removes the html element from the view, and then notifies the server
+    destroy: function () {
+        this.htmlElement.parentNode.removeChild(this.htmlElement);
+        return VisibleKernel.superclass.prototype.destroy.call(this);
     },
 
     mouseDownHandler: function(e) {
@@ -336,6 +349,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         if (targ.nodeType == 3) // defeat Safari bug
             targ = targ.parentNode;
 
+        // XXX jsdbi relationships are working yet, so we don't have a kernel :(
         this.kernel.name(targ.value);
     },
 

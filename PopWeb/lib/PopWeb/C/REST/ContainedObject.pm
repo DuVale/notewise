@@ -114,9 +114,9 @@ sub update : Private {
 }
 
 sub delete : Private {
-    my ( $self, $c, $id) = @_;
+    my ( $self, $c, $container_id, $contained_id) = @_;
 
-    my $containedobject = PopWeb::M::CDBI::ContainedObject->retrieve($id);
+    my $containedobject = PopWeb::M::CDBI::ContainedObject->retrieve(container_object=>$container_id, contained_object=>$contained_id);
     if($containedobject){
         $containedobject->delete();
         $c->res->status(200);
