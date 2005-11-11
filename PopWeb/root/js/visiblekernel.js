@@ -531,7 +531,7 @@ CustomDropzone.prototype = (new Rico.Dropzone()).extend( {
 //           window.status=htmlElement.style.left + ' x ' + htmlElement.style.top;
 
            // Can't make element child of it's own child and don't reparent it if it's already in the right element
-           if(htmlElement != this.htmlElement.parentNode
+           if(!this.htmlElement.hasAncestor(htmlElement)
               && htmlElement.parentNode != this.htmlElement){
 
                // figure out the new x and y
@@ -540,10 +540,12 @@ CustomDropzone.prototype = (new Rico.Dropzone()).extend( {
                var newX = pos.x-parentPos.x;
                var newY = pos.y-parentPos.y;
 
-               this.htmlElement.appendChild(htmlElement);
+               htmlElement.parentNode.removeChild(htmlElement);
 
                draggableObjects[i].vkernel.y(pos.y-parentPos.y);
                draggableObjects[i].vkernel.x(pos.x-parentPos.x);
+
+               this.htmlElement.appendChild(htmlElement);
            }
        }
    },

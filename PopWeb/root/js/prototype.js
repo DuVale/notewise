@@ -417,6 +417,18 @@ HTMLElement.prototype.getElementsByClassName = function(className) {
   return elements;
 }
 
+// Tests to see if this element has the given element as a parent
+HTMLElement.prototype.hasAncestor = function(parentElement) {
+    var element = this;
+    while(element != document){
+        if(element == parentElement){
+            return true;
+        }
+        element = element.parentNode;
+    }
+    return false;
+}
+
 /*--------------------------------------------------------------------------*/
 
 if (!window.Element) {
