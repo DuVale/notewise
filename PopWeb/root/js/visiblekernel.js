@@ -85,6 +85,14 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         dndMgr._terminateEvent(e);
     },
 
+    // prevents the default browser action for this event from occuring
+    preventDefault: function(e) {
+        if ( e.preventDefault != undefined )
+           e.preventDefault();
+        else
+           e.returnValue = false;
+    },
+
     registerHandlers: function() {
         // set up the dnd
         dndMgr.registerDraggable( new KernelDraggable('vkernel'+this.idString(), this) );
@@ -145,6 +153,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     clearSelectionAndTerminate: function(e){
         SelectionManager.clearSelection();
         this.terminateEvent(e);
+        this.preventDefault(e);
     },
 
     // event should be of the form 'mousedown' not 'onmousedown'.
@@ -350,7 +359,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
             targ = targ.parentNode;
 
         // XXX jsdbi relationships are working yet, so we don't have a kernel :(
-        this.kernel.name(targ.value);
+//        this.kernel.name(targ.value);
     },
 
 
@@ -563,4 +572,5 @@ SelectionManager.clearSelection = function() {
         var element = elements[i];
         element.className = element.className.replace(/ selected|selected /, '');
     }
+    document.getElementById('mysearchfield').focus();
 };

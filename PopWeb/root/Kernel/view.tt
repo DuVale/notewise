@@ -205,11 +205,11 @@
 
             <div>
                 <div id="search">
-                    Search: <input autocomplete="off" id="searchfield" name="s">
+                    Search: <input autocomplete="off" id="mysearchfield" name="s">
                     <div class="auto_complete" id="searchresults"></div>
                 </div>
                 <script>
-                new Ajax.Autocompleter('searchfield', 'searchresults', '/ac', {frequency: .2});
+                new Ajax.Autocompleter('mysearchfield', 'searchresults', '/ac', {frequency: .2});
                 </script>
             </div>
             <div id="parents" class="section">
@@ -271,12 +271,13 @@
             vkernel.namefield.focus();
         }
 
-        function clearSelection () {
-            SelectionManager.clearSelection();
+        function clearSelection (e) {
+            VisibleKernel.prototype.clearSelectionAndTerminate(e);
         }
         document.getElementById('background').addEventListener("dblclick", addKernel, false);
         document.addEventListener("mousedown", clearSelection, false);
 
+        document.getElementById('mysearchfield').focus();
         </script>
     </body>
 </html>
