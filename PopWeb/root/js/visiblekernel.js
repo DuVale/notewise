@@ -468,8 +468,32 @@ KernelCornerDraggable.prototype = (new Rico.Draggable()).extend( {
     startDrag: function() {
     },
  
+    cancelDrag: function() {
+        var cornerWidth = this.htmlElement.clientWidth;
+        var cornerHeight = this.htmlElement.clientHeight;
+        var w = Number(chopPx(this.htmlElement.style.left)) + cornerWidth;
+        var h = Number(chopPx(this.htmlElement.style.top)) + cornerHeight;
+
+        // set limits on size
+        var minWidth=100;
+        var minHeight=100;
+        if(w < minWidth){
+            this.htmlElement.style.left=(minWidth-cornerWidth)+'px';
+            this.vkernel.width(minWidth);
+        } else {
+            this.vkernel.width(w);
+        }
+        if(h < minHeight){
+            this.htmlElement.style.top=(minHeight-cornerHeight)+'px';
+            this.vkernel.height(minHeight);
+        } else {
+          this.vkernel.height(h);
+        }
+        this.vkernel.layoutResize();
+    },
+
     endDrag: function() {
-         this.vkernel.update();
+        this.vkernel.update();
     },
  
     duringDrag: function() {
@@ -494,9 +518,6 @@ KernelCornerDraggable.prototype = (new Rico.Draggable()).extend( {
           this.vkernel.height(h);
         }
         this.vkernel.layoutResize();
-    },
- 
-    cancelDrag: function() {
     },
  
     select: function() {

@@ -1161,7 +1161,6 @@ Rico.DragAndDrop.prototype = {
           //alert("completing drag operation");
          this._completeDropOperation(e);
       } else {
-          //alert("cancel drag operation");
          this._terminateEvent(e);
          new Effect.Position( this.dragElement,
                               this.origPos.x,
