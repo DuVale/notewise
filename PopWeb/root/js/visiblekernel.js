@@ -97,7 +97,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         // set up the dnd
         dndMgr.registerDraggable( new KernelDraggable('vkernel'+this.idString(), this) );
         dndMgr.registerDraggable( new KernelCornerDraggable('vkcorner'+this.idString(), this) );
-        dndMgr.registerDropZone( new CustomDropzone('body'+this.idString()) );
+        dndMgr.registerDropZone( new CustomDropzone('body'+this.idString(),this) );
 
         // setup the namefield actions
         this.registerEventListener(this.namefield,'blur', this.updateName.bindAsEventListener(this));
@@ -402,8 +402,28 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         if( this.isSelected()){
             this.htmlElement.className = this.htmlElement.className.replace(/ selected|selected /, '');
         }
-    }
+    },
 
+    reparent: function(vkernel) {
+        var parentElement = vkernel.body;
+
+        // Can't make element child of it's own child and don't reparent it if it's already in the right element
+        if(!parentElement.hasAncestor(this.htmlElement)
+          && this.htmlElement.parentNode != parentElement){
+            // figure out the new x and y
+            var pos = RicoUtil.toViewportPosition(this.htmlElement);
+            var parentPos = RicoUtil.toViewportPosition(parentElement);
+            var newX = pos.x-parentPos.x;
+            var newY = pos.y-parentPos.y;
+
+            this.htmlElement.parentNode.removeChild(this.htmlElement);
+
+            this.y(pos.y-parentPos.y);
+            this.x(pos.x-parentPos.x);
+
+            parentElement.appendChild(this.htmlElement);
+        }
+    }
 });
 
 var KernelDraggable = Class.create();
@@ -488,65 +508,18 @@ var CustomDropzone = Class.create();
 
 CustomDropzone.prototype = (new Rico.Dropzone()).extend( {
 
-//   canAccept: function (draggableObjects) {
-//       var canAccept = true;
-//       for(var i=0;i<draggableObjects.length;i++){
-//           var htmlElement = draggableObjects[i].htmlElement;
-//
-//           var x = Number(chopPx(htmlElement.style.left));
-//           if(x<0){
-//               canAccept=false;
-//               break;
-//           }
-//
-//           var y = Number(chopPx(htmlElement.style.top));
-//           if(y<0){
-//               canAccept=false;
-//               break;
-//           }
-//
-//           var w = htmlElement.clientWidth;
-//           var parentWidth = htmlElement.parentNode.clientWidth;
-//           if(x+w>parentWidth){
-//               canAccept=false;
-//               break;
-//           }
-//
-//           var h = htmlElement.clientHeight;
-//           var parentHeight = htmlElement.parentNode.clientHeight;
-//           if(y+h>parentHeight){
-//               canAccept=false;
-//               break;
-//           }
-//       }
-//       return canAccept;
-//   },
+   initialize: function( htmlElement, vkernel ) {
+        this.type        = 'Kernel';
+        this.htmlElement = $(htmlElement);
+        this.vkernel        = vkernel;
+   },
 
    accept: function(draggableObjects) {
        for(var i=0;i<draggableObjects.length;i++){
            if(draggableObjects[i].type != 'Kernel'){
                continue;
            }
-           var htmlElement = draggableObjects[i].htmlElement;
-//           window.status=htmlElement.style.left + ' x ' + htmlElement.style.top;
-
-           // Can't make element child of it's own child and don't reparent it if it's already in the right element
-           if(!this.htmlElement.hasAncestor(htmlElement)
-              && htmlElement.parentNode != this.htmlElement){
-
-               // figure out the new x and y
-               var pos = RicoUtil.toViewportPosition(htmlElement);
-               var parentPos = RicoUtil.toViewportPosition(this.htmlElement);
-               var newX = pos.x-parentPos.x;
-               var newY = pos.y-parentPos.y;
-
-               htmlElement.parentNode.removeChild(htmlElement);
-
-               draggableObjects[i].vkernel.y(pos.y-parentPos.y);
-               draggableObjects[i].vkernel.x(pos.x-parentPos.x);
-
-               this.htmlElement.appendChild(htmlElement);
-           }
+           draggableObjects[i].vkernel.reparent(this.vkernel);
        }
    },
 

@@ -7,6 +7,7 @@
         <script type="text/javascript" src="/js/jsdbi.js"></script>
         <script type="text/javascript" src="/js/linedraw.js"></script>
         <script type="text/javascript" src="/js/new_relationship.js"></script>
+        <script type="text/javascript" src="/js/relationship.js"></script>
         <script type="text/javascript" src="/js/kernel.js"></script>
         <script type="text/javascript" src="/js/visiblekernel.js"></script>
         <script type="text/javascript" src="/js/controls.js"></script>
@@ -227,7 +228,10 @@
             <div id="kernel0" class="vkernel">
                 <input type="text" id="namefield0" class="namefield" value="[% kernel.name %]"/>
                 <div class="body" id="background">
-
+                    <script>
+                        // XXX this is pretty nasty - put this inside the view's vkernel instead
+                        var vkernelCache = {};
+                    </script>
                     [% FOR vkernel = visible_kernels %]
                         [%INCLUDE 'Kernel/kernel.tt'%]
                     [%END%]
@@ -237,7 +241,11 @@
 
         <script>
         var viewKernelId=[%kernel.id%];
-        dndMgr.registerDropZone( new CustomDropzone('background') );
+        // XXX precache this instead of fetching it
+        var vkernel = new VisibleKernel(undefined,[%kernel.id%],undefined);
+        vkernel.body = document.getElementById('background');
+
+        dndMgr.registerDropZone( new CustomDropzone('background',vkernel) );
 
         var background = document.getElementById('background');
 
@@ -278,6 +286,13 @@
         document.addEventListener("mousedown", clearSelection, false);
 
         document.getElementById('mysearchfield').focus();
+        var vkernel1=vkernelCache['130/433'];
+        var vkernel2=vkernelCache['130/432'];
+        if(vkernel1 && vkernel2){
+            var relationship = new Relationship(vkernel1,vkernel2);
+        } else {
+            alert("couldn't find the right kernels to create the relationship");
+        }
         </script>
     </body>
 </html>
