@@ -2,6 +2,7 @@
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
     <head>
+        <script type="text/javascript" src="/js/wz_jsgraphics.js"></script>
         <script type="text/javascript" src="/js/prototype.js"></script>
         <script type="text/javascript" src="/js/rico.js"></script>
         <script type="text/javascript" src="/js/jsdbi.js"></script>
@@ -62,8 +63,6 @@
             }
             .vkernel {
                 border: 1px solid #00F;
-                width: 100px;
-                height: 100px;
                 position: absolute;
                 background: blue;
                 z-index: 1;
@@ -129,6 +128,12 @@
                 top: 0px;
                 clear: both;
             }
+
+            .vkernel.collapsed .body {
+                height: 0px;
+                display: none;
+            }
+
             .leftgrippie, .rightgrippie {
                 background: url('/images/gripper.png');
                 z-index:0;
@@ -143,10 +148,10 @@
                 width: 100%;
             }
             .rightgrippie {
-                top: 0;
-                right: 0;
-                width: 0;
-                height: 0;
+                top: 0px;
+                right: 0px;
+                width: 0px;
+                height: 0px;
             }
 
             .corner {
@@ -195,7 +200,6 @@
                else if (e.srcElement) targ = e.srcElement;
                if (targ.nodeType == 3) // defeat Safari bug
                     targ = targ.parentNode;
-               window.status = "got blur: "+(i++)+" value: "+targ.value;
                ajaxEngine.sendRequest( 'updateKernel',
                                        'id=2',
                                        'name='+targ.value );
@@ -292,7 +296,7 @@
         if(vkernel1 && vkernel2){
             var relationship = new Relationship(vkernel1,vkernel2);
         } else {
-            alert("couldn't find the right kernels to create the relationship");
+//            alert("couldn't find the right kernels to create the relationship");
         }
         </script>
     </body>

@@ -6,6 +6,7 @@
     <li>Run some client side unit tests:
         <ul>
             <li><a href="/test/jsunit/testRunner.html?testPage=/test/testVKernel.html&autoRun=true">Run kernel tests</a></li>
+            <li><a href="/test/jsunit/testRunner.html?testPage=/test/testRelationship.html&autoRun=true">Run relationship tests</a></li>
             <li><a href="/test/jsunit/testRunner.html">Run other tests</a></li>
         </ul>
     </li>

@@ -18,8 +18,8 @@
     var vkernel = new VisibleKernel([%vkernel.container_kernel.id%],[%vkernel.contained_kernel.id%],kernelDiv,kernel);
     vkernel.x([%vkernel.x%]);
     vkernel.y([%vkernel.y%]);
-    vkernel.width([%vkernel.width%]);
-    vkernel.height([%vkernel.height%]);
+    vkernel.setWidth([%vkernel.width%]);
+    vkernel.setHeight([%vkernel.height%]);
     vkernel.collapsed([%vkernel.collapsed%]);
     vkernel.layout();
     vkernelCache['[%vkernel.container_kernel.id%]/[%vkernel.contained_kernel.id%]']=vkernel;

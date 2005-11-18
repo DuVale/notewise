@@ -1,3 +1,4 @@
+var i=0;
 var VisibleKernel = Class.create();
 VisibleKernel.extend(JSDBI);
 VisibleKernel.superclass = JSDBI;
@@ -31,13 +32,8 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     setup: function () {
         this.fetchElements();
         this.registerHandlers();
-        // XXX debug
-        this.addMoveListener(function(kernel,x,y){
-            window.status = "got move: "+x+"x"+y;
-        });
-        this.addSizeListener(function(kernel,w,h){
-            window.status = "got resize: "+w+"x"+h;
-        });
+        this.setWidth(this.width());
+        this.setHeight(this.height());
     },
 
     idString: function() {
@@ -50,7 +46,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     realize: function(parent) {
         this.htmlElement = document.createElement('div');
         this.htmlElement.id="vkernel"+this.idString();
-        this.htmlElement.className="vkernel";
+        this.htmlElement.className="vkernel collapsed";
         this.htmlElement.innerHTML+=
            "<div class=\"leftgrippie\"></div>"
            +"<input type=button value='-' class='expandbutton'/>"
@@ -121,6 +117,11 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         this.registerEventListener(this.removebutton,
                                    'click',
                                    this.destroy.bind(this));
+
+        // setup the collapsed button
+        this.registerEventListener(this.expandbutton,
+                                   'click',
+                                   this.toggleCollapsed.bind(this));
 
         // Setup action terminators
         this.registerEventListener(this.body,
@@ -237,7 +238,8 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     // causes the internal elements to resize if necessary
     layoutResize: function() {
         var body = (this.htmlElement.getElementsByClassName('body'))[0];
-        body.style.height = (this.height() - 34)+'px';
+        var height = this.height() - 34;
+        body.style.height = height+'px';
     },
 
     // returns the desired width of the name field.  Usually the width of the text in the field, but bounded by the minimum width
@@ -259,6 +261,44 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         VisibleKernel.textSizingBox.style.fontSize = size;
         VisibleKernel.textSizingBox.firstChild.data = text;
         return VisibleKernel.textSizingBox.offsetWidth;
+    },
+
+    toggleCollapsed: function() {
+        if(this.collapsed()){
+            this.collapsed(false);
+        } else {
+            this.collapsed(true);
+        }
+        this.update();
+    },
+
+    // Just sets the internal collapsed value
+    setCollapsed: function(collapsed) {
+        return VisibleKernel.superclass.prototype.collapsed.call(this, collapsed);
+    },
+
+    collapsed: function(collapsed) {
+        if(collapsed == undefined) {
+            // skip it
+            var results = VisibleKernel.superclass.prototype.collapsed.call(this);
+            return results;
+        } if(collapsed){
+            var results = VisibleKernel.superclass.prototype.collapsed.call(this, true);
+            if(this.htmlElement){
+                this.htmlElement.className += ' collapsed';
+                this.setHeight(this.getMinHeight());
+            }
+            return results;
+        } else {
+            // XXX why doesn't calling the accessor work?
+//            return VisibleKernel.superclass.prototype.collapsed.call(this, false);
+            this.__collapsed=false;
+            if(this.htmlElement){
+                this.htmlElement.className = this.htmlElement.className.replace(/ collapsed|collapsed /, '');
+                this.setHeight(this.getMinHeight());
+            }
+            return false;
+        }
     },
 
     getStyle: function(el,styleProp) {
@@ -299,34 +339,130 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         return VisibleKernel.superclass.prototype.y.call(this, y);
     },
 
-    // Just sets the internal width
+    // Sets the width and moves the object accordingly
     setWidth: function(width) {
-        this.notifySizeListeners(width,this.height());
-        return VisibleKernel.superclass.prototype.width.call(this, width);
+        var results;
+        if(width != undefined){
+            results = this.width(this.checkWidth(width));
+            if(this.htmlElement){
+                this.htmlElement.style.width = results+"px";
+            }
+            this.layoutResize();
+            this.layoutCorner();
+        } else {
+            results = this.width(this.checkWidth(width));
+        }
+        return results;
     },
 
-    // Sets the width and moves the object accordingly
+    // Just sets the internal width
     width: function(width) {
-        if(width && this.htmlElement){
-            this.htmlElement.style.width = width+"px";
+        var results = VisibleKernel.superclass.prototype.width.call(this, width);
+        if(width != undefined){
             this.notifySizeListeners(width,this.height());
         }
-        return VisibleKernel.superclass.prototype.width.call(this, width);
+        return results;
+    },
+
+    // Sets the height and moves the object accordingly
+    setHeight: function(height) {
+        var results;
+        if(height != undefined){
+            results = this.height(this.checkHeight(height));
+            if(this.htmlElement){
+                this.htmlElement.style.height = results+"px";
+            }
+            this.layoutResize();
+            this.layoutCorner();
+        } else {
+            results = this.height(this.checkHeight(height));
+        }
+        return results;
     },
 
     // Just sets the internal height
-    setHeight: function(height) {
-        this.notifySizeListeners(this.width(),height);
-        return VisibleKernel.superclass.prototype.height.call(this, height);
-    },
-
-    // Sets the width and moves the object accordingly
     height: function(height) {
-        if(height && this.htmlElement){
-            this.htmlElement.style.height = height+"px";
+        var results = VisibleKernel.superclass.prototype.height.call(this, height);
+        if(height != undefined){
             this.notifySizeListeners(this.width(),height);
         }
-        return VisibleKernel.superclass.prototype.height.call(this, height);
+        return results;
+    },
+
+    // checks to make sure the height is ok, and returns a corrected value if it isn't
+    checkHeight: function(h){
+        var minHeight=this.getMinHeight();
+        var maxHeight=this.getMaxHeight();
+        if(h < minHeight){
+            h = minHeight;
+        } else if(h > maxHeight){
+            h = maxHeight;
+        }
+        return h;
+    },
+
+    // checks to make sure the width is ok, and returns a corrected value if it isn't
+    checkWidth: function(w){
+        var minWidth=this.getMinWidth();
+        var maxWidth=this.getMaxWidth();
+        if(w < minWidth){
+            w = minWidth;
+        } else if(w > maxWidth){
+            w = maxWidth;
+        }
+        return w;
+    },
+
+    getMinHeight: function() {
+        //TODO
+        if(this.collapsed()){
+            return 30; // height of name field
+        } else {
+            return 100;
+        }
+    },
+
+    getMaxHeight: function() {
+        //TODO
+        if(this.collapsed()){
+            return 30; // height of name field
+        } else {
+            return 1000;
+        }
+    },
+
+    getMinWidth: function() {
+        var nameFieldWidth =  this.getNameFieldWidth()+30;
+        if(this.collapsed()){
+            return nameFieldWidth;
+        } else {
+            return Math.max(nameFieldWidth,100);
+        }
+    },
+
+    getMaxWidth: function() {
+        //TODO
+        return 1000;
+    },
+
+    getMinX: function() {
+        //TODO
+        return 0;
+    },
+
+    getMaxX: function() {
+        //TODO
+        return 1000;
+    },
+
+    getMinY: function() {
+        //TODO
+        return 0;
+    },
+
+    getMaxY: function() {
+        //TODO
+        return 1000;
     },
 
     // Adds a movement listener.  The notify method will called whenever this visible kernel moves, with the parameters this object, newX, and new Y
@@ -469,27 +605,6 @@ KernelCornerDraggable.prototype = (new Rico.Draggable()).extend( {
     },
  
     cancelDrag: function() {
-        var cornerWidth = this.htmlElement.clientWidth;
-        var cornerHeight = this.htmlElement.clientHeight;
-        var w = Number(chopPx(this.htmlElement.style.left)) + cornerWidth;
-        var h = Number(chopPx(this.htmlElement.style.top)) + cornerHeight;
-
-        // set limits on size
-        var minWidth=100;
-        var minHeight=100;
-        if(w < minWidth){
-            this.htmlElement.style.left=(minWidth-cornerWidth)+'px';
-            this.vkernel.width(minWidth);
-        } else {
-            this.vkernel.width(w);
-        }
-        if(h < minHeight){
-            this.htmlElement.style.top=(minHeight-cornerHeight)+'px';
-            this.vkernel.height(minHeight);
-        } else {
-          this.vkernel.height(h);
-        }
-        this.vkernel.layoutResize();
     },
 
     endDrag: function() {
@@ -497,26 +612,18 @@ KernelCornerDraggable.prototype = (new Rico.Draggable()).extend( {
     },
  
     duringDrag: function() {
+        this.sizeFromCorner();
+    },
+
+    sizeFromCorner: function(){
         var cornerWidth = this.htmlElement.clientWidth;
         var cornerHeight = this.htmlElement.clientHeight;
         var w = Number(chopPx(this.htmlElement.style.left)) + cornerWidth;
         var h = Number(chopPx(this.htmlElement.style.top)) + cornerHeight;
-
-        // set limits on size
-        var minWidth=100;
-        var minHeight=100;
-        if(w < minWidth){
-            this.htmlElement.style.left=(minWidth-cornerWidth)+'px';
-            this.vkernel.width(minWidth);
-        } else {
-            this.vkernel.width(w);
+        if(!this.vkernel.collapsed()){
+            this.vkernel.setHeight(h);
         }
-        if(h < minHeight){
-            this.htmlElement.style.top=(minHeight-cornerHeight)+'px';
-            this.vkernel.height(minHeight);
-        } else {
-          this.vkernel.height(h);
-        }
+        this.vkernel.setWidth(w);
         this.vkernel.layoutResize();
     },
  
