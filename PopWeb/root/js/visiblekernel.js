@@ -80,11 +80,6 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         this.removebutton = (this.htmlElement.getElementsByClassName('removebutton'))[0];
     },
 
-    // Kills the event so it doesn't propogate up the component hierarchy
-    terminateEvent: function(e) {
-        dndMgr._terminateEvent(e);
-    },
-
     // prevents the default browser action for this event from occuring
     preventDefault: function(e) {
         if ( e.preventDefault != undefined )
@@ -100,56 +95,67 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         dndMgr.registerDropZone( new CustomDropzone('body'+this.idString(),this) );
 
         // setup the namefield actions
-        this.registerEventListener(this.namefield,'blur', this.updateName.bindAsEventListener(this));
-        this.registerEventListener(this.namefield,'keyup', this.layoutNamefield.bind(this));
-        this.registerEventListener(this.namefield,
+        Utils.registerEventListener(this.namefield,'blur', this.updateName.bindAsEventListener(this));
+        Utils.registerEventListener(this.namefield,'keyup', this.layoutNamefield.bind(this));
+        Utils.registerEventListener(this.namefield,
                                    'mousedown',
                                    this.mouseDownHandler.bindAsEventListener(this));
 
         // setup the click handlers
-        this.registerEventListener(this.htmlElement,
+        Utils.registerEventListener(this.htmlElement,
                                    'mousedown',
                                    this.mouseDownHandler.bindAsEventListener(this));
-        this.registerEventListener(this.body,'dblclick', this.addNewKernel.bindAsEventListener(this));
+        Utils.registerEventListener(this.body,'dblclick', this.addNewKernel.bindAsEventListener(this));
         
         // setup the relationship button
-        this.registerEventListener(this.relationshipbutton,
+        Utils.registerEventListener(this.relationshipbutton,
                                    'mousedown',
                                    this.startCreateRelationship.bindAsEventListener(this));
 
         // setup the remove button
-        this.registerEventListener(this.removebutton,
+        Utils.registerEventListener(this.removebutton,
                                    'click',
                                    this.destroy.bind(this));
 
         // setup the collapsed button
-        this.registerEventListener(this.expandbutton,
+        Utils.registerEventListener(this.expandbutton,
                                    'click',
                                    this.toggleCollapsed.bind(this));
 
         // TODO DRY - consolidate these into a big list of element/event pairs
         // Setup action terminators
-        this.registerEventListener(this.body,
+        Utils.registerEventListener(this.body,
                                    'mousedown',
                                    this.clearSelectionAndTerminate.bindAsEventListener(this));
         // drag in namefield should select text, not drag object
-        this.registerEventListener(this.namefield,
+        Utils.registerEventListener(this.namefield,
                                    'mousedown',
-                                   this.terminateEvent.bindAsEventListener(this));
+                                   Utils.terminateEvent.bindAsEventListener(this));
         // double click in namefield should select text, not create kernel
-        this.registerEventListener(this.namefield,
+        Utils.registerEventListener(this.namefield,
                                    'dblclick',
                                    this.clearSelectionAndTerminate.bindAsEventListener(this));
         // dragging on any of the buttons shouldn't drag the object
-        this.registerEventListener(this.relationshipbutton,
+        Utils.registerEventListener(this.relationshipbutton,
                                    'mousedown',
-                                   this.terminateEvent.bindAsEventListener(this));
-        this.registerEventListener(this.expandbutton,
+                                   Utils.terminateEvent.bindAsEventListener(this));
+        Utils.registerEventListener(this.expandbutton,
                                    'mousedown',
-                                   this.terminateEvent.bindAsEventListener(this));
-        this.registerEventListener(this.removebutton,
+                                   Utils.terminateEvent.bindAsEventListener(this));
+        Utils.registerEventListener(this.removebutton,
                                    'mousedown',
-                                   this.terminateEvent.bindAsEventListener(this));
+                                   Utils.terminateEvent.bindAsEventListener(this));
+
+        // doubleclicking on any of the buttons shouldn't do anything
+        Utils.registerEventListener(this.relationshipbutton,
+                                   'dblclick',
+                                   Utils.terminateEvent.bindAsEventListener(this));
+        Utils.registerEventListener(this.expandbutton,
+                                   'dblclick',
+                                   Utils.terminateEvent.bindAsEventListener(this));
+        Utils.registerEventListener(this.removebutton,
+                                   'dblclick',
+                                   Utils.terminateEvent.bindAsEventListener(this));
     },
 
     startCreateRelationship: function(e){
@@ -158,20 +164,8 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
 
     clearSelectionAndTerminate: function(e){
         SelectionManager.clearSelection();
-        this.terminateEvent(e);
+        Utils.terminateEvent(e);
         this.preventDefault(e);
-    },
-
-    // event should be of the form 'mousedown' not 'onmousedown'.
-    registerEventListener: function(element,event,eventListener){
-        if ( typeof document.implementation != "undefined" &&
-             document.implementation.hasFeature("HTML",   "1.0") &&
-             document.implementation.hasFeature("Events", "2.0") &&
-             document.implementation.hasFeature("CSS",    "2.0") ) {
-            element.addEventListener(event, eventListener, false);
-        } else {
-            element.attachEvent("on"+event, eventListener);
-        }
     },
 
     // XXX should use this for adding to the view as well
@@ -202,7 +196,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         vkernel.realize(this.body);
         vkernel.select();
         vkernel.namefield.focus();
-        this.terminateEvent(e);
+        Utils.terminateEvent(e);
     },
 
     // removes the html element from the view, and then notifies the server
@@ -293,6 +287,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
                 this.htmlElement.className += ' collapsed';
                 this.setHeight(this.getMinHeight());
             }
+            this.notifyEndChangeListeners();
             return results;
         } else {
             // XXX why doesn't calling the accessor work?
@@ -302,6 +297,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
                 this.htmlElement.className = this.htmlElement.className.replace(/ collapsed|collapsed /, '');
                 this.setHeight(this.getMinHeight());
             }
+            this.notifyEndChangeListeners();
             return false;
         }
     },

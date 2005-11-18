@@ -106,6 +106,7 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.vkernel1=vkernel1;
         this.vkernel2=vkernel2;
         this.htmlElement = document.createElement('div');
+        this.htmlElement.className='relationship';
         this.htmlElement.style.width='1000px';
         this.htmlElement.style.height='1000px';
         this.htmlElement.id=this.idString();
@@ -115,9 +116,13 @@ Relationship.prototype = (new JSDBI()).extend( {
                                       this.vkernel1.y()+this.vkernel1.height()/2,
                                       this.vkernel2.x()+this.vkernel2.width()/2,
                                       this.vkernel2.y()+this.vkernel2.height()/2);
-        this.registerListeners();
         this.createLabel();
+        this.createButtons();
         this.createArrows();
+        this.registerListeners();
+        this.intersect1={x:0, y:0};
+        this.intersect2={x:0, y:0};
+//        this.line.img.style.border='1px solid red';
     },
 
     idString: function() {
@@ -125,6 +130,13 @@ Relationship.prototype = (new JSDBI()).extend( {
     },
 
     createLabel: function() {
+        // this div holds the label and associated buttons, so they can be easily moved as a single unit
+        this.labelDiv = document.createElement('div');
+        this.labelDiv.className='labelDiv selected';
+        this.labelDiv.style.position='absolute';
+        this.labelDiv.style.border='1px solid purple';
+        this.htmlElement.appendChild(this.labelDiv);
+
         this.label = document.createElement('input');
         this.label.value = 'asdfasdfasdfas';
         this.label.style.position='absolute';
@@ -133,10 +145,40 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.label.style.background='white';
         this.label.style.border='0px solid black';
         this.label.style.textAlign='center';
-        this.vkernel1.registerEventListener(this.label,
-                                   'mousedown',
-                                   vkernel1.terminateEvent.bindAsEventListener(this));
-        this.htmlElement.appendChild(this.label);
+        this.labelDiv.appendChild(this.label);
+        this.label.style.top='-10px';
+        this.label.style.left='-50px';
+    },
+
+    createButtons: function() {
+        // TODO most of this crap should go in the stylesheet
+        this.removeButton = document.createElement('input');
+        this.removeButton.type='button';
+        this.removeButton.className='removebutton';
+        this.removeButton.value = 'X';
+        this.removeButton.style.position='absolute';
+        this.removeButton.style.width='20px';
+        this.removeButton.style.height='20px';
+        this.removeButton.style.padding='0px';
+        this.removeButton.style.background='blue';
+        this.removeButton.style.color='white';
+        this.labelDiv.appendChild(this.removeButton);
+        this.removeButton.style.left='55px';
+        this.removeButton.style.top='-12px';
+
+        this.hideButton = document.createElement('input');
+        this.hideButton.type='button';
+        this.hideButton.className='hidebutton';
+        this.hideButton.value = 'H';
+        this.hideButton.style.position='absolute';
+        this.hideButton.style.width='20px';
+        this.hideButton.style.height='20px';
+        this.hideButton.style.padding='0px';
+        this.hideButton.style.background='blue';
+        this.hideButton.style.color='white';
+        this.labelDiv.appendChild(this.hideButton);
+        this.hideButton.style.left='-75px';
+        this.hideButton.style.top='-12px';
     },
 
     createArrows: function() {
@@ -182,9 +224,9 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.needUpdateArrows=false;
     },
 
-    moveLabel: function(x,y) {
-        this.label.style.left=(x-this.label.clientWidth/2)+'px';
-        this.label.style.top=(y-this.label.clientHeight/2)+'px';
+    moveLabelDiv: function(x,y) {
+        this.labelDiv.style.left=(x)+'px';
+        this.labelDiv.style.top=(y)+'px';
     },
 
     moveArrows: function() {
@@ -203,21 +245,21 @@ Relationship.prototype = (new JSDBI()).extend( {
                          {x: this.vkernel2.x()+this.vkernel2.width()/2,
                           y: this.vkernel2.y()+this.vkernel2.height()/2});
 
-        var intersect1 = rect1.getLineIntersect(line);
-        var intersect2 = rect2.getLineIntersect(line);
+        this.intersect1 = rect1.getLineIntersect(line);
+        this.intersect2 = rect2.getLineIntersect(line);
 
-        if(intersect1){
-            this.arrowCanvasElements[0].style.left=(intersect1.x-17)+'px';
-            this.arrowCanvasElements[0].style.top=(intersect1.y-17)+'px';
+        if(this.intersect1){
+            this.arrowCanvasElements[0].style.left=(this.intersect1.x-17)+'px';
+            this.arrowCanvasElements[0].style.top=(this.intersect1.y-17)+'px';
         }
-        if(intersect2){
-            this.arrowCanvasElements[1].style.left=(intersect2.x-17)+'px';
-            this.arrowCanvasElements[1].style.top=(intersect2.y-17)+'px';
+        if(this.intersect2){
+            this.arrowCanvasElements[1].style.left=(this.intersect2.x-17)+'px';
+            this.arrowCanvasElements[1].style.top=(this.intersect2.y-17)+'px';
         }
-        if(intersect1 && intersect2){
-            var x=Math.min(intersect1.x,intersect2.x)+Math.abs(intersect2.x-intersect1.x)/2;
-            var y=Math.min(intersect1.y,intersect2.y)+Math.abs(intersect2.y-intersect1.y)/2;
-            this.moveLabel(x,y);
+        if(this.intersect1 && this.intersect2){
+            var x=Math.min(this.intersect1.x,this.intersect2.x)+Math.abs(this.intersect2.x-this.intersect1.x)/2;
+            var y=Math.min(this.intersect1.y,this.intersect2.y)+Math.abs(this.intersect2.y-this.intersect1.y)/2;
+            this.moveLabelDiv(x,y);
         }
     },
 
@@ -255,52 +297,125 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.vkernel1.addEndChangeListener(this.endChange.bind(this));
         this.vkernel2.addEndChangeListener(this.endChange.bind(this));
 
+        Utils.registerEventListener(this.label,
+                                    'mousedown',
+                                    Utils.terminateEvent.bindAsEventListener(this));
+
+        Utils.registerEventListener(this.label,
+                                    'click',
+                                    this.selectAndTerminate.bindAsEventListener(this));
+
+        Utils.registerEventListener(this.removeButton,
+                                    'mousedown',
+                                    Utils.terminateEvent.bindAsEventListener(this));
+        Utils.registerEventListener(this.removeButton,
+                                    'dblclick',
+                                    Utils.terminateEvent.bindAsEventListener(this));
+        Utils.registerEventListener(this.removeButton,
+                                    'click',
+                                    this.removeButtonClick.bindAsEventListener(this));
+
+        Utils.registerEventListener(this.hideButton,
+                                    'mousedown',
+                                    Utils.terminateEvent.bindAsEventListener(this));
+        Utils.registerEventListener(this.hideButton,
+                                    'dblclick',
+                                    Utils.terminateEvent.bindAsEventListener(this));
+        Utils.registerEventListener(this.hideButton,
+                                    'click',
+                                    this.hideButtonClick.bindAsEventListener(this));
+
+        Utils.registerEventListener(this.arrowCanvasElements[0],
+                                    'mousedown',
+                                    Utils.terminateEvent.bindAsEventListener(this));
+        Utils.registerEventListener(this.arrowCanvasElements[0],
+                                    'dblclick',
+                                    Utils.terminateEvent.bindAsEventListener(this));
+        Utils.registerEventListener(this.arrowCanvasElements[0],
+                                    'click',
+                                    this.arrow1click.bindAsEventListener(this));
+
+        Utils.registerEventListener(this.arrowCanvasElements[1],
+                                    'mousedown',
+                                    Utils.terminateEvent.bindAsEventListener(this));
+        Utils.registerEventListener(this.arrowCanvasElements[1],
+                                    'dblclick',
+                                    Utils.terminateEvent.bindAsEventListener(this));
+        Utils.registerEventListener(this.arrowCanvasElements[1],
+                                    'click',
+                                    this.arrow2click.bindAsEventListener(this));
+
         this.vkernel1.addMoveListener(this.updatePosition1.bind(this));
         this.vkernel1.addSizeListener(this.updatePosition1.bind(this));
         this.vkernel2.addMoveListener(this.updatePosition2.bind(this));
         this.vkernel2.addSizeListener(this.updatePosition2.bind(this));
     },
 
+    hideButtonClick: function(e){
+        // TODO
+        alert("got click on hide button");
+    },
+
+    removeButtonClick: function(e){
+        // TODO
+        alert("got click on remove button");
+    },
+
+    arrow1click: function(e){
+        // TODO
+        alert("got click on arrow 1");
+    },
+
+    arrow2click: function(e){
+        // TODO
+        alert("got click on arrow 2");
+    },
+
     startChange: function(vkernel) {
         window.status = "got start drag";
         //hide arrows and label
-        this.label.style.display='none';
+        this.labelDiv.style.display='none';
         this.arrowCanvasElements[0].style.display='none';
         this.arrowCanvasElements[1].style.display='none';
     },
 
     endChange: function(vkernel) {
         window.status = "got end drag";
-        this.label.style.display='inline';
+
+        this.line.setP1(this.vkernel1.x()+this.vkernel1.width()/2,
+                        this.vkernel1.y()+this.vkernel1.height()/2);
+        this.line.setP2(this.vkernel2.x()+this.vkernel2.width()/2,
+                        this.vkernel2.y()+this.vkernel2.height()/2);
+
+        this.labelDiv.style.display='inline';
         this.updateArrows();
         this.arrowCanvasElements[0].style.display='block';
         this.arrowCanvasElements[1].style.display='block';
     },
 
-//    getIntersectionPointBetween(rectA, rectB){
-//        // line representing segment arrow is to be drawn on - from middle of object to middle of object
-//        
-//        Point2D aCenter = new Point2D.Double(a.getCenterX(), a.getCenterY());
-//        Point2D bCenter = new Point2D.Double(b.getCenterX(), b.getCenterY());
-//        Line2D arrowLine = new Line2D.Double(aCenter.getX(),
-//                                             aCenter.getY(),
-//                                             bCenter.getX(),
-//                                             bCenter.getY());
-//      
-//        
-//        Point2D intersectPoint = getRectLineIntersect(a.getBounds(),arrowLine);
-//        if (intersectPoint == null){
-//            // this generally happens when the center of b is contained within the bounds of a
-//            if(DEBUG) System.out.println("intersect point was null - "+a.getBounds()+" "+arrowLine.getP1()+" to "+arrowLine.getP2());
-//            
-//            // this is slightly a hack, but give it the center of a. Doesn't
-//            // really meet the contract for this method, but owrks in the
-//            // overall scheme of things.
-//            intersectPoint = aCenter;
-//        } else {
-//            if(DEBUG) System.out.println("intersect point was not null - "+intersectPoint);
-//        }
-//        return intersectPoint;
-//    }
+    selectAndTerminate: function(e) {
+        SelectionManager.clearSelection();
+        this.select();
+        this.label.focus();
+        Utils.terminateEvent(e);
+    },
 
+    // Select this relationship
+    select: function () {
+        if( !this.isSelected() ){
+            this.htmlElement.className += ' selected';
+        }
+    },
+
+    // Mark this relationship as not selected
+    deselect: function () {
+        if( this.isSelected()){
+            this.htmlElement.className = this.htmlElement.className.replace(/ selected|selected /, '');
+        }
+    },
+
+    // Returns whether or not this relationship is currently selected
+    isSelected: function () {
+        return this.htmlElement.className.indexOf('selected') != -1;
+    },
 });
