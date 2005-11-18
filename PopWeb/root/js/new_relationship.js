@@ -107,7 +107,6 @@ NewRelationship.prototype = {
         x = Math.min(x,parent.clientWidth);
         y = Math.max(0,y);
         y = Math.min(y,parent.clientHeight);
-        window.status = (x+'x'+y);
         this.line.setP2(x,y);
     }
 }
