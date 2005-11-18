@@ -118,12 +118,6 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.registerListeners();
         this.createLabel();
         this.createArrows();
-
-        // indicates whether a request is pending to update the arrows
-        this.needUpdateArrows = false;
-        
-        // indicates whether we've just updated the arrows, and it would be too soon to update them again
-        this.justUpdatedArrows = false;
     },
 
     idString: function() {
@@ -132,11 +126,12 @@ Relationship.prototype = (new JSDBI()).extend( {
 
     createLabel: function() {
         this.label = document.createElement('input');
+        this.label.value = 'asdfasdfasdfas';
         this.label.style.position='absolute';
         this.label.style.width='100px';
         this.label.style.height='20px';
         this.label.style.background='white';
-        this.label.style.border='1px solid black';
+        this.label.style.border='0px solid black';
         this.label.style.textAlign='center';
         this.vkernel1.registerEventListener(this.label,
                                    'mousedown',
@@ -162,38 +157,29 @@ Relationship.prototype = (new JSDBI()).extend( {
     updatePosition1: function(){
         this.line.setP1(this.vkernel1.x()+this.vkernel1.width()/2,
                         this.vkernel1.y()+this.vkernel1.height()/2);
-        this.updateArrows();
     },
 
     updatePosition2: function(){
         this.line.setP2(this.vkernel2.x()+this.vkernel2.width()/2,
                         this.vkernel2.y()+this.vkernel2.height()/2);
-        this.updateArrows();
     },
 
     updateArrows: function() {
         this.moveArrows();
-        if(this.needUpdateArrows){
-            // we've already got an update request pending, so don't do anything
-            return;
-        } else {
-            if(this.justUpdatedArrows){
-                // we just updated the arrows, so queue the request
-                this.needUpdateArrows = true;
-            } else {
-                // we haven't updated the arrows, so we can do it right away
-                this.doUpdateArrows();
-                // TODO make a constant from this magic number (time between updates of arrows)
-                window.setTimeout(this.resetJustUpdatedArrows.bind(this),300);
-            }
-        }
-    },
+        this.arrowCanvases[0].clear();
+        this.arrowCanvases[0].setColor("#000000");
+        this.arrowCanvases[1].clear();
+        this.arrowCanvases[1].setColor("#000000");
 
-    resetJustUpdatedArrows: function() {
-        if(this.needUpdateArrows){
-            this.doUpdateArrows();
-        }
-        this.justUpdatedArrows = false;
+        var angle = Math.atan2(this.vkernel2.y()+this.vkernel2.height()/2 - (this.vkernel1.y()+this.vkernel1.height()/2),
+                               this.vkernel1.x()+this.vkernel1.width()/2- (this.vkernel2.x()+this.vkernel2.width()/2));
+
+        this.drawArrow(this.arrowCanvases[0],17,17,angle);
+        this.arrowCanvases[0].paint();
+        this.drawArrow(this.arrowCanvases[1],17,17,angle+Math.PI);
+        this.arrowCanvases[1].paint();
+        this.justUpdatedArrows=true;
+        this.needUpdateArrows=false;
     },
 
     moveLabel: function(x,y) {
@@ -235,23 +221,6 @@ Relationship.prototype = (new JSDBI()).extend( {
         }
     },
 
-    doUpdateArrows: function() {
-        this.arrowCanvases[0].clear();
-        this.arrowCanvases[0].setColor("#000000");
-        this.arrowCanvases[1].clear();
-        this.arrowCanvases[1].setColor("#000000");
-
-        var angle = Math.atan2(this.vkernel2.y()+this.vkernel2.height()/2 - (this.vkernel1.y()+this.vkernel1.height()/2),
-                               this.vkernel1.x()+this.vkernel1.width()/2- (this.vkernel2.x()+this.vkernel2.width()/2));
-
-        this.drawArrow(this.arrowCanvases[0],17,17,angle);
-        this.arrowCanvases[0].paint();
-        this.drawArrow(this.arrowCanvases[1],17,17,angle+Math.PI);
-        this.arrowCanvases[1].paint();
-        this.justUpdatedArrows=true;
-        this.needUpdateArrows=false;
-    },
-
     // draws an arrow with the point of the arow at the x and y coordinates specified, with the angle specified.  A zero angle means the arrow is pointing to the right
     drawArrow: function(canvas, x, y, theta) {
         var coords = new Array(new Array(-15,0,-15), new Array(-7,0,7));
@@ -281,10 +250,31 @@ Relationship.prototype = (new JSDBI()).extend( {
     },
 
     registerListeners: function() {
+        this.vkernel1.addStartChangeListener(this.startChange.bind(this));
+        this.vkernel2.addStartChangeListener(this.startChange.bind(this));
+        this.vkernel1.addEndChangeListener(this.endChange.bind(this));
+        this.vkernel2.addEndChangeListener(this.endChange.bind(this));
+
         this.vkernel1.addMoveListener(this.updatePosition1.bind(this));
         this.vkernel1.addSizeListener(this.updatePosition1.bind(this));
         this.vkernel2.addMoveListener(this.updatePosition2.bind(this));
         this.vkernel2.addSizeListener(this.updatePosition2.bind(this));
+    },
+
+    startChange: function(vkernel) {
+        window.status = "got start drag";
+        //hide arrows and label
+        this.label.style.display='none';
+        this.arrowCanvasElements[0].style.display='none';
+        this.arrowCanvasElements[1].style.display='none';
+    },
+
+    endChange: function(vkernel) {
+        window.status = "got end drag";
+        this.label.style.display='inline';
+        this.updateArrows();
+        this.arrowCanvasElements[0].style.display='block';
+        this.arrowCanvasElements[1].style.display='block';
     },
 
 //    getIntersectionPointBetween(rectA, rectB){

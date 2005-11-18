@@ -214,7 +214,6 @@ LineDraw.Line.prototype = {
         this.img.style.top=y+"px";
         this.img.style.width=w+"px";
         this.img.style.height=h+"px";
-        window.status = imageName + ' height: '+this.img.style.height + ' width: '+this.img.style.width;
      }
 }
 

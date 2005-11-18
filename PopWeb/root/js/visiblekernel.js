@@ -24,6 +24,10 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         this.__moveListeners = new Array();
         // listeners that get notified when this visible kernel changes size
         this.__sizeListeners = new Array();
+        // listeners that get notified when this visible kernel starts moving or changing size (start of the drag)
+        this.__startChangeListeners = new Array();
+        // listeners that get notified when this visible kernel stops moving or changing size (end of the drag)
+        this.__endChangeListeners = new Array();
         if(this.htmlElement){
             this.setup();
         }
@@ -123,6 +127,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
                                    'click',
                                    this.toggleCollapsed.bind(this));
 
+        // TODO DRY - consolidate these into a big list of element/event pairs
         // Setup action terminators
         this.registerEventListener(this.body,
                                    'mousedown',
@@ -465,14 +470,31 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         return 1000;
     },
 
-    // Adds a movement listener.  The notify method will called whenever this visible kernel moves, with the parameters this object, newX, and new Y
+    // Adds a movement listener.  The notify method will called whenever this
+    // visible kernel moves, with the parameters this object, newX, and new Y
     addMoveListener: function (notifyMethod){
         this.__moveListeners.push(notifyMethod);
     },
 
-    // Adds a size listener.  The notify method will called whenever this visible kernel is resized, with the parameters this object, new width, and new height
+    // Adds a size listener.  The notify method will called whenever this
+    // visible kernel is resized, with the parameters this object, new width,
+    // and new height
     addSizeListener: function (notifyMethod){
         this.__sizeListeners.push(notifyMethod);
+    },
+
+    // Adds a start change listener.  The notify method will called whenever
+    // this visible kernel starts resizing or moving.  The notify method will
+    // get this object as a parameter.
+    addStartChangeListener: function (notifyMethod){
+        this.__startChangeListeners.push(notifyMethod);
+    },
+
+    // Adds an end change listener.  The notify method will called whenever
+    // this visible kernel stops resizing or moving.  The notify method will
+    // get this object as a parameter.
+    addEndChangeListener: function (notifyMethod){
+        this.__endChangeListeners.push(notifyMethod);
     },
 
     notifyMoveListeners: function (x,y){
@@ -484,6 +506,18 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     notifySizeListeners: function (width, height){
         for(var i=0;i<this.__sizeListeners.length;i++){
             this.__sizeListeners[i](this,width,height);
+        }
+    },
+
+    notifyStartChangeListeners: function (width, height){
+        for(var i=0;i<this.__startChangeListeners.length;i++){
+            this.__startChangeListeners[i](this);
+        }
+    },
+
+    notifyEndChangeListeners: function (width, height){
+        for(var i=0;i<this.__endChangeListeners.length;i++){
+            this.__endChangeListeners[i](this);
         }
     },
 
@@ -572,9 +606,11 @@ KernelDraggable.prototype = (new Rico.Draggable()).extend( {
    },
 
    startDrag: function() {
+       this.vkernel.notifyStartChangeListeners();
    },
 
    endDrag: function() {
+       this.vkernel.notifyEndChangeListeners();
        this.vkernel.update();
    },
 
@@ -584,6 +620,7 @@ KernelDraggable.prototype = (new Rico.Draggable()).extend( {
    },
 
    cancelDrag: function() {
+       this.vkernel.notifyEndChangeListeners();
    },
 
    select: function() {
@@ -602,13 +639,16 @@ KernelCornerDraggable.prototype = (new Rico.Draggable()).extend( {
     },
  
     startDrag: function() {
+       this.vkernel.notifyStartChangeListeners();
     },
  
     cancelDrag: function() {
+       this.vkernel.notifyEndChangeListeners();
     },
 
     endDrag: function() {
-        this.vkernel.update();
+       this.vkernel.notifyEndChangeListeners();
+       this.vkernel.update();
     },
  
     duringDrag: function() {
