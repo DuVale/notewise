@@ -17,6 +17,7 @@
                 border: 0px solid black;
                 width:800px;
             }
+
             .section {
                 border-left: 1px solid black;
                 border-right: 1px solid black;
@@ -43,8 +44,9 @@
             #background {
                 border: 1px solid black;
                 width: 794px;
-                height: 564px;
+                height: 566px;
                 top: 0px;
+                position: relative;
             }
             #namefield0 {
                 width: 200px;
@@ -118,11 +120,11 @@
             }
             .vkernel .body {
                 background: white;
-                width: auto;
-                height: 65px;
-                position: relative;
-                margin: 2px;
-                top: 0px;
+                position: absolute;
+                left: 2px;
+                right: 2px;
+                top: 30px;
+                bottom: 2px;
                 clear: both;
             }
 
@@ -213,86 +215,92 @@
             <div id="kernel0" class="vkernel">
                 <input type="text" id="namefield0" class="namefield" value="[% kernel.name %]"/>
                 <div class="body" id="background">
-                    <script type="text/javascript" src="/js/wz_jsgraphics.js"></script>
-                    <script type="text/javascript" src="/js/prototype.js"></script>
-                    <script type="text/javascript" src="/js/rico.js"></script>
-                    <script type="text/javascript" src="/js/jsdbi.js"></script>
-                    <script type="text/javascript" src="/js/utils.js"></script>
-                    <script type="text/javascript" src="/js/linedraw.js"></script>
-                    <script type="text/javascript" src="/js/new_relationship.js"></script>
-                    <script type="text/javascript" src="/js/relationship.js"></script>
-                    <script type="text/javascript" src="/js/kernel.js"></script>
-                    <script type="text/javascript" src="/js/visiblekernel.js"></script>
-                    <script type="text/javascript" src="/js/controls.js"></script>
-                    <script type="text/javascript" src="/js/effects.js"></script>
-                    <script type="text/javascript" src="/js/dragdrop.js"></script>
-                    <script>
-                        // XXX this is pretty nasty - put this inside the view's vkernel instead
-                        var vkernelCache = {};
-                    </script>
                     [% FOR vkernel = visible_kernels %]
                         [%INCLUDE 'Kernel/kernel.tt'%]
                     [%END%]
                 </div>
             </div>
         </div>
-
+        <script type="text/javascript" src="/js/wz_jsgraphics.js"></script>
+        <script type="text/javascript" src="/js/prototype.js"></script>
+        <script type="text/javascript" src="/js/rico.js"></script>
+        <script type="text/javascript" src="/js/jsdbi.js"></script>
+        <script type="text/javascript" src="/js/utils.js"></script>
+        <script type="text/javascript" src="/js/linedraw.js"></script>
+        <script type="text/javascript" src="/js/new_relationship.js"></script>
+        <script type="text/javascript" src="/js/relationship.js"></script>
+        <script type="text/javascript" src="/js/kernel.js"></script>
+        <script type="text/javascript" src="/js/visiblekernel.js"></script>
+        <script type="text/javascript" src="/js/controls.js"></script>
+        <script type="text/javascript" src="/js/effects.js"></script>
+        <script type="text/javascript" src="/js/dragdrop.js"></script>
         <script>
-        var viewKernelId=[%kernel.id%];
-        // XXX precache this instead of fetching it
-        var vkernel = new VisibleKernel(undefined,[%kernel.id%],undefined);
-        vkernel.body = document.getElementById('background');
+            // XXX this is pretty nasty - put this inside the view's vkernel instead
+            var vkernelCache = {};
+        </script>
 
-        var background = vkernel.body;
-        dndMgr.registerDropZone( new CustomDropzone(background,vkernel) );
+        [% FOR vkernel = visible_kernels %]
+            <script>
+                [%INCLUDE 'Kernel/kernel-js.tt'%]
+            </script>
+        [%END%]
+        <script>
 
-        var i = 42;
-        function addKernel(e){
-            alert("body addKernel called");
+            var viewKernelId=[%kernel.id%];
+            // XXX precache this instead of fetching it
+            var vkernel = new VisibleKernel(undefined,[%kernel.id%],undefined);
+            vkernel.body = document.getElementById('background');
 
-            var posx = 0;
-            var posy = 0;
-            if (!e) var e = window.event;
-            if (e.pageX || e.pageY)
-            {
-                    posx = e.pageX;
-                    posy = e.pageY;
+            var background = vkernel.body;
+            dndMgr.registerDropZone( new CustomDropzone(background,vkernel) );
+
+            var i = 42;
+            function addKernel(e){
+                alert("body addKernel called");
+
+                var posx = 0;
+                var posy = 0;
+                if (!e) var e = window.event;
+                if (e.pageX || e.pageY)
+                {
+                        posx = e.pageX;
+                        posy = e.pageY;
+                }
+                else if (e.clientX || e.clientY)
+                {
+                        posx = e.clientX + document.body.scrollLeft;
+                        posy = e.clientY + document.body.scrollTop;
+                }
+
+                var x = posx-background.offsetLeft;
+                var y = posy-background.offsetTop;
+                var vkernel = VisibleKernel.insert({container_object: viewKernelId,
+                                                    x: x,
+                                                    y: y,
+                                                    width: 100,
+                                                    height: 100,
+                                                    collapsed: 1});
+                vkernel.realize(background);
+                vkernel.select();
+                vkernel.namefield.focus();
             }
-            else if (e.clientX || e.clientY)
-            {
-                    posx = e.clientX + document.body.scrollLeft;
-                    posy = e.clientY + document.body.scrollTop;
+
+            function clearSelection (e) {
+                VisibleKernel.prototype.clearSelectionAndTerminate(e);
+            }
+            document.getElementById('background').addEventListener("dblclick", addKernel, false);
+            document.addEventListener("mousedown", clearSelection, false);
+
+            document.getElementById('mysearchfield').focus();
+            var vkernel1=vkernelCache['130/433'];
+            var vkernel2=vkernelCache['130/432'];
+            if(vkernel1 && vkernel2){
+                var relationship = new Relationship(vkernel1,vkernel2);
+            } else {
+    //            alert("couldn't find the right kernels to create the relationship");
             }
 
-            var x = posx-background.offsetLeft;
-            var y = posy-background.offsetTop;
-            var vkernel = VisibleKernel.insert({container_object: viewKernelId,
-                                                x: x,
-                                                y: y,
-                                                width: 100,
-                                                height: 100,
-                                                collapsed: 1});
-            vkernel.realize(background);
-            vkernel.select();
-            vkernel.namefield.focus();
-        }
-
-        function clearSelection (e) {
-            VisibleKernel.prototype.clearSelectionAndTerminate(e);
-        }
-        document.getElementById('background').addEventListener("dblclick", addKernel, false);
-        document.addEventListener("mousedown", clearSelection, false);
-
-        document.getElementById('mysearchfield').focus();
-        var vkernel1=vkernelCache['130/433'];
-        var vkernel2=vkernelCache['130/432'];
-        if(vkernel1 && vkernel2){
-            var relationship = new Relationship(vkernel1,vkernel2);
-        } else {
-//            alert("couldn't find the right kernels to create the relationship");
-        }
-
-        new Ajax.Autocompleter('mysearchfield', 'searchresults', '/ac', {frequency: .2});
+            new Ajax.Autocompleter('mysearchfield', 'searchresults', '/ac', {frequency: .2});
         </script>
     </body>
 </html>

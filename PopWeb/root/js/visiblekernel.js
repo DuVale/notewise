@@ -254,11 +254,6 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
 
     // causes the internal elements to resize if necessary
     layoutResize: function() {
-        var body = Utils.getElementsByClassName(this.htmlElement,'body')[0];
-        // XXX Jon says magic number are bad
-        var height = this.height() - 34;
-        height = Math.max(0,height);
-        body.style.height = height+'px';
     },
 
     // returns the desired width of the name field.  Usually the width of the text in the field, but bounded by the minimum width
@@ -660,10 +655,12 @@ KernelCornerDraggable.prototype = (new Rico.Draggable()).extend( {
     },
  
     cancelDrag: function() {
+       this.sizeFromCorner();
        this.vkernel.notifyEndChangeListeners();
     },
 
     endDrag: function() {
+       this.sizeFromCorner();
        this.vkernel.notifyEndChangeListeners();
        this.vkernel.update();
     },

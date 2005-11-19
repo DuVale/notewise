@@ -10,21 +10,6 @@
     <div class="body">
         [% body %]
     </div>
-    <div class="corner">
+    <div class="corner" style="right: 0px; bottom: 0px;">
     </div>
 </div>
-<script>
-    var kernelDiv = document.getElementById('vkernel[%id%]');
-    var vkernel = new VisibleKernel([%vkernel.container_kernel.id%],
-                                    [%vkernel.contained_kernel.id%],
-                                    kernelDiv,
-                                    [%vkernel.x%],
-                                    [%vkernel.y%],
-                                    [%vkernel.width%],
-                                    [%vkernel.height%],
-                                    [%vkernel.collapsed%]
-                                    );
-    vkernel.layout();
-    vkernelCache['[%vkernel.container_kernel.id%]/[%vkernel.contained_kernel.id%]']=vkernel;
-</script>
-

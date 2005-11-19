@@ -1,0 +1,13 @@
+[% id = vkernel.container_kernel.id _ '/' _ vkernel.contained_kernel.id %]
+    var kernelDiv = document.getElementById('vkernel[%id%]');
+    var vkernel = new VisibleKernel([%vkernel.container_kernel.id%],
+                                    [%vkernel.contained_kernel.id%],
+                                    kernelDiv,
+                                    [%vkernel.x%],
+                                    [%vkernel.y%],
+                                    [%vkernel.width%],
+                                    [%vkernel.height%],
+                                    [%vkernel.collapsed%]
+                                    );
+    vkernel.layout();
+    vkernelCache['[%vkernel.container_kernel.id%]/[%vkernel.contained_kernel.id%]']=vkernel;
