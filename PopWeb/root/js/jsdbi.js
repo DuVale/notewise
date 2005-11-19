@@ -56,6 +56,7 @@
 // Thanks to Scott Williams, Chris Whipple, and Jon Raphelson for letting me bounce ideas off them
 
 // TODO current list
+//  Add dosc for multiple primary keys
 //  Handle errors from the server
 
 // TODO future list
@@ -71,9 +72,8 @@ JSDBI.prototype = {
     initialize: function () {
     },
 
-    // Returns the primary key for this object
+    // Returns the primary key(s) for this object
     id: function () {
-        // call the accessor for the primary key (gross syntax, I know)
         if(this.__primaryKeys){
             var ids = new Array;
             for(var i=0;i<this.__primaryKeys.length;i++){
@@ -86,6 +86,10 @@ JSDBI.prototype = {
             return this[primaryKey]();
         }
     },
+
+	toString: function() {
+		return this.id().toString();
+	},
 
     // Sends any updated fields in the object to the server.
     update: function() {
@@ -100,7 +104,7 @@ JSDBI.prototype = {
     //  XXX it won't let me name this delete - is destroy a good name?
     destroy: function() {
         var request = new Ajax.Request(this.url(), { method: 'delete',
-                                                     asynchronous: true} );
+                                                     asynchronous: false} );
         return;
     },
 
@@ -112,8 +116,6 @@ JSDBI.prototype = {
             url = this.__url+'/'+this.id();
         } else if (typeof this.id() == 'object'){
             url = this.__url+'/'+this.id().join('/');
-        } else {
-            alert ('id of unknown type: '+(typeof this.id()));
         }
         return url;
     },
@@ -275,7 +277,6 @@ JSDBI.insert = function (values) {
     var object = new this();
     for(key in values){
         var value = values[key];
-        window.status="key: "+key;
         object[key](value);
     }
     var params = object.__getParams();
@@ -283,8 +284,85 @@ JSDBI.insert = function (values) {
                                         { method: 'put',
                                           parameters: params,
                                           asynchronous: false} );
-//    alert(request.transport.responseText);
     object.__populate(request.transport.responseXML);
     return object;
+};
+
+// has_a - define relationship on this object. It creates a few methods on the 
+// prototype, including the _field_ accessor
+JSDBI.has_a = function (field, clazz) {
+	var localField = field;
+	var localClazz = clazz;
+
+	this.prototype[localField] = function (value) {
+		if(value) {
+			return this['__' + localField] = value.toString();
+		} else {
+			// inflate if we need to
+			var obj;
+			var type = typeof this['__' + localField];
+			if(type == 'string' || type == 'number') {
+				var eClazz = eval(localClazz);
+				obj = eClazz.retrieve(this['__' + localField]);
+                                this['__' + localField] = obj;
+			} else {
+				obj = this['__' + localField];
+			}		
+			return obj;
+		}
+	};
+};
+
+// has_many - define relationship on this object. It creates a few methods on
+// the prototype, including the _field_ accessor and the add_to_field method.
+JSDBI.has_many = function (field, clazz, key, retrieveUrl) {
+	this.prototype[field] = function (value) {
+		var localField = field;
+		var localClazz = clazz;
+		var localKey = key;
+		var localUrl = retrieveUrl;
+
+		if(value) {
+			alert("not quite sure what to do here");
+		} else {
+			var retArray = new Array;
+			var eClazz = eval(localClazz);
+			var opts = { 
+				method: 'get',
+				asynchronous: false 
+			};
+			var request = new Ajax.Request(localUrl.replace(/\$/, this.id().toString()), opts);
+			var xml = request.transport.responseXML;
+			var elements = xml.getElementsByTagName(eClazz.elementTag());
+			for(var i = 0; i < elements.length; i++) {
+				var obj = new eClazz();
+				obj.__populate(elements[i]);
+				retArray.push(obj);
+			}
+			return retArray;	
+		}
+	};
+
+	this.prototype['add_to_' + field] = function (value) {
+		var localField = field;
+		var localClazz = clazz;
+		var localKey = key;
+		
+		var obj;
+		var eClazz = eval(localClazz);
+		var type = typeof value;
+		if (type == 'string' || type == 'number') {
+			// we got an id to an already existing object
+			obj = eClazz.retreive(value);
+			obj[localKey] = this.toString();
+			obj.update();	
+		} else {
+			// we got an object - were making a new one
+			value[localKey] = this.toString();
+			obj = eClazz.insert(value);	
+		}
+
+		return obj;
+	};
 };
 

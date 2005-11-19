@@ -397,38 +397,6 @@ document.getElementsByClassName = function(className) {
   return elements;
 }
 
-HTMLElement.prototype.getElementsByClassName = function(className) {
-  var children = this.childNodes;
-  var elements = new Array();
-  
-  for (var i = 0; i < children.length; i++) {
-    var child = children[i];
-    if(child.className !== undefined){
-        var classNames = child.className.split(' ');
-        for (var j = 0; j < classNames.length; j++) {
-          if (classNames[j] == className) {
-            elements.push(child);
-            break;
-          }
-        }
-    }
-  }
-  
-  return elements;
-}
-
-// Tests to see if this element has the given element as a parent
-HTMLElement.prototype.hasAncestor = function(parentElement) {
-    var element = this;
-    while(element != document){
-        if(element == parentElement){
-            return true;
-        }
-        element = element.parentNode;
-    }
-    return false;
-}
-
 /*--------------------------------------------------------------------------*/
 
 if (!window.Element) {

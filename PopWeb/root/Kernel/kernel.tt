@@ -1,26 +1,29 @@
 [% id = vkernel.container_kernel.id _ '/' _ vkernel.contained_kernel.id %]
-<div id="vkernel[%id%]" class="vkernel">
+<div id="vkernel[%id%]" class="vkernel" style="left: [%vkernel.x%]px; top: [%vkernel.y%]px;
+                                               width: [%vkernel.width%]px; height: [%vkernel.height%]px;">
     <input type=button value="-" class="expandbutton"/>
     <input type=button value='X' class="removebutton"/>
     <input type=button value='R' class="relationshipbutton"/>
     <div class="leftgrippie"></div>
-    <input type="text" id="namefield[%id%]" class="namefield" value="[%vkernel.contained_kernel.name%]"/>
+    <input type="text" class="namefield" value="[%vkernel.contained_kernel.name%]"/>
     <div class="rightgrippie"/></div>
-    <div class="body" id="body[%id%]">
+    <div class="body">
+        [% body %]
     </div>
-    <div class="corner" id="vkcorner[%id%]">
+    <div class="corner">
     </div>
 </div>
 <script>
     var kernelDiv = document.getElementById('vkernel[%id%]');
-    var kernel = new Kernel([%vkernel.contained_kernel%]);
-    kernel.name = '[%vkernel.contained_kernel.name%]';
-    var vkernel = new VisibleKernel([%vkernel.container_kernel.id%],[%vkernel.contained_kernel.id%],kernelDiv,kernel);
-    vkernel.x([%vkernel.x%]);
-    vkernel.y([%vkernel.y%]);
-    vkernel.setWidth([%vkernel.width%]);
-    vkernel.setHeight([%vkernel.height%]);
-    vkernel.collapsed([%vkernel.collapsed%]);
+    var vkernel = new VisibleKernel([%vkernel.container_kernel.id%],
+                                    [%vkernel.contained_kernel.id%],
+                                    kernelDiv,
+                                    [%vkernel.x%],
+                                    [%vkernel.y%],
+                                    [%vkernel.width%],
+                                    [%vkernel.height%],
+                                    [%vkernel.collapsed%]
+                                    );
     vkernel.layout();
     vkernelCache['[%vkernel.container_kernel.id%]/[%vkernel.contained_kernel.id%]']=vkernel;
 </script>

@@ -2,19 +2,6 @@
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
     <head>
-        <script type="text/javascript" src="/js/wz_jsgraphics.js"></script>
-        <script type="text/javascript" src="/js/prototype.js"></script>
-        <script type="text/javascript" src="/js/rico.js"></script>
-        <script type="text/javascript" src="/js/jsdbi.js"></script>
-        <script type="text/javascript" src="/js/utils.js"></script>
-        <script type="text/javascript" src="/js/linedraw.js"></script>
-        <script type="text/javascript" src="/js/new_relationship.js"></script>
-        <script type="text/javascript" src="/js/relationship.js"></script>
-        <script type="text/javascript" src="/js/kernel.js"></script>
-        <script type="text/javascript" src="/js/visiblekernel.js"></script>
-        <script type="text/javascript" src="/js/controls.js"></script>
-        <script type="text/javascript" src="/js/effects.js"></script>
-        <script type="text/javascript" src="/js/dragdrop.js"></script>
         <style>
             #search {
                 float: right;
@@ -153,8 +140,8 @@
                 cursor: move;
             }
             .leftgrippie {
-                top: 0;
-                left: 0;
+                top: 0px;
+                left: 0px;
                 width: 100%;
             }
             .rightgrippie {
@@ -196,25 +183,11 @@
               margin:0;
               padding:0;
             }
+            div.dummyDiv {
+                position: absolute;
+                background: red;
+            }
         </style>
-        <script>
-            // Prevent a drag on the text field from moving the object
-            var i=0;
-            var onMouseDownTextFieldListener = function(e) {
-                dndMgr._terminateEvent(e);
-            };
-
-            var updateName = function (e) {
-               var targ;
-               if (e.target) targ = e.target;
-               else if (e.srcElement) targ = e.srcElement;
-               if (targ.nodeType == 3) // defeat Safari bug
-                    targ = targ.parentNode;
-               ajaxEngine.sendRequest( 'updateKernel',
-                                       'id=2',
-                                       'name='+targ.value );
-            };
-        </script>
     </head>
     <body>
         <div id="outerframe">
@@ -224,9 +197,6 @@
                     Search: <input autocomplete="off" id="mysearchfield" name="s">
                     <div class="auto_complete" id="searchresults"></div>
                 </div>
-                <script>
-                new Ajax.Autocompleter('mysearchfield', 'searchresults', '/ac', {frequency: .2});
-                </script>
             </div>
             <div id="parents" class="section">
                 <div class="header">
@@ -243,6 +213,19 @@
             <div id="kernel0" class="vkernel">
                 <input type="text" id="namefield0" class="namefield" value="[% kernel.name %]"/>
                 <div class="body" id="background">
+                    <script type="text/javascript" src="/js/wz_jsgraphics.js"></script>
+                    <script type="text/javascript" src="/js/prototype.js"></script>
+                    <script type="text/javascript" src="/js/rico.js"></script>
+                    <script type="text/javascript" src="/js/jsdbi.js"></script>
+                    <script type="text/javascript" src="/js/utils.js"></script>
+                    <script type="text/javascript" src="/js/linedraw.js"></script>
+                    <script type="text/javascript" src="/js/new_relationship.js"></script>
+                    <script type="text/javascript" src="/js/relationship.js"></script>
+                    <script type="text/javascript" src="/js/kernel.js"></script>
+                    <script type="text/javascript" src="/js/visiblekernel.js"></script>
+                    <script type="text/javascript" src="/js/controls.js"></script>
+                    <script type="text/javascript" src="/js/effects.js"></script>
+                    <script type="text/javascript" src="/js/dragdrop.js"></script>
                     <script>
                         // XXX this is pretty nasty - put this inside the view's vkernel instead
                         var vkernelCache = {};
@@ -260,12 +243,12 @@
         var vkernel = new VisibleKernel(undefined,[%kernel.id%],undefined);
         vkernel.body = document.getElementById('background');
 
-        dndMgr.registerDropZone( new CustomDropzone('background',vkernel) );
-
-        var background = document.getElementById('background');
+        var background = vkernel.body;
+        dndMgr.registerDropZone( new CustomDropzone(background,vkernel) );
 
         var i = 42;
         function addKernel(e){
+            alert("body addKernel called");
 
             var posx = 0;
             var posy = 0;
@@ -308,6 +291,8 @@
         } else {
 //            alert("couldn't find the right kernels to create the relationship");
         }
+
+        new Ajax.Autocompleter('mysearchfield', 'searchresults', '/ac', {frequency: .2});
         </script>
     </body>
 </html>

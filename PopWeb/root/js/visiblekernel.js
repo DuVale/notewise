@@ -13,13 +13,14 @@ VisibleKernel.fields(['container_object',
 VisibleKernel.primaryKeys(['container_object', 'contained_object']);
 VisibleKernel.url('/rest/vkernel');
 VisibleKernel.elementTag('visiblekernel');
+VisibleKernel.has_a('contained_object','Kernel');
+VisibleKernel.has_a('container_object','Kernel');
 
 VisibleKernel.prototype = (new JSDBI()).extend( {
-    initialize: function(container_object,contained_object,htmlElement,kernel) {
+    initialize: function(container_object,contained_object,htmlElement,x,y,width,height,collapsed) {
         this.container_object(container_object);
         this.contained_object(contained_object);
         this.htmlElement = htmlElement;
-        this.kernel = kernel;
         // listeners that get notified when this visible kernel moves
         this.__moveListeners = new Array();
         // listeners that get notified when this visible kernel changes size
@@ -28,6 +29,11 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         this.__startChangeListeners = new Array();
         // listeners that get notified when this visible kernel stops moving or changing size (end of the drag)
         this.__endChangeListeners = new Array();
+        this.__x=x;
+        this.__y=y;
+        this.__width=width;
+        this.__height=height;
+        this.__collapsed=collapsed;
         if(this.htmlElement){
             this.setup();
         }
@@ -36,8 +42,6 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     setup: function () {
         this.fetchElements();
         this.registerHandlers();
-        this.setWidth(this.width());
-        this.setHeight(this.height());
     },
 
     idString: function() {
@@ -56,28 +60,29 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
            +"<input type=button value='-' class='expandbutton'/>"
            +"<input type=button value='X' class='removebutton'/>"
            +"<input type=button value='R' class='relationshipbutton'/>"
-           +"<input value=\"here\" type=\"text\" id=\"namefield"+this.idString()+"\" class=\"namefield\"/>"
+           +"<input value=\"\" type=\"text\" class=\"namefield\"/>"
            +"<div class=\"rightgrippie\"/></div>"
-           +"<div class=\"body\" id=\"body"+this.idString()+"\">"
+           +"<div class=\"body\">"
            +"</div>"
-           +"<div class=\"corner\" id='vkcorner"+this.idString()+"'>"
+           +"<div class=\"corner\">"
            +"</div>";
-//        this.namefield.value = this.kernel.name;
-        this.x(this.x());
-        this.y(this.y());
         parent.appendChild(this.htmlElement);
         this.setup();
+        this.x(this.x());
+        this.y(this.y());
+        this.setWidth(this.width());
+        this.setHeight(this.height());
         this.namefield.value = '';
         this.layout();
     },
 
     fetchElements: function () {
-        this.namefield = document.getElementById('namefield'+this.idString());
-        this.body = document.getElementById('body'+this.idString());
-        this.corner = document.getElementById('vkcorner'+this.idString());
-        this.relationshipbutton = (this.htmlElement.getElementsByClassName('relationshipbutton'))[0];
-        this.expandbutton = (this.htmlElement.getElementsByClassName('expandbutton'))[0];
-        this.removebutton = (this.htmlElement.getElementsByClassName('removebutton'))[0];
+        this.namefield = Utils.getElementsByClassName(this.htmlElement, 'namefield')[0];
+        this.body = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
+        this.corner = Utils.getElementsByClassName(this.htmlElement, 'corner')[0];
+        this.relationshipbutton = Utils.getElementsByClassName(this.htmlElement, 'relationshipbutton')[0];
+        this.expandbutton = Utils.getElementsByClassName(this.htmlElement, 'expandbutton')[0];
+        this.removebutton = Utils.getElementsByClassName(this.htmlElement, 'removebutton')[0];
     },
 
     // prevents the default browser action for this event from occuring
@@ -90,9 +95,9 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
 
     registerHandlers: function() {
         // set up the dnd
-        dndMgr.registerDraggable( new KernelDraggable('vkernel'+this.idString(), this) );
-        dndMgr.registerDraggable( new KernelCornerDraggable('vkcorner'+this.idString(), this) );
-        dndMgr.registerDropZone( new CustomDropzone('body'+this.idString(),this) );
+        dndMgr.registerDraggable( new KernelDraggable(this.htmlElement, this) );
+        dndMgr.registerDraggable( new KernelCornerDraggable(this.corner, this) );
+        dndMgr.registerDropZone( new CustomDropzone(this.body,this) );
 
         // setup the namefield actions
         Utils.registerEventListener(this.namefield,'blur', this.updateName.bindAsEventListener(this));
@@ -187,16 +192,29 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
 
         var x = posx-parentPos.x;
         var y = posy-parentPos.y;
+        var dummyDiv = document.createElement('div');
+        dummyDiv.className='dummyDiv';
+        dummyDiv.style.left=x+'px';
+        dummyDiv.style.top=y+'px';
+        dummyDiv.style.width='100px';
+        dummyDiv.style.height='34px'; //XXX jon hates me
+        this.body.appendChild(dummyDiv);
+
+        window.setTimeout(this.createVKernel.bind(this),0,x,y,dummyDiv);
+        Utils.terminateEvent(e);
+    },
+
+    createVKernel: function(x,y,dummyDiv){
         var vkernel = VisibleKernel.insert({container_object: this.contained_object(),
                                             x: x,
                                             y: y,
                                             width: 100,
                                             height: 100,
                                             collapsed: 1});
+        this.body.removeChild(dummyDiv);
         vkernel.realize(this.body);
         vkernel.select();
         vkernel.namefield.focus();
-        Utils.terminateEvent(e);
     },
 
     // removes the html element from the view, and then notifies the server
@@ -236,8 +254,10 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
 
     // causes the internal elements to resize if necessary
     layoutResize: function() {
-        var body = (this.htmlElement.getElementsByClassName('body'))[0];
+        var body = Utils.getElementsByClassName(this.htmlElement,'body')[0];
+        // XXX Jon says magic number are bad
         var height = this.height() - 34;
+        height = Math.max(0,height);
         body.style.height = height+'px';
     },
 
@@ -525,7 +545,8 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
             targ = targ.parentNode;
 
         // XXX jsdbi relationships are working yet, so we don't have a kernel :(
-//        this.kernel.name(targ.value);
+        this.contained_object().name(targ.value);
+        this.contained_object().update();
     },
 
 
@@ -574,7 +595,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         var parentElement = vkernel.body;
 
         // Can't make element child of it's own child and don't reparent it if it's already in the right element
-        if(!parentElement.hasAncestor(this.htmlElement)
+        if(!Utils.hasAncestor(parentElement,this.htmlElement)
           && this.htmlElement.parentNode != parentElement){
             // figure out the new x and y
             var pos = RicoUtil.toViewportPosition(this.htmlElement);
@@ -597,7 +618,7 @@ KernelDraggable.prototype = (new Rico.Draggable()).extend( {
 
    initialize: function( htmlElement, vkernel ) {
       this.type        = 'Kernel';
-      this.htmlElement = $(htmlElement);
+      this.htmlElement = htmlElement;
       this.vkernel        = vkernel;
    },
 
@@ -630,7 +651,7 @@ var KernelCornerDraggable = Class.create();
 KernelCornerDraggable.prototype = (new Rico.Draggable()).extend( {
     initialize: function( htmlElement, vkernel ) {
         this.type        = 'KernelCorner';
-        this.htmlElement = $(htmlElement);
+        this.htmlElement = htmlElement;
         this.vkernel        = vkernel;
     },
  
@@ -674,7 +695,7 @@ CustomDropzone.prototype = (new Rico.Dropzone()).extend( {
 
    initialize: function( htmlElement, vkernel ) {
         this.type        = 'Kernel';
-        this.htmlElement = $(htmlElement);
+        this.htmlElement = htmlElement;
         this.vkernel        = vkernel;
    },
 
