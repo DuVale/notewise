@@ -304,6 +304,7 @@ JSDBI.has_a = function (field, clazz) {
 			if(type == 'string' || type == 'number') {
 				var eClazz = eval(localClazz);
 				obj = eClazz.retrieve(this['__' + localField]);
+                                this['__' + localField] = obj;
 			} else {
 				obj = this['__' + localField];
 			}		
