@@ -20,7 +20,13 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     initialize: function(container_object,contained_object,htmlElement,x,y,width,height,collapsed) {
         this.container_object(container_object);
         this.contained_object(contained_object);
+        this.__x=x;
+        this.__y=y;
+        this.__width=width;
+        this.__height=height;
+        this.__collapsed=collapsed;
         this.htmlElement = htmlElement;
+
         // listeners that get notified when this visible kernel moves
         this.__moveListeners = new Array();
         // listeners that get notified when this visible kernel changes size
@@ -29,11 +35,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         this.__startChangeListeners = new Array();
         // listeners that get notified when this visible kernel stops moving or changing size (end of the drag)
         this.__endChangeListeners = new Array();
-        this.__x=x;
-        this.__y=y;
-        this.__width=width;
-        this.__height=height;
-        this.__collapsed=collapsed;
+
         if(this.htmlElement){
             this.setup();
         }
@@ -44,6 +46,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         this.registerHandlers();
     },
 
+    // returns the id in the form '1/2'
     idString: function() {
         var id = this.id().join('/');
         return id;

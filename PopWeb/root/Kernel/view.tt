@@ -187,7 +187,7 @@
             }
             div.dummyDiv {
                 position: absolute;
-                background: red;
+                background: #888888;
             }
         </style>
     </head>
