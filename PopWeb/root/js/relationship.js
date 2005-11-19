@@ -107,8 +107,6 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.vkernel2=vkernel2;
         this.htmlElement = document.createElement('div');
         this.htmlElement.className='relationship';
-        this.htmlElement.style.width='1000px';
-        this.htmlElement.style.height='1000px';
         this.htmlElement.id=this.idString();
         this.vkernel1.htmlElement.parentNode.appendChild(this.htmlElement);
         this.line = new LineDraw.Line(this.htmlElement,

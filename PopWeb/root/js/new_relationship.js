@@ -35,15 +35,18 @@ NewRelationship.prototype = {
             posy = e.clientY + document.body.scrollTop;
         }
         // the visible kernel coords are probably off - they need the parent's screen position not the relative coords
-        var startX = Number(visible_kernel.x()) + (Number(visible_kernel.width()))/2;
-        var startY = Number(visible_kernel.y()) + (Number(visible_kernel.height()))/2;
+        var startX = visible_kernel.htmlElement.offsetLeft + visible_kernel.htmlElement.clientWidth/2;
+        var startY = visible_kernel.htmlElement.offsetTop;
+        var parent = this.startVisibleKernel.htmlElement.parentNode;
+        var parentPos = RicoUtil.toViewportPosition(parent);
         var parentX = document.getElementById('background').offsetLeft;
         var parentY = document.getElementById('background').offsetTop;
         this.line = new LineDraw.Line(visible_kernel.htmlElement.parentNode,
                                       startX,
                                       startY,
-                                      posx-parentX,
-                                      posy-parentY);
+                                      posx-parentPos.x,
+                                      posy-parentPos.y
+                                     );
         this.line.img.style.zIndex = 100;
     },
 

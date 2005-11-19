@@ -23,10 +23,12 @@ sub default : Private {
 }
 
 sub kernel : Path('/rest/kernel') {
-    my ( $self, $c) = @_;
+    my ( $self, $c, $id, $action) = @_;
 
     my $method = $c->req->method;
-    if($method eq 'GET'){
+    if($action eq 'children'){
+        $c->forward('children');
+    } elsif($method eq 'GET'){
         $c->forward('view');
     } elsif($method eq 'PUT'){
         $c->forward('add');
@@ -35,6 +37,19 @@ sub kernel : Path('/rest/kernel') {
     } elsif($method eq 'DELETE'){
         $c->forward('delete');
     }
+}
+
+sub children : Private {
+    my ( $self, $c, $id) = @_;
+
+    my $kernel = PopWeb::M::CDBI::Kernel->retrieve($id);
+    unless($kernel){
+        $c->response->status(404);
+        $c->res->output('ERROR');
+        return;
+    }
+    $c->stash->{visiblekernel}=[map $_->to_xml_hash_deep, $kernel->contained_objects];
+    $c->forward('PopWeb::V::XML');
 }
 
 sub view : Private {

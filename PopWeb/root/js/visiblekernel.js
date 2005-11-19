@@ -44,6 +44,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     setup: function () {
         this.fetchElements();
         this.registerHandlers();
+        this.hydrateChildren();
     },
 
     // returns the id in the form '1/2'
@@ -58,9 +59,10 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         this.htmlElement = document.createElement('div');
         this.htmlElement.id="vkernel"+this.idString();
         this.htmlElement.className="vkernel collapsed";
+        var expandButtonLabel = this.collapsed() ? '+' : '-';
         this.htmlElement.innerHTML+=
            "<div class=\"leftgrippie\"></div>"
-           +"<input type=button value='-' class='expandbutton'/>"
+           +"<input type=button value='"+expandButtonLabel+"' class='expandbutton'/>"
            +"<input type=button value='X' class='removebutton'/>"
            +"<input type=button value='R' class='relationshipbutton'/>"
            +"<input value=\"\" type=\"text\" class=\"namefield\"/>"
@@ -75,8 +77,26 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         this.y(this.y());
         this.setWidth(this.width());
         this.setHeight(this.height());
-        this.namefield.value = '';
+        if(this.kernel().name() === undefined){
+            this.namefield.value = '';
+        } else {
+            this.namefield.value = this.kernel().name();
+        }
         this.layout();
+    },
+
+    hydrateChildren: function() {
+        var children = this.kernel().children();
+//        alert("hydrate children called.  Found "+children.length+" children");
+        for(var i=0; i<children.length; i++){
+            var child = children[i];
+//            alert("hydrating "+child.kernel().name());
+            child.realize(this.body);
+        }
+    },
+
+    kernel: function() {
+        return this.contained_object();
     },
 
     fetchElements: function () {
@@ -114,6 +134,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
                                    'mousedown',
                                    this.mouseDownHandler.bindAsEventListener(this));
         Utils.registerEventListener(this.body,'dblclick', this.addNewKernel.bindAsEventListener(this));
+        Utils.registerEventListener(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
         
         // setup the relationship button
         Utils.registerEventListener(this.relationshipbutton,
@@ -166,6 +187,12 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
                                    Utils.terminateEvent.bindAsEventListener(this));
     },
 
+    // make this kernel into the current view (ie, switch the url to this kernel)
+    makeView: function(e){
+        window.location = '/kernel/view/'+this.kernel().id();
+        Utils.terminateEvent(e);
+    },
+
     startCreateRelationship: function(e){
         newRelationship.startDrag(e,this);
     },
@@ -193,13 +220,13 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
 
         var parentPos = RicoUtil.toViewportPosition(this.body);
 
-        var x = posx-parentPos.x;
-        var y = posy-parentPos.y;
+        var x = (posx-parentPos.x)*100/this.body.clientWidth;
+        var y = (posy-parentPos.y)*100/this.body.clientHeight;
         var dummyDiv = document.createElement('div');
         dummyDiv.className='dummyDiv';
-        dummyDiv.style.left=x+'px';
-        dummyDiv.style.top=y+'px';
-        dummyDiv.style.width='100px';
+        dummyDiv.style.left=x+'%';
+        dummyDiv.style.top=y+'%';
+        dummyDiv.style.width='30%';
         dummyDiv.style.height='34px'; //XXX jon hates me
         this.body.appendChild(dummyDiv);
 
@@ -211,8 +238,8 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         var vkernel = VisibleKernel.insert({container_object: this.contained_object(),
                                             x: x,
                                             y: y,
-                                            width: 100,
-                                            height: 100,
+                                            width: 30,
+                                            height: 30,
                                             collapsed: 1});
         this.body.removeChild(dummyDiv);
         vkernel.realize(this.body);
@@ -235,7 +262,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     // performs internal visual layout of the html elements for this kernel
     layout: function(){
         this.layoutResize();
-        this.layoutCorner();
+//        this.layoutCorner();
         this.layoutNamefield();
     },
 
@@ -251,8 +278,10 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
 
     // causes the resize corner to relayout
     layoutCorner: function() {
-        this.corner.style.left = (this.width() - this.corner.clientWidth)+'px';
-        this.corner.style.top = (this.height() - this.corner.clientHeight)+'px';
+        this.corner.style.left = '';
+        this.corner.style.top = '';
+        this.corner.style.right = '0px';
+        this.corner.style.bottom = '0px';
     },
 
     // causes the internal elements to resize if necessary
@@ -281,6 +310,11 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     },
 
     toggleCollapsed: function() {
+        if(this.expandbutton.value == '-'){
+            this.expandbutton.value = '+';
+        } else {
+            this.expandbutton.value = '-';
+        }
         if(this.collapsed()){
             this.collapsed(false);
         } else {
@@ -303,7 +337,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
             var results = VisibleKernel.superclass.prototype.collapsed.call(this, true);
             if(this.htmlElement){
                 this.htmlElement.className += ' collapsed';
-                this.setHeight(this.getMinHeight());
+//                this.setHeight(this.getMinHeight());
             }
             this.notifyEndChangeListeners();
             return results;
@@ -313,7 +347,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
             this.__collapsed=false;
             if(this.htmlElement){
                 this.htmlElement.className = this.htmlElement.className.replace(/ collapsed|collapsed /, '');
-                this.setHeight(this.getMinHeight());
+//                this.setHeight(this.getMinHeight());
             }
             this.notifyEndChangeListeners();
             return false;
@@ -334,10 +368,10 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         return VisibleKernel.superclass.prototype.x.call(this, x);
     },
 
-    // Sets the x coordinate and moves the object accordingly
+    // Sets the x coordinate as a percentage of the parent object's width and moves the object accordingly
     x: function(x) {
         if(x && this.htmlElement){
-            this.htmlElement.style.left = x+"px";
+            this.htmlElement.style.left = x+"%";
             this.notifyMoveListeners(x,this.y());
         }
         return VisibleKernel.superclass.prototype.x.call(this, x);
@@ -349,22 +383,22 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         return VisibleKernel.superclass.prototype.y.call(this, y);
     },
 
-    // Sets the y coordinate and moves the object accordingly
+    // Sets the y coordinate as a percentage of the parent object's height and moves the object accordingly
     y: function(y) {
         if(y && this.htmlElement){
-            this.htmlElement.style.top = y+"px";
+            this.htmlElement.style.top = y+"%";
             this.notifyMoveListeners(this.x(),y);
         }
         return VisibleKernel.superclass.prototype.y.call(this, y);
     },
 
-    // Sets the width and moves the object accordingly
+    // Sets the width as a percentage of the parent object's width and moves the object accordingly
     setWidth: function(width) {
         var results;
         if(width != undefined){
             results = this.width(this.checkWidth(width));
             if(this.htmlElement){
-                this.htmlElement.style.width = results+"px";
+                this.htmlElement.style.width = results+"%";
             }
             this.layoutResize();
             this.layoutCorner();
@@ -383,13 +417,13 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         return results;
     },
 
-    // Sets the height and moves the object accordingly
+    // Sets the height as a percentage of the parent object's width and moves the object accordingly
     setHeight: function(height) {
         var results;
         if(height != undefined){
             results = this.height(this.checkHeight(height));
             if(this.htmlElement){
-                this.htmlElement.style.height = results+"px";
+                this.htmlElement.style.height = results+"%";
             }
             this.layoutResize();
             this.layoutCorner();
@@ -410,32 +444,34 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
 
     // checks to make sure the height is ok, and returns a corrected value if it isn't
     checkHeight: function(h){
-        var minHeight=this.getMinHeight();
-        var maxHeight=this.getMaxHeight();
-        if(h < minHeight){
-            h = minHeight;
-        } else if(h > maxHeight){
-            h = maxHeight;
-        }
+        //TODO fix this to work with the new percentages
+//        var minHeight=this.getMinHeight();
+//        var maxHeight=this.getMaxHeight();
+//        if(h < minHeight){
+//            h = minHeight;
+//        } else if(h > maxHeight){
+//            h = maxHeight;
+//        }
         return h;
     },
 
     // checks to make sure the width is ok, and returns a corrected value if it isn't
     checkWidth: function(w){
-        var minWidth=this.getMinWidth();
-        var maxWidth=this.getMaxWidth();
-        if(w < minWidth){
-            w = minWidth;
-        } else if(w > maxWidth){
-            w = maxWidth;
-        }
+        //TODO fix this to work with the new percentages
+//        var minWidth=this.getMinWidth();
+//        var maxWidth=this.getMaxWidth();
+//        if(w < minWidth){
+//            w = minWidth;
+//        } else if(w > maxWidth){
+//            w = maxWidth;
+//        }
         return w;
     },
 
     getMinHeight: function() {
         //TODO
         if(this.collapsed()){
-            return 30; // height of name field
+            return 0; // height of name field
         } else {
             return 100;
         }
@@ -446,7 +482,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         if(this.collapsed()){
             return 30; // height of name field
         } else {
-            return 1000;
+            return 2000;
         }
     },
 
@@ -461,7 +497,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
 
     getMaxWidth: function() {
         //TODO
-        return 1000;
+        return 2000;
     },
 
     getMinX: function() {
@@ -471,7 +507,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
 
     getMaxX: function() {
         //TODO
-        return 1000;
+        return 2000;
     },
 
     getMinY: function() {
@@ -481,7 +517,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
 
     getMaxY: function() {
         //TODO
-        return 1000;
+        return 2000;
     },
 
     // Adds a movement listener.  The notify method will called whenever this
@@ -626,12 +662,14 @@ KernelDraggable.prototype = (new Rico.Draggable()).extend( {
 
    endDrag: function() {
        this.vkernel.notifyEndChangeListeners();
+       this.vkernel.x(Number(chopPx(this.htmlElement.style.left))*100/this.htmlElement.parentNode.clientWidth);
+       this.vkernel.y(Number(chopPx(this.htmlElement.style.top))*100/this.htmlElement.parentNode.clientHeight);
        this.vkernel.update();
    },
 
    duringDrag: function() {
-       this.vkernel.setX(Number(chopPx(this.htmlElement.style.left)));
-       this.vkernel.setY(Number(chopPx(this.htmlElement.style.top)));
+       this.vkernel.setX(Number(chopPx(this.htmlElement.style.left))*100/this.htmlElement.parentNode.clientWidth);
+       this.vkernel.setY(Number(chopPx(this.htmlElement.style.top))*100/this.htmlElement.parentNode.clientHeight);
    },
 
    cancelDrag: function() {
@@ -658,13 +696,14 @@ KernelCornerDraggable.prototype = (new Rico.Draggable()).extend( {
     },
  
     cancelDrag: function() {
-       this.sizeFromCorner();
+//       this.sizeFromCorner();
        this.vkernel.notifyEndChangeListeners();
     },
 
     endDrag: function() {
-       this.sizeFromCorner();
+//       this.sizeFromCorner();
        this.vkernel.notifyEndChangeListeners();
+       this.vkernel.layoutCorner();
        this.vkernel.update();
     },
  
@@ -678,9 +717,10 @@ KernelCornerDraggable.prototype = (new Rico.Draggable()).extend( {
         var w = Number(chopPx(this.htmlElement.style.left)) + cornerWidth;
         var h = Number(chopPx(this.htmlElement.style.top)) + cornerHeight;
         if(!this.vkernel.collapsed()){
-            this.vkernel.setHeight(h);
+            this.vkernel.setHeight(h*100/this.vkernel.htmlElement.parentNode.clientHeight);
         }
-        this.vkernel.setWidth(w);
+        this.vkernel.setWidth(w*100/this.vkernel.htmlElement.parentNode.clientWidth);
+        window.status="width: "+this.vkernel.width();
         this.vkernel.layoutResize();
     },
  

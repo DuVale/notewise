@@ -84,10 +84,10 @@ CREATE TABLE IF NOT EXISTS masked_relationship (
 CREATE TABLE IF NOT EXISTS contained_object (
     container_object MEDIUMINT UNSIGNED NOT NULL,
     contained_object MEDIUMINT UNSIGNED NOT NULL,
-    x SMALLINT,
-    y SMALLINT,
-    width SMALLINT,
-    height SMALLINT,
+    x float,
+    y float,
+    width float,
+    height float,
     collapsed TINYINT,
     -- Note: MySQL "BOOLEAN" type is just a synonym for TINYINT(1).  As in C,
     --   zero is false, nonzero is true.
