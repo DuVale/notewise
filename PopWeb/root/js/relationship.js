@@ -12,7 +12,7 @@ Rectangle.prototype = {
                 y: this.y+this.h/2};
     },
 
-    // line should be of the form Array({x:0,y:0},{x:10,y:10})
+    // line should be of the form [{x:0,y:0},{x:10,y:10}]
     // returns intersect point of the form {x: 2, y:4}
     getLineIntersect: function(line) {
         // deal with perfectly vertical lines
@@ -180,8 +180,8 @@ Relationship.prototype = (new JSDBI()).extend( {
     },
 
     createArrows: function() {
-        this.arrowCanvasElements = new Array();
-        this.arrowCanvases = new Array();
+        this.arrowCanvasElements = [];
+        this.arrowCanvases = [];
         for(var i=0; i < 2; i++){
             this.arrowCanvasElements[i] = document.createElement('div'); this.arrowCanvasElements[i].id='canvas'+i+'/'+this.idString();
             this.htmlElement.appendChild(this.arrowCanvasElements[i]);
@@ -238,10 +238,10 @@ Relationship.prototype = (new JSDBI()).extend( {
                                   this.vkernel2.width(),
                                   this.vkernel2.height());
 
-        line = new Array({x: this.vkernel1.x()+this.vkernel1.width()/2,
-                          y: this.vkernel1.y()+this.vkernel1.height()/2},
-                         {x: this.vkernel2.x()+this.vkernel2.width()/2,
-                          y: this.vkernel2.y()+this.vkernel2.height()/2});
+        line = [{x: this.vkernel1.x()+this.vkernel1.width()/2,
+                 y: this.vkernel1.y()+this.vkernel1.height()/2},
+                {x: this.vkernel2.x()+this.vkernel2.width()/2,
+                 y: this.vkernel2.y()+this.vkernel2.height()/2}];
 
         this.intersect1 = rect1.getLineIntersect(line);
         this.intersect2 = rect2.getLineIntersect(line);
@@ -263,7 +263,7 @@ Relationship.prototype = (new JSDBI()).extend( {
 
     // draws an arrow with the point of the arow at the x and y coordinates specified, with the angle specified.  A zero angle means the arrow is pointing to the right
     drawArrow: function(canvas, x, y, theta) {
-        var coords = new Array(new Array(-15,0,-15), new Array(-7,0,7));
+        var coords = [[-15,0,-15], [-7,0,7]];
         this.rotate(coords,theta);
         this.translate(coords,x,y);
         canvas.fillPolygon(coords[0], coords[1]);

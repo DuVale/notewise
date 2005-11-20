@@ -30,13 +30,13 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
         this.htmlElement = htmlElement;
 
         // listeners that get notified when this visible kernel moves
-        this.__moveListeners = new Array();
+        this.__moveListeners = [];
         // listeners that get notified when this visible kernel changes size
-        this.__sizeListeners = new Array();
+        this.__sizeListeners = [];
         // listeners that get notified when this visible kernel starts moving or changing size (start of the drag)
-        this.__startChangeListeners = new Array();
+        this.__startChangeListeners = [];
         // listeners that get notified when this visible kernel stops moving or changing size (end of the drag)
-        this.__endChangeListeners = new Array();
+        this.__endChangeListeners = [];
 
         if(this.htmlElement){
             this.setup();
@@ -47,6 +47,10 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
         this.fetchElements();
         this.registerHandlers();
         this.hydrateChildren();
+
+        // add this object as a property of the htmlElement, so we can get back
+        // to it if all we have is the element
+        this.htmlElement.kernel = this;
     },
 
     // returns the id in the form '1/2'
@@ -127,14 +131,8 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
         // setup the namefield actions
         Utils.registerEventListener(this.namefield,'blur', this.updateName.bindAsEventListener(this));
         Utils.registerEventListener(this.namefield,'keyup', this.layoutNamefield.bind(this));
-        Utils.registerEventListener(this.namefield,
-                                   'mousedown',
-                                   this.mouseDownHandler.bindAsEventListener(this));
 
         // setup the click handlers
-        Utils.registerEventListener(this.htmlElement,
-                                   'mousedown',
-                                   this.mouseDownHandler.bindAsEventListener(this));
         Utils.registerEventListener(this.body,'dblclick', this.addNewKernel.bindAsEventListener(this));
         Utils.registerEventListener(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
         
@@ -200,7 +198,7 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
     },
 
     clearSelectionAndTerminate: function(e){
-        SelectionManager.clearSelection();
+        dndMgr.clearSelection();
         Utils.terminateEvent(e);
         this.preventDefault(e);
     },
@@ -232,7 +230,7 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
         dummyDiv.style.height='34px'; //XXX jon hates me
         this.body.appendChild(dummyDiv);
 
-        window.setTimeout(this.createVKernel.bind(this),0,x,y,dummyDiv);
+        window.setTimeout(this.createVKernel.bind(this),5,x,y,dummyDiv);
         Utils.terminateEvent(e);
     },
 
@@ -253,12 +251,6 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
     destroy: function () {
         this.htmlElement.parentNode.removeChild(this.htmlElement);
         return VisibleKernel.superclass.prototype.destroy.call(this);
-    },
-
-    mouseDownHandler: function(e) {
-        SelectionManager.clearSelection();
-        this.select();
-//        dndMgr._terminateEvent(e);
     },
 
     // performs internal visual layout of the html elements for this kernel
@@ -589,21 +581,28 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
     reparent: function(vkernel) {
         var parentElement = vkernel.body;
 
-        // Can't make element child of it's own child and don't reparent it if it's already in the right element
+        // Can't make element child of it's own child and don't reparent it if
+        // it's already in the right element
         if(!Utils.hasAncestor(parentElement,this.htmlElement)
           && this.htmlElement.parentNode != parentElement){
-            // figure out the new x and y
+            // figure out the new x and y percentages
             var pos = Utils.toViewportPosition(this.htmlElement);
             var parentPos = Utils.toViewportPosition(parentElement);
-            var newX = pos.x-parentPos.x;
-            var newY = pos.y-parentPos.y;
 
+            var width = this.htmlElement.clientWidth;
+            var height = this.htmlElement.clientHeight;
             this.htmlElement.parentNode.removeChild(this.htmlElement);
 
-            this.y(pos.y-parentPos.y);
-            this.x(pos.x-parentPos.x);
+            this.x((pos.x-parentPos.x)*100/parentElement.clientWidth);
+            this.y((pos.y-parentPos.y)*100/parentElement.clientHeight);
+            this.setWidth(width*100/parentElement.clientWidth);
+            this.setHeight(height*100/parentElement.clientHeight);
 
             parentElement.appendChild(this.htmlElement);
+
+            // update the db
+            this.container_object(vkernel.kernel());
+            this.update();
         }
     },
 
@@ -630,9 +629,24 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
 
     startDrag: function() {
         this.notifyStartChangeListeners();
+
+        // change the startx/starty offsets so they're correct when we pop up
+        // into the document body
+        var parentPos = Utils.toViewportPosition(this.htmlElement.parentNode);
+        this.startx -= parentPos.x;
+        this.starty -= parentPos.y;
+
+        // convert this element to pixels, so it doesn't change size as we reparent
+        this.htmlElement.style.width=this.htmlElement.clientWidth+'px';
+        this.htmlElement.style.height=this.htmlElement.clientHeight+'px';
+
+        // pop the element up into the document body, so it can drag anywhere
+        this.htmlElement.parentNode.removeChild(this.htmlElement);
+        document.body.appendChild(this.htmlElement);
     },
  
     endDrag: function() {
+        // TODO need to make sure at the end of the drag, the element ends up back down inside a kernel body
         this.notifyEndChangeListeners();
         this.x(Number(chopPx(this.htmlElement.style.left))*100
                        / this.htmlElement.parentNode.clientWidth);
@@ -642,10 +656,10 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
     },
  
     duringDrag: function() {
-        this.setX(Number(chopPx(this.htmlElement.style.left))*100
-                          / this.htmlElement.parentNode.clientWidth);
-        this.setY(Number(chopPx(this.htmlElement.style.top))*100
-                          / this.htmlElement.parentNode.clientHeight);
+//        this.setX(Number(chopPx(this.htmlElement.style.left))*100
+//                          / this.htmlElement.parentNode.clientWidth);
+//        this.setY(Number(chopPx(this.htmlElement.style.top))*100
+//                          / this.htmlElement.parentNode.clientHeight);
     },
  
     cancelDrag: function() {
@@ -655,42 +669,6 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
 
  
 });
-
-var KernelDraggable = Class.create();
-KernelDraggable.prototype = (new Draggable()).extend( {
-
-   initialize: function( htmlElement, vkernel ) {
-      this.type        = 'Kernel';
-      this.htmlElement = htmlElement;
-      this.vkernel        = vkernel;
-   },
-
-   startDrag: function() {
-       this.vkernel.notifyStartChangeListeners();
-   },
-
-   endDrag: function() {
-       this.vkernel.notifyEndChangeListeners();
-       this.vkernel.x(Number(chopPx(this.htmlElement.style.left))*100/this.htmlElement.parentNode.clientWidth);
-       this.vkernel.y(Number(chopPx(this.htmlElement.style.top))*100/this.htmlElement.parentNode.clientHeight);
-       this.vkernel.update();
-   },
-
-   duringDrag: function() {
-       this.vkernel.setX(Number(chopPx(this.htmlElement.style.left))*100/this.htmlElement.parentNode.clientWidth);
-       this.vkernel.setY(Number(chopPx(this.htmlElement.style.top))*100/this.htmlElement.parentNode.clientHeight);
-   },
-
-   cancelDrag: function() {
-       this.vkernel.notifyEndChangeListeners();
-   },
-
-   select: function() {
-   }
-
-} );
-
-var i =0;
 
 var KernelCornerDraggable = Class.create();
 KernelCornerDraggable.prototype = (new Draggable()).extend( {
@@ -729,7 +707,6 @@ KernelCornerDraggable.prototype = (new Draggable()).extend( {
             this.vkernel.setHeight(h*100/this.vkernel.htmlElement.parentNode.clientHeight);
         }
         this.vkernel.setWidth(w*100/this.vkernel.htmlElement.parentNode.clientWidth);
-        window.status="width: "+this.vkernel.width();
         this.vkernel.layoutResize();
     },
  
@@ -773,13 +750,3 @@ CustomDropzone.prototype = (new Dropzone()).extend( {
 function chopPx (str) {
     return str.replace(/[a-z]+/i, '');
 }
-
-var SelectionManager = Class.create();
-SelectionManager.clearSelection = function() {
-    var elements = document.getElementsByClassName('selected');
-    for(var i=0;i<elements.length;i++){
-        var element = elements[i];
-        element.className = element.className.replace(/ selected|selected /, '');
-    }
-    document.getElementById('mysearchfield').focus();
-};

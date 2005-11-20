@@ -1,5 +1,60 @@
 // TODO this is all heavily based on code from rico - need to make sure we comply with license
 
+Rico = {};
+Rico.ArrayExtensions = new Array();
+
+if (Object.prototype.extend) {
+   // in prototype.js...
+   Rico.ArrayExtensions[ Rico.ArrayExtensions.length ] = Object.prototype.extend;
+}
+
+if (Array.prototype.push) {
+   // in prototype.js...
+   Rico.ArrayExtensions[ Rico.ArrayExtensions.length ] = Array.prototype.push;
+}
+
+if (!Array.prototype.remove) {
+   Array.prototype.remove = function(dx) {
+      if( isNaN(dx) || dx > this.length )
+         return false;
+      for( var i=0,n=0; i<this.length; i++ )
+         if( i != dx )
+            this[n++]=this[i];
+      this.length-=1;
+   };
+  Rico.ArrayExtensions[ Rico.ArrayExtensions.length ] = Array.prototype.remove;
+}
+
+if (!Array.prototype.removeItem) {
+   Array.prototype.removeItem = function(item) {
+      for ( var i = 0 ; i < this.length ; i++ )
+         if ( this[i] == item ) {
+            this.remove(i);
+            break;
+         }
+   };
+  Rico.ArrayExtensions[ Rico.ArrayExtensions.length ] = Array.prototype.removeItem;
+}
+
+if (!Array.prototype.indices) {
+   Array.prototype.indices = function() {
+      var indexArray = new Array();
+      for ( index in this ) {
+         var ignoreThis = false;
+         for ( var i = 0 ; i < Rico.ArrayExtensions.length ; i++ ) {
+            if ( this[index] == Rico.ArrayExtensions[i] ) {
+               ignoreThis = true;
+               break;
+            }
+         }
+         if ( !ignoreThis )
+            indexArray[ indexArray.length ] = index;
+      }
+      return indexArray;
+   }
+  Rico.ArrayExtensions[ Rico.ArrayExtensions.length ] = Array.prototype.indices;
+}
+
 DragAndDrop = Class.create();
 
 DragAndDrop.prototype = {
@@ -49,6 +104,7 @@ DragAndDrop.prototype = {
          this.currentDragObjects[i].deselect();
       this.currentDragObjects = new Array();
       this.lastSelectedDraggable = null;
+      document.getElementById('mysearchfield').focus();
    },
 
    // returns true if there are currently any objects selected
@@ -57,10 +113,10 @@ DragAndDrop.prototype = {
    },
 
    // starts a drag from the given html element
-   setStartDragFromElement: function( e, mouseDownElement ) {
-      this.origPos = Utils.toDocumentPosition(mouseDownElement);
-      this.startx = e.screenX - this.origPos.x
-      this.starty = e.screenY - this.origPos.y
+   setStartDragFromDraggable: function( e, draggableObject ) {
+      this.origPos = Utils.toDocumentPosition(draggableObject.getMouseDownHTMLElement());
+      draggableObject.startx = e.screenX - this.origPos.x
+      draggableObject.starty = e.screenY - this.origPos.y
       //this.startComponentX = e.layerX ? e.layerX : e.offsetX;
       //this.startComponentY = e.layerY ? e.layerY : e.offsetY;
       //this.adjustedForDraggableSize = false;
@@ -115,6 +171,11 @@ DragAndDrop.prototype = {
          return;
       }
 
+      // XXX - should this really happen on the mouse down?  The problem is
+      // that if you click on something, and then ctrl-click on something else,
+      // and then mousedown-drag on one of the objects, it deselects that
+      // object and only drags the other one.  This seems counter intuitive
+
       // add the draggable to the selection
       this.updateSelection( draggableObject, e.ctrlKey );
 
@@ -123,7 +184,9 @@ DragAndDrop.prototype = {
          for ( var i = 0 ; i < this.dropZones.length ; i++ )
             this.dropZones[i].clearPositionCache();
 
-      this.setStartDragFromElement( e, draggableObject.getMouseDownHTMLElement() );
+      for ( var i = 0 ; i < this.currentDragObjects.length ; i++ ){
+          this.setStartDragFromDraggable( e, this.currentDragObjects[i] );
+      }
    },
 
 
@@ -142,9 +205,6 @@ DragAndDrop.prototype = {
 
       if ( !this.activatedDropZones )
          this._activateRegisteredDropZones();
-
-      //if ( !this.adjustedForDraggableSize )
-      //   this._adjustForDraggableSize(e);
 
       this._updateDraggableLocation(e);
       this._updateDropZonesHover(e);
@@ -178,27 +238,15 @@ DragAndDrop.prototype = {
       this.currentDragObjectVisible = true;
    },
 
-   /**
-   _adjustForDraggableSize: function(e) {
-      var dragElementWidth  = this.dragElement.offsetWidth;
-      var dragElementHeight = this.dragElement.offsetHeight;
-      if ( this.startComponentX > dragElementWidth )
-         this.startx -= this.startComponentX - dragElementWidth + 2;
-      if ( e.offsetY ) {
-         if ( this.startComponentY > dragElementHeight )
-            this.starty -= this.startComponentY - dragElementHeight + 2;
-      }
-      this.adjustedForDraggableSize = true;
-   },
-   **/
-
    // updates the location of the objects being dragged
    _updateDraggableLocation: function(e) {
-      var dragObjectStyle = this.dragElement.style;
-      dragObjectStyle.left = (e.screenX - this.startx) + "px"
-      dragObjectStyle.top  = (e.screenY - this.starty) + "px";
-      for ( var i = 0 ; i < this.currentDragObjects.length ; i++ )
-         this.currentDragObjects[i].duringDrag();
+      for ( var i = 0 ; i < this.currentDragObjects.length ; i++ ){
+         var currentDragObject = this.currentDragObjects[i];
+         var dragObjectStyle = currentDragObject.htmlElement.style;
+         dragObjectStyle.left = (e.screenX - currentDragObject.startx) + "px"
+         dragObjectStyle.top  = (e.screenY - currentDragObject.starty) + "px";
+         currentDragObject.duringDrag();
+      }
    },
 
    // turns off and on which drop zones currently have hover indicators on
