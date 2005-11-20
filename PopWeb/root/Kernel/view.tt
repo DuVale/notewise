@@ -140,6 +140,7 @@
                 top: 30px;
                 bottom: 2px;
                 clear: both;
+                overflow: hidden;
             }
 
             .vkernel.collapsed {
@@ -242,7 +243,7 @@
         </div>
         <script type="text/javascript" src="/js/wz_jsgraphics.js"></script>
         <script type="text/javascript" src="/js/prototype.js"></script>
-        <script type="text/javascript" src="/js/rico.js"></script>
+        <script type="text/javascript" src="/js/dragndrop.js"></script>
         <script type="text/javascript" src="/js/jsdbi.js"></script>
         <script type="text/javascript" src="/js/utils.js"></script>
         <script type="text/javascript" src="/js/linedraw.js"></script>

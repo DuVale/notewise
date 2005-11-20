@@ -16,8 +16,10 @@ VisibleKernel.elementTag('visiblekernel');
 VisibleKernel.has_a('contained_object','Kernel');
 VisibleKernel.has_a('container_object','Kernel');
 
-VisibleKernel.prototype = (new JSDBI()).extend( {
+// multiple inheritance from both JSDBI and Draggable
+VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
     initialize: function(container_object,contained_object,htmlElement,x,y,width,height,collapsed) {
+        this.type        = 'Kernel';
         this.container_object(container_object);
         this.contained_object(contained_object);
         this.__x=x;
@@ -118,7 +120,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
 
     registerHandlers: function() {
         // set up the dnd
-        dndMgr.registerDraggable( new KernelDraggable(this.htmlElement, this) );
+        dndMgr.registerDraggable( this );
         dndMgr.registerDraggable( new KernelCornerDraggable(this.corner, this) );
         dndMgr.registerDropZone( new CustomDropzone(this.body,this) );
 
@@ -218,7 +220,7 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
             posy = e.clientY + document.body.scrollTop;
         }
 
-        var parentPos = RicoUtil.toViewportPosition(this.body);
+        var parentPos = Utils.toViewportPosition(this.body);
 
         var x = (posx-parentPos.x)*100/this.body.clientWidth;
         var y = (posy-parentPos.y)*100/this.body.clientHeight;
@@ -584,47 +586,6 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
     },
 
 
-//    populate: function(xml){
-//        var vkernelElements = xml.getElementsByTagName("visiblekernel");
-//
-//        var vkernelElement = vkernelElements[0];
-//        this.container_id = vkernelElement.getAttribute("container_id");
-//        this.x = vkernelElement.getAttribute("x");
-//        this.y = vkernelElement.getAttribute("y");
-//        this.width = vkernelElement.getAttribute("width");
-//        this.height = vkernelElement.getAttribute("height");
-//        this.collapsed = vkernelElement.getAttribute("collapsed");
-//
-//        // create the associated kernel if necessary
-//        var kernelXML = (xml.getElementsByTagName("kernel"))[0];
-//        if(!this.kernel){
-//            this.kernel = new Kernel();
-//
-//            // pass on the population opportunity to the kernel
-//            this.kernel.populate(kernelXML);
-//        }
-//        this.id = this.container_id+'/'+this.kernel.id;
-//    },
-
-    // Returns whether or not this kernel is currently selected
-    isSelected: function () {
-        return this.htmlElement.className.indexOf('selected') != -1;
-    },
-
-    // Select this kernel
-    select: function () {
-        if( !this.isSelected() ){
-            this.htmlElement.className += ' selected';
-        }
-    },
-
-    // Mark this kernel as not selected
-    deselect: function () {
-        if( this.isSelected()){
-            this.htmlElement.className = this.htmlElement.className.replace(/ selected|selected /, '');
-        }
-    },
-
     reparent: function(vkernel) {
         var parentElement = vkernel.body;
 
@@ -632,8 +593,8 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
         if(!Utils.hasAncestor(parentElement,this.htmlElement)
           && this.htmlElement.parentNode != parentElement){
             // figure out the new x and y
-            var pos = RicoUtil.toViewportPosition(this.htmlElement);
-            var parentPos = RicoUtil.toViewportPosition(parentElement);
+            var pos = Utils.toViewportPosition(this.htmlElement);
+            var parentPos = Utils.toViewportPosition(parentElement);
             var newX = pos.x-parentPos.x;
             var newY = pos.y-parentPos.y;
 
@@ -644,11 +605,59 @@ VisibleKernel.prototype = (new JSDBI()).extend( {
 
             parentElement.appendChild(this.htmlElement);
         }
-    }
+    },
+
+    // Returns whether or not this kernel is currently selected
+    isSelected: function () {
+        return this.htmlElement.className.indexOf('selected') != -1;
+    },
+
+    // Mark this kernel as not selected
+    deselect: function () {
+        if( this.isSelected()){
+            this.htmlElement.className = this.htmlElement.className.replace(/ selected|selected /, '');
+        }
+    },
+
+    // Rico draggable stuff
+
+    // Select this kernel
+    select: function () {
+        if( !this.isSelected() ){
+            this.htmlElement.className += ' selected';
+        }
+    },
+
+    startDrag: function() {
+        this.notifyStartChangeListeners();
+    },
+ 
+    endDrag: function() {
+        this.notifyEndChangeListeners();
+        this.x(Number(chopPx(this.htmlElement.style.left))*100
+                       / this.htmlElement.parentNode.clientWidth);
+        this.y(Number(chopPx(this.htmlElement.style.top))*100
+                       / this.htmlElement.parentNode.clientHeight);
+        this.update();
+    },
+ 
+    duringDrag: function() {
+        this.setX(Number(chopPx(this.htmlElement.style.left))*100
+                          / this.htmlElement.parentNode.clientWidth);
+        this.setY(Number(chopPx(this.htmlElement.style.top))*100
+                          / this.htmlElement.parentNode.clientHeight);
+    },
+ 
+    cancelDrag: function() {
+        this.notifyEndChangeListeners();
+    },
+
+
+ 
 });
 
 var KernelDraggable = Class.create();
-KernelDraggable.prototype = (new Rico.Draggable()).extend( {
+KernelDraggable.prototype = (new Draggable()).extend( {
 
    initialize: function( htmlElement, vkernel ) {
       this.type        = 'Kernel';
@@ -684,7 +693,7 @@ KernelDraggable.prototype = (new Rico.Draggable()).extend( {
 var i =0;
 
 var KernelCornerDraggable = Class.create();
-KernelCornerDraggable.prototype = (new Rico.Draggable()).extend( {
+KernelCornerDraggable.prototype = (new Draggable()).extend( {
     initialize: function( htmlElement, vkernel ) {
         this.type        = 'KernelCorner';
         this.htmlElement = htmlElement;
@@ -731,7 +740,7 @@ KernelCornerDraggable.prototype = (new Rico.Draggable()).extend( {
 
 var CustomDropzone = Class.create();
 
-CustomDropzone.prototype = (new Rico.Dropzone()).extend( {
+CustomDropzone.prototype = (new Dropzone()).extend( {
 
    initialize: function( htmlElement, vkernel ) {
         this.type        = 'Kernel';
@@ -744,7 +753,7 @@ CustomDropzone.prototype = (new Rico.Dropzone()).extend( {
            if(draggableObjects[i].type != 'Kernel'){
                continue;
            }
-           draggableObjects[i].vkernel.reparent(this.vkernel);
+           draggableObjects[i].reparent(this.vkernel);
        }
    },
 
