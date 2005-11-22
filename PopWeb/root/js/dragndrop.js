@@ -115,10 +115,8 @@ DragAndDrop.prototype = {
    // starts a drag from the given html element
    setStartDragFromDraggable: function( e, draggableObject ) {
       this.origPos = Utils.toDocumentPosition(draggableObject.getMouseDownHTMLElement());
-      window.status = ("origPos: "+this.origPos.x+'x'+this.origPos.y);
       draggableObject.startx = e.screenX - this.origPos.x
       draggableObject.starty = e.screenY - this.origPos.y
-      this.origPos = Utils.toViewportPosition(draggableObject.getMouseDownHTMLElement());
 
       this.interestedInMotionEvents = this.hasSelection();
       this._terminateEvent(e);
@@ -293,7 +291,6 @@ DragAndDrop.prototype = {
          this._completeDropOperation(e);
       } else {
          this._terminateEvent(e);
-         window.status = ("returning to: "+this.origPos.x+'x'+this.origPos.y);
          new Effect.Position( this.dragElement,
                               this.origPos.x,
                               this.origPos.y,

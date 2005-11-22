@@ -637,6 +637,10 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
         this.startx -= parentPos.x;
         this.starty -= parentPos.y;
 
+        // make sure the original position is relative to the viewport, not the
+        // parent, so it ends up back in the same place if the drag is canceled
+        this.origPos = Utils.toViewportPosition(draggableObject.getMouseDownHTMLElement());
+
         // convert this element to pixels, so it doesn't change size as we reparent
         this.htmlElement.style.width=this.htmlElement.clientWidth+'px';
         this.htmlElement.style.height=this.htmlElement.clientHeight+'px';
