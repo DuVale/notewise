@@ -23,7 +23,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-Effect = {}
+if(typeof Effect == 'undefined'){
+    Effect = {};
+}
 Effect2 = Effect; // deprecated
 
 /* ------------- transitions ------------- */

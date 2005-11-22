@@ -578,7 +578,8 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
     },
 
 
-    reparent: function(vkernel) {
+    // accepts the vkernel to reparent to, and whether or not to notify the server about it
+    reparent: function(vkernel, do_update) {
         var parentElement = vkernel.body;
 
         // Can't make element child of it's own child and don't reparent it if
@@ -641,12 +642,14 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
         this.htmlElement.style.height=this.htmlElement.clientHeight+'px';
 
         // pop the element up into the document body, so it can drag anywhere
+        this.oldParentNode = this.htmlElement.parentNode;
         this.htmlElement.parentNode.removeChild(this.htmlElement);
         document.body.appendChild(this.htmlElement);
     },
  
     endDrag: function() {
         // TODO need to make sure at the end of the drag, the element ends up back down inside a kernel body
+        delete this.oldParentNode;
         this.notifyEndChangeListeners();
         this.x(Number(chopPx(this.htmlElement.style.left))*100
                        / this.htmlElement.parentNode.clientWidth);
@@ -656,18 +659,27 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
     },
  
     duringDrag: function() {
-//        this.setX(Number(chopPx(this.htmlElement.style.left))*100
-//                          / this.htmlElement.parentNode.clientWidth);
-//        this.setY(Number(chopPx(this.htmlElement.style.top))*100
-//                          / this.htmlElement.parentNode.clientHeight);
     },
  
     cancelDrag: function() {
+        var parentElement = this.oldParentNode;
+
+        var pos = Utils.toViewportPosition(this.htmlElement);
+        var parentPos = Utils.toViewportPosition(parentElement);
+        var width = this.htmlElement.clientWidth;
+        var height = this.htmlElement.clientHeight;
+
+        parentElement.appendChild(this.htmlElement);
+
+
+        var elementStyle = this.htmlElement.style;
+        elementStyle.left = ((pos.x-parentPos.x)*100/parentElement.clientWidth) + '%';
+        elementStyle.top = ((pos.y-parentPos.y)*100/parentElement.clientHeight) + '%';
+        elementStyle.width = (width*100/parentElement.clientWidth) + '%';
+        elementStyle.height = (height*100/parentElement.clientHeight) + '%';
+
         this.notifyEndChangeListeners();
-    },
-
-
- 
+    }
 });
 
 var KernelCornerDraggable = Class.create();

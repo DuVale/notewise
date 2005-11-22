@@ -115,11 +115,10 @@ DragAndDrop.prototype = {
    // starts a drag from the given html element
    setStartDragFromDraggable: function( e, draggableObject ) {
       this.origPos = Utils.toDocumentPosition(draggableObject.getMouseDownHTMLElement());
+      window.status = ("origPos: "+this.origPos.x+'x'+this.origPos.y);
       draggableObject.startx = e.screenX - this.origPos.x
       draggableObject.starty = e.screenY - this.origPos.y
-      //this.startComponentX = e.layerX ? e.layerX : e.offsetX;
-      //this.startComponentY = e.layerY ? e.layerY : e.offsetY;
-      //this.adjustedForDraggableSize = false;
+      this.origPos = Utils.toViewportPosition(draggableObject.getMouseDownHTMLElement());
 
       this.interestedInMotionEvents = this.hasSelection();
       this._terminateEvent(e);
@@ -294,6 +293,7 @@ DragAndDrop.prototype = {
          this._completeDropOperation(e);
       } else {
          this._terminateEvent(e);
+         window.status = ("returning to: "+this.origPos.x+'x'+this.origPos.y);
          new Effect.Position( this.dragElement,
                               this.origPos.x,
                               this.origPos.y,
@@ -643,4 +643,99 @@ Dropzone.prototype = {
    }
 }
 
+if(typeof Effect == 'undefined'){
+    Effect = {};
+}
 
+Effect.Position = Class.create();
+Effect.Position.prototype = {
+
+   initialize: function(element, x, y, duration, steps, options) {
+      new Effect.SizeAndPosition(element, x, y, null, null, duration, steps, options);
+  }
+}
+
+Effect.SizeAndPosition = Class.create();
+Effect.SizeAndPosition.prototype = {
+
+   initialize: function(element, x, y, w, h, duration, steps, options) {
+      this.element = $(element);
+      this.x = x;
+      this.y = y;
+      this.w = w;
+      this.h = h;
+      this.duration = duration;
+      this.steps    = steps;
+      this.options  = arguments[7] || {};
+
+      this.sizeAndPosition();
+   },
+
+   sizeAndPosition: function() {
+      if (this.isFinished()) {
+         if(this.options.complete) this.options.complete(this);
+         return;
+      }
+
+      if (this.timer)
+         clearTimeout(this.timer);
+
+      var stepDuration = Math.round(this.duration/this.steps) ;
+
+      // Get original values: x,y = top left corner;  w,h = width height
+      var currentX = this.element.offsetLeft;
+      var currentY = this.element.offsetTop;
+      var currentW = this.element.offsetWidth;
+      var currentH = this.element.offsetHeight;
+
+      // If values not set, or zero, we do not modify them, and take original as final as well
+      this.x = (this.x) ? this.x : currentX;
+      this.y = (this.y) ? this.y : currentY;
+      this.w = (this.w) ? this.w : currentW;
+      this.h = (this.h) ? this.h : currentH;
+
+      // how much do we need to modify our values for each step?
+      var difX = this.steps >  0 ? (this.x - currentX)/this.steps : 0;
+      var difY = this.steps >  0 ? (this.y - currentY)/this.steps : 0;
+      var difW = this.steps >  0 ? (this.w - currentW)/this.steps : 0;
+      var difH = this.steps >  0 ? (this.h - currentH)/this.steps : 0;
+
+      this.moveBy(difX, difY);
+      this.resizeBy(difW, difH);
+
+      this.duration -= stepDuration;
+      this.steps--;
+
+      this.timer = setTimeout(this.sizeAndPosition.bind(this), stepDuration);
+   },
+
+   isFinished: function() {
+      return this.steps <= 0;
+   },
+
+   moveBy: function( difX, difY ) {
+      var currentLeft = this.element.offsetLeft;
+      var currentTop  = this.element.offsetTop;
+      var intDifX     = parseInt(difX);
+      var intDifY     = parseInt(difY);
+
+      var style = this.element.style;
+      if ( intDifX != 0 )
+         style.left = (currentLeft + intDifX) + "px";
+      if ( intDifY != 0 )
+         style.top  = (currentTop + intDifY) + "px";
+   },
+
+   resizeBy: function( difW, difH ) {
+      var currentWidth  = this.element.offsetWidth;
+      var currentHeight = this.element.offsetHeight;
+      var intDifW       = parseInt(difW);
+      var intDifH       = parseInt(difH);
+
+      var style = this.element.style;
+      if ( intDifW != 0 )
+         style.width   = (currentWidth  + intDifW) + "px";
+      if ( intDifH != 0 )
+         style.height  = (currentHeight + intDifH) + "px";
+   }
+}
