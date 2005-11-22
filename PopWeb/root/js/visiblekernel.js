@@ -310,9 +310,9 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
             this.expandbutton.value = '-';
         }
         if(this.collapsed()){
-            this.collapsed(false);
+            this.collapsed(0);
         } else {
-            this.collapsed(true);
+            this.collapsed(1);
         }
         this.update();
     },
@@ -328,7 +328,7 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
             var results = VisibleKernel.superclass.prototype.collapsed.call(this);
             return results;
         } if(collapsed){
-            var results = VisibleKernel.superclass.prototype.collapsed.call(this, true);
+            var results = VisibleKernel.superclass.prototype.collapsed.call(this, 1);
             if(this.htmlElement){
                 this.htmlElement.className += ' collapsed';
 //                this.setHeight(this.getMinHeight());
@@ -338,13 +338,13 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
         } else {
             // XXX why doesn't calling the accessor work?
 //            return VisibleKernel.superclass.prototype.collapsed.call(this, false);
-            this.__collapsed=false;
+            this.__collapsed=0;
             if(this.htmlElement){
                 this.htmlElement.className = this.htmlElement.className.replace(/ collapsed|collapsed /, '');
 //                this.setHeight(this.getMinHeight());
             }
             this.notifyEndChangeListeners();
-            return false;
+            return 0;
         }
     },
 
