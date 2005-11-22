@@ -2,6 +2,7 @@
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
     <head>
+        <title>[% kernel.name %] - PopWeb</title>
         <style>
             body {
                 padding: 0px;
@@ -236,7 +237,7 @@
                 <input type="text" id="namefield0" class="namefield" value="[% kernel.name %]"/>
                 <div class="body" id="background">
                     [% FOR vkernel = visible_kernels %]
-                        [%INCLUDE 'Kernel/kernel.tt'%]
+                        [%INCLUDE 'Kernel/kernel.tt' i=0 %]
                     [%END%]
                 </div>
             </div>
@@ -260,9 +261,8 @@
         </script>
 
         [% FOR vkernel = visible_kernels %]
-            <script>
-                [%INCLUDE 'Kernel/kernel-js.tt'%]
-            </script>
+            [% i = 0 %]
+            [%INCLUDE 'Kernel/kernel-js.tt'%]
         [%END%]
         <script>
 

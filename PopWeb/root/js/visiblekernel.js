@@ -46,7 +46,7 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
     setup: function () {
         this.fetchElements();
         this.registerHandlers();
-        this.hydrateChildren();
+//        this.hydrateChildren();
 
         // add this object as a property of the htmlElement, so we can get back
         // to it if all we have is the element
@@ -243,7 +243,7 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
                                             collapsed: 1});
         this.body.removeChild(dummyDiv);
         vkernel.realize(this.body);
-        vkernel.select();
+        dndMgr.updateSelection(vkernel,false);
         vkernel.namefield.focus();
     },
 
@@ -614,7 +614,7 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
     // Mark this kernel as not selected
     deselect: function () {
         if( this.isSelected()){
-            this.htmlElement.className = this.htmlElement.className.replace(/ selected|selected /, '');
+            this.htmlElement.className = this.htmlElement.className.replace(/ selected/, '');
         }
     },
 

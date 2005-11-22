@@ -1,3 +1,4 @@
+[% i = i + 1%]
 [% id = vkernel.container_kernel.id _ '/' _ vkernel.contained_kernel.id %]
 <div id="vkernel[%id%]" class="vkernel" style="left: [% vkernel.x %]%; top: [% vkernel.y %]%;
                                                width: [% vkernel.width %]%;
@@ -9,7 +10,14 @@
     <input type="text" class="namefield" value="[%vkernel.contained_kernel.name%]"/>
     <div class="rightgrippie"/></div>
     <div class="body">
-        [% body %]
+        [% UNLESS vkernel.collapsed %]
+            [% j = i + 1 %]
+            [% IF i < 4 %]
+                [% FOR vkernel = vkernel.contained_kernel.contained_objects %]
+                    [%INCLUDE 'Kernel/kernel.tt' i=j%]
+                [% END %]
+            [% END %]
+        [% END %]
     </div>
     <div class="corner" style="right: 0px; bottom: 0px;">
     </div>
