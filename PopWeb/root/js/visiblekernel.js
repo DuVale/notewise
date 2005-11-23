@@ -639,7 +639,7 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
 
         // make sure the original position is relative to the viewport, not the
         // parent, so it ends up back in the same place if the drag is canceled
-        this.origPos = Utils.toViewportPosition(draggableObject.getMouseDownHTMLElement());
+        this.origPos = Utils.toViewportPosition(this.htmlElement);
 
         // convert this element to pixels, so it doesn't change size as we reparent
         this.htmlElement.style.width=this.htmlElement.clientWidth+'px';
@@ -751,9 +751,12 @@ CustomDropzone.prototype = (new Dropzone()).extend( {
    },
 
    showHover: function() {
+//        this.htmlElement.className += ' activated';
    },
 
    hideHover: function() {
+//        this.htmlElement.className = this.htmlElement.className.replace(/activated/, '');
+//       alert("hid hover: "+this.htmlElement.className);
    },
 
    activate: function() {

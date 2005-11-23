@@ -336,12 +336,15 @@ DragAndDrop.prototype = {
       for ( var i = 0 ; i < n ; i++ ) {
          if ( this._mousePointInDropZone( e, this.dropZones[i] ) ) {
             if ( this.dropZones[i].canAccept(this.currentDragObjects) ) {
-               this.dropZones[i].hideHover();
                this.dropZones[i].accept(this.currentDragObjects);
                foundDropZone = true;
                break;
             }
          }
+      }
+
+      for ( var i = 0 ; i < n ; i++ ) {
+         this.dropZones[i].hideHover();
       }
 
       return foundDropZone;
@@ -361,6 +364,7 @@ DragAndDrop.prototype = {
 
    // returns true if the mouse is located in the given drop zone
    _mousePointInDropZone: function( e, dropZone ) {
+       // TODO this is where the zindex awareness should go, I think.
 
       var absoluteRect = dropZone.getAbsoluteRect();
 

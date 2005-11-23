@@ -144,6 +144,10 @@
                 overflow: hidden;
             }
 
+            .vkernel .body.activated {
+                background: #d2eeff;
+            }
+
             .vkernel.collapsed {
                 min-height: 30px;
                 max-height: 30px;
@@ -254,7 +258,10 @@
         <script type="text/javascript" src="/js/visiblekernel.js"></script>
         <script type="text/javascript" src="/js/controls.js"></script>
         <script type="text/javascript" src="/js/effects.js"></script>
-        <script type="text/javascript" src="/js/dragdrop.js"></script>
+        [%#
+        use this instead of the above garbage to get faster loading of javascript
+        <script type="text/javascript" src="/javascript"></script>
+        %]
         <script>
             // XXX this is pretty nasty - put this inside the view's vkernel instead
             var vkernelCache = {};
