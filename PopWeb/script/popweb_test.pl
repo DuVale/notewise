@@ -1,13 +1,11 @@
 #!/usr/bin/perl -w
 
-BEGIN { $ENV{CATALYST_ENGINE} ||= 'Test' }
-
 use strict;
 use Getopt::Long;
 use Pod::Usage;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
-use PopWeb;
+use Catalyst::Test 'PopWeb';
 
 my $help = 0;
 
@@ -15,7 +13,7 @@ GetOptions( 'help|?' => \$help );
 
 pod2usage(1) if ( $help || !$ARGV[0] );
 
-print PopWeb->run($ARGV[0])->content . "\n";
+print request($ARGV[0])->content . "\n";
 
 1;
 
@@ -40,7 +38,7 @@ popweb_test.pl [options] uri
 
 =head1 DESCRIPTION
 
-Run a Catalyst action from the comand line.
+Run a Catalyst action from the command line.
 
 =head1 AUTHOR
 
@@ -50,7 +48,7 @@ Sebastian Riedel, C<sri@oook.de>
 
 Copyright 2004 Sebastian Riedel. All rights reserved.
 
-This library is free software. You can redistribute it and/or modify
-it under the same terms as perl itself.
+This library is free software, you can redistribute it and/or modify
+it under the same terms as Perl itself.
 
 =cut
