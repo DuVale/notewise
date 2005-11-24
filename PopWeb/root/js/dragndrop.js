@@ -55,9 +55,87 @@ if (!Array.prototype.indices) {
   Rico.ArrayExtensions[ Rico.ArrayExtensions.length ] = Array.prototype.indices;
 }
 
+LayerManager = Class.create();
+LayerManager.prototype = {
+    initialize: function() {
+    },
+
+    minIndex: -10000000,
+    maxIndex: 10000000,
+    defaultIndex: 2,
+
+    // moves the element to the next layer above the highest layer
+    moveToFront: function(element){
+        var parentElement = element.parentNode;
+
+        // get the highest layer in the parent
+        var highestLayer = this.minIndex;
+        for(var i=0; i<parentElement.childNodes.length; i++){
+            var siblingElement = parentElement.childNodes[i];
+            if(siblingElement == element){
+                continue;
+            }
+            var layerIndex = this.layer(siblingElement);
+            if(layerIndex != null
+               && layerIndex > highestLayer){
+                highestLayer = this.layer(siblingElement);
+            }
+        }
+        if(highestLayer == this.minIndex){
+            // we probably didn't see anything with layers, so reset to reasonable value
+            highestLayer=this.defaultIndex;
+        }
+
+        // set the layer of this element to be one higher than the highest layer
+        // XXX note that this could lead to large layer indexes, if used for a long time.
+        this.layer(element,Number(highestLayer)+1);
+    },
+
+    // moves the element to the next layer below the lowest layer
+    moveToBack: function(element){
+        var parentElement = element.parentNode;
+
+        // get the lowest layer in the parent
+        var lowestLayer = this.maxIndex;
+        for(var i=0; i<parentElement.childNodes.length; i++){
+            if(siblingElement == element){
+                continue;
+            }
+            var siblingElement = parentElement.childNodes[i];
+            var layerIndex = this.layer(siblingElement);
+            if(layerIndex != null
+               && layerIndex < lowestLayer){
+                lowestLayer = this.layer(siblingElement);
+            }
+        }
+        if(lowestLayer == this.maxIndex){
+            // we probably didn't see anything with layers, so reset to reasonable value
+            lowestLayer=this.defaultIndex;
+        }
+
+        // set the layer of this element to be one lower than the lowest layer
+        // XXX note that this could lead to large negative layer indexes, if used for a long time.
+        this.layer(element,Number(lowestLayer)-1);
+    },
+
+    // returns the layer index for the element, optionally setting it if a layer is given
+    layer: function(element,layer){
+        if(typeof element.style == 'undefined'){
+            return null;
+        }
+        if(layer !== undefined){
+            window.status="assign layer index "+layer;
+            return element.style.zIndex=layer;
+        } else {
+            return element.style.zIndex || this.defaultIndex;
+        }
+    }
+};
+
 DragAndDrop = Class.create();
 
-DragAndDrop.prototype = {
+DragAndDrop.prototype = new LayerManager();
+DragAndDrop.prototype.extend({
 
    // sets up a new dndMgr
    initialize: function() {
@@ -446,7 +524,7 @@ DragAndDrop.prototype = {
          document.attachEvent( "onmousemove", this._mouseMoveHandler.bindAsEventListener(this) );
       }
    }
-}
+});
 
 var dndMgr = new DragAndDrop();
 dndMgr.initializeEventHandlers();

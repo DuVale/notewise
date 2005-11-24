@@ -480,6 +480,8 @@ VisibleKernel.prototype.extend( {
 
             parentElement.appendChild(this.htmlElement);
 
+            dndMgr.moveToFront(this.htmlElement);
+
             // update the db
             this.container_object(vkernel.kernel());
             this.update();
@@ -505,6 +507,7 @@ VisibleKernel.prototype.extend( {
         if( !this.isSelected() ){
             this.htmlElement.className += ' selected';
         }
+        dndMgr.moveToFront(this.htmlElement);
     },
 
     startDrag: function() {
