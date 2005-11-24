@@ -35,6 +35,7 @@
                 </div>
             </div>
         </div>
+
         <script type="text/javascript" src="/js/wz_jsgraphics.js"></script>
         <script type="text/javascript" src="/js/prototype.js"></script>
         <script type="text/javascript" src="/js/dragndrop.js"></script>
@@ -65,43 +66,11 @@
         <script>
 
             var viewKernelId=[%kernel.id%];
-            // XXX precache this instead of fetching it
             var view = new ViewKernel([%kernel.id%],document.getElementById('viewkernel'));
-
-            function addKernel(e){
-                alert("body addKernel called");
-
-                var posx = 0;
-                var posy = 0;
-                if (!e) var e = window.event;
-                if (e.pageX || e.pageY)
-                {
-                        posx = e.pageX;
-                        posy = e.pageY;
-                }
-                else if (e.clientX || e.clientY)
-                {
-                        posx = e.clientX + document.body.scrollLeft;
-                        posy = e.clientY + document.body.scrollTop;
-                }
-
-                var x = posx-background.offsetLeft;
-                var y = posy-background.offsetTop;
-                var vkernel = VisibleKernel.insert({container_object: viewKernelId,
-                                                    x: x,
-                                                    y: y,
-                                                    width: 100,
-                                                    height: 100,
-                                                    collapsed: 1});
-                vkernel.realize(background);
-                vkernel.select();
-                vkernel.namefield.focus();
-            }
 
             function clearSelection (e) {
                 VisibleKernel.prototype.clearSelectionAndTerminate(e);
             }
-            document.getElementById('background').addEventListener("dblclick", addKernel, false);
             document.addEventListener("mousedown", clearSelection, false);
 
             document.getElementById('mysearchfield').focus();

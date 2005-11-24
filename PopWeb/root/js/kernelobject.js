@@ -12,6 +12,9 @@ KernelObject.prototype = {
         // set up the dnd
         dndMgr.registerDropZone( new CustomDropzone(this.body,this) );
 
+        // setup the click handlers
+        Utils.registerEventListener(this.body,'dblclick', this.addNewKernel.bindAsEventListener(this));
+
         // setup the namefield actions
         Utils.registerEventListener(this.namefield,'blur', this.updateName.bindAsEventListener(this));
         Utils.registerEventListener(this.namefield,'keyup', this.layoutNamefield.bind(this));
@@ -101,5 +104,48 @@ KernelObject.prototype = {
            e.preventDefault();
         else
            e.returnValue = false;
+    },
+
+    addNewKernel: function (e){
+        // get the mouse event coordinates
+        var posx = 0;
+        var posy = 0;
+        if (!e) var e = window.event;
+        if (e.pageX || e.pageY) {
+            posx = e.pageX;
+            posy = e.pageY;
+        }
+        else if (e.clientX || e.clientY) {
+            posx = e.clientX + document.body.scrollLeft;
+            posy = e.clientY + document.body.scrollTop;
+        }
+
+        var parentPos = Utils.toViewportPosition(this.body);
+
+        var x = (posx-parentPos.x)*100/this.body.clientWidth;
+        var y = (posy-parentPos.y)*100/this.body.clientHeight;
+        var dummyDiv = document.createElement('div');
+        dummyDiv.className='dummyDiv';
+        dummyDiv.style.left=x+'%';
+        dummyDiv.style.top=y+'%';
+        dummyDiv.style.width='30%';
+        dummyDiv.style.height='34px'; //XXX jon hates me - magic numbers are bad
+        this.body.appendChild(dummyDiv);
+
+        window.setTimeout(this.createVKernel.bind(this),5,x,y,dummyDiv);
+        Utils.terminateEvent(e);
+    },
+
+    createVKernel: function(x,y,dummyDiv){
+        var vkernel = VisibleKernel.insert({container_object: this.kernel(),
+                                            x: x,
+                                            y: y,
+                                            width: 30,
+                                            height: 30,
+                                            collapsed: 1});
+        this.body.removeChild(dummyDiv);
+        vkernel.realize(this.body);
+        dndMgr.updateSelection(vkernel,false);
+        vkernel.namefield.focus();
     },
 };
