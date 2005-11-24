@@ -45,7 +45,7 @@
                 cursor: default;
             }
 
-            #kernel0 {
+            #viewkernel {
                 border: 0px;
                 margin: 0px;
                 position: relative;
@@ -218,7 +218,6 @@
     </head>
     <body>
         <div id="outerframe">
-
             <div>
                 <div id="search">
                     Search: <input autocomplete="off" id="mysearchfield" name="s">
@@ -237,7 +236,7 @@
                 Relationships
                 </div>
             </div>
-            <div id="kernel0" class="vkernel">
+            <div id="viewkernel" class="vkernel">
                 <input type="text" id="namefield0" class="namefield" value="[% kernel.name %]"/>
                 <div class="body" id="background">
                     [% FOR vkernel = visible_kernels %]
@@ -254,6 +253,8 @@
         <script type="text/javascript" src="/js/linedraw.js"></script>
         <script type="text/javascript" src="/js/new_relationship.js"></script>
         <script type="text/javascript" src="/js/relationship.js"></script>
+        <script type="text/javascript" src="/js/kernelobject.js"></script>
+        <script type="text/javascript" src="/js/viewkernel.js"></script>
         <script type="text/javascript" src="/js/kernel.js"></script>
         <script type="text/javascript" src="/js/visiblekernel.js"></script>
         <script type="text/javascript" src="/js/controls.js"></script>
@@ -275,13 +276,8 @@
 
             var viewKernelId=[%kernel.id%];
             // XXX precache this instead of fetching it
-            var vkernel = new VisibleKernel(undefined,[%kernel.id%],undefined);
-            vkernel.body = document.getElementById('background');
+            var view = new ViewKernel([%kernel.id%],document.getElementById('viewkernel'));
 
-            var background = vkernel.body;
-            dndMgr.registerDropZone( new CustomDropzone(background,vkernel) );
-
-            var i = 42;
             function addKernel(e){
                 alert("body addKernel called");
 
@@ -319,13 +315,14 @@
             document.addEventListener("mousedown", clearSelection, false);
 
             document.getElementById('mysearchfield').focus();
-            var vkernel1=vkernelCache['130/433'];
-            var vkernel2=vkernelCache['130/432'];
-            if(vkernel1 && vkernel2){
-                var relationship = new Relationship(vkernel1,vkernel2);
-            } else {
-    //            alert("couldn't find the right kernels to create the relationship");
-            }
+
+//            var vkernel1=vkernelCache['130/433'];
+//            var vkernel2=vkernelCache['130/432'];
+//            if(vkernel1 && vkernel2){
+//                var relationship = new Relationship(vkernel1,vkernel2);
+//            } else {
+//    //            alert("couldn't find the right kernels to create the relationship");
+//            }
 
             new Ajax.Autocompleter('mysearchfield', 'searchresults', '/ac', {frequency: .2});
         </script>

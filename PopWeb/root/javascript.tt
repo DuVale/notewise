@@ -1,0 +1,17 @@
+[%#
+    Note: this should eventually be a static file
+%]
+
+[% INCLUDE 'js/wz_jsgraphics.js' %]
+[% INCLUDE 'js/prototype.js' %]
+[% INCLUDE 'js/dragndrop.js' %]
+[% INCLUDE 'js/jsdbi.js' %]
+[% INCLUDE 'js/utils.js' %]
+[% INCLUDE 'js/linedraw.js' %]
+[% INCLUDE 'js/new_relationship.js' %]
+[% INCLUDE 'js/relationship.js' %]
+[% INCLUDE 'js/kernel.js' %]
+[% INCLUDE 'js/visiblekernel.js' %]
+[% INCLUDE 'js/controls.js' %]
+[% INCLUDE 'js/effects.js' %]
+[% INCLUDE 'js/dragdrop.js' %]

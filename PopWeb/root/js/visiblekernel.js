@@ -1,7 +1,5 @@
-var i=0;
 var VisibleKernel = Class.create();
 VisibleKernel.extend(JSDBI);
-VisibleKernel.superclass = JSDBI;
 
 VisibleKernel.fields(['container_object',
                       'contained_object',
@@ -17,8 +15,12 @@ VisibleKernel.has_a('contained_object','Kernel');
 VisibleKernel.has_a('container_object','Kernel');
 
 // multiple inheritance from both JSDBI and Draggable
-VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
+VisibleKernel.prototype = new JSDBI();
+VisibleKernel.prototype.extend(new Draggable());
+VisibleKernel.prototype.extend(new KernelObject());
+VisibleKernel.prototype.extend( {
     initialize: function(container_object,contained_object,htmlElement,x,y,width,height,collapsed) {
+        KernelObject.prototype.initialize.call(this, htmlElement);
         this.type        = 'Kernel';
         this.container_object(container_object);
         this.contained_object(contained_object);
@@ -27,7 +29,6 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
         this.__width=width;
         this.__height=height;
         this.__collapsed=collapsed;
-        this.htmlElement = htmlElement;
 
         // listeners that get notified when this visible kernel moves
         this.__moveListeners = [];
@@ -38,14 +39,13 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
         // listeners that get notified when this visible kernel stops moving or changing size (end of the drag)
         this.__endChangeListeners = [];
 
-        if(this.htmlElement){
-            this.setup();
-        }
     },
 
     setup: function () {
+        KernelObject.prototype.setup.call(this);
+
         this.fetchElements();
-        this.registerHandlers();
+//        this.registerHandlers();
 //        this.hydrateChildren();
 
         // add this object as a property of the htmlElement, so we can get back
@@ -114,23 +114,13 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
         this.removebutton = Utils.getElementsByClassName(this.htmlElement, 'removebutton')[0];
     },
 
-    // prevents the default browser action for this event from occuring
-    preventDefault: function(e) {
-        if ( e.preventDefault != undefined )
-           e.preventDefault();
-        else
-           e.returnValue = false;
-    },
-
     registerHandlers: function() {
+        KernelObject.prototype.registerHandlers.call(this);
+
         // set up the dnd
         dndMgr.registerDraggable( this );
         dndMgr.registerDraggable( new KernelCornerDraggable(this.corner, this) );
         dndMgr.registerDropZone( new CustomDropzone(this.body,this) );
-
-        // setup the namefield actions
-        Utils.registerEventListener(this.namefield,'blur', this.updateName.bindAsEventListener(this));
-        Utils.registerEventListener(this.namefield,'keyup', this.layoutNamefield.bind(this));
 
         // setup the click handlers
         Utils.registerEventListener(this.body,'dblclick', this.addNewKernel.bindAsEventListener(this));
@@ -155,14 +145,6 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
         // Setup action terminators
         Utils.registerEventListener(this.body,
                                    'mousedown',
-                                   this.clearSelectionAndTerminate.bindAsEventListener(this));
-        // drag in namefield should select text, not drag object
-        Utils.registerEventListener(this.namefield,
-                                   'mousedown',
-                                   Utils.terminateEvent.bindAsEventListener(this));
-        // double click in namefield should select text, not create kernel
-        Utils.registerEventListener(this.namefield,
-                                   'dblclick',
                                    this.clearSelectionAndTerminate.bindAsEventListener(this));
         // dragging on any of the buttons shouldn't drag the object
         Utils.registerEventListener(this.relationshipbutton,
@@ -195,12 +177,6 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
 
     startCreateRelationship: function(e){
         newRelationship.startDrag(e,this);
-    },
-
-    clearSelectionAndTerminate: function(e){
-        dndMgr.clearSelection();
-        Utils.terminateEvent(e);
-        this.preventDefault(e);
     },
 
     // XXX should use this for adding to the view as well
@@ -250,7 +226,7 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
     // removes the html element from the view, and then notifies the server
     destroy: function () {
         this.htmlElement.parentNode.removeChild(this.htmlElement);
-        return VisibleKernel.superclass.prototype.destroy.call(this);
+        return JSDBI.prototype.destroy.call(this);
     },
 
     // performs internal visual layout of the html elements for this kernel
@@ -258,16 +234,6 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
         this.layoutResize();
 //        this.layoutCorner();
         this.layoutNamefield();
-    },
-
-    // causes the namefield to relayout
-    layoutNamefield: function() {
-        this.namefield.style.width = this.getNameFieldWidth()+'px';
-
-        // scroll the text field all the way to the left again - apparently
-        // setting the value of a text input field again causes it to properly
-        // scroll all the way to the left
-        this.namefield.value = this.namefield.value;
     },
 
     // causes the resize corner to relayout
@@ -280,27 +246,6 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
 
     // causes the internal elements to resize if necessary
     layoutResize: function() {
-    },
-
-    // returns the desired width of the name field.  Usually the width of the text in the field, but bounded by the minimum width
-    getNameFieldWidth: function(){
-        // TODO make 20 into a constant - min namefield width
-        return Math.max(this.getTextWidth(this.namefield.value,this.getStyle(this.namefield,'font-size'))*1.15+10,20);
-    },
-
-    getTextWidth: function(text,size){
-        if(VisibleKernel.textSizingBox === undefined){
-            VisibleKernel.textSizingBox = document.createElement('span');
-            VisibleKernel.textSizingBox.innerHTML = 'a';
-            // put it way off the left side of the page so it's not visible
-            var body = document.getElementsByTagName('body')[0];
-            body.appendChild(VisibleKernel.textSizingBox);
-            VisibleKernel.textSizingBox.style.position = 'absolute';
-            VisibleKernel.textSizingBox.style.left = '-500px';
-        }
-        VisibleKernel.textSizingBox.style.fontSize = size;
-        VisibleKernel.textSizingBox.firstChild.data = text;
-        return VisibleKernel.textSizingBox.offsetWidth;
     },
 
     toggleCollapsed: function() {
@@ -319,16 +264,16 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
 
     // Just sets the internal collapsed value
     setCollapsed: function(collapsed) {
-        return VisibleKernel.superclass.prototype.collapsed.call(this, collapsed);
+        return JSDBI.prototype.collapsed.call(this, collapsed);
     },
 
     collapsed: function(collapsed) {
         if(collapsed == undefined) {
             // skip it
-            var results = VisibleKernel.superclass.prototype.collapsed.call(this);
+            var results = JSDBI.prototype.collapsed.call(this);
             return results;
         } if(collapsed){
-            var results = VisibleKernel.superclass.prototype.collapsed.call(this, 1);
+            var results = JSDBI.prototype.collapsed.call(this, 1);
             if(this.htmlElement){
                 this.htmlElement.className += ' collapsed';
 //                this.setHeight(this.getMinHeight());
@@ -337,7 +282,7 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
             return results;
         } else {
             // XXX why doesn't calling the accessor work?
-//            return VisibleKernel.superclass.prototype.collapsed.call(this, false);
+//            return JSDBI.prototype.collapsed.call(this, false);
             this.__collapsed=0;
             if(this.htmlElement){
                 this.htmlElement.className = this.htmlElement.className.replace(/ collapsed|collapsed /, '');
@@ -348,18 +293,10 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
         }
     },
 
-    getStyle: function(el,styleProp) {
-	if (el.currentStyle){
-		var y = el.currentStyle[styleProp];
-	}else if (window.getComputedStyle){
-		var y = document.defaultView.getComputedStyle(el,null).getPropertyValue(styleProp);
-        }
-	return y;
-    },
     // Just sets the internal x coordinate
     setX: function(x) {
         this.notifyMoveListeners(x,this.y());
-        return VisibleKernel.superclass.prototype.x.call(this, x);
+        return JSDBI.prototype.x.call(this, x);
     },
 
     // Sets the x coordinate as a percentage of the parent object's width and moves the object accordingly
@@ -368,13 +305,13 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
             this.htmlElement.style.left = x+"%";
             this.notifyMoveListeners(x,this.y());
         }
-        return VisibleKernel.superclass.prototype.x.call(this, x);
+        return JSDBI.prototype.x.call(this, x);
     },
 
     // Just sets the internal y coordinate
     setY: function(y) {
         this.notifyMoveListeners(this.x(),y);
-        return VisibleKernel.superclass.prototype.y.call(this, y);
+        return JSDBI.prototype.y.call(this, y);
     },
 
     // Sets the y coordinate as a percentage of the parent object's height and moves the object accordingly
@@ -383,7 +320,7 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
             this.htmlElement.style.top = y+"%";
             this.notifyMoveListeners(this.x(),y);
         }
-        return VisibleKernel.superclass.prototype.y.call(this, y);
+        return JSDBI.prototype.y.call(this, y);
     },
 
     // Sets the width as a percentage of the parent object's width and moves the object accordingly
@@ -404,7 +341,7 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
 
     // Just sets the internal width
     width: function(width) {
-        var results = VisibleKernel.superclass.prototype.width.call(this, width);
+        var results = JSDBI.prototype.width.call(this, width);
         if(width != undefined){
             this.notifySizeListeners(width,this.height());
         }
@@ -429,7 +366,7 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
 
     // Just sets the internal height
     height: function(height) {
-        var results = VisibleKernel.superclass.prototype.height.call(this, height);
+        var results = JSDBI.prototype.height.call(this, height);
         if(height != undefined){
             this.notifySizeListeners(this.width(),height);
         }
@@ -564,19 +501,6 @@ VisibleKernel.prototype = (new JSDBI()).extend(new Draggable()).extend( {
             this.__endChangeListeners[i](this);
         }
     },
-
-    updateName: function (e) {
-        var targ;
-        if (e.target) targ = e.target;
-        else if (e.srcElement) targ = e.srcElement;
-        if (targ.nodeType == 3) // defeat Safari bug
-            targ = targ.parentNode;
-
-        // XXX jsdbi relationships are working yet, so we don't have a kernel :(
-        this.contained_object().name(targ.value);
-        this.contained_object().update();
-    },
-
 
     // accepts the vkernel to reparent to, and whether or not to notify the server about it
     reparent: function(vkernel, do_update) {

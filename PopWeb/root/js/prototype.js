@@ -15,6 +15,7 @@ var Prototype = {
   emptyFunction: function() {}
 }
 
+// creates a constructor which creates a blank object, and then immediate calls initialize()
 var Class = {
   create: function() {
     return function() { 
