@@ -268,6 +268,9 @@ JSDBI.retrieve = function (id) {
                                    { method: 'get',
                                      asynchronous: false } );
 
+    if(!request.transport.responseXML){
+        alert("Got bogus xml response to retrieve: "+request.transport.responseText);
+    }
     object.__populate(request.transport.responseXML);
     return object;
 };
@@ -284,6 +287,9 @@ JSDBI.insert = function (values) {
                                         { method: 'put',
                                           parameters: params,
                                           asynchronous: false} );
+    if(!request.transport.responseXML){
+        alert("Got bogus xml response to insert: "+request.transport.responseText);
+    }
     object.__populate(request.transport.responseXML);
     return object;
 };
