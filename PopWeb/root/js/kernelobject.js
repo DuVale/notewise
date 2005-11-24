@@ -9,6 +9,9 @@ KernelObject.prototype = {
     },
 
     registerHandlers: function() {
+        // set up the dnd
+        dndMgr.registerDropZone( new CustomDropzone(this.body,this) );
+
         // setup the namefield actions
         Utils.registerEventListener(this.namefield,'blur', this.updateName.bindAsEventListener(this));
         Utils.registerEventListener(this.namefield,'keyup', this.layoutNamefield.bind(this));
@@ -72,6 +75,7 @@ KernelObject.prototype = {
 
     fetchElements: function() {
         if(this.htmlElement){
+            this.body = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
             this.namefield = Utils.getElementsByClassName(this.htmlElement, 'namefield')[0];
         };
     },

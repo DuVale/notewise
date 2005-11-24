@@ -44,7 +44,7 @@ VisibleKernel.prototype.extend( {
     setup: function () {
         KernelObject.prototype.setup.call(this);
 
-        this.fetchElements();
+//        this.fetchElements();
 //        this.registerHandlers();
 //        this.hydrateChildren();
 
@@ -106,6 +106,7 @@ VisibleKernel.prototype.extend( {
     },
 
     fetchElements: function () {
+        KernelObject.prototype.fetchElements.call(this);
         this.namefield = Utils.getElementsByClassName(this.htmlElement, 'namefield')[0];
         this.body = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
         this.corner = Utils.getElementsByClassName(this.htmlElement, 'corner')[0];
@@ -120,7 +121,6 @@ VisibleKernel.prototype.extend( {
         // set up the dnd
         dndMgr.registerDraggable( this );
         dndMgr.registerDraggable( new KernelCornerDraggable(this.corner, this) );
-        dndMgr.registerDropZone( new CustomDropzone(this.body,this) );
 
         // setup the click handlers
         Utils.registerEventListener(this.body,'dblclick', this.addNewKernel.bindAsEventListener(this));
