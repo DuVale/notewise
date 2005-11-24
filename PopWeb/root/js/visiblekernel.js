@@ -124,6 +124,7 @@ VisibleKernel.prototype.extend( {
 
         // setup the click handlers
         Utils.registerEventListener(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
+        Utils.registerEventListener(this.namefield,'click', this.selectAndTerminate.bindAsEventListener(this));
         
         // setup the relationship button
         Utils.registerEventListener(this.relationshipbutton,
@@ -166,6 +167,13 @@ VisibleKernel.prototype.extend( {
         Utils.registerEventListener(this.removebutton,
                                    'dblclick',
                                    Utils.terminateEvent.bindAsEventListener(this));
+    },
+
+    selectAndTerminate: function(e) {
+        dndMgr.clearSelection();
+        dndMgr.updateSelection(this,false);
+        this.namefield.focus();
+        Utils.terminateEvent(e)
     },
 
     // make this kernel into the current view (ie, switch the url to this kernel)

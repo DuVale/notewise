@@ -26,7 +26,7 @@ KernelObject.prototype = {
         // double click in namefield should select text, not create kernel
         Utils.registerEventListener(this.namefield,
                                    'dblclick',
-                                   this.clearSelectionAndTerminate.bindAsEventListener(this));
+                                   Utils.terminateEvent.bindAsEventListener(this));
     },
 
     updateName: function (e) {
