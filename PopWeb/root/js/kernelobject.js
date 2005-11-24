@@ -61,7 +61,7 @@ KernelObject.prototype = {
             var body = document.getElementsByTagName('body')[0];
             body.appendChild(KernelObject.textSizingBox);
             KernelObject.textSizingBox.style.position = 'absolute';
-            KernelObject.textSizingBox.style.left = '-500px';
+            KernelObject.textSizingBox.style.left = '-2000px';
         }
         KernelObject.textSizingBox.style.fontSize = size;
         KernelObject.textSizingBox.firstChild.data = text;

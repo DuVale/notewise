@@ -7,7 +7,8 @@
     <input type=button value='X' class="removebutton"/>
     <input type=button value='R' class="relationshipbutton"/>
     <div class="leftgrippie"></div>
-    <input type="text" class="namefield" value="[%vkernel.contained_kernel.name%]"/>
+    <input type="text" class="namefield" value="[%vkernel.contained_kernel.name%]"
+           style="width: [%vkernel.contained_kernel.name.length * 0.55 + 1%]em;"/>
     <div class="rightgrippie"/></div>
     <div class="body">
         [% UNLESS vkernel.collapsed %]

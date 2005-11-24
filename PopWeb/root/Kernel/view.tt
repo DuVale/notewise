@@ -26,7 +26,8 @@
                 </div>
             </div>
             <div id="viewkernel" class="vkernel">
-                <input type="text" id="namefield0" class="namefield" value="[% kernel.name %]"/>
+                <input type="text" id="namefield0" class="namefield" value="[% kernel.name %]"
+                style="width: [% kernel.name.length * 0.55 + 1 %]em;"/>
                 <div class="body" id="background">
                     [% FOR vkernel = visible_kernels %]
                         [%INCLUDE 'Kernel/kernel.tt' i=0 %]
