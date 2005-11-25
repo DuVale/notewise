@@ -258,7 +258,7 @@ VisibleKernel.prototype.extend( {
 
     // Just sets the internal x coordinate
     setX: function(x) {
-        this.notifyMoveListeners(x,this.y());
+        this.notifyMoveListeners(x+'%',this.y()+'%');
         return JSDBI.prototype.x.call(this, x);
     },
 
@@ -266,14 +266,14 @@ VisibleKernel.prototype.extend( {
     x: function(x) {
         if(x && this.htmlElement){
             this.htmlElement.style.left = x+"%";
-            this.notifyMoveListeners(x,this.y());
+            this.notifyMoveListeners(x+'%',this.y()+'%');
         }
         return JSDBI.prototype.x.call(this, x);
     },
 
     // Just sets the internal y coordinate
     setY: function(y) {
-        this.notifyMoveListeners(this.x(),y);
+        this.notifyMoveListeners(this.x()+'%',y+'%');
         return JSDBI.prototype.y.call(this, y);
     },
 
@@ -281,7 +281,7 @@ VisibleKernel.prototype.extend( {
     y: function(y) {
         if(y && this.htmlElement){
             this.htmlElement.style.top = y+"%";
-            this.notifyMoveListeners(this.x(),y);
+            this.notifyMoveListeners(this.x()+'%',y+'%');
         }
         return JSDBI.prototype.y.call(this, y);
     },
@@ -306,7 +306,7 @@ VisibleKernel.prototype.extend( {
     width: function(width) {
         var results = JSDBI.prototype.width.call(this, width);
         if(width != undefined){
-            this.notifySizeListeners(width,this.height());
+            this.notifySizeListeners(width+'%',this.height()+'%');
         }
         return results;
     },
@@ -331,7 +331,7 @@ VisibleKernel.prototype.extend( {
     height: function(height) {
         var results = JSDBI.prototype.height.call(this, height);
         if(height != undefined){
-            this.notifySizeListeners(this.width(),height);
+            this.notifySizeListeners(this.width()+'%',height+'%');
         }
         return results;
     },
@@ -453,13 +453,13 @@ VisibleKernel.prototype.extend( {
         }
     },
 
-    notifyStartChangeListeners: function (width, height){
+    notifyStartChangeListeners: function (){
         for(var i=0;i<this.__startChangeListeners.length;i++){
             this.__startChangeListeners[i](this);
         }
     },
 
-    notifyEndChangeListeners: function (width, height){
+    notifyEndChangeListeners: function (){
         for(var i=0;i<this.__endChangeListeners.length;i++){
             this.__endChangeListeners[i](this);
         }
@@ -553,6 +553,12 @@ VisibleKernel.prototype.extend( {
     },
  
     duringDrag: function() {
+        var parentPos = Utils.toViewportPosition(this.oldParentNode);
+        this.setX(Number(chopPx(this.htmlElement.style.left))*100
+                       / this.oldParentNode.clientWidth);
+        window.status = parentPos.y;
+        this.setY((Number(chopPx(this.htmlElement.style.top))-parentPos.y)*100
+                       / this.oldParentNode.clientHeight);
     },
  
     cancelDrag: function() {

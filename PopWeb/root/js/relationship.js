@@ -109,11 +109,11 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.htmlElement.className='relationship';
         this.htmlElement.id=this.idString();
         this.vkernel1.htmlElement.parentNode.appendChild(this.htmlElement);
-        this.line = new LineDraw.Line(this.htmlElement,
-                                      this.vkernel1.x()+this.vkernel1.width()/2,
-                                      this.vkernel1.y()+this.vkernel1.height()/2,
-                                      this.vkernel2.x()+this.vkernel2.width()/2,
-                                      this.vkernel2.y()+this.vkernel2.height()/2);
+        this.line = new LineDraw.Line(this.vkernel1.htmlElement.parentNode,
+                                      (this.vkernel1.x()+this.vkernel1.width()/2)+'%',
+                                      (this.vkernel1.y()+this.vkernel1.height()/2)+'%',
+                                      (this.vkernel2.x()+this.vkernel2.width()/2)+'%',
+                                      (this.vkernel2.y()+this.vkernel2.height()/2)+'%');
         this.createLabel();
         this.createButtons();
         this.createArrows();
@@ -132,7 +132,8 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.labelDiv = document.createElement('div');
         this.labelDiv.className='labelDiv selected';
         this.labelDiv.style.position='absolute';
-        this.labelDiv.style.border='1px solid purple';
+        this.labelDiv.style.zIndex=5;
+        this.labelDiv.style.border='0px solid purple';
         this.htmlElement.appendChild(this.labelDiv);
 
         this.label = document.createElement('input');
@@ -185,7 +186,7 @@ Relationship.prototype = (new JSDBI()).extend( {
         for(var i=0; i < 2; i++){
             this.arrowCanvasElements[i] = document.createElement('div'); this.arrowCanvasElements[i].id='canvas'+i+'/'+this.idString();
             this.htmlElement.appendChild(this.arrowCanvasElements[i]);
-//            this.arrowCanvasElements[i].style.border = '1px solid green';
+            this.arrowCanvasElements[i].style.border = '0px solid green';
             this.arrowCanvasElements[i].style.width = '34px';
             this.arrowCanvasElements[i].style.height = '34px';
             this.arrowCanvasElements[i].style.position = 'absolute';
@@ -195,13 +196,23 @@ Relationship.prototype = (new JSDBI()).extend( {
    },
 
     updatePosition1: function(){
-        this.line.setP1(this.vkernel1.x()+this.vkernel1.width()/2,
-                        this.vkernel1.y()+this.vkernel1.height()/2);
+//        window.status = "vk1 x: "+this.vkernel1.x()
+//                        +" width: "+this.vkernel1.width()
+//                        +" y: "+this.vkernel1.y()
+//                        +" height: "+this.vkernel1.height();
+        this.line.setP1((this.vkernel1.x()+this.vkernel1.width()/2)+'%',
+                        (this.vkernel1.y()+this.vkernel1.height()/2)+'%'
+                       );
     },
 
     updatePosition2: function(){
-        this.line.setP2(this.vkernel2.x()+this.vkernel2.width()/2,
-                        this.vkernel2.y()+this.vkernel2.height()/2);
+//        window.status = "vk2 x: "+this.vkernel2.x()
+//                        +" width: "+this.vkernel2.width()
+//                        +" y: "+this.vkernel2.y()
+//                        +" height: "+this.vkernel2.height();
+        this.line.setP2((this.vkernel2.x()+this.vkernel2.width()/2)+'%',
+                        (this.vkernel2.y()+this.vkernel2.height()/2)+'%'
+                       );
     },
 
     updateArrows: function() {
@@ -211,20 +222,25 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.arrowCanvases[1].clear();
         this.arrowCanvases[1].setColor("#000000");
 
-        var angle = Math.atan2(this.vkernel2.y()+this.vkernel2.height()/2 - (this.vkernel1.y()+this.vkernel1.height()/2),
-                               this.vkernel1.x()+this.vkernel1.width()/2- (this.vkernel2.x()+this.vkernel2.width()/2));
+        var vkernel1Pos = Utils.toViewportPosition(this.vkernel1.htmlElement);
+        var vkernel2Pos = Utils.toViewportPosition(this.vkernel2.htmlElement);
 
-        this.drawArrow(this.arrowCanvases[0],17,17,angle);
+        var angle = Math.atan2(vkernel2Pos.y+this.vkernel2.htmlElement.clientHeight/2
+                               - (vkernel1Pos.y+this.vkernel1.htmlElement.clientHeight/2),
+                               vkernel1Pos.x + this.vkernel1.htmlElement.clientWidth/2
+                               - (vkernel2Pos.x+this.vkernel2.htmlElement.clientWidth/2));
+
+        this.drawArrow(this.arrowCanvases[0],0,0,angle);
         this.arrowCanvases[0].paint();
-        this.drawArrow(this.arrowCanvases[1],17,17,angle+Math.PI);
+        this.drawArrow(this.arrowCanvases[1],0,0,angle+Math.PI);
         this.arrowCanvases[1].paint();
         this.justUpdatedArrows=true;
         this.needUpdateArrows=false;
     },
 
     moveLabelDiv: function(x,y) {
-        this.labelDiv.style.left=(x)+'px';
-        this.labelDiv.style.top=(y)+'px';
+        this.labelDiv.style.left=(x)+'%';
+        this.labelDiv.style.top=(y)+'%';
     },
 
     moveArrows: function() {
@@ -247,12 +263,12 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.intersect2 = rect2.getLineIntersect(line);
 
         if(this.intersect1){
-            this.arrowCanvasElements[0].style.left=(this.intersect1.x-17)+'px';
-            this.arrowCanvasElements[0].style.top=(this.intersect1.y-17)+'px';
+            this.arrowCanvasElements[0].style.left=(this.intersect1.x)+'%';
+            this.arrowCanvasElements[0].style.top=(this.intersect1.y)+'%';
         }
         if(this.intersect2){
-            this.arrowCanvasElements[1].style.left=(this.intersect2.x-17)+'px';
-            this.arrowCanvasElements[1].style.top=(this.intersect2.y-17)+'px';
+            this.arrowCanvasElements[1].style.left=(this.intersect2.x)+'%';
+            this.arrowCanvasElements[1].style.top=(this.intersect2.y)+'%';
         }
         if(this.intersect1 && this.intersect2){
             var x=Math.min(this.intersect1.x,this.intersect2.x)+Math.abs(this.intersect2.x-this.intersect1.x)/2;
@@ -370,7 +386,6 @@ Relationship.prototype = (new JSDBI()).extend( {
     },
 
     startChange: function(vkernel) {
-        window.status = "got start drag";
         //hide arrows and label
         this.labelDiv.style.display='none';
         this.arrowCanvasElements[0].style.display='none';
@@ -378,12 +393,12 @@ Relationship.prototype = (new JSDBI()).extend( {
     },
 
     endChange: function(vkernel) {
-        window.status = "got end drag";
-
-        this.line.setP1(this.vkernel1.x()+this.vkernel1.width()/2,
-                        this.vkernel1.y()+this.vkernel1.height()/2);
-        this.line.setP2(this.vkernel2.x()+this.vkernel2.width()/2,
-                        this.vkernel2.y()+this.vkernel2.height()/2);
+        this.line.setP1((this.vkernel1.x()+this.vkernel1.width()/2)+'%',
+                        (this.vkernel1.y()+this.vkernel1.height()/2)+'%'
+                       );
+        this.line.setP2((this.vkernel2.x()+this.vkernel2.width()/2)+'%',
+                        (this.vkernel2.y()+this.vkernel2.height()/2)+'%'
+                       );
 
         this.labelDiv.style.display='inline';
         this.updateArrows();

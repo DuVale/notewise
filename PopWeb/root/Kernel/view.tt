@@ -75,13 +75,13 @@
 
             document.getElementById('mysearchfield').focus();
 
-//            var vkernel1=vkernelCache['130/433'];
-//            var vkernel2=vkernelCache['130/432'];
-//            if(vkernel1 && vkernel2){
-//                var relationship = new Relationship(vkernel1,vkernel2);
-//            } else {
-//    //            alert("couldn't find the right kernels to create the relationship");
-//            }
+            var vkernel1=vkernelCache['682/686'];
+            var vkernel2=vkernelCache['682/684'];
+            if(vkernel1 && vkernel2){
+                var relationship = new Relationship(vkernel1,vkernel2);
+            } else {
+    //            alert("couldn't find the right kernels to create the relationship");
+            }
 
             new Ajax.Autocompleter('mysearchfield', 'searchresults', '/ac', {frequency: .2});
         </script>
