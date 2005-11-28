@@ -70,7 +70,7 @@ var JSDBI = Class.create();
 JSDBI.Version = '0.2';
 JSDBI.prototype = {
     initialize: function () {
-    },
+	 },
 
     // Returns the primary key(s) for this object
     id: function () {
@@ -91,19 +91,33 @@ JSDBI.prototype = {
 		return this.id().toString();
 	},
 
+	__internalUrl: function (value) {
+		if(value) {
+			this[__internalUrl] = value;
+		} else {
+			if (this[__internalUrl]) {
+				return this[__internalUrl];
+			} else {
+				this[__internalUrl] = this.url();
+				return this[__internalUrl];
+			}
+		}
+	},
+
     // Sends any updated fields in the object to the server.
     update: function() {
         var params = this.__getParams();
-        var request = new Ajax.Request(this.url(), { method: 'post',
+        var request = new Ajax.Request(this.__internalUrl(), { method: 'post',
                                                      parameters: params,
                                                      asynchronous: true} );
+		  this.__internalUrl(this.url());
         return;
     },
 
     // Deletes this object from the server.
     //  XXX it won't let me name this delete - is destroy a good name?
     destroy: function() {
-        var request = new Ajax.Request(this.url(), { method: 'delete',
+        var request = new Ajax.Request(this.__internalUrl(), { method: 'delete',
                                                      asynchronous: false} );
         return;
     },
