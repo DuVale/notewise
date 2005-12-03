@@ -145,29 +145,13 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.removeButton.type='button';
         this.removeButton.className='removebutton';
         this.removeButton.value = 'X';
-        this.removeButton.style.position='absolute';
-        this.removeButton.style.width='20px';
-        this.removeButton.style.height='20px';
-        this.removeButton.style.padding='0px';
-        this.removeButton.style.background='blue';
-        this.removeButton.style.color='white';
         this.labelDiv.appendChild(this.removeButton);
-        this.removeButton.style.left='55px';
-        this.removeButton.style.top='-12px';
 
         this.hideButton = document.createElement('input');
         this.hideButton.type='button';
         this.hideButton.className='hidebutton';
         this.hideButton.value = 'H';
-        this.hideButton.style.position='absolute';
-        this.hideButton.style.width='20px';
-        this.hideButton.style.height='20px';
-        this.hideButton.style.padding='0px';
-        this.hideButton.style.background='blue';
-        this.hideButton.style.color='white';
         this.labelDiv.appendChild(this.hideButton);
-        this.hideButton.style.left='-75px';
-        this.hideButton.style.top='-12px';
     },
 
     createArrows: function() {
