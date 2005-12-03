@@ -10,19 +10,29 @@
             <div>
                 <div id="search">
                     Search: <input autocomplete="off" id="mysearchfield" name="s">
+                    <script>
+                        document.getElementById('mysearchfield').focus();
+                    </script>
                     <div class="auto_complete" id="searchresults"></div>
                 </div>
             </div>
             <div id="parents" class="section">
                 <div class="header">
                 <span onclick="if(this.innerHTML == 'V'){this.innerHTML='&gt;'; document.getElementById('parents').className='section';} else {this.innerHTML='V'; document.getElementById('parents').className='section expanded';}">&gt;</span>
-                    Parents
+                    Parents ([%kernel.parents.size or '0'%])
+                </div>
+                <div class="body">
+                    <ul>
+                        [% FOR parent = kernel.parents %]
+                            <li><a href="[% base %]/kernel/view/[%parent.id%]">[%parent.name%]</a></li>
+                        [% END %]
+                    </ul>
                 </div>
             </div>
             <div id="relationships" class="section">
                 <div class="header">
                 <span onclick="if(this.innerHTML == 'V'){this.innerHTML='&gt;'; document.getElementById('relationships').className='section';} else {this.innerHTML='V'; document.getElementById('relationships').className='section expanded';}">&gt;</span>
-                Relationships
+                Relationships (0)
                 </div>
             </div>
             <div id="viewkernel" class="vkernel">
@@ -72,8 +82,6 @@
                 VisibleKernel.prototype.clearSelectionAndTerminate(e);
             }
             document.addEventListener("mousedown", clearSelection, false);
-
-            document.getElementById('mysearchfield').focus();
 
             var vkernel1=vkernelCache['682/686'];
             var vkernel2=vkernelCache['682/684'];

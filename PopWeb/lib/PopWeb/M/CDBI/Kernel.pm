@@ -3,6 +3,7 @@ package PopWeb::M::CDBI::Kernel;
 use strict;
 use warnings;
 use DateTime;
+use Data::Dumper;
 
 __PACKAGE__->has_a(object_id => 'PopWeb::M::CDBI::ObjectId');
 
@@ -74,6 +75,13 @@ sub contained_objects {
     my $self = shift;
     my @contained_ids = PopWeb::M::CDBI::ContainedObject->search(container_object => $self->id);
     return map $_, @contained_ids;
+}
+
+sub parents {
+    my $self = shift;
+    my @contained_ids = PopWeb::M::CDBI::ContainedObject->search(contained_object => $self->id);
+    my @parents = map $_->container_kernel, @contained_ids;
+    return @parents;
 }
 
 sub notes {
