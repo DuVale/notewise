@@ -140,7 +140,6 @@ Relationship.prototype = (new JSDBI()).extend( {
     },
 
     createButtons: function() {
-        // TODO most of this crap should go in the stylesheet
         this.removeButton = document.createElement('input');
         this.removeButton.type='button';
         this.removeButton.className='removebutton';
