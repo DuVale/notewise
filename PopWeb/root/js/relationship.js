@@ -121,7 +121,6 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.createButtons();
         this.createArrows();
         this.registerListeners();
-//        this.line.img.style.border='1px solid red';
     },
 
     idString: function() {
@@ -132,22 +131,12 @@ Relationship.prototype = (new JSDBI()).extend( {
         // this div holds the label and associated buttons, so they can be easily moved as a single unit
         this.labelDiv = document.createElement('div');
         this.labelDiv.className='labelDiv selected';
-        this.labelDiv.style.position='absolute';
-        this.labelDiv.style.zIndex=5;
-        this.labelDiv.style.border='0px solid purple';
         this.htmlElement.appendChild(this.labelDiv);
 
         this.label = document.createElement('input');
         this.label.value = 'asdfasdfasdfas';
-        this.label.style.position='absolute';
-        this.label.style.width='100px';
-        this.label.style.height='20px';
-        this.label.style.background='white';
-        this.label.style.border='0px solid black';
-        this.label.style.textAlign='center';
+        this.label.className = 'relationshipLabel';
         this.labelDiv.appendChild(this.label);
-        this.label.style.top='-10px';
-        this.label.style.left='-50px';
     },
 
     createButtons: function() {
@@ -187,19 +176,13 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.arrowDivs = [];
         for(var i=0; i < 2; i++){
             this.arrowDivs[i] = document.createElement('div');
-            this.arrowDivs[i].style.position = 'absolute';
+            this.arrowDivs[i].className='arrowdiv';
             this.htmlElement.appendChild(this.arrowDivs[i]);
 
             this.arrowCanvasElements[i] = document.createElement('div');
             this.arrowCanvasElements[i].id='canvas'+i+'/'+this.idString();
+            this.arrowCanvasElements[i].className='arrowcanvas';
             this.arrowDivs[i].appendChild(this.arrowCanvasElements[i]);
-            this.arrowCanvasElements[i].style.border = '0px solid green';
-            this.arrowCanvasElements[i].style.left = '-17px';
-            this.arrowCanvasElements[i].style.top = '-17px';
-            this.arrowCanvasElements[i].style.width = '34px';
-            this.arrowCanvasElements[i].style.height = '34px';
-            this.arrowCanvasElements[i].style.position = 'absolute';
-            this.arrowCanvasElements[i].style.zIndex = 15;
             this.arrowCanvases[i] = new jsGraphics('canvas'+i+'/'+this.idString());
         }
         this.updateArrows();
