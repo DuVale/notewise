@@ -105,6 +105,9 @@ Relationship.prototype = (new JSDBI()).extend( {
     initialize: function (vkernel1,vkernel2){
         this.vkernel1=vkernel1;
         this.vkernel2=vkernel2;
+        this.intersect1={x:0, y:0};
+        this.intersect2={x:0, y:0};
+        this.showArrow = [true, true];
         this.htmlElement = document.createElement('div');
         this.htmlElement.className='relationship';
         this.htmlElement.id=this.idString();
@@ -118,8 +121,6 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.createButtons();
         this.createArrows();
         this.registerListeners();
-        this.intersect1={x:0, y:0};
-        this.intersect2={x:0, y:0};
 //        this.line.img.style.border='1px solid red';
     },
 
@@ -183,13 +184,22 @@ Relationship.prototype = (new JSDBI()).extend( {
     createArrows: function() {
         this.arrowCanvasElements = [];
         this.arrowCanvases = [];
+        this.arrowDivs = [];
         for(var i=0; i < 2; i++){
-            this.arrowCanvasElements[i] = document.createElement('div'); this.arrowCanvasElements[i].id='canvas'+i+'/'+this.idString();
-            this.htmlElement.appendChild(this.arrowCanvasElements[i]);
+            this.arrowDivs[i] = document.createElement('div');
+            this.arrowDivs[i].style.position = 'absolute';
+            this.htmlElement.appendChild(this.arrowDivs[i]);
+
+            this.arrowCanvasElements[i] = document.createElement('div');
+            this.arrowCanvasElements[i].id='canvas'+i+'/'+this.idString();
+            this.arrowDivs[i].appendChild(this.arrowCanvasElements[i]);
             this.arrowCanvasElements[i].style.border = '0px solid green';
+            this.arrowCanvasElements[i].style.left = '-17px';
+            this.arrowCanvasElements[i].style.top = '-17px';
             this.arrowCanvasElements[i].style.width = '34px';
             this.arrowCanvasElements[i].style.height = '34px';
             this.arrowCanvasElements[i].style.position = 'absolute';
+            this.arrowCanvasElements[i].style.zIndex = 15;
             this.arrowCanvases[i] = new jsGraphics('canvas'+i+'/'+this.idString());
         }
         this.updateArrows();
@@ -230,10 +240,14 @@ Relationship.prototype = (new JSDBI()).extend( {
                                vkernel1Pos.x + this.vkernel1.htmlElement.clientWidth/2
                                - (vkernel2Pos.x+this.vkernel2.htmlElement.clientWidth/2));
 
-        this.drawArrow(this.arrowCanvases[0],0,0,angle);
-        this.arrowCanvases[0].paint();
-        this.drawArrow(this.arrowCanvases[1],0,0,angle+Math.PI);
-        this.arrowCanvases[1].paint();
+        if(this.showArrow[0]){
+            this.drawArrow(this.arrowCanvases[0],17,17,angle);
+            this.arrowCanvases[0].paint();
+        }
+        if(this.showArrow[1]){
+            this.drawArrow(this.arrowCanvases[1],17,17,angle+Math.PI);
+            this.arrowCanvases[1].paint();
+        }
         this.justUpdatedArrows=true;
         this.needUpdateArrows=false;
     },
@@ -263,12 +277,12 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.intersect2 = rect2.getLineIntersect(line);
 
         if(this.intersect1){
-            this.arrowCanvasElements[0].style.left=(this.intersect1.x)+'%';
-            this.arrowCanvasElements[0].style.top=(this.intersect1.y)+'%';
+            this.arrowDivs[0].style.left=(this.intersect1.x)+'%';
+            this.arrowDivs[0].style.top=(this.intersect1.y)+'%';
         }
         if(this.intersect2){
-            this.arrowCanvasElements[1].style.left=(this.intersect2.x)+'%';
-            this.arrowCanvasElements[1].style.top=(this.intersect2.y)+'%';
+            this.arrowDivs[1].style.left=(this.intersect2.x)+'%';
+            this.arrowDivs[1].style.top=(this.intersect2.y)+'%';
         }
         if(this.intersect1 && this.intersect2){
             var x=Math.min(this.intersect1.x,this.intersect2.x)+Math.abs(this.intersect2.x-this.intersect1.x)/2;
@@ -376,13 +390,13 @@ Relationship.prototype = (new JSDBI()).extend( {
     },
 
     arrow1click: function(e){
-        // TODO
-        alert("got click on arrow 1");
+        this.showArrow[0] =  !this.showArrow[0];
+        this.updateArrows();
     },
 
     arrow2click: function(e){
-        // TODO
-        alert("got click on arrow 2");
+        this.showArrow[1] =  !this.showArrow[1];
+        this.updateArrows();
     },
 
     startChange: function(vkernel) {
@@ -407,8 +421,7 @@ Relationship.prototype = (new JSDBI()).extend( {
     },
 
     selectAndTerminate: function(e) {
-        SelectionManager.clearSelection();
-        this.select();
+        dndMgr.updateSelection(this,false);
         this.label.focus();
         Utils.terminateEvent(e);
     },
