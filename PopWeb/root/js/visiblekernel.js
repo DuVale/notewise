@@ -479,14 +479,14 @@ VisibleKernel.prototype.extend( {
 
             var width = this.htmlElement.clientWidth;
             var height = this.htmlElement.clientHeight;
-            this.htmlElement.parentNode.removeChild(this.htmlElement);
+
+            parentElement.appendChild(this.htmlElement);
 
             this.x((pos.x-parentPos.x)*100/parentElement.clientWidth);
             this.y((pos.y-parentPos.y)*100/parentElement.clientHeight);
             this.setWidth(width*100/parentElement.clientWidth);
             this.setHeight(height*100/parentElement.clientHeight);
 
-            parentElement.appendChild(this.htmlElement);
 
             dndMgr.moveToFront(this.htmlElement);
 
