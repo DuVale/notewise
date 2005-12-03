@@ -31,9 +31,19 @@ sub default : Private {
 
 sub ac : Global {
     my ( $self, $c ) = @_;
-    $c->stash->{kernels} = [PopWeb::M::CDBI::Kernel->search_where(name => { 'like', $c->req->params->{s}."%" })];
+    my $max_results = 15;
+
+    my @kernels = PopWeb::M::CDBI::Kernel->search_where(name => { 'like', $c->req->params->{s}."%" });
+    if(@kernels < $max_results){
+        # if we didn't get enough, get some more
+        push @kernels, PopWeb::M::CDBI::Kernel->search_where(name => { 'like', "% ".$c->req->params->{s}."%" });
+    }
+
+    # only show up to max_results
+    my $upper_count = @kernels < $max_results ? $#kernels : $max_results - 1;
+    $c->stash->{kernels} = [@kernels[0..$upper_count]];
+
     $c->stash->{template} = 'Search/autocomplete-results.tt';
-    #$c->res->output("<ul><li>a</li><li>b</li></ul>");
 }
 
 =back
