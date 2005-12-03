@@ -32,7 +32,14 @@
             <div id="relationships" class="section">
                 <div class="header">
                 <span onclick="if(this.innerHTML == 'V'){this.innerHTML='&gt;'; document.getElementById('relationships').className='section';} else {this.innerHTML='V'; document.getElementById('relationships').className='section expanded';}">&gt;</span>
-                Relationships (0)
+                Relationships ([%kernel.related_kernels.size or '0'%])
+                </div>
+                <div class="body">
+                    <ul>
+                        [% FOR sibling = kernel.related_kernels %]
+                            <li><a href="[% base %]/kernel/view/[%sibling.id%]">[%sibling.name%]</a></li>
+                        [% END %]
+                    </ul>
                 </div>
             </div>
             <div id="viewkernel" class="vkernel">

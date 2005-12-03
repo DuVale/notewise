@@ -84,6 +84,14 @@ sub parents {
     return @parents;
 }
 
+sub related_kernels {
+    my $self = shift;
+    my @relationships1 = PopWeb::M::CDBI::Relationship->search(part1 => $self->id);
+    my @relationships2 = PopWeb::M::CDBI::Relationship->search(part2 => $self->id);
+    my @related_kernels = ((map $_->part2->object, @relationships1),(map $_->part1->object, @relationships2));
+    return @related_kernels;
+}
+
 sub notes {
     my $self = shift;
     my @notes = PopWeb::M::CDBI::Note->search(container => $self->id);

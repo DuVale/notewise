@@ -4,6 +4,9 @@ use strict;
 
 __PACKAGE__->add_trigger(before_create => \&create_id);
 
+__PACKAGE__->has_a(part1 => 'PopWeb::M::CDBI::ObjectId');
+__PACKAGE__->has_a(part2 => 'PopWeb::M::CDBI::ObjectId');
+
 sub create_id {
     my $self=shift;
     my $object_id = PopWeb::M::CDBI::ObjectId->create({type=>'relationship'});
