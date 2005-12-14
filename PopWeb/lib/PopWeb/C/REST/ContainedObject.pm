@@ -102,7 +102,7 @@ sub update : Private {
         }
 
         # do the update
-        my $contained_object = PopWeb::M::CDBI::ContainedObject->retrieve(container_object=>$container_id,contained_object=>$contained_id);
+        my $contained_object = (PopWeb::M::CDBI::ContainedObject->search(container_object=>$container_id,contained_object=>$contained_id))[0];
         unless($contained_object){
             $c->res->status(404); # Not found
             return $c->res->output('ERROR');

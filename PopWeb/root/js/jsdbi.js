@@ -87,37 +87,37 @@ JSDBI.prototype = {
         }
     },
 
-	toString: function() {
-		return this.id().toString();
-	},
+    toString: function() {
+            return this.id().toString();
+    },
 
-	__internalUrl: function (value) {
-		if(value) {
-			this[__internalUrl] = value;
-		} else {
-			if (this[__internalUrl]) {
-				return this[__internalUrl];
-			} else {
-				this[__internalUrl] = this.url();
-				return this[__internalUrl];
-			}
-		}
-	},
+    internalUrl: function (value) {
+        if(value) {
+            this.__internalUrl = value;
+        } else {
+            if (this['__internalUrl']) {
+                return this.__internalUrl;
+            } else {
+                this.__internalUrl = this.url();
+                return this.__internalUrl;
+            }
+        }
+    },
 
     // Sends any updated fields in the object to the server.
     update: function() {
         var params = this.__getParams();
-        var request = new Ajax.Request(this.__internalUrl(), { method: 'post',
+        var request = new Ajax.Request(this.internalUrl(), { method: 'post',
                                                      parameters: params,
                                                      asynchronous: true} );
-		  this.__internalUrl(this.url());
+        this.internalUrl(this.url());
         return;
     },
 
     // Deletes this object from the server.
     //  XXX it won't let me name this delete - is destroy a good name?
     destroy: function() {
-        var request = new Ajax.Request(this.__internalUrl(), { method: 'delete',
+        var request = new Ajax.Request(this.internalUrl(), { method: 'delete',
                                                      asynchronous: false} );
         return;
     },
@@ -310,79 +310,68 @@ JSDBI.insert = function (values) {
 
 // has_a - define relationship on this object. It creates a few methods on the 
 // prototype, including the _field_ accessor
-JSDBI.has_a = function (field, clazz) {
-	var localField = field;
-	var localClazz = clazz;
+JSDBI.has_a = function (field, className) {
 
-	this.prototype[localField] = function (value) {
-		if(value) {
-			return this['__' + localField] = value.toString();
-		} else {
-			// inflate if we need to
-			var obj;
-			var type = typeof this['__' + localField];
-			if(type == 'string' || type == 'number') {
-				var eClazz = eval(localClazz);
-				obj = eClazz.retrieve(this['__' + localField]);
-                                this['__' + localField] = obj;
-			} else {
-				obj = this['__' + localField];
-			}		
-			return obj;
-		}
-	};
+    this.prototype[field] = function (value) {
+        if(value) {
+            return this['__' + field] = value.toString();
+        } else {
+            // inflate if we need to
+            var obj;
+            var type = typeof this['__' + field];
+            if(type == 'string' || type == 'number') {
+                var eClass = eval(className);
+                obj = eClass.retrieve(this['__' + field]);
+                                this['__' + field] = obj;
+            } else {
+                obj = this['__' + field];
+            }        
+            return obj;
+        }
+    };
 };
 
 // has_many - define relationship on this object. It creates a few methods on
 // the prototype, including the _field_ accessor and the add_to_field method.
-JSDBI.has_many = function (field, clazz, key, retrieveUrl) {
-	this.prototype[field] = function (value) {
-		var localField = field;
-		var localClazz = clazz;
-		var localKey = key;
-		var localUrl = retrieveUrl;
+JSDBI.has_many = function (field, className, key, retrieveUrl) {
+    this.prototype[field] = function (value) {
+        if(value) {
+            alert("not quite sure what to do here");
+        } else {
+            var retArray = new Array;
+            var eClass = eval(className);
+            var opts = { 
+                method: 'get',
+                asynchronous: false 
+            };
+            var request = new Ajax.Request(retrieveUrl.replace(/\$/, this.id().toString()), opts);
+            var xml = request.transport.responseXML;
+            var elements = xml.getElementsByTagName(eClass.elementTag());
+            for(var i = 0; i < elements.length; i++) {
+                var obj = new eClass();
+                obj.__populate(elements[i]);
+                retArray.push(obj);
+            }
+            return retArray;    
+        }
+    };
 
-		if(value) {
-			alert("not quite sure what to do here");
-		} else {
-			var retArray = new Array;
-			var eClazz = eval(localClazz);
-			var opts = { 
-				method: 'get',
-				asynchronous: false 
-			};
-			var request = new Ajax.Request(localUrl.replace(/\$/, this.id().toString()), opts);
-			var xml = request.transport.responseXML;
-			var elements = xml.getElementsByTagName(eClazz.elementTag());
-			for(var i = 0; i < elements.length; i++) {
-				var obj = new eClazz();
-				obj.__populate(elements[i]);
-				retArray.push(obj);
-			}
-			return retArray;	
-		}
-	};
+    this.prototype['add_to_' + field] = function (value) {
+        var obj;
+        var eClass = eval(className);
+        var type = typeof value;
+        if (type == 'string' || type == 'number') {
+            // we got an id to an already existing object
+            obj = eClass.retreive(value);
+            obj[key] = this.toString();
+            obj.update();    
+        } else {
+            // we got an object - were making a new one
+            value[key] = this.toString();
+            obj = eClass.insert(value);    
+        }
 
-	this.prototype['add_to_' + field] = function (value) {
-		var localField = field;
-		var localClazz = clazz;
-		var localKey = key;
-		
-		var obj;
-		var eClazz = eval(localClazz);
-		var type = typeof value;
-		if (type == 'string' || type == 'number') {
-			// we got an id to an already existing object
-			obj = eClazz.retreive(value);
-			obj[localKey] = this.toString();
-			obj.update();	
-		} else {
-			// we got an object - were making a new one
-			value[localKey] = this.toString();
-			obj = eClazz.insert(value);	
-		}
-
-		return obj;
-	};
+        return obj;
+    };
 };
 

@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS masked_relationship (
 ) ENGINE = MYISAM;
 
 CREATE TABLE IF NOT EXISTS contained_object (
+    id MEDIUMINT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT,
     container_object MEDIUMINT UNSIGNED NOT NULL,
     contained_object MEDIUMINT UNSIGNED NOT NULL,
     x float,
@@ -91,7 +92,7 @@ CREATE TABLE IF NOT EXISTS contained_object (
     collapsed TINYINT,
     -- Note: MySQL "BOOLEAN" type is just a synonym for TINYINT(1).  As in C,
     --   zero is false, nonzero is true.
-    PRIMARY KEY (container_object, contained_object),
+    PRIMARY KEY (id),
     FOREIGN KEY (container_object) REFERENCES object_id(id),
     FOREIGN KEY (contained_object) REFERENCES object_id(id),
     INDEX objectsContainingObjects (container_object),
