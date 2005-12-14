@@ -40,7 +40,8 @@ sub containedobject : Path('/rest/containedobject') {
 sub view : Private {
     my ( $self, $c, $container_id, $contained_id) = @_;
 
-    my $contained_object = PopWeb::M::CDBI::ContainedObject->retrieve(container_object=>$container_id, contained_object=>$contained_id);
+    $c->log->debug("retrieving $container_id $contained_id");
+    my $contained_object = (PopWeb::M::CDBI::ContainedObject->search(container_object=>$container_id, contained_object=>$contained_id))[0];
     # XXX the following hashkey should really be containedobject, no visiblekernel, to allow both /rest/containedobject and /rest/visiblekernel
     $c->stash->{visiblekernel}=$contained_object->to_xml_hash_deep;
     $c->forward('PopWeb::V::XML');
@@ -79,7 +80,7 @@ sub add : Private {
 	my $contained_object = PopWeb::M::CDBI::ContainedObject->create_from_form( $c->form );
 
         $c->res->status(201); # Created
-    	return $c->forward('view',[$contained_object->id]);
+    	return $c->forward('view',[$contained_object->container_object, $contained_object->contained_object]);
     }
 }
 
