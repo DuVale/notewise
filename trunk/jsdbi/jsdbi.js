@@ -70,7 +70,11 @@ var JSDBI = Class.create();
 JSDBI.Version = '0.2';
 JSDBI.prototype = {
     initialize: function () {
-	 },
+        if(this.fields() && this.fields().length > 0){
+            // only do this if the class has been properly initialized
+            this.__internalUrl = this.url();
+        }
+    },
 
     // Returns the primary key(s) for this object
     id: function () {
@@ -95,22 +99,21 @@ JSDBI.prototype = {
         if(value) {
             this.__internalUrl = value;
         } else {
-            if (this['__internalUrl']) {
-                return this.__internalUrl;
-            } else {
-                this.__internalUrl = this.url();
-                return this.__internalUrl;
-            }
+            return this.__internalUrl;
         }
     },
 
     // Sends any updated fields in the object to the server.
     update: function() {
+        if(!this.__updated){
+            return;
+        }
         var params = this.__getParams();
         var request = new Ajax.Request(this.internalUrl(), { method: 'post',
                                                      parameters: params,
                                                      asynchronous: true} );
         this.internalUrl(this.url());
+        this.__updated = false;
         return;
     },
 
@@ -145,6 +148,7 @@ JSDBI.prototype = {
             var field = this.__fields[i];
             this[field](xml.getAttribute(field));
         }
+        this.internalUrl(this.url());
     },
 
     // returns a string containing all the fields for this object joined together as cgi parameters
@@ -252,6 +256,7 @@ JSDBI.__createAccessor = function (field){
     return function (value) {
         var thisfield = field;
         if(value){
+            this.__updated = true;
             return this['__'+thisfield] = value;
         } else {
             return this['__'+thisfield];
@@ -310,21 +315,20 @@ JSDBI.insert = function (values) {
 
 // has_a - define relationship on this object. It creates a few methods on the 
 // prototype, including the _field_ accessor
-JSDBI.has_a = function (field, className) {
-
-    this.prototype[field] = function (value) {
+JSDBI.has_a = function (fieldName, className) {
+    this.prototype[fieldName] = function (value) {
         if(value) {
-            return this['__' + field] = value.toString();
+            return this['__' + fieldName] = value.toString();
         } else {
             // inflate if we need to
             var obj;
-            var type = typeof this['__' + field];
+            var type = typeof this['__' + fieldName];
             if(type == 'string' || type == 'number') {
                 var eClass = eval(className);
-                obj = eClass.retrieve(this['__' + field]);
-                                this['__' + field] = obj;
+                obj = eClass.retrieve(this['__' + fieldName]);
+                this['__' + fieldName] = obj;
             } else {
-                obj = this['__' + field];
+                obj = this['__' + fieldName];
             }        
             return obj;
         }
