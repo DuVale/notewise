@@ -12,3 +12,4 @@ is($object_id->type,'kernel');
 
 $user->delete;
 $object_id->delete;
+1;
