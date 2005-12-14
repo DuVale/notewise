@@ -82,12 +82,12 @@ JSDBI.prototype = {
             var ids = new Array;
             for(var i=0;i<this.__primaryKeys.length;i++){
                 var keyName=this.__primaryKeys[i]
-                ids.push(this[keyName]());
+                ids.push(this.__getField(keyName));
             }
             return ids;
         } else {
             var primaryKey = this.fields()[0];
-            return this[primaryKey]();
+            return this.__getField(primaryKey);
         }
     },
 
@@ -156,16 +156,26 @@ JSDBI.prototype = {
         var paramList = "";
         for(var i=0;i<this.__fields.length;i++){
             var fieldName = this.__fields[i];
-            if(this[fieldName]() == undefined){
+            if(this.__getField(fieldName) == undefined){
                 // skip undefined values
                 continue;
             }
             if(paramList){
                 paramList = paramList + '&';
             }
-            paramList = paramList + escape(fieldName)+'='+escape(this[fieldName]());
+            paramList = paramList + escape(fieldName)+'='+escape(this.__getField(fieldName));
         }
         return paramList;
+    },
+
+    // gets the value of a field without hydrating it
+    __getField: function(fieldName) {
+        return this['__'+fieldName];
+    },
+    
+    // sets the value of a field
+    __setField: function(fieldName, value) {
+        return this['__'+fieldName] = value;
     },
 
     // returns the names of the fields for this object
@@ -257,9 +267,9 @@ JSDBI.__createAccessor = function (field){
         var thisfield = field;
         if(value){
             this.__updated = true;
-            return this['__'+thisfield] = value;
+            return this.__setField(thisfield,value);
         } else {
-            return this['__'+thisfield];
+            return this.__getField(thisfield);
         }
     };
 };
@@ -318,17 +328,17 @@ JSDBI.insert = function (values) {
 JSDBI.has_a = function (fieldName, className) {
     this.prototype[fieldName] = function (value) {
         if(value) {
-            return this['__' + fieldName] = value.toString();
+            return this.__setField(fieldName,value);
         } else {
             // inflate if we need to
             var obj;
-            var type = typeof this['__' + fieldName];
+            var type = typeof this.__getField(fieldName);
             if(type == 'string' || type == 'number') {
                 var eClass = eval(className);
-                obj = eClass.retrieve(this['__' + fieldName]);
-                this['__' + fieldName] = obj;
+                obj = eClass.retrieve(this.__getField(fieldName));
+                this.__setField(fieldName, obj);
             } else {
-                obj = this['__' + fieldName];
+                obj = this.__getField(fieldName);
             }        
             return obj;
         }

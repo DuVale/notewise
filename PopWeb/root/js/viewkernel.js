@@ -12,5 +12,9 @@ ViewKernel.prototype.extend( {
         }
 
         return this.__kernel;
+    },
+
+    kernel_id: function() {
+        return this.__kernel_id;
     }
 });

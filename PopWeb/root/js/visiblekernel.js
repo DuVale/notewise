@@ -105,6 +105,10 @@ VisibleKernel.prototype.extend( {
         return this.contained_object();
     },
 
+    kernel_id: function() {
+        return this.__getField('contained_object');
+    },
+
     fetchElements: function () {
         KernelObject.prototype.fetchElements.call(this);
         this.namefield = Utils.getElementsByClassName(this.htmlElement, 'namefield')[0];
@@ -491,7 +495,10 @@ VisibleKernel.prototype.extend( {
             dndMgr.moveToFront(this.htmlElement);
 
             // update the db
-            this.container_object(vkernel.kernel());
+
+            // this is a hack to avoid having to retrieve the kernel object
+            // itself, since we don't really need it right now
+            this.container_object(vkernel.kernel_id());
             this.update();
         }
     },
