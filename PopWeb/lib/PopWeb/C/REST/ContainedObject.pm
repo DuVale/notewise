@@ -42,6 +42,11 @@ sub view : Private {
 
     $c->log->debug("retrieving $container_id $contained_id");
     my $contained_object = (PopWeb::M::CDBI::ContainedObject->search(container_object=>$container_id, contained_object=>$contained_id))[0];
+    unless($contained_object){
+        $c->response->status(404);
+        $c->res->output('ERROR');
+        return;
+    }
     # XXX the following hashkey should really be containedobject, no visiblekernel, to allow both /rest/containedobject and /rest/visiblekernel
     $c->stash->{visiblekernel}=$contained_object->to_xml_hash_deep;
     $c->forward('PopWeb::V::XML');
@@ -77,6 +82,7 @@ sub add : Private {
 
         # cause $c->form to be generated again
         $c->form( optional => [ PopWeb::M::CDBI::ContainedObject->columns, PopWeb::M::CDBI::Kernel->columns ] );
+
 	my $contained_object = PopWeb::M::CDBI::ContainedObject->create_from_form( $c->form );
 
         $c->res->status(201); # Created
@@ -117,7 +123,7 @@ sub update : Private {
 sub delete : Private {
     my ( $self, $c, $container_id, $contained_id) = @_;
 
-    my $containedobject = PopWeb::M::CDBI::ContainedObject->retrieve(container_object=>$container_id, contained_object=>$contained_id);
+    my $containedobject = (PopWeb::M::CDBI::ContainedObject->search(container_object=>$container_id, contained_object=>$contained_id))[0];
     if($containedobject){
         $containedobject->delete();
         $c->res->status(200);

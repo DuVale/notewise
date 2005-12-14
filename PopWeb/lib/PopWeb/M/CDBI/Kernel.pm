@@ -94,7 +94,7 @@ sub related_kernels {
 
 sub notes {
     my $self = shift;
-    my @notes = PopWeb::M::CDBI::Note->search(container => $self->id);
+    my @notes = PopWeb::M::CDBI::Note->search(container_object => $self->id);
     return @notes;
 }
 

@@ -14,7 +14,7 @@ sub to_xml_hash {
     my $self = shift;
     return {
         id => $self->id,
-        container => $self->container,
+        container_object => $self->container_object,
         content => $self->content,
         source => $self->source,
         created => $self->created,
