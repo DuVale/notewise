@@ -38,7 +38,7 @@ VisibleKernel.prototype.extend( {
         this.__startChangeListeners = [];
         // listeners that get notified when this visible kernel stops moving or changing size (end of the drag)
         this.__endChangeListeners = [];
-
+        JSDBI.prototype.initialize.call(this);
     },
 
     setup: function () {
