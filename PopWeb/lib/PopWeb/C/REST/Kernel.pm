@@ -26,7 +26,7 @@ sub kernel : Path('/rest/kernel') {
     my ( $self, $c, $id, $action) = @_;
 
     my $method = $c->req->method;
-    if($action eq 'children'){
+    if(defined $action && $action eq 'children'){
         $c->forward('children');
     } elsif($method eq 'GET'){
         $c->forward('view');

@@ -8,7 +8,12 @@
     <input type=button value='R' class="relationshipbutton"/>
     <div class="leftgrippie"></div>
     <input type="text" class="namefield" value="[%vkernel.contained_kernel.name%]"
-           style="width: [%vkernel.contained_kernel.name.length * 0.55 + 1%]em;"/>
+            [% IF vkernel.contained_kernel.name %]
+               [% name_length = vkernel.contained_kernel.name.length * 0.55 + 1%]
+           [% ELSE %]
+               [% name_length = 1.05%]
+           [% END %]
+           style="width: [% name_length %]em;"/>
     <div class="rightgrippie"/></div>
     <div class="body">
         [% UNLESS vkernel.collapsed %]

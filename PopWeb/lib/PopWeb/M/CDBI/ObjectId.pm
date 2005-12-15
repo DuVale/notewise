@@ -2,7 +2,6 @@ package PopWeb::M::CDBI::ObjectId;
 
 use strict;
 
-__PACKAGE__->has_many(contained_objects=>'PopWeb::M::CDBI::ContainedObject');
 __PACKAGE__->has_a(user=>'PopWeb::M::CDBI::User');
 
 sub object {
