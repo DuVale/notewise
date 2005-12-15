@@ -46,11 +46,7 @@ sub view : Private {
         $c->res->output('ERROR');
         return;
     }
-    my %note_hash;
-    foreach my $column (PopWeb::M::CDBI::Note->columns) {
-        $note_hash{$column} = $note->$column;
-    }
-    $c->stash->{note}=\%note_hash;
+    $c->stash->{note}=$note->to_xml_hash;
     $c->forward('PopWeb::V::XML');
 }
 
@@ -64,7 +60,7 @@ sub add : Private {
         $c->res->status(400); # Bad Request
     } else {
         # check permissions
-        my $container_object=PopWeb::M::CDBI::Kernel->retrieve($c->form->valid('container_id'));
+        my $container_object=PopWeb::M::CDBI::Kernel->retrieve($c->form->valid('container_object'));
         if ($container_object->user->id != $c->req->{user_id}){
             $c->res->status(403); # Forbidden
             return $c->res->output('FORBIDDEN');
@@ -88,7 +84,7 @@ sub update : Private {
         $c->res->output('ERROR');
     } else {
         # check permissions
-        my $container_object=PopWeb::M::CDBI::Kernel->retrieve($c->form->valid('container_id'));
+        my $container_object=PopWeb::M::CDBI::Kernel->retrieve($c->form->valid('container_object'));
         if ($container_object->user->id != $c->req->{user_id}){
             $c->res->status(403); # Forbidden
             return $c->res->output('FORBIDDEN');

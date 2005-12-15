@@ -11,6 +11,7 @@ __PACKAGE__->add_trigger(before_create => \&create_id);
 __PACKAGE__->add_trigger(before_create => \&add_created_date);
 
 __PACKAGE__->columns(TEMP => qw/user/);
+
 sub user {
     my $self=shift;
     if ($self->object_id){

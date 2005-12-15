@@ -75,8 +75,11 @@ sub add : Private {
         $c->res->status(400); # Bad Request
     } else {
         my $kernel = PopWeb::M::CDBI::Kernel->create_from_form( $c->form );
+        $kernel = PopWeb::M::CDBI::Kernel->retrieve($kernel->object_id);
+        $kernel->user($c->req->{user_id});
+        $kernel->update;
         $c->res->status(201); # Created
-    	return $c->forward('view',[$kernel->id]);
+    	return $c->forward('view',[$kernel->object_id->id]);
     }
 }
 

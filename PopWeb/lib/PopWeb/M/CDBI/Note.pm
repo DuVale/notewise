@@ -7,7 +7,7 @@ __PACKAGE__->add_trigger(before_create => \&create_id);
 sub create_id {
     my $self=shift;
     my $object_id = PopWeb::M::CDBI::ObjectId->create({type=>'note'});
-    $self->_attribute_store(id => $object_id->id);
+    $self->_attribute_store(object_id => $object_id->id);
 }
 
 sub to_xml_hash {
@@ -18,7 +18,7 @@ sub to_xml_hash {
         content => $self->content,
         source => $self->source,
         created => $self->created,
-        lastModified => $self->lastModified,
+        lastmodified => $self->lastModified,
         x => $self->x,
         y => $self->y,
         w => $self->w,
