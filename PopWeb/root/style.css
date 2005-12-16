@@ -79,7 +79,7 @@ body {
     background: blue;
     z-index: 1;
     min-width: 99px;
-    min-height: 30px;
+    min-height: 1.1em;
 }
 
 .vkernel.selected {
@@ -179,7 +179,7 @@ body {
     left: -50px;
 }
 
-.vkernel .namefield {
+.vkernel .namelink {
     border: 0px solid white;
     background: blue;
     color: white;
@@ -188,17 +188,49 @@ body {
     margin-left: auto;
     margin-right: auto;
     top: 0px;
-    width: 78px;
-    height: 28px;
+    height: 1.5em;
     text-align: center;
-    font-size: 20px;
+    font-size: 1em;
 }
+
+.vkernel .namelink a {
+    color: white;
+}
+
+.vkernel .namelink a:hover {
+    color: #21bbf4;
+}
+
+.vkernel .namefield {
+    border: 0px;
+    background: blue;
+    color: black;
+    display: none;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    top: 0px;
+    height: 1.1em;
+    text-align: center;
+    font-size: 1em;
+}
+
+.vkernel.selected .namefield {
+    display: block;
+    background: white;
+    border: 2px inset grey;
+}
+
+.vkernel.selected .namelink {
+    display: none;
+}
+
 .vkernel .body {
     background: white;
     position: absolute;
     left: 2px;
     right: 2px;
-    top: 30px;
+    top: 1.5em;
     bottom: 2px;
     clear: both;
     overflow: hidden;
@@ -209,8 +241,8 @@ body {
 }
 
 .vkernel.collapsed {
-    min-height: 30px;
-    max-height: 30px;
+    min-height: 1.5em;
+    max-height: 1.5em;
 }
 
 .vkernel.collapsed .body {
@@ -218,24 +250,20 @@ body {
     display: none;
 }
 
-.leftgrippie, .rightgrippie {
+.leftgrippie {
     background: url('/images/gripper.png');
     z-index:0;
     width: 10px;
-    height: 30px;
+    height: 1.2em;
     position: absolute;
     cursor: move;
-}
-.leftgrippie {
     top: 0px;
     left: 0px;
     width: 100%;
 }
-.rightgrippie {
-    top: 0px;
-    right: 0px;
-    width: 0px;
-    height: 0px;
+
+.vkernel.collapsed .corner {
+    display: none;
 }
 
 .corner {

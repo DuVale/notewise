@@ -66,28 +66,32 @@ VisibleKernel.prototype.extend( {
         this.htmlElement.id="vkernel"+this.idString();
         this.htmlElement.className="vkernel collapsed";
         var expandButtonLabel = this.collapsed() ? '+' : '-';
-        this.htmlElement.innerHTML+=
+        var name;
+        if(this.kernel().name() === undefined){
+            name = '';
+        } else {
+            name = this.kernel().name();
+        }
+        var innerHTML =
            "<div class=\"leftgrippie\"></div>"
            +"<input type=button value='"+expandButtonLabel+"' class='expandbutton'/>"
            +"<input type=button value='X' class='removebutton'/>"
            +"<input type=button value='R' class='relationshipbutton'/>"
-           +"<input value=\"\" type=\"text\" class=\"namefield\"/>"
+           +"<input value=\"\" type=\"text\" class=\"namefield\" autocomplete=\"off\" value=\""+name+"\"/>"
+           +"<a class=\"namelink\" href=\"/kernel/view/"+this.__getField('contained_object')+"\">"
+           +name+"</a>"
            +"<div class=\"rightgrippie\"/></div>"
            +"<div class=\"body\">"
            +"</div>"
            +"<div class=\"corner\">"
            +"</div>";
+        this.htmlElement.innerHTML = innerHTML;
         parent.appendChild(this.htmlElement);
         this.setup();
         this.x(this.x());
         this.y(this.y());
         this.setWidth(this.width());
         this.setHeight(this.height());
-        if(this.kernel().name() === undefined){
-            this.namefield.value = '';
-        } else {
-            this.namefield.value = this.kernel().name();
-        }
         this.layout();
     },
 
@@ -112,6 +116,7 @@ VisibleKernel.prototype.extend( {
     fetchElements: function () {
         KernelObject.prototype.fetchElements.call(this);
         this.namefield = Utils.getElementsByClassName(this.htmlElement, 'namefield')[0];
+        this.namelink = Utils.getElementsByClassName(this.htmlElement, 'namelink')[0];
         this.body = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
         this.corner = Utils.getElementsByClassName(this.htmlElement, 'corner')[0];
         this.relationshipbutton = Utils.getElementsByClassName(this.htmlElement, 'relationshipbutton')[0];
@@ -128,7 +133,9 @@ VisibleKernel.prototype.extend( {
 
         // setup the click handlers
         Utils.registerEventListener(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
-        Utils.registerEventListener(this.namefield,'click', this.selectAndTerminate.bindAsEventListener(this));
+//        Utils.registerEventListener(this.namefield,'click', this.selectAndTerminate.bindAsEventListener(this));
+        Utils.registerEventListener(this.namelink,'click', Utils.terminateEvent.bindAsEventListener(this));
+        Utils.registerEventListener(this.namelink,'mousedown', Utils.terminateEvent.bindAsEventListener(this));
         
         // setup the relationship button
         Utils.registerEventListener(this.relationshipbutton,
@@ -369,7 +376,7 @@ VisibleKernel.prototype.extend( {
     getMinHeight: function() {
         //TODO
         if(this.collapsed()){
-            return 0; // height of name field
+            return 0;
         } else {
             return 100;
         }

@@ -36,13 +36,20 @@ KernelObject.prototype = {
         if (targ.nodeType == 3) // defeat Safari bug
             targ = targ.parentNode;
 
+        // Update the link text
+        // XXX this only works for visible kernels
+        this.namelink.innerHTML = targ.value;
+
         this.kernel().name(targ.value);
         this.kernel().update();
+
     },
 
     // causes the namefield to relayout
     layoutNamefield: function() {
-        this.namefield.style.width = this.getNameFieldWidth()+'px';
+        var width = this.getNameFieldWidth();
+        this.namefield.style.width = width+'px';
+        this.namelink.style.width = width+'px';
 
         // scroll the text field all the way to the left again - apparently
         // setting the value of a text input field again causes it to properly

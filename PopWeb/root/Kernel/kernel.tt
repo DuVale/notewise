@@ -1,20 +1,22 @@
 [% i = i + 1%]
 [% id = vkernel.container_kernel.id _ '/' _ vkernel.contained_kernel.id %]
-<div id="vkernel[%id%]" class="vkernel" style="left: [% vkernel.x %]%; top: [% vkernel.y %]%;
-                                               width: [% vkernel.width %]%;
-                                               height: [% vkernel.height %]%;">
-    <input type=button value="-" class="expandbutton"/>
+<div id="vkernel[%id%]" class="vkernel [%IF vkernel.collapsed%]collapsed[%END%]"
+         style="left: [% vkernel.x %]%; top: [% vkernel.y %]%;
+                width: [% vkernel.width %]%;
+                height: [% vkernel.height %]%;">
+    <input type=button value="[%IF vkernel.collapsed%]+[%ELSE%]-[%END%]" class="expandbutton"/>
     <input type=button value='X' class="removebutton"/>
     <input type=button value='R' class="relationshipbutton"/>
     <div class="leftgrippie"></div>
-    <input type="text" class="namefield" value="[%vkernel.contained_kernel.name%]"
-            [% IF vkernel.contained_kernel.name %]
-               [% name_length = vkernel.contained_kernel.name.length * 0.55 + 1%]
-           [% ELSE %]
-               [% name_length = 1.05%]
-           [% END %]
-           style="width: [% name_length %]em;"/>
-    <div class="rightgrippie"/></div>
+    [% IF vkernel.contained_kernel.name %]
+        [% name_length = vkernel.contained_kernel.name.length * 0.55 + 1%]
+    [% ELSE %]
+        [% name_length = 1.05%]
+    [% END %]
+    <input class="namefield" style="width: [% name_length %]em;" value="[% vkernel.contained_kernel.name %]" autocomplete="off"/>
+    <a class="namelink" style="width: [% name_length %]em;" href="[% base _ '/kernel/view/' _ vkernel.contained_kernel.id %]">
+        [% vkernel.contained_kernel.name %]
+    </a>
     <div class="body">
         [% UNLESS vkernel.collapsed %]
             [% j = i + 1 %]
