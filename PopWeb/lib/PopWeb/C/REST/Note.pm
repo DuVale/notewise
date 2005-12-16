@@ -61,14 +61,15 @@ sub add : Private {
     } else {
         # check permissions
         my $container_object=PopWeb::M::CDBI::Kernel->retrieve($c->form->valid('container_object'));
-        if ($container_object->user->id != $c->req->{user_id}){
-            $c->res->status(403); # Forbidden
-            return $c->res->output('FORBIDDEN');
+        if (check_user_is_owner($c, $container_object)){
+            my $note = PopWeb::M::CDBI::Note->create_from_form( $c->form );
+            # hydrate the object_id
+            $note = PopWeb::M::CDBI::Note->retrieve($note->object_id);
+            $note->user($c->req->{user_id});
+            $note->update;
+            $c->res->status(201); # Created
+            return $c->forward('view',[$note->object_id->id]);
         }
-
-        my $note = PopWeb::M::CDBI::Note->create_from_form( $c->form );
-        $c->res->status(201); # Created
-    	return $c->forward('view',[$note->id]);
     }
 }
 
@@ -83,35 +84,44 @@ sub update : Private {
         $c->res->status(400); # Bad Request
         $c->res->output('ERROR');
     } else {
-        # check permissions
-        my $container_object=PopWeb::M::CDBI::Kernel->retrieve($c->form->valid('container_object'));
-        if ($container_object->user->id != $c->req->{user_id}){
-            $c->res->status(403); # Forbidden
-            return $c->res->output('FORBIDDEN');
-        }
-
         my $note = PopWeb::M::CDBI::Note->retrieve($id);
         unless($note){
             $c->res->status(404); # Not found
             return $c->res->output('ERROR');
         }
-        $note->update_from_form( $c->form );
-        $c->res->status(200); # OK
-    	return $c->forward('view',[$id]);
+        if(check_user_is_owner($c, $note)){
+            $note->update_from_form( $c->form );
+            $c->res->status(200); # OK
+            return $c->forward('view',[$id]);
+        }
     }
+}
+
+sub check_user_is_owner {
+    my ($c,$object) = @_;
+
+    # check permissions
+    if ($object->user->id != $c->req->{user_id}){
+        $c->res->status(403); # Forbidden
+        $c->res->output('FORBIDDEN');
+        return 0;
+    }
+    return 1;
 }
 
 sub delete : Private {
     my ( $self, $c, $id) = @_;
 
     my $note = PopWeb::M::CDBI::Note->retrieve($id);
-    if($note){
-        $note->delete();
-        $c->res->status(200);
-    } else {
-        $c->res->status(404);
+    if(check_user_is_owner($c, $note)){
+        if($note){
+            $note->delete();
+            $c->res->status(200);
+        } else {
+            $c->res->status(404);
+        }
+        $c->res->output('OK');
     }
-    $c->res->output('OK');
 }
 
 =head1 AUTHOR

@@ -32,7 +32,6 @@ $mech->get_ok("http://localhost/rest/vkernel/$container_id/$kernel_id");
 $mech->content_like(qr#<visiblekernel collapsed="1" contained_object="$kernel_id" container_object="$container_id" height="400" width="300" x="100" y="200">
 \s+<kernel name="" created="\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}" id="$kernel_id" lastModified="\d+" source="" uri="" user="$user_id" />
 \s+</visiblekernel># );
-diag($mech->content);
 
 $req = new_request('POST', "http://localhost/rest/vkernel/$container_id/$kernel_id",
                     { container_object=>$container_id,
@@ -45,6 +44,8 @@ $req = new_request('POST', "http://localhost/rest/vkernel/$container_id/$kernel_
 $mech->request($req);
 is($mech->status,200,'Status of POST is 200');
 $mech->content_is('OK');
+
+# TODO test deletion
 
 ### Test permissions
 # login a different user
@@ -77,6 +78,8 @@ $req = new_request('POST', "http://localhost/rest/vkernel/$container_id/$kernel_
 $mech->request($req);
 is($mech->status,403,'Status of POST is 403');
 $mech->content_is("FORBIDDEN", "updating other users' kernels is forbidden");
+
+# TODO test deletion permissions
 
 $user->delete;
 $user2->delete;

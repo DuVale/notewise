@@ -25,7 +25,6 @@ is($mech->status,201,'Status of PUT is 201');
 
 my ($kernel_id) = $mech->content =~ /<kernel.+id="(\d+)"/;
 
-
 $mech->content_like(qr#<kernel name="harrypotter" created="2005-01-01 01:02:03" id="$kernel_id" lastModified="\d+" source="mysource" uri="myuri">
 \s+<containedObjects>
 \s+</containedObjects>
