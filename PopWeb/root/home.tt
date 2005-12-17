@@ -13,6 +13,7 @@
     <li>View a kernel:
         <ul>
             [% FOR kernel = kernels %]
+                [% NEXT IF kernel.user != c.req.user_id %]
                 <li><a href="/kernel/view/[%kernel.id%]">[%kernel.name ? kernel.name : 'unnamed' %]</a></li>
             [% END %]
         </ul>
