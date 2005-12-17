@@ -1,105 +1,116 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-    <head>
-        <title>[% kernel.name %] - PopWeb</title>
-    </head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="/js/prototype.lite.js" type="text/javascript"></script>
+    <script src="/js/moo.fx.js" type="text/javascript"></script>
+    <script src="/js/moo.fx.pack.js" type="text/javascript"></script>
+    <script src="/js/ui.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="/style.css"/>
-    <body>
-        <div id="outerframe">
-            <div>
-                <div id="search">
-                    Search: <input autocomplete="off" id="mysearchfield" name="s">
-                    <script>
-                        document.getElementById('mysearchfield').focus();
-                    </script>
-                    <div class="auto_complete" id="searchresults"></div>
+</head>
+<body>
+    <div id="sidebar">
+        <!-- sidebar accordion-style menus go in here; parents, rels, etc -->
+        <table id="menutable" cellpadding="0" cellspacing="0" border="0">
+            <tr><td><input id="mysearchfield"/></td></tr>
+            <tr><td style="vertical-align: top; background: white;">
+                
+                <div class="panetitle">
+                    <div class="twistbutton" onmousedown="expandMenu(this, 'parents_content');">&nbsp;</div>
+                    parents ([%kernel.parents.size or '0'%])
                 </div>
-            </div>
-            <div id="parents" class="section">
-                <div class="header">
-                <span onclick="if(this.innerHTML == 'V'){this.innerHTML='&gt;'; document.getElementById('parents').className='section';} else {this.innerHTML='V'; document.getElementById('parents').className='section expanded';}">&gt;</span>
-                    Parents ([%kernel.parents.size or '0'%])
-                </div>
-                <div class="body">
+                <div class="panecontent" id="parents_content">
                     <ul>
                         [% FOR parent = kernel.parents %]
                             <li><a href="[% base %]/kernel/view/[%parent.id%]">[%parent.name%]</a></li>
                         [% END %]
                     </ul>
                 </div>
-            </div>
-            <div id="relationships" class="section">
-                <div class="header">
-                <span onclick="if(this.innerHTML == 'V'){this.innerHTML='&gt;'; document.getElementById('relationships').className='section';} else {this.innerHTML='V'; document.getElementById('relationships').className='section expanded';}">&gt;</span>
-                Relationships ([%kernel.related_kernels.size or '0'%])
+                
+                <div class="panetitle" onmousedown="resizeMenu_drag('parents_content');">
+                    <div class="twistbutton" onclick="expandMenu(this, 'rel_content');">&nbsp;</div>
+                    relationships ([%kernel.related_kernels.size or '0'%])
+
                 </div>
-                <div class="body">
+                <div class="panecontent" id="rel_content">
                     <ul>
                         [% FOR sibling = kernel.related_kernels %]
                             <li><a href="[% base %]/kernel/view/[%sibling.id%]">[%sibling.name%]</a></li>
                         [% END %]
                     </ul>
                 </div>
-            </div>
-            <div id="viewkernel" class="vkernel">
-                <input type="text" id="namefield0" class="namefield" value="[% kernel.name %]"
-                style="width: [% kernel.name.length * 0.55 + 1 %]em;"/>
-                <div class="body" id="background">
-                    [% FOR vkernel = visible_kernels %]
-                        [%INCLUDE 'Kernel/kernel.tt' i=0 %]
-                    [%END%]
+                
+            </td></tr>
+            
+            <tr><td>
+                <div class="panetitle">
+                    <div class="twistbutton nobutton">&nbsp;</div>
+                    sandbox
                 </div>
-            </div>
-        </div>
-
-        <script type="text/javascript" src="/js/MochiKit.js"></script>
-        <script type="text/javascript" src="/js/wz_jsgraphics.js"></script>
-        <script type="text/javascript" src="/js/prototype.js"></script>
-        <script type="text/javascript" src="/js/dragndrop.js"></script>
-        <script type="text/javascript" src="/js/jsdbi.js"></script>
-        <script type="text/javascript" src="/js/utils.js"></script>
-        <script type="text/javascript" src="/js/linedraw.js"></script>
-        <script type="text/javascript" src="/js/new_relationship.js"></script>
-        <script type="text/javascript" src="/js/relationship.js"></script>
-        <script type="text/javascript" src="/js/kernelobject.js"></script>
-        <script type="text/javascript" src="/js/viewkernel.js"></script>
-        <script type="text/javascript" src="/js/kernel.js"></script>
-        <script type="text/javascript" src="/js/visiblekernel.js"></script>
-        <script type="text/javascript" src="/js/controls.js"></script>
-        <script type="text/javascript" src="/js/effects.js"></script>
-        [%#
-        use this instead of the above garbage to get faster loading of javascript
-        <script type="text/javascript" src="/javascript"></script>
-        %]
-        <script>
-            // XXX this is pretty nasty - put this inside the view's vkernel instead
-            var vkernelCache = {};
-        </script>
-
+            </td></tr>
+            <tr><td id="sandbox_container" style="height: 100%;">
+                <div id="sandbox" style="position: relative;">
+                    <div style="background: green; position: absolute; bottom: 0; right: 0; height: 80%; width: 80%;">&nbsp;</div>
+                </div>
+            </td></tr>
+        </table>
+    </div>
+    <div id="viewkernel">
+        <!-- main content for the visiblekernel -->
+        <input type="text" id="namefield0" class="namefield" autocomplete="off"
+               value="[% kernel.name %]"
+               style="width: [% kernel.name.length * 0.55 + 1 %]em;"/>
         [% FOR vkernel = visible_kernels %]
-            [% i = 0 %]
-            [%INCLUDE 'Kernel/kernel-js.tt'%]
+            [%INCLUDE 'Kernel/kernel.tt' i=0 %]
         [%END%]
-        <script>
+    </div>
+    <script type="text/javascript" src="/js/MochiKit.js"></script>
+    <script type="text/javascript" src="/js/wz_jsgraphics.js"></script>
+    <script type="text/javascript" src="/js/prototype.js"></script>
+    <script type="text/javascript" src="/js/dragndrop.js"></script>
+    <script type="text/javascript" src="/js/jsdbi.js"></script>
+    <script type="text/javascript" src="/js/utils.js"></script>
+    <script type="text/javascript" src="/js/linedraw.js"></script>
+    <script type="text/javascript" src="/js/new_relationship.js"></script>
+    <script type="text/javascript" src="/js/relationship.js"></script>
+    <script type="text/javascript" src="/js/kernelobject.js"></script>
+    <script type="text/javascript" src="/js/viewkernel.js"></script>
+    <script type="text/javascript" src="/js/kernel.js"></script>
+    <script type="text/javascript" src="/js/visiblekernel.js"></script>
+    <script type="text/javascript" src="/js/controls.js"></script>
+    <script type="text/javascript" src="/js/effects.js"></script>
+    [%#
+    use this instead of the above garbage to get faster loading of javascript
+    <script type="text/javascript" src="/javascript"></script>
+    %]
+    <script>
+        // XXX this is pretty nasty - put this inside the view's vkernel instead
+        var vkernelCache = {};
+    </script>
 
-            var viewKernelId=[%kernel.id%];
-            var view = new ViewKernel([%kernel.id%],document.getElementById('viewkernel'));
+    [% FOR vkernel = visible_kernels %]
+        [% i = 0 %]
+        [%INCLUDE 'Kernel/kernel-js.tt'%]
+    [%END%]
+    <script>
 
-            function clearSelection (e) {
-                VisibleKernel.prototype.clearSelectionAndTerminate(e);
-            }
-            document.addEventListener("mousedown", clearSelection, false);
+        var viewKernelId=[%kernel.id%];
+        var view = new ViewKernel([%kernel.id%],document.getElementById('viewkernel'));
 
-            var vkernel1=vkernelCache['682/686'];
-            var vkernel2=vkernelCache['682/684'];
-            if(vkernel1 && vkernel2){
-                var relationship = new Relationship(vkernel1,vkernel2);
-            } else {
-    //            alert("couldn't find the right kernels to create the relationship");
-            }
+        function clearSelection (e) {
+            VisibleKernel.prototype.clearSelectionAndTerminate(e);
+        }
+        view.htmlElement.addEventListener("mousedown", clearSelection, false);
 
-            new Ajax.Autocompleter('mysearchfield', 'searchresults', '/ac', {frequency: .2});
-        </script>
-    </body>
+//        var vkernel1=vkernelCache['682/686'];
+//        var vkernel2=vkernelCache['682/684'];
+//        if(vkernel1 && vkernel2){
+//            var relationship = new Relationship(vkernel1,vkernel2);
+//        } else {
+////            alert("couldn't find the right kernels to create the relationship");
+//        }
+
+//        new Ajax.Autocompleter('mysearchfield', 'searchresults', '/ac', {frequency: .2});
+    </script>
+</body>
 </html>

@@ -16,5 +16,10 @@ ViewKernel.prototype.extend( {
 
     kernel_id: function() {
         return this.__kernel_id;
+    },
+
+    fetchElements: function () {
+        this.body = this.htmlElement;
+        KernelObject.prototype.fetchElements.call(this);
     }
 });

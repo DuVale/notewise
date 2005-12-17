@@ -115,7 +115,7 @@ VisibleKernel.prototype.extend( {
 
     fetchElements: function () {
         KernelObject.prototype.fetchElements.call(this);
-        this.namefield = Utils.getElementsByClassName(this.htmlElement, 'namefield')[0];
+        this.body = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
         this.namelink = Utils.getElementsByClassName(this.htmlElement, 'namelink')[0];
         this.body = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
         this.corner = Utils.getElementsByClassName(this.htmlElement, 'corner')[0];

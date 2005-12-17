@@ -1,6 +1,7 @@
-body {
-    padding: 0px;
-    margin: 0px;
+body, html {
+	width: 100%; height: 100%;
+	top: 0; left: 0;
+	padding: 0; margin: 0;
 }
 
 #search {
@@ -50,11 +51,11 @@ body {
 }
 
 #viewkernel {
-    border: 0px;
+    border: 1px solid red;
     margin: 0px;
     position: relative;
-    width: 100%;
-    height: 85%;
+    width: 75%;
+    height: 100%;
 }
 
 #viewkernel > .namefield {
@@ -79,7 +80,7 @@ body {
     background: blue;
     z-index: 1;
     min-width: 99px;
-    min-height: 1.1em;
+    min-height: 100px;
 }
 
 .vkernel.selected {
@@ -301,4 +302,92 @@ div.auto_complete ul strong.highlight {
 div.dummyDiv {
     position: absolute;
     background: #888888;
+}
+
+/* main layout styles */
+
+#sidebar {
+    position: absolute;
+    top: 0; right: 0;
+	height: 100%; width: 25%;
+	border-left: 1px solid #999;
+	background-color: white;
+}
+
+#root {
+    height: 100%; width: 75%;
+	background-color: #ccf;
+	text-align: center;
+}
+
+/* sidebar content */
+
+#menutable {
+    width: 100%; height: 100%;
+    margin: 0; padding: 0;
+    border: 0;
+    vertical-align: top;
+}
+
+#searchbox {
+    background-color: #9ff; color: #333;
+    border: 0;
+
+    padding-top: 100px;
+
+    font-size: 12px;
+
+    margin: 0; padding: 0;
+    width: 100%; height: 14px;
+}
+
+#searchbox:focus {
+    background-color: #ccc; color: #333;
+}
+
+.panetitle {
+    height: 20px; width: 100%; /* width not specified */
+    line-height: 20px;
+    
+    margin: 0; padding: 0;
+
+    color: #999;
+    font-family: Verdana; font-size: 12px; font-weight: bold;
+    background: url(/images/menupane_back.gif) repeat-x;
+}
+
+.twistbutton {
+    width: 20px; height: 20px;
+    float: left; cursor: pointer;
+    background: url(/images/expand_open.gif);
+}
+
+.closed {
+    background: url(/images/expand_closed.gif);
+}
+
+.nobutton {
+    cursor: default;
+    background: transparent;
+}
+
+.panecontent {
+    height: 100px; 
+    overflow: auto;
+    border-bottom: 1px solid #bebebe;
+}
+
+#sandbox {
+    width: 100%; height: 100%;
+}
+
+/* main content */
+
+#kernel_title {
+    border: 1px solid #eee;
+    font-family: Verdana;
+    font-size: 2em;
+    color: #333;
+    background: none; 
+    text-align: center;
 }

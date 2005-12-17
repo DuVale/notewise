@@ -85,7 +85,6 @@ KernelObject.prototype = {
 
     fetchElements: function() {
         if(this.htmlElement){
-            this.body = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
             this.namefield = Utils.getElementsByClassName(this.htmlElement, 'namefield')[0];
         };
     },
