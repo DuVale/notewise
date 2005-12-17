@@ -229,13 +229,10 @@ VisibleKernel.prototype.extend( {
             this.expandbutton.value = '-';
         }
         if(this.collapsed()){
-            log("marking not collapsed");
             this.collapsed(false);
         } else {
-            log("marking collapsed");
             this.collapsed(true);
         }
-        log("updating");
         this.update();
     },
 
@@ -252,7 +249,6 @@ VisibleKernel.prototype.extend( {
         } if(collapsed){
             var results = JSDBI.prototype.collapsed.call(this, 1);
             if(this.htmlElement){
-                log("adding collapsed class");
                 this.htmlElement.className += ' collapsed';
 //                this.setHeight(this.getMinHeight());
             }
@@ -261,7 +257,6 @@ VisibleKernel.prototype.extend( {
         } else {
             var results = JSDBI.prototype.collapsed.call(this, 0);
             if(this.htmlElement){
-                log("removing collapsed class");
                 this.htmlElement.className = this.htmlElement.className.replace(/ collapsed|collapsed /, '');
 //                this.setHeight(this.getMinHeight());
             }
@@ -272,18 +267,12 @@ VisibleKernel.prototype.extend( {
 
     // Just sets the internal x coordinate
     setX: function(x) {
-        if(x){
-            log("setX("+x+")");
-        }
         this.notifyMoveListeners(x+'%',this.y()+'%');
         return JSDBI.prototype.x.call(this, x);
     },
 
     // Sets the x coordinate as a percentage of the parent object's width and moves the object accordingly
     x: function(x) {
-        if(x){
-            log("x("+x+")");
-        }
         if(x && this.htmlElement){
             this.htmlElement.style.left = x+"%";
             this.notifyMoveListeners(x+'%',this.y()+'%');
@@ -293,18 +282,12 @@ VisibleKernel.prototype.extend( {
 
     // Just sets the internal y coordinate
     setY: function(y) {
-        if(y){
-            log("setY("+y+")");
-        }
         this.notifyMoveListeners(this.x()+'%',y+'%');
         return JSDBI.prototype.y.call(this, y);
     },
 
     // Sets the y coordinate as a percentage of the parent object's height and moves the object accordingly
     y: function(y) {
-        if(y){
-            log("y("+y+")");
-        }
         if(y && this.htmlElement){
             this.htmlElement.style.top = y+"%";
             this.notifyMoveListeners(this.x()+'%',y+'%');
@@ -495,6 +478,7 @@ VisibleKernel.prototype.extend( {
     // accepts the vkernel to reparent to, and whether or not to notify the server about it
     reparent: function(vkernel, do_update) {
         var parentElement = vkernel.body;
+        log("reparent called");
 
         // Can't make element child of it's own child and don't reparent it if
         // it's already in the right element
@@ -580,18 +564,12 @@ VisibleKernel.prototype.extend( {
         // TODO need to make sure at the end of the drag, the element ends up back down inside a kernel body
         delete this.oldParentNode;
         this.notifyEndChangeListeners();
-        this.x(Number(chopPx(this.htmlElement.style.left))*100
-                       / this.htmlElement.parentNode.clientWidth);
-        this.y(Number(chopPx(this.htmlElement.style.top))*100
-                       / this.htmlElement.parentNode.clientHeight);
-        this.update();
     },
  
     duringDrag: function() {
         var parentPos = Utils.toViewportPosition(this.oldParentNode);
         this.setX(Number(chopPx(this.htmlElement.style.left))*100
                        / this.oldParentNode.clientWidth);
-        window.status = parentPos.y;
         this.setY((Number(chopPx(this.htmlElement.style.top))-parentPos.y)*100
                        / this.oldParentNode.clientHeight);
     },
