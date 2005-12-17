@@ -265,7 +265,8 @@ JSDBI.primaryKeys = function (keyNames) {
 JSDBI.__createAccessor = function (field){
     return function (value) {
         var thisfield = field;
-        if(value){
+        // XXX add a unit test to make sure this works with false and 0 as values
+        if(value !== undefined){
             this.__updated = true;
             return this.__setField(thisfield,value);
         } else {

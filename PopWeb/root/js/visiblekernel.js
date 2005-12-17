@@ -229,10 +229,13 @@ VisibleKernel.prototype.extend( {
             this.expandbutton.value = '-';
         }
         if(this.collapsed()){
-            this.collapsed(0);
+            log("marking not collapsed");
+            this.collapsed(false);
         } else {
-            this.collapsed(1);
+            log("marking collapsed");
+            this.collapsed(true);
         }
+        log("updating");
         this.update();
     },
 
@@ -249,32 +252,38 @@ VisibleKernel.prototype.extend( {
         } if(collapsed){
             var results = JSDBI.prototype.collapsed.call(this, 1);
             if(this.htmlElement){
+                log("adding collapsed class");
                 this.htmlElement.className += ' collapsed';
 //                this.setHeight(this.getMinHeight());
             }
             this.notifyEndChangeListeners();
             return results;
         } else {
-            // XXX why doesn't calling the accessor work?
-//            return JSDBI.prototype.collapsed.call(this, false);
-            this.__collapsed=0;
+            var results = JSDBI.prototype.collapsed.call(this, 0);
             if(this.htmlElement){
+                log("removing collapsed class");
                 this.htmlElement.className = this.htmlElement.className.replace(/ collapsed|collapsed /, '');
 //                this.setHeight(this.getMinHeight());
             }
             this.notifyEndChangeListeners();
-            return 0;
+            return results;
         }
     },
 
     // Just sets the internal x coordinate
     setX: function(x) {
+        if(x){
+            log("setX("+x+")");
+        }
         this.notifyMoveListeners(x+'%',this.y()+'%');
         return JSDBI.prototype.x.call(this, x);
     },
 
     // Sets the x coordinate as a percentage of the parent object's width and moves the object accordingly
     x: function(x) {
+        if(x){
+            log("x("+x+")");
+        }
         if(x && this.htmlElement){
             this.htmlElement.style.left = x+"%";
             this.notifyMoveListeners(x+'%',this.y()+'%');
@@ -284,12 +293,18 @@ VisibleKernel.prototype.extend( {
 
     // Just sets the internal y coordinate
     setY: function(y) {
+        if(y){
+            log("setY("+y+")");
+        }
         this.notifyMoveListeners(this.x()+'%',y+'%');
         return JSDBI.prototype.y.call(this, y);
     },
 
     // Sets the y coordinate as a percentage of the parent object's height and moves the object accordingly
     y: function(y) {
+        if(y){
+            log("y("+y+")");
+        }
         if(y && this.htmlElement){
             this.htmlElement.style.top = y+"%";
             this.notifyMoveListeners(this.x()+'%',y+'%');
@@ -340,6 +355,7 @@ VisibleKernel.prototype.extend( {
 
     // Just sets the internal height
     height: function(height) {
+        log("height called");
         var results = JSDBI.prototype.height.call(this, height);
         if(height != undefined){
             this.notifySizeListeners(this.width()+'%',height+'%');
@@ -496,7 +512,11 @@ VisibleKernel.prototype.extend( {
             this.x((pos.x-parentPos.x)*100/parentElement.clientWidth);
             this.y((pos.y-parentPos.y)*100/parentElement.clientHeight);
             this.setWidth(width*100/parentElement.clientWidth);
-            this.setHeight(height*100/parentElement.clientHeight);
+            if(!this.collapsed()){
+                // don't set the height if we're collapsed, cause it'll wipe
+                // out the currently saved height
+                this.setHeight(height*100/parentElement.clientHeight);
+            }
 
 
             dndMgr.moveToFront(this.htmlElement);
@@ -550,6 +570,7 @@ VisibleKernel.prototype.extend( {
         this.htmlElement.style.height=this.htmlElement.clientHeight+'px';
 
         // pop the element up into the document body, so it can drag anywhere
+        log("setting oldParentNode to "+this.htmlElement.parentNode);
         this.oldParentNode = this.htmlElement.parentNode;
         this.htmlElement.parentNode.removeChild(this.htmlElement);
         document.body.appendChild(this.htmlElement);
