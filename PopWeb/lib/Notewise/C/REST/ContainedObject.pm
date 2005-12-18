@@ -88,6 +88,13 @@ sub add : Private {
         $create_hash{user}=$c->req->{user_id};
         my $kernel = Notewise::M::CDBI::Kernel->create( \%create_hash );
         $c->req->params->{contained_object}=$kernel->id;
+    } else {
+        my $contained_object=Notewise::M::CDBI::Kernel->retrieve(
+                               $c->form->valid('contained_object')
+                             );
+        unless ($contained_object->has_permission($c->req->{user_id},'view')){
+            $c->detach('/rest/forbidden');
+        }
     }
 
     # cause $c->form to be generated again

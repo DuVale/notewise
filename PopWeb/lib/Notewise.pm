@@ -1,7 +1,7 @@
 package Notewise;
 
 use strict;
-use Catalyst qw/FormValidator Session::FastMmap Authentication::CDBI/;
+use Catalyst qw/-Debug FormValidator Session::FastMmap Authentication::CDBI/;
 
 our $VERSION = '0.01';
 
