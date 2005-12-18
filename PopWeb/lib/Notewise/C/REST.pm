@@ -22,13 +22,13 @@ Catalyst Controller.
 
 sub ok: Private {
     my ( $self, $c) = @_;
-    $c->res->status(200); # Forbidden
+    $c->res->status(200); # Ok
     return $c->res->output('OK');
 }
 
 sub error: Private {
     my ( $self, $c) = @_;
-    $c->res->status(400); # Forbidden
+    $c->res->status(400); # Error
     return $c->res->output('ERROR');
 }
 
@@ -40,7 +40,7 @@ sub forbidden: Private {
 
 sub notfound: Private {
     my ( $self, $c) = @_;
-    $c->res->status(404); # Forbidden
+    $c->res->status(404); # Not found
     return $c->res->output('ERROR');
 }
 
