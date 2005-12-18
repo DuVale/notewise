@@ -226,18 +226,20 @@ VisibleKernel.prototype.extend( {
         var width = KernelObject.prototype.layoutNamefield.call(this);
         if(this.collapsed()){
             this.setFixedWidth(true,width);
+        } else {
+            this.setFixedWidth(false,width);
         }
     },
 
     setFixedWidth: function(fixed, width){
+        width = (width+50);
         if(fixed){
-            width = (width+50)+'px';
-            this.htmlElement.style.minWidth = width;
-            this.htmlElement.style.maxWidth = width;
+            this.htmlElement.style.maxWidth = width+'px';
         } else {
-            this.htmlElement.style.minWidth = '';
             this.htmlElement.style.maxWidth = '';
         }
+        this.htmlElement.style.minWidth = width+'px';
+        window.status = "setFixedWidth set minWidth to "+width;
     },
 
     toggleCollapsed: function() {
@@ -276,7 +278,7 @@ VisibleKernel.prototype.extend( {
             var results = JSDBI.prototype.collapsed.call(this, 0);
             if(this.htmlElement){
                 this.htmlElement.className = this.htmlElement.className.replace(/ collapsed|collapsed /, '');
-                this.setFixedWidth(false);
+                this.setFixedWidth(false,this.getNameFieldWidth());
             }
             this.notifyEndChangeListeners();
             return results;

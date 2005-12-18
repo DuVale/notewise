@@ -85,7 +85,7 @@ body, html {
 }
 
 .vkernel {
-    border: 1px solid #00F;
+    border: 2px solid #00F;
     position: absolute;
     background: blue;
     z-index: 1;
@@ -94,7 +94,7 @@ body, html {
 }
 
 .vkernel.selected {
-    border: 3px solid #21bbff;
+    border: 2px solid #21bbff;
 }
 
 .expandbutton,
@@ -226,13 +226,13 @@ body, html {
     font-size: 1em;
 }
 
-.vkernel.selected .namefield {
+.vkernel.selected > .namefield {
     display: block;
     background: white;
     border: 2px inset grey;
 }
 
-.vkernel.selected .namelink {
+.vkernel.selected > .namelink {
     display: none;
 }
 
