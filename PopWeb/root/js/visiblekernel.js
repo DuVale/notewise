@@ -222,6 +222,24 @@ VisibleKernel.prototype.extend( {
     layoutResize: function() {
     },
 
+    layoutNamefield: function() {
+        var width = KernelObject.prototype.layoutNamefield.call(this);
+        if(this.collapsed()){
+            this.setFixedWidth(true,width);
+        }
+    },
+
+    setFixedWidth: function(fixed, width){
+        if(fixed){
+            width = (width+50)+'px';
+            this.htmlElement.style.minWidth = width;
+            this.htmlElement.style.maxWidth = width;
+        } else {
+            this.htmlElement.style.minWidth = '';
+            this.htmlElement.style.maxWidth = '';
+        }
+    },
+
     toggleCollapsed: function() {
         if(this.expandbutton.value == '-'){
             this.expandbutton.value = '+';
@@ -252,6 +270,7 @@ VisibleKernel.prototype.extend( {
                 this.htmlElement.className += ' collapsed';
 //                this.setHeight(this.getMinHeight());
             }
+            this.setFixedWidth(true,this.getNameFieldWidth());
             this.notifyEndChangeListeners();
             return results;
         } else {
@@ -260,6 +279,7 @@ VisibleKernel.prototype.extend( {
                 this.htmlElement.className = this.htmlElement.className.replace(/ collapsed|collapsed /, '');
 //                this.setHeight(this.getMinHeight());
             }
+            this.setFixedWidth(false);
             this.notifyEndChangeListeners();
             return results;
         }

@@ -55,6 +55,7 @@ KernelObject.prototype = {
         // setting the value of a text input field again causes it to properly
         // scroll all the way to the left
         this.namefield.value = this.namefield.value;
+        return width;
     },
 
     // returns the desired width of the name field.  Usually the width of the text in the field, but bounded by the minimum width
