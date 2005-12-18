@@ -6,10 +6,10 @@ use Catalyst qw/-Debug FormValidator Session::FastMmap Authentication::CDBI/;
 our $VERSION = '0.01';
 
 Notewise->config( name => 'Notewise',
-                'Notewise::V::TT' => {
-                    TIMER => 0,
-                },
-              );
+                 'Notewise::V::TT' => {
+                     TIMER => 0,
+                 },
+                );
 
 Notewise->setup( qw/Static::Simple/ );
 Notewise->config->{static}->{ignore_extensions} = [];
