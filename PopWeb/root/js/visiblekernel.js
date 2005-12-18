@@ -268,18 +268,16 @@ VisibleKernel.prototype.extend( {
             var results = JSDBI.prototype.collapsed.call(this, 1);
             if(this.htmlElement){
                 this.htmlElement.className += ' collapsed';
-//                this.setHeight(this.getMinHeight());
+                this.setFixedWidth(true,this.getNameFieldWidth());
             }
-            this.setFixedWidth(true,this.getNameFieldWidth());
             this.notifyEndChangeListeners();
             return results;
         } else {
             var results = JSDBI.prototype.collapsed.call(this, 0);
             if(this.htmlElement){
                 this.htmlElement.className = this.htmlElement.className.replace(/ collapsed|collapsed /, '');
-//                this.setHeight(this.getMinHeight());
+                this.setFixedWidth(false);
             }
-            this.setFixedWidth(false);
             this.notifyEndChangeListeners();
             return results;
         }
