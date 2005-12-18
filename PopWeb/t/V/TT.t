@@ -1,4 +1,4 @@
 
 use Test::More tests => 1;
-use_ok('PopWeb::V::TT');
+use_ok('Notewise::V::TT');
 

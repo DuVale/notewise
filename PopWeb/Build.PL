@@ -4,7 +4,7 @@ use Catalyst::Build;
 my $build = Catalyst::Build->new(
     create_makefile_pl => 'passthrough',
     license            => 'perl',
-    module_name        => 'PopWeb',
+    module_name        => 'Notewise',
     requires           => { Catalyst => '5.10' },
     create_makefile_pl => 'passthrough',
     script_files       => [ glob('script/*') ],

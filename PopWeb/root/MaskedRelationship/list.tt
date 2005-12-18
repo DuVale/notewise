@@ -1,7 +1,7 @@
 
 
 
-[% USE table_class = Class('PopWeb::M::CDBI::MaskedRelationship') %]
+[% USE table_class = Class('Notewise::M::CDBI::MaskedRelationship') %]
 <table>
     <tr>
     

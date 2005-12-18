@@ -1,17 +1,17 @@
 use Test::More tests => 14;
-use Test::WWW::Mechanize::Catalyst 'PopWeb';
-use_ok('PopWeb::C::REST::ContainedObject');
-use_ok('PopWeb::C::REST::VKernel');
+use Test::WWW::Mechanize::Catalyst 'Notewise';
+use_ok('Notewise::C::REST::ContainedObject');
+use_ok('Notewise::C::REST::VKernel');
 
 my $mech = Test::WWW::Mechanize::Catalyst->new;
 # login
-my $user = PopWeb::M::CDBI::User->find_or_create({email=>'test@tester.scottyallen.com',
+my $user = Notewise::M::CDBI::User->find_or_create({email=>'test@tester.scottyallen.com',
                                           password=>'password',
                                           name=>'automated testing account'});
 $mech->get_ok('http://localhost/?email=test@tester.scottyallen.com&password=password');
 my $user_id=$user->id;
 
-my $container = PopWeb::M::CDBI::Kernel->create({user=>$user_id});
+my $container = Notewise::M::CDBI::Kernel->create({user=>$user_id});
 my $container_id = $container->id;
 
 $req = new_request('PUT', "http://localhost/rest/vkernel",
@@ -50,7 +50,7 @@ $mech->content_is('OK');
 ### Test permissions
 # login a different user
 $mech = Test::WWW::Mechanize::Catalyst->new; #wipe our cookies
-my $user2 = PopWeb::M::CDBI::User->create({email=>'test2@tester.scottyallen.com',
+my $user2 = Notewise::M::CDBI::User->create({email=>'test2@tester.scottyallen.com',
                                           password=>'password',
                                           name=>'automated testing account'});
 $mech->get_ok('http://localhost/?email=test2@tester.scottyallen.com&password=password');
@@ -84,8 +84,8 @@ $mech->content_is("FORBIDDEN", "updating other users' kernels is forbidden");
 $user->delete;
 $user2->delete;
 $container->delete;
-PopWeb::M::CDBI::Kernel->retrieve($kernel_id)->delete;
-map $_->delete, PopWeb::M::CDBI::ContainedObject->search(contained_object=>kernel_id);
+Notewise::M::CDBI::Kernel->retrieve($kernel_id)->delete;
+map $_->delete, Notewise::M::CDBI::ContainedObject->search(contained_object=>kernel_id);
 
 sub new_request {
     my($type,$url,$params) = @_;

@@ -1,13 +1,13 @@
 use Test::More tests => 11;
-use_ok( Catalyst::Test, 'PopWeb' );
-use_ok('PopWeb::C::REST::Kernel');
+use_ok( Catalyst::Test, 'Notewise' );
+use_ok('Notewise::C::REST::Kernel');
 
 
-use Test::WWW::Mechanize::Catalyst 'PopWeb';
+use Test::WWW::Mechanize::Catalyst 'Notewise';
 
 my $mech = Test::WWW::Mechanize::Catalyst->new;
 # login
-my $user = PopWeb::M::CDBI::User->find_or_create({email=>'test@tester.scottyallen.com',
+my $user = Notewise::M::CDBI::User->find_or_create({email=>'test@tester.scottyallen.com',
                                           password=>'password',
                                           name=>'automated testing account'});
 $mech->get_ok('http://localhost/?email=test@tester.scottyallen.com&password=password');
@@ -56,7 +56,7 @@ $mech->content_like(qr#<kernel name="fred" created="2004-02-03 02:03:04" id="$ke
 \s+</kernel># );
 
 $user->delete;
-PopWeb::M::CDBI::Kernel->retrieve($kernel_id)->delete;
+Notewise::M::CDBI::Kernel->retrieve($kernel_id)->delete;
 
 sub new_request {
     my($type,$url,$params) = @_;

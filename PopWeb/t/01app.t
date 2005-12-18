@@ -1,5 +1,5 @@
 use Test::More tests => 4;
-use Test::WWW::Mechanize::Catalyst 'PopWeb';
+use Test::WWW::Mechanize::Catalyst 'Notewise';
 
 my $mech = Test::WWW::Mechanize::Catalyst->new;
 $mech->get_ok('http://localhost/');
@@ -8,7 +8,7 @@ $mech->get_ok('http://localhost/');
 $mech->content_contains('Login',"check we get a login page when we're not logged in");
 
 # test login
-my $user = PopWeb::M::CDBI::User->create({email=>'test@tester.scottyallen.com',
+my $user = Notewise::M::CDBI::User->create({email=>'test@tester.scottyallen.com',
                                           password=>'password',
                                           name=>'automated testing account'});
 $mech->get_ok('http://localhost/?email=test@tester.scottyallen.com&password=password');

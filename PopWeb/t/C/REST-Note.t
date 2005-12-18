@@ -1,16 +1,16 @@
 
 use Test::More tests => 19;
-use_ok( Catalyst::Test, 'PopWeb' );
-use_ok('PopWeb::C::REST::Note');
+use_ok( Catalyst::Test, 'Notewise' );
+use_ok('Notewise::C::REST::Note');
 
 ok( request('rest/note')->is_success );
 
-use Test::WWW::Mechanize::Catalyst 'PopWeb';
+use Test::WWW::Mechanize::Catalyst 'Notewise';
 
 my $mech = Test::WWW::Mechanize::Catalyst->new;
 
 # login
-my $user = PopWeb::M::CDBI::User->find_or_create({email=>'test@tester.scottyallen.com',
+my $user = Notewise::M::CDBI::User->find_or_create({email=>'test@tester.scottyallen.com',
                                           password=>'password',
                                           name=>'automated testing account'});
 $mech->get_ok('http://localhost/?email=test@tester.scottyallen.com&password=password');
@@ -92,7 +92,7 @@ with a new line</note>
 ### Test permissions
 # login a different user
 $mech = Test::WWW::Mechanize::Catalyst->new; #wipe our cookies
-my $user2 = PopWeb::M::CDBI::User->create({email=>'test2@tester.scottyallen.com',
+my $user2 = Notewise::M::CDBI::User->create({email=>'test2@tester.scottyallen.com',
                                           password=>'password',
                                           name=>'automated testing account'});
 $mech->get_ok('http://localhost/?email=test2@tester.scottyallen.com&password=password');
@@ -135,9 +135,9 @@ $mech->content_is("FORBIDDEN", "deleting other users' notes is forbidden");
 
 $user->delete;
 $user2->delete;
-PopWeb::M::CDBI::Note->retrieve($note_id)->delete;
-PopWeb::M::CDBI::Kernel->retrieve($kernel_id)->delete;
-PopWeb::M::CDBI::Kernel->retrieve($kernel2_id)->delete;
+Notewise::M::CDBI::Note->retrieve($note_id)->delete;
+Notewise::M::CDBI::Kernel->retrieve($kernel_id)->delete;
+Notewise::M::CDBI::Kernel->retrieve($kernel2_id)->delete;
 
 sub new_request {
     my($type,$url,$params) = @_;

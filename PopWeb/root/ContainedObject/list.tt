@@ -1,7 +1,7 @@
 
 
 
-[% USE table_class = Class('PopWeb::M::CDBI::ContainedObject') %]
+[% USE table_class = Class('Notewise::M::CDBI::ContainedObject') %]
 <table>
     <tr>
     
