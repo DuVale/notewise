@@ -50,7 +50,6 @@
             </td></tr>
             <tr><td id="sandbox_container" style="height: 100%;">
                 <div id="sandbox" style="position: relative;">
-                    <div style="background: green; position: absolute; bottom: 0; right: 0; height: 80%; width: 80%;">&nbsp;</div>
                 </div>
             </td></tr>
         </table>
