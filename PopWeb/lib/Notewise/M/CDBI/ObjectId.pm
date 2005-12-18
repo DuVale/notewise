@@ -17,6 +17,19 @@ sub object {
     }
 }
 
+sub has_permission {
+    my ($self, $user, $action) = @_;
+
+    # hydrate user if necessary
+    $user = Notewise::M::CDBI::User->retrieve($user) unless ref $user;
+    die "invalid action" unless grep $action eq $_, qw(view modify delete);
+    if ($user->id == $self->user->id){
+        return 1;
+    }
+    #TODO add support for permissions for other users than the owner
+    return 0;
+}
+
 =head1 NAME
 
 Notewise::M::CDBI::ObjectId - CDBI Model Component Table Class

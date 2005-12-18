@@ -1,4 +1,4 @@
-use Test::More tests => 14;
+use Test::More tests => 23;
 use Test::WWW::Mechanize::Catalyst 'Notewise';
 use_ok('Notewise::C::REST::ContainedObject');
 use_ok('Notewise::C::REST::VKernel');
@@ -11,9 +11,11 @@ my $user = Notewise::M::CDBI::User->find_or_create({email=>'test@tester.scottyal
 $mech->get_ok('http://localhost/?email=test@tester.scottyallen.com&password=password');
 my $user_id=$user->id;
 
+# create a dummy kernel
 my $container = Notewise::M::CDBI::Kernel->create({user=>$user_id});
 my $container_id = $container->id;
 
+# Create a contained object
 $req = new_request('PUT', "http://localhost/rest/vkernel",
                     {container_object=>$container_id,
                      x=>100,
@@ -33,6 +35,8 @@ $mech->content_like(qr#<visiblekernel collapsed="1" contained_object="$kernel_id
 \s+<kernel name="" created="\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}" id="$kernel_id" lastModified="\d+" source="" uri="" user="$user_id" />
 \s+</visiblekernel># );
 
+# Try updating it
+
 $req = new_request('POST', "http://localhost/rest/vkernel/$container_id/$kernel_id",
                     { container_object=>$container_id,
                       contained_object=>$kernel_id,
@@ -44,8 +48,6 @@ $req = new_request('POST', "http://localhost/rest/vkernel/$container_id/$kernel_
 $mech->request($req);
 is($mech->status,200,'Status of POST is 200');
 $mech->content_is('OK');
-
-# TODO test deletion
 
 ### Test permissions
 # login a different user
@@ -77,14 +79,41 @@ $req = new_request('POST', "http://localhost/rest/vkernel/$container_id/$kernel_
                      collapsed=>1});
 $mech->request($req);
 is($mech->status,403,'Status of POST is 403');
-$mech->content_is("FORBIDDEN", "updating other users' kernels is forbidden");
+$mech->content_is("FORBIDDEN", "updating other users' contained objects is forbidden");
 
-# TODO test deletion permissions
+# test view permissions
+$req = new_request('GET', "http://localhost/rest/vkernel/$container_id/$kernel_id");
+$mech->request($req);
+is($mech->status,403,'Status of GET is 403');
+$mech->content_is("FORBIDDEN", "viewing other users' contained objects is forbidden");
+
+# test deletion permissions
+$req = new_request('DELETE', "http://localhost/rest/vkernel/$container_id/$kernel_id");
+$mech->request($req);
+is($mech->status,403,'Status of DELETE is 403');
+$mech->content_is("FORBIDDEN", "deleting other users' kernels is forbidden");
+
+
+### test allowed deletion
+$mech = Test::WWW::Mechanize::Catalyst->new; #wipe our cookies
+$mech->get_ok('http://localhost/?email=test@tester.scottyallen.com&password=password');
+$req = new_request('DELETE', "http://localhost/rest/vkernel/$container_id/$kernel_id");
+$mech->request($req);
+is($mech->status,200,'Status of DELETE is 200');
+$mech->content_is("OK", "delete our own kernel");
+
+# try getting it again
+$req = new_request('GET', "http://localhost/rest/vkernel/$container_id/$kernel_id");
+$mech->request($req);
+is($mech->status,404,'Status of GET is 404');
+$mech->content_is("ERROR", "object is truely deleted");
+
+
+# Cleanup
 
 $user->delete;
 $user2->delete;
 $container->delete;
-Notewise::M::CDBI::Kernel->retrieve($kernel_id)->delete;
 map $_->delete, Notewise::M::CDBI::ContainedObject->search(contained_object=>kernel_id);
 
 sub new_request {
@@ -105,3 +134,5 @@ sub new_request {
     }
     return $req;
 }
+
+# vim:ft=perl

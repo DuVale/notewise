@@ -99,6 +99,11 @@ sub notes {
     return @notes;
 }
 
+sub has_permission {
+    my $self = shift;
+    return $self->object_id->has_permission(@_);
+}
+
 =head1 NAME
 
 Notewise::M::CDBI::Kernel - CDBI Model Component Table Class

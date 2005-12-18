@@ -29,6 +29,15 @@ sub container_kernel {
     return $self->container_object->object;
 }
 
+sub has_permission {
+    my ($self,$user,$action) = @_;
+    if($action eq 'delete'){
+        return $self->container_object->has_permission($user,'modify');
+    } else {
+        return $self->container_object->has_permission($user,$action);
+    }
+}
+
 =head1 NAME
 
 Notewise::M::CDBI::ContainedObject - CDBI Model Component for contained_object table

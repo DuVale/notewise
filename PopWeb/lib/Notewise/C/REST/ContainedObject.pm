@@ -40,13 +40,16 @@ sub containedobject : Path('/rest/containedobject') {
 sub view : Private {
     my ( $self, $c, $container_id, $contained_id) = @_;
 
-    $c->log->debug("retrieving $container_id $contained_id");
     my $contained_object = (Notewise::M::CDBI::ContainedObject->search(container_object=>$container_id, contained_object=>$contained_id))[0];
     unless($contained_object){
-        $c->response->status(404);
-        $c->res->output('ERROR');
-        return;
+        $c->detach('/rest/notfound');
     }
+
+    # check permissions
+    unless ($contained_object->has_permission($c->req->{user_id},'view')){
+        $c->detach('/rest/forbidden');
+    }
+
     # XXX the following hashkey should really be containedobject, no visiblekernel, to allow both /rest/containedobject and /rest/visiblekernel
     $c->stash->{visiblekernel}=$contained_object->to_xml_hash_deep;
     $c->forward('Notewise::V::XML');
@@ -57,80 +60,88 @@ sub add : Private {
 
     $c->form( optional => [ Notewise::M::CDBI::ContainedObject->columns ] );
     if ($c->form->has_missing) {
-        $c->res->status(400); # Bad Request
+        $c->detach('/rest/error');
     } elsif ($c->form->has_invalid) {
-        $c->res->status(400); # Bad Request
-    } else {
-        $c->form( optional => [ Notewise::M::CDBI::ContainedObject->columns, Notewise::M::CDBI::Kernel->columns] );
-
-        # check permissions
-        my $container_object=Notewise::M::CDBI::Kernel->retrieve($c->form->valid('container_object'));
-        if ($container_object->user->id != $c->req->{user_id}){
-            $c->res->status(403); # Forbidden
-            return $c->res->output('FORBIDDEN');
-        }
-
-        unless($c->req->params->{contained_object}){
-            my %create_hash;
-            foreach my $column (Notewise::M::CDBI::Kernel->columns){
-                $create_hash{$column} = $c->form->valid($column);
-            }
-            $create_hash{user}=$c->req->{user_id};
-            my $kernel = Notewise::M::CDBI::Kernel->create( \%create_hash );
-            $c->req->params->{contained_object}=$kernel->id;
-        }
-
-        # cause $c->form to be generated again
-        $c->form( optional => [ Notewise::M::CDBI::ContainedObject->columns, Notewise::M::CDBI::Kernel->columns ] );
-
-	my $contained_object = Notewise::M::CDBI::ContainedObject->create_from_form( $c->form );
-
-        $c->res->status(201); # Created
-    	return $c->forward('view',[$contained_object->container_object, $contained_object->contained_object]);
+        $c->detach('/rest/error');
     }
+
+    # This is a bit of a hack to allow us to add a newly created kernel to
+    # this view in one request, instead of two, by allowing the values for
+    # the kernel itself to be passed in as well
+    $c->form( optional => [ Notewise::M::CDBI::ContainedObject->columns,
+                            Notewise::M::CDBI::Kernel->columns] );
+
+    # check permissions
+    my $container_object=Notewise::M::CDBI::Kernel->retrieve(
+                           $c->form->valid('container_object')
+                         );
+    unless ($container_object->has_permission($c->req->{user_id},'modify')){
+        $c->detach('/rest/forbidden');
+    }
+
+    # figure out if we need to create the kernel as well
+    unless($c->req->params->{contained_object}){
+        my %create_hash;
+        foreach my $column (Notewise::M::CDBI::Kernel->columns){
+            $create_hash{$column} = $c->form->valid($column);
+        }
+        $create_hash{user}=$c->req->{user_id};
+        my $kernel = Notewise::M::CDBI::Kernel->create( \%create_hash );
+        $c->req->params->{contained_object}=$kernel->id;
+    }
+
+    # cause $c->form to be generated again
+    $c->form( optional => [ Notewise::M::CDBI::ContainedObject->columns,
+                            Notewise::M::CDBI::Kernel->columns
+                          ] );
+
+    my $contained_object = Notewise::M::CDBI::ContainedObject->create_from_form( $c->form );
+
+    $c->res->status(201); # Created
+    return $c->forward('view',[$contained_object->container_object,
+                               $contained_object->contained_object]);
 }
 
 sub update : Private {
     my ( $self, $c, $container_id, $contained_id) = @_;
 
     $c->form( optional => [ Notewise::M::CDBI::ContainedObject->columns ] );
-    if ($c->form->has_missing) {
-        $c->res->status(400); # Bad Request
-        $c->res->output('ERROR');
-    } elsif ($c->form->has_invalid) {
-        $c->res->status(400); # Bad Request
-        $c->res->output('ERROR');
-    } else {
-        # check permissions
-        my $container=Notewise::M::CDBI::Kernel->retrieve($container_id);
-        if ($container->user->id != $c->req->{user_id}){
-            $c->res->status(403); # Not found
-            return $c->res->output('FORBIDDEN');
-        }
+    if ($c->form->has_missing) { $c->detach('/rest/error'); }
+    elsif ($c->form->has_invalid) { $c->detach('/rest/error'); }
 
-        # do the update
-        my $contained_object = (Notewise::M::CDBI::ContainedObject->search(container_object=>$container_id,contained_object=>$contained_id))[0];
-        unless($contained_object){
-            $c->res->status(404); # Not found
-            return $c->res->output('ERROR');
-        }
-        $contained_object->update_from_form( $c->form );
-        $c->res->status(200); # OK
-	$c->res->output('OK');
+    # check permissions
+    my $container=Notewise::M::CDBI::Kernel->retrieve($container_id);
+    unless ($container->has_permission($c->req->{user_id},'modify')){
+        $c->detach('/rest/forbidden');
     }
+
+    # do the update
+    my $contained_object = (
+        Notewise::M::CDBI::ContainedObject->search(container_object=>$container_id,
+                                                   contained_object=>$contained_id))[0];
+    unless($contained_object){
+        $c->detach('/rest/notfound');
+    }
+    $contained_object->update_from_form( $c->form );
+    $c->detach('/rest/ok');
 }
 
 sub delete : Private {
     my ( $self, $c, $container_id, $contained_id) = @_;
 
     my $containedobject = (Notewise::M::CDBI::ContainedObject->search(container_object=>$container_id, contained_object=>$contained_id))[0];
+
+    # check permissions
+    unless ($containedobject->container_object->has_permission($c->req->{user_id},'modify')){
+        $c->detach('/rest/forbidden');
+    }
+
     if($containedobject){
         $containedobject->delete();
-        $c->res->status(200);
+        $c->detach('/rest/ok');
     } else {
-        $c->res->status(404);
+        $c->detach('/rest/notfound');
     }
-    $c->res->output('OK');
 }
 
 =head1 AUTHOR
