@@ -7,13 +7,11 @@ use_ok('Notewise::C::REST::Note');
 ok( request('rest/note')->is_success );
 
 
-my $mech = Test::WWW::Mechanize::Catalyst->new;
+my $mech;
+my $user;
 
 # login
-my $user = Notewise::M::CDBI::User->find_or_create({email=>'test@tester.scottyallen.com',
-                                          password=>'password',
-                                          name=>'automated testing account'});
-$mech->get_ok('http://localhost/?email=test@tester.scottyallen.com&password=password');
+($mech, $user) = login_user('test@tester.scottyallen.com','password');
 my $user_id=$user->id;
 
 my $req;

@@ -4,12 +4,11 @@ use Notewise::TestUtils;
 use_ok( Catalyst::Test, 'Notewise' );
 use_ok('Notewise::C::Kernel');
 
-my $mech = Test::WWW::Mechanize::Catalyst->new;
+my $mech;
+my $user;
+
 # login
-my $user = Notewise::M::CDBI::User->find_or_create({email=>'test@tester.scottyallen.com',
-                                          password=>'password',
-                                          name=>'automated testing account'});
-$mech->get_ok('http://localhost/?email=test@tester.scottyallen.com&password=password','login');
+($mech, $user) = login_user('test@tester.scottyallen.com','password');
 my $user_id=$user->id;
 
 # create a dummy kernel
@@ -22,11 +21,9 @@ $mech->request($req);
 is($mech->status,200,'Status of GET is 200');
 
 # try looking at another user's kernel
-$mech = Test::WWW::Mechanize::Catalyst->new;
-my $user2 = Notewise::M::CDBI::User->find_or_create({email=>'test2@tester.scottyallen.com',
-                                          password=>'password',
-                                          name=>'automated testing account'});
-$mech->get_ok('http://localhost/?email=test2@tester.scottyallen.com&password=password','login');
+# login
+my $user2;
+($mech, $user2) = login_user('test2@tester.scottyallen.com','password');
 
 $req = new_request('GET', "http://localhost/kernel/view/$kernel_id");
 $mech->request($req);

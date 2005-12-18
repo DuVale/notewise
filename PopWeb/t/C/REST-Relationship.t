@@ -8,17 +8,13 @@ use_ok('Notewise::C::REST::Relationship');
 
 ok( request('rest/relationship')->is_success );
 
-
-my $mech = Test::WWW::Mechanize::Catalyst->new;
+my $req;
+my $mech;
 
 # login
-my $user = Notewise::M::CDBI::User->find_or_create({email=>'test@tester.scottyallen.com',
-                                          password=>'password',
-                                          name=>'automated testing account'});
-$mech->get_ok('http://localhost/?email=test@tester.scottyallen.com&password=password');
+my $user;
+($mech, $user) = login_user('test@tester.scottyallen.com','password');
 my $user_id=$user->id;
-
-my $req;
 
 # setup some dummy kernels
 

@@ -1,6 +1,6 @@
 package Notewise::TestUtils;
 
-@EXPORT = qw(new_request);
+@EXPORT = qw(new_request login_user);
 
 sub new_request {
     my($type,$url,$params) = @_;
@@ -19,6 +19,20 @@ sub new_request {
         $req->header('Content-Length' => length($content));
     }
     return $req;
+}
+
+
+sub login_user {
+    my ($email,$password)=@_;
+    my $mech = Test::WWW::Mechanize::Catalyst->new;
+
+    # login
+    my $user = Notewise::M::CDBI::User->find_or_create({email=>$email,
+                                                        password=>$password});
+    $user->name('automated testing account');
+    $user->update;
+    $mech->get_ok("http://localhost/?email=$email&password=$password");
+    return $mech, $user;
 }
 
 1;

@@ -4,12 +4,10 @@ use Notewise::TestUtils;
 use_ok('Notewise::C::REST::ContainedObject');
 use_ok('Notewise::C::REST::VKernel');
 
-my $mech = Test::WWW::Mechanize::Catalyst->new;
+my $mech;
+my $user;
 # login
-my $user = Notewise::M::CDBI::User->find_or_create({email=>'test@tester.scottyallen.com',
-                                          password=>'password',
-                                          name=>'automated testing account'});
-$mech->get_ok('http://localhost/?email=test@tester.scottyallen.com&password=password');
+($mech, $user) = login_user('test@tester.scottyallen.com','password');
 my $user_id=$user->id;
 
 # create a dummy kernel
@@ -52,11 +50,7 @@ $mech->content_is('OK');
 
 ### Test permissions
 # login a different user
-$mech = Test::WWW::Mechanize::Catalyst->new; #wipe our cookies
-my $user2 = Notewise::M::CDBI::User->create({email=>'test2@tester.scottyallen.com',
-                                          password=>'password',
-                                          name=>'automated testing account'});
-$mech->get_ok('http://localhost/?email=test2@tester.scottyallen.com&password=password');
+($mech, $user2) = login_user('test2@tester.scottyallen.com','password');
 my $user2_id=$user2->id;
 
 # Try adding to a kernel that isn't owned by this user
@@ -113,8 +107,7 @@ is($mech->status,403,'Status of DELETE is 403');
 $mech->content_is("FORBIDDEN", "deleting other users' kernels is forbidden");
 
 ### test allowed deletion
-$mech = Test::WWW::Mechanize::Catalyst->new; #wipe our cookies
-$mech->get_ok('http://localhost/?email=test@tester.scottyallen.com&password=password','login user 1 again');
+($mech, $user) = login_user('test@tester.scottyallen.com','password');
 $req = new_request('DELETE', "http://localhost/rest/vkernel/$container_id/$kernel_id");
 $mech->request($req);
 is($mech->status,200,'Status of DELETE is 200');
