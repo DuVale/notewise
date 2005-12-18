@@ -1,5 +1,6 @@
 use Test::More tests => 25;
 use Test::WWW::Mechanize::Catalyst 'Notewise';
+use Notewise::TestUtils;
 use_ok('Notewise::C::REST::ContainedObject');
 use_ok('Notewise::C::REST::VKernel');
 
@@ -131,24 +132,5 @@ $user->delete;
 $user2->delete;
 $container->delete;
 map $_->delete, Notewise::M::CDBI::ContainedObject->search(contained_object=>kernel_id);
-
-sub new_request {
-    my($type,$url,$params) = @_;
-    $req = new HTTP::Request($type, $url);
-    if($params){
-        $req->header('Content-Type' => 'application/x-www-form-urlencoded');
-        my $content;
-        foreach my $key (keys %$params){
-            if($content){
-                $content .= "&$key=$params->{$key}";
-            } else {
-                $content .= "$key=$params->{$key}";
-            }
-        }
-        $req->content($content);
-        $req->header('Content-Length' => length($content));
-    }
-    return $req;
-}
 
 # vim:ft=perl

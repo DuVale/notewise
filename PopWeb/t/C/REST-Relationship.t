@@ -1,12 +1,13 @@
 use Test::More tests => 11;
+use Test::WWW::Mechanize::Catalyst 'Notewise';
 use Test::XML;
+use Notewise::TestUtils;
 
 use_ok( Catalyst::Test, 'Notewise' );
 use_ok('Notewise::C::REST::Relationship');
 
 ok( request('rest/relationship')->is_success );
 
-use Test::WWW::Mechanize::Catalyst 'Notewise';
 
 my $mech = Test::WWW::Mechanize::Catalyst->new;
 
@@ -75,24 +76,5 @@ $mech->request($req);
 
 is($mech->status,200,'Status of GET is 200');
 is_xml($mech->content, qq#<response><relationship nav="fromright" part1="$kernel2_id" part2="$kernel_id" id="$relationship_id" type="0" /></response>#);
-
-sub new_request {
-    my($type,$url,$params) = @_;
-    $req = new HTTP::Request($type, $url);
-    if($params){
-        $req->header('Content-Type' => 'application/x-www-form-urlencoded');
-        my $content;
-        foreach my $key (keys %$params){
-            if($content){
-                $content .= "&$key=$params->{$key}";
-            } else {
-                $content .= "$key=$params->{$key}";
-            }
-        }
-        $req->content($content);
-        $req->header('Content-Length' => length($content));
-    }
-    return $req;
-}
 
 # vim:filetype=perl

@@ -1,9 +1,9 @@
 use Test::More tests => 11;
 use_ok( Catalyst::Test, 'Notewise' );
 use_ok('Notewise::C::REST::Kernel');
-
-
 use Test::WWW::Mechanize::Catalyst 'Notewise';
+use Notewise::TestUtils;
+
 
 my $mech = Test::WWW::Mechanize::Catalyst->new;
 # login
@@ -58,21 +58,4 @@ $mech->content_like(qr#<kernel name="fred" created="2004-02-03 02:03:04" id="$ke
 $user->delete;
 Notewise::M::CDBI::Kernel->retrieve($kernel_id)->delete;
 
-sub new_request {
-    my($type,$url,$params) = @_;
-    $req = new HTTP::Request($type, $url);
-    if($params){
-        $req->header('Content-Type' => 'application/x-www-form-urlencoded');
-        my $content;
-        foreach my $key (keys %$params){
-            if($content){
-                $content .= "&$key=$params->{$key}";
-            } else {
-                $content .= "$key=$params->{$key}";
-            }
-        }
-        $req->content($content);
-        $req->header('Content-Length' => length($content));
-    }
-    return $req;
-}
+# vim:ft=perl

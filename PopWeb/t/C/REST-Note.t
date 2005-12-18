@@ -1,11 +1,11 @@
-
 use Test::More tests => 19;
+use Test::WWW::Mechanize::Catalyst 'Notewise';
+use Notewise::TestUtils;
 use_ok( Catalyst::Test, 'Notewise' );
 use_ok('Notewise::C::REST::Note');
 
 ok( request('rest/note')->is_success );
 
-use Test::WWW::Mechanize::Catalyst 'Notewise';
 
 my $mech = Test::WWW::Mechanize::Catalyst->new;
 
@@ -138,24 +138,5 @@ $user2->delete;
 Notewise::M::CDBI::Note->retrieve($note_id)->delete;
 Notewise::M::CDBI::Kernel->retrieve($kernel_id)->delete;
 Notewise::M::CDBI::Kernel->retrieve($kernel2_id)->delete;
-
-sub new_request {
-    my($type,$url,$params) = @_;
-    $req = new HTTP::Request($type, $url);
-    if($params){
-        $req->header('Content-Type' => 'application/x-www-form-urlencoded');
-        my $content;
-        foreach my $key (keys %$params){
-            if($content){
-                $content .= "&$key=$params->{$key}";
-            } else {
-                $content .= "$key=$params->{$key}";
-            }
-        }
-        $req->content($content);
-        $req->header('Content-Length' => length($content));
-    }
-    return $req;
-}
 
 # vim:filetype=perl
