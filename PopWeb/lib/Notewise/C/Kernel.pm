@@ -132,6 +132,12 @@ Fetches a row and sets a template.
 
 sub view : Local {
     my ( $self, $c, $id ) = @_;
+    my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
+    unless ($kernel->has_permission($c->req->{user_id},'view')){
+        $c->res->status(403); # Forbidden
+        #TODO make this screen prettier
+        return $c->res->output('You do not have access to this kernel');
+    }
     $c->stash->{kernel} = Notewise::M::CDBI::Kernel->retrieve($id);
     $c->stash->{visible_kernels} = [Notewise::M::CDBI::ContainedObject->search({container_object=>$id})];
     $c->stash->{template} = 'Kernel/view.tt';
