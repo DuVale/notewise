@@ -1,7 +1,7 @@
 package Notewise;
 
 use strict;
-use Catalyst qw/-Debug FormValidator Session::FastMmap Authentication::CDBI/;
+use Catalyst qw/FormValidator Session::FastMmap Authentication::CDBI/;
 
 our $VERSION = '0.01';
 
@@ -44,7 +44,7 @@ Catalyst based application.
 sub default : Private {
     my ( $self, $c ) = @_;
     $c->stash->{template}='home.tt';
-    $c->stash->{kernels}=[map $_->object, Notewise::M::CDBI::ObjectId->search(type=>'kernel')];
+    $c->stash->{kernels}=[map $_->object, Notewise::M::CDBI::ObjectId->search(type=>'kernel',user=>$c->req->{user_id})];
 }
 
 sub end : Private {
