@@ -157,3 +157,5 @@ sub new_request {
     }
     return $req;
 }
+
+# vim:filetype=perl
