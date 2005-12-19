@@ -7,6 +7,7 @@ __PACKAGE__->add_trigger(before_create => \&create_id);
 __PACKAGE__->has_a(relationship_id => 'Notewise::M::CDBI::ObjectId');
 __PACKAGE__->has_a(part1 => 'Notewise::M::CDBI::ObjectId');
 __PACKAGE__->has_a(part2 => 'Notewise::M::CDBI::ObjectId');
+__PACKAGE__->has_a(type => 'Notewise::M::CDBI::RelationshipType');
 
 sub create_id {
     my $self=shift;
@@ -20,7 +21,7 @@ sub to_xml_hash {
         id => $self->relationship_id->id,
         part1 => $self->part1->id,
         part2 => $self->part2->id,
-        type => $self->type,
+        type => $self->type->relationship_type,
         nav => $self->nav
     };
 }

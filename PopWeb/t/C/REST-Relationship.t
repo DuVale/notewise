@@ -46,7 +46,7 @@ $mech->request($req);
 is($mech->status,201,'Status of PUT is 201');
 
 my ($relationship_id) = $mech->content =~ /<relationship.*\sid="(\d+)"/;
-is_xml($mech->content, qq#<response><relationship nav="fromleft" part1="$kernel_id" part2="$kernel2_id" id="$relationship_id" type="0" /></response>#);
+is_xml($mech->content, qq#<response><relationship nav="fromleft" part1="$kernel_id" part2="$kernel2_id" id="$relationship_id" type="asdf" /></response>#);
 
 # fetch it again
 
@@ -54,7 +54,7 @@ $req = new_request('GET', "http://localhost/rest/relationship/$relationship_id")
 $mech->request($req);
 
 is($mech->status,200,'Status of GET is 201');
-is_xml($mech->content, qq#<response><relationship nav="fromleft" part1="$kernel_id" part2="$kernel2_id" id="$relationship_id" type="0" /></response>#);
+is_xml($mech->content, qq#<response><relationship nav="fromleft" part1="$kernel_id" part2="$kernel2_id" id="$relationship_id" type="asdf" /></response>#);
 
 # update it
 
@@ -67,10 +67,12 @@ $req = new_request('POST', "http://localhost/rest/relationship/$relationship_id"
 $mech->request($req);
 is($mech->status,200,'Status of POST is 200');
 
+# fetch it again
+
 $req = new_request('GET', "http://localhost/rest/relationship/$relationship_id");
 $mech->request($req);
 
 is($mech->status,200,'Status of GET is 200');
-is_xml($mech->content, qq#<response><relationship nav="fromright" part1="$kernel2_id" part2="$kernel_id" id="$relationship_id" type="0" /></response>#);
+is_xml($mech->content, qq#<response><relationship nav="fromright" part1="$kernel2_id" part2="$kernel_id" id="$relationship_id" type="asdfoo" /></response>#);
 
 # vim:filetype=perl

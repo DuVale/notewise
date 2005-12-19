@@ -61,6 +61,11 @@ sub add : Private {
         $c->res->status(400); # Bad Request
     } else {
         my $relationship = Notewise::M::CDBI::Relationship->create_from_form( $c->form );
+
+        # fetch the correct type object
+        my $type = Notewise::M::CDBI::RelationshipType->find_or_create({relationship_type=>$c->req->params->{type}});
+        $relationship->type($type->id);
+        $relationship->update;
         $c->res->status(201); # Created
     	return $c->forward('view',[$relationship->id]);
     }
@@ -83,6 +88,12 @@ sub update : Private {
             return $c->res->output('ERROR');
         }
         $relationship->update_from_form( $c->form );
+
+        # fetch the correct type object
+        my $type = Notewise::M::CDBI::RelationshipType->find_or_create({relationship_type=>$c->req->params->{type}});
+        $relationship->type($type->id);
+        $relationship->update;
+
         $c->res->status(200); # OK
     	return $c->forward('view',[$id]);
     }
