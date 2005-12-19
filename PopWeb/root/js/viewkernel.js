@@ -1,3 +1,7 @@
+// ViewKernel is the class for the current view.  It is not directly resizable
+// or draggable. (though it is usually contained within a browser window that
+// is).
+
 var ViewKernel = Class.create();
 ViewKernel.prototype = new KernelObject();
 ViewKernel.prototype.extend( {

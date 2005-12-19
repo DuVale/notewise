@@ -1,4 +1,6 @@
-// TODO this is all heavily based on code from rico - need to make sure we comply with license
+// TODO this is all heavily based on code from rico - need to make sure we
+// comply with license.  I basically just started with Rico, and hacked out
+// anything we didn't need.
 
 Rico = {};
 Rico.ArrayExtensions = new Array();

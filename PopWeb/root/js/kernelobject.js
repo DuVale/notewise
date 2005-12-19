@@ -1,3 +1,6 @@
+// KernelObject is the super class for all kernel objects, such as ViewKernel
+// and VisibleKernel.  It contains all the shared logic between these classes.
+
 var KernelObject = Class.create();
 KernelObject.prototype = {
     initialize: function(htmlElement){
@@ -8,6 +11,7 @@ KernelObject.prototype = {
         }
     },
 
+    // setup all the event listeners
     registerHandlers: function() {
         // set up the dnd
         dndMgr.registerDropZone( new CustomDropzone(this.body,this) );
@@ -29,6 +33,7 @@ KernelObject.prototype = {
                                    Utils.terminateEvent.bindAsEventListener(this));
     },
 
+    // Updates the kernel name on the server.  Called from an event handler when the name is changed.
     updateName: function (e) {
         var targ;
         if (e.target) targ = e.target;
@@ -58,13 +63,23 @@ KernelObject.prototype = {
         return width;
     },
 
-    // returns the desired width of the name field.  Usually the width of the text in the field, but bounded by the minimum width
+    // returns the desired width of the name field.  Usually the width of the
+    // text in the field, but bounded by the minimum width
     getNameFieldWidth: function(){
         // TODO make 20 into a constant - min namefield width
-        return Math.max(this.getTextWidth(this.namefield.value,this.getStyle(this.namefield,'font-size'))*1.15+10,20);
+        return Math.max(this.getTextWidth(this.namefield.value,
+                                          this.getStyle(this.namefield,
+                                                        'font-size'))*1.15+10,20);
     },
 
+    // Gets the size of the given text, in the given font
     getTextWidth: function(text,size){
+        // Create the dummy span we will use for checking the size of the text.
+        // The idea is that spans size themselves automatically, so it should
+        // be possible to set the text in the span (and set the font of the
+        // span to the right size), and then check the size of the span.
+
+        // TODO this method should be tested for candidacy for memoization
         if(KernelObject.textSizingBox === undefined){
             KernelObject.textSizingBox = document.createElement('span');
             KernelObject.textSizingBox.innerHTML = 'a';
@@ -84,12 +99,17 @@ KernelObject.prototype = {
         this.registerHandlers();
     },
 
+    // retrieves references to all the relevant html elements and stores them
+    // as properties in this object
     fetchElements: function() {
         if(this.htmlElement){
             this.namefield = Utils.getElementsByClassName(this.htmlElement, 'namefield')[0];
         };
     },
 
+    // XXX not quite sure why this is necessary.  Need to check that. Seems to
+    // check a particular property of the style for a particular element,
+    // though
     getStyle: function(el,styleProp) {
 	if (el.currentStyle){
 		var y = el.currentStyle[styleProp];
@@ -99,6 +119,7 @@ KernelObject.prototype = {
 	return y;
     },
 
+    // Clear the selection (resetting focus to the search box) and terminate the event
     clearSelectionAndTerminate: function(e){
         dndMgr.clearSelection();
         Utils.terminateEvent(e);
@@ -113,6 +134,7 @@ KernelObject.prototype = {
            e.returnValue = false;
     },
 
+    // Adds a new kernel to the kernel body for the mouse event given (currently called from a double click)
     addNewKernel: function (e){
         // get the mouse event coordinates
         var posx = 0;
@@ -139,17 +161,21 @@ KernelObject.prototype = {
         dummyDiv.style.height='34px'; //XXX jon hates me - magic numbers are bad
         this.body.appendChild(dummyDiv);
 
+        // Give the browser a little bit of time to refresh, so the dummyDiv paints
         window.setTimeout(this.createVKernel.bind(this),5,x,y,dummyDiv);
         Utils.terminateEvent(e);
     },
 
+    // actually create the new kernel, at coordinates x,y, and remove the dummyDiv.
     createVKernel: function(x,y,dummyDiv){
+        // create the vkernel object on the server, and a matching js object
         var vkernel = VisibleKernel.insert({container_object: this.kernel(),
                                             x: x,
                                             y: y,
                                             width: 30,
                                             height: 30,
                                             collapsed: 1});
+        // XXX make sure that this is the right order - whatever order doesn't cause a blink is fine
         this.body.removeChild(dummyDiv);
         vkernel.realize(this.body);
         dndMgr.updateSelection(vkernel,false);
