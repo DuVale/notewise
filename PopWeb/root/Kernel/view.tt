@@ -14,7 +14,9 @@
     <div id="sidebar">
         <!-- sidebar accordion-style menus go in here; parents, rels, etc -->
         <table id="menutable" cellpadding="0" cellspacing="0" border="0">
-            <tr><td style="padding: 5px">Search: <input id="mysearchfield"/></td></tr>
+            <tr><td style="padding: 5px">
+                    Search: <div><input id="mysearchfield"/><div id="mysearchresults"></div></div>
+                </td></tr>
             <tr><td style="vertical-align: top; background: white;">
                 
                 <div class="panetitle">
@@ -111,7 +113,7 @@
 ////            alert("couldn't find the right kernels to create the relationship");
 //        }
 
-//        new Ajax.Autocompleter('mysearchfield', 'searchresults', '/ac', {frequency: .2});
+        new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '/ac', {frequency: .2});
     </script>
 </body>
 </html>

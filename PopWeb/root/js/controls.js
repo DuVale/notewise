@@ -119,6 +119,7 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
       this.options.parameters = this.options.callback ?
         this.options.callback(this.element, Form.Element.getValue(this.element)) :
           Form.Element.serialize(this.element);
+      alert(this.options.parameters);
       new Ajax.Request(this.url, this.options);
     } else {
       this.active = false;
