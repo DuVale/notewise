@@ -7,6 +7,12 @@ __PACKAGE__->has_a(object_id => 'Notewise::M::CDBI::ObjectId');
 __PACKAGE__->add_trigger(before_create => \&create_id);
 __PACKAGE__->columns(TEMP => qw/user/);
 
+__PACKAGE__->add_trigger(after_create => \&hydrate_object_id);
+sub hydrate_object_id {
+    my $self = shift;
+    my $object_id = Notewise::M::CDBI::ObjectId->retrieve($self->object_id);
+    $self->_attribute_store(object_id => $object_id);
+}
 
 sub user {
     my $self=shift;
@@ -21,8 +27,8 @@ sub user {
 
 sub create_id {
     my $self=shift;
-    my $object_id = Notewise::M::CDBI::ObjectId->create({type=>'note'});
-    $self->_attribute_store(object_id => $object_id->id);
+    my $object_id = Notewise::M::CDBI::ObjectId->create({user=>$self->user,type=>'note'});
+    $self->_attribute_store(object_id => $object_id);
 }
 
 sub to_xml_hash {
@@ -39,6 +45,11 @@ sub to_xml_hash {
         w => $self->w,
         h => $self->h,
     };
+}
+
+sub has_permission {
+    my $self = shift;
+    return $self->object_id->has_permission(@_);
 }
 
 =head1 NAME

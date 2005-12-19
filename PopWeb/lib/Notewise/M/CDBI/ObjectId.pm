@@ -23,6 +23,7 @@ sub has_permission {
     # hydrate user if necessary
     $user = Notewise::M::CDBI::User->retrieve($user) unless ref $user;
     die "invalid action" unless grep $action eq $_, qw(view modify delete);
+    return 0 unless $self->user;
     if ($user->id == $self->user->id){
         return 1;
     }

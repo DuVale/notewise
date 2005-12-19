@@ -12,6 +12,13 @@ __PACKAGE__->add_trigger(before_create => \&add_created_date);
 
 __PACKAGE__->columns(TEMP => qw/user/);
 
+__PACKAGE__->add_trigger(after_create => \&hydrate_object_id);
+sub hydrate_object_id {
+    my $self = shift;
+    my $object_id = Notewise::M::CDBI::ObjectId->retrieve($self->object_id);
+    $self->_attribute_store(object_id => $object_id);
+}
+
 sub user {
     my $self=shift;
     if ($self->object_id){
@@ -26,7 +33,7 @@ sub user {
 sub create_id {
     my $self=shift;
     my $object_id = Notewise::M::CDBI::ObjectId->create({user=>$self->user,type=>'kernel'});
-    $self->_attribute_store(object_id => $object_id->id);
+    $self->_attribute_store(object_id => $object_id);
 }
 
 sub add_created_date {
@@ -36,6 +43,10 @@ sub add_created_date {
         my $now = DateTime->now();
         $self->_attribute_store(created => $now->ymd('-').' '.$now->hms);
     }
+}
+
+sub to_xml_hash {
+    return to_xml_hash_shallow(@_);
 }
 
 sub to_xml_hash_shallow {
