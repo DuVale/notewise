@@ -63,8 +63,6 @@ sub add : Private {
         my $container_object=Notewise::M::CDBI::Kernel->retrieve($c->form->valid('container_object'));
         if (check_user_is_owner($c, $container_object)){
             my $note = Notewise::M::CDBI::Note->create_from_form( $c->form );
-            # hydrate the object_id
-            $note = Notewise::M::CDBI::Note->retrieve($note->object_id);
             $note->user($c->req->{user_id});
             $note->update;
             $c->res->status(201); # Created

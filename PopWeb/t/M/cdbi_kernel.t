@@ -10,7 +10,7 @@ my $kernel = Notewise::M::CDBI::Kernel->create({name=>'foo',user=>$user->id});
 #tests
 
 isnt($kernel->object_id, 0, 'object exists');
-$kernel = Notewise::M::CDBI::Kernel->retrieve($kernel->id);
+$kernel = Notewise::M::CDBI::Kernel->retrieve($kernel->object_id->id);
 is($kernel->user, $user->id, 'user id is correct after kernel rehydration');
 
 # test permissions

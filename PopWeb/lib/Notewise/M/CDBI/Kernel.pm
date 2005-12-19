@@ -33,7 +33,7 @@ sub user {
 sub create_id {
     my $self=shift;
     my $object_id = Notewise::M::CDBI::ObjectId->create({user=>$self->user,type=>'kernel'});
-    $self->_attribute_store(object_id => $object_id);
+    $self->_attribute_store(object_id => $object_id->id);
 }
 
 sub add_created_date {
