@@ -116,10 +116,10 @@ LineDraw.Line.prototype = {
         var y = Math.min(y1Coord.value, y2Coord.value)+y1Coord.units;
 
         var direction;
-        window.status = x1Coord.value + ' ' +
-                        x2Coord.value + ' ' +
-                        y1Coord.value + ' ' +
-                        y2Coord.value + ' ';
+//        window.status = x1Coord.value + ' ' +
+//                        x2Coord.value + ' ' +
+//                        y1Coord.value + ' ' +
+//                        y2Coord.value + ' ';
         if( (x2Coord.value > x1Coord.value && y2Coord.value < y1Coord.value)
             || (x2Coord.value < x1Coord.value && y2Coord.value > y1Coord.value) ){
             direction = 'l';

@@ -332,10 +332,10 @@ div.dummyDiv {
 #mysearchfield {
     background-color: #ccc; color: #333;
     border: 1px solid black;
-    
     width: 50%;
-
     font-size: 12pt;
+    padding: 3px;
+    margin: 3px;
 }
 
 #mysearchfield:focus {

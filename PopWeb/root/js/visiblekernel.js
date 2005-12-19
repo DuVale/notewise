@@ -366,6 +366,24 @@ VisibleKernel.prototype.extend( {
         return results;
     },
 
+    // returns the current actual onscreen size of the object in percent
+    currentHeight: function() {
+        if(this.collapsed()){
+            return this.htmlElement.clientHeight*100/this.htmlElement.parentNode.clientHeight;
+        } else {
+            return this.height();
+        }
+    },
+
+    // returns the current actual onscreen size of the object in percent
+    currentWidth: function() {
+        if(this.collapsed()){
+            return this.htmlElement.clientWidth*100/this.htmlElement.parentNode.clientWidth;
+        } else {
+            return this.width();
+        }
+    },
+
     // checks to make sure the height is ok, and returns a corrected value if it isn't
     checkHeight: function(h){
         //TODO fix this to work with the new percentages

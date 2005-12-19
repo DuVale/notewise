@@ -113,10 +113,10 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.htmlElement.id=this.idString();
         this.vkernel1.htmlElement.parentNode.appendChild(this.htmlElement);
         this.line = new LineDraw.Line(this.vkernel1.htmlElement.parentNode,
-                                      (this.vkernel1.x()+this.vkernel1.width()/2)+'%',
-                                      (this.vkernel1.y()+this.vkernel1.height()/2)+'%',
-                                      (this.vkernel2.x()+this.vkernel2.width()/2)+'%',
-                                      (this.vkernel2.y()+this.vkernel2.height()/2)+'%');
+                                      (this.vkernel1.x()+this.vkernel1.currentWidth()/2)+'%',
+                                      (this.vkernel1.y()+this.vkernel1.currentHeight()/2)+'%',
+                                      (this.vkernel2.x()+this.vkernel2.currentWidth()/2)+'%',
+                                      (this.vkernel2.y()+this.vkernel2.currentHeight()/2)+'%');
         this.createLabel();
         this.createButtons();
         this.createArrows();
@@ -172,22 +172,14 @@ Relationship.prototype = (new JSDBI()).extend( {
    },
 
     updatePosition1: function(){
-//        window.status = "vk1 x: "+this.vkernel1.x()
-//                        +" width: "+this.vkernel1.width()
-//                        +" y: "+this.vkernel1.y()
-//                        +" height: "+this.vkernel1.height();
-        this.line.setP1((this.vkernel1.x()+this.vkernel1.width()/2)+'%',
-                        (this.vkernel1.y()+this.vkernel1.height()/2)+'%'
+        this.line.setP1((this.vkernel1.x()+this.vkernel1.currentWidth()/2)+'%',
+                        (this.vkernel1.y()+this.vkernel1.currentHeight()/2)+'%'
                        );
     },
 
     updatePosition2: function(){
-//        window.status = "vk2 x: "+this.vkernel2.x()
-//                        +" width: "+this.vkernel2.width()
-//                        +" y: "+this.vkernel2.y()
-//                        +" height: "+this.vkernel2.height();
-        this.line.setP2((this.vkernel2.x()+this.vkernel2.width()/2)+'%',
-                        (this.vkernel2.y()+this.vkernel2.height()/2)+'%'
+        this.line.setP2((this.vkernel2.x()+this.vkernel2.currentWidth()/2)+'%',
+                        (this.vkernel2.y()+this.vkernel2.currentHeight()/2)+'%'
                        );
     },
 
@@ -227,17 +219,17 @@ Relationship.prototype = (new JSDBI()).extend( {
         // figure out the intersection between each box and the line between them
         var rect1 = new Rectangle(this.vkernel1.x(),
                                   this.vkernel1.y(),
-                                  this.vkernel1.width(),
-                                  this.vkernel1.height());
+                                  this.vkernel1.currentWidth(),
+                                  this.vkernel1.currentHeight());
         var rect2 = new Rectangle(this.vkernel2.x(),
                                   this.vkernel2.y(),
-                                  this.vkernel2.width(),
-                                  this.vkernel2.height());
+                                  this.vkernel2.currentWidth(),
+                                  this.vkernel2.currentHeight());
 
-        line = [{x: this.vkernel1.x()+this.vkernel1.width()/2,
-                 y: this.vkernel1.y()+this.vkernel1.height()/2},
-                {x: this.vkernel2.x()+this.vkernel2.width()/2,
-                 y: this.vkernel2.y()+this.vkernel2.height()/2}];
+        line = [{x: this.vkernel1.x()+this.vkernel1.currentWidth()/2,
+                 y: this.vkernel1.y()+this.vkernel1.currentHeight()/2},
+                {x: this.vkernel2.x()+this.vkernel2.currentWidth()/2,
+                 y: this.vkernel2.y()+this.vkernel2.currentHeight()/2}];
 
         this.intersect1 = rect1.getLineIntersect(line);
         this.intersect2 = rect2.getLineIntersect(line);
@@ -373,12 +365,8 @@ Relationship.prototype = (new JSDBI()).extend( {
     },
 
     endChange: function(vkernel) {
-        this.line.setP1((this.vkernel1.x()+this.vkernel1.width()/2)+'%',
-                        (this.vkernel1.y()+this.vkernel1.height()/2)+'%'
-                       );
-        this.line.setP2((this.vkernel2.x()+this.vkernel2.width()/2)+'%',
-                        (this.vkernel2.y()+this.vkernel2.height()/2)+'%'
-                       );
+        this.updatePosition1();
+        this.updatePosition2();
 
         this.labelDiv.style.display='inline';
         this.updateArrows();
