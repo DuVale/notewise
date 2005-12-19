@@ -22,7 +22,7 @@ sub default : Private {
     $c->res->output('Congratulations, Notewise::C::REST::ContainedObject is on Catalyst!');
 }
 
-sub containedobject : Path('/rest/containedobject') {
+sub containedobject : Path {
     my ( $self, $c) = @_;
 
     my $method = $c->req->method;

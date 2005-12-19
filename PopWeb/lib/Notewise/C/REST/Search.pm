@@ -25,7 +25,7 @@ Catalyst Controller.
 sub search : Path {
     my ( $self, $c, $searchstring ) = @_;
 
-    my $max_results = 2000;
+    my $max_results = 1000;
 
     my @objects = Notewise::M::CDBI::Kernel->search_where(
                             name => { 'like', $searchstring."%" });

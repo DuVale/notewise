@@ -22,7 +22,7 @@ sub default : Private {
     $c->res->output('Congratulations, Notewise::C::REST::Note is on Catalyst!');
 }
 
-sub note : Path('/rest/note') {
+sub note : Path {
     my ( $self, $c) = @_;
 
     my $method = $c->req->method;

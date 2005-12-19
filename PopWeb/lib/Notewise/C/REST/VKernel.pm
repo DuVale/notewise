@@ -26,7 +26,7 @@ Simple forward to /rest/containedobject
 
 =cut
 
-sub vkernel : Path('/rest/vkernel') {
+sub vkernel : Path {
     my ( $self, $c ) = @_;
 
     $c->forward('/rest/containedobject/containedobject');

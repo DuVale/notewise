@@ -22,7 +22,7 @@ sub default : Private {
     $c->res->output('Congratulations, Notewise::C::REST::Relationship is on Catalyst!');
 }
 
-sub relationship : Path('/rest/relationship') {
+sub relationship : Path {
     my ( $self, $c) = @_;
 
     my $method = $c->req->method;

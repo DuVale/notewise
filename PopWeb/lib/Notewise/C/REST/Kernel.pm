@@ -22,7 +22,7 @@ sub default : Private {
     $c->res->output('Congratulations, Notewise::C::REST::Kernel is on Catalyst!');
 }
 
-sub kernel : Path('/rest/kernel') {
+sub kernel : Path {
     my ( $self, $c, $id, $action) = @_;
 
     my $method = $c->req->method;

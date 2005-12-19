@@ -95,4 +95,12 @@ Sample xml:
 
 * Search *
 
-TODO
+To search for notes or kernels, send a GET of the form
+http://notewise.com/rest/search/mysearchstring replacing "mysearchstring" with
+your desired search string.  This will search for any kernels or notes
+containing words that start with the given search string.  The response will
+be of the form:
+
+<response>
+    [kernel and note xml...]
+</response>
