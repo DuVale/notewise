@@ -36,7 +36,7 @@ sub to_xml_hash {
     return {
         id => $self->object_id->id,
         container_object => $self->container_object,
-        content => $self->content,
+        acontent => $self->content,
         source => $self->source,
         created => $self->created,
         lastmodified => $self->lastModified,

@@ -1,4 +1,5 @@
 use Test::More tests => 19;
+use Test::XML;
 use Test::WWW::Mechanize::Catalyst 'Notewise';
 use Notewise::TestUtils;
 use_ok( Catalyst::Test, 'Notewise' );
@@ -52,18 +53,16 @@ is($mech->status,201,'Status of PUT is 201');
 
 my ($note_id) = $mech->content =~ /<note.+id="(\d+)"/;
 
-$mech->content_like(qr#<response>
-\s+<note id="\d+" container_object="$kernel_id" created="2005-01-01 01:02:03" h="400" lastmodified="\d+" source="myuri" w="300" x="100" y="200">a test note
-a new line</note>
-</response>#);
+is_xml($mech->content,qq#<response><note id="$note_id" container_object="$kernel_id" created="2005-01-01 01:02:03" h="400" lastmodified="2005-02-02 03:04:05" source="myuri" w="300" x="100" y="200" acontent="a test note\na new line">
+</note>
+</response>#,"check PUT result");
 
 # Try and get it back again
 
 $mech->get_ok("/rest/note/$note_id");
-$mech->content_like(qr#<response>
-\s+<note id="\d+" container_object="$kernel_id" created="2005-01-01 01:02:03" h="400" lastmodified="\d+" source="myuri" w="300" x="100" y="200">a test note
-a new line</note>
-</response>#);
+is_xml($mech->content,qq#<response><note id="$note_id" container_object="$kernel_id" created="2005-01-01 01:02:03" h="400" lastmodified="2005-02-02 03:04:05" source="myuri" w="300" x="100" y="200" acontent="a test note\na new line">
+</note>
+</response>#,"check PUT result");
 
 # update it
 
@@ -80,10 +79,9 @@ $mech->content_lacks('ERROR');
 $mech->content_lacks('FORBIDDEN');
 
 $mech->get_ok("/rest/note/$note_id");
-$mech->content_like(qr#<response>
-\s+<note id="$note_id" container_object="$kernel2_id" created="2005-01-01 01:02:03" h="800" lastmodified="\d+" source="myuri2" w="700" x="500" y="600">a test note
-with a new line</note>
-</response>#);
+is_xml($mech->content,qq#<response><note id="$note_id" container_object="$kernel2_id" created="2005-01-01 01:02:03" h="800" lastmodified="2005-02-02 03:04:05" source="myuri2" w="700" x="500" y="600" acontent="a test note\nwith a new line">
+</note>
+</response>#,"check PUT result");
 
 # TODO test attempt to update created or last modified
 
