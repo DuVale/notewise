@@ -1,0 +1,22 @@
+[% id = vkernel.container_kernel.id _ '/' _ vkernel.contained_kernel.id %]
+<script>
+    var kernelDiv = document.getElementById('vkernel[%id%]');
+    var vkernel = new VisibleKernel([%vkernel.container_kernel.id%],
+                                    [%vkernel.contained_kernel.id%],
+                                    kernelDiv,
+                                    [%vkernel.x%],
+                                    [%vkernel.y%],
+                                    [%vkernel.width%],
+                                    [%vkernel.height%],
+                                    [%vkernel.collapsed%]
+                                    );
+    vkernel.layout();
+    vkernelCache['[%vkernel.container_kernel.id%]/[%vkernel.contained_kernel.id%]']=vkernel;
+</script>
+
+    [% j = i + 1 %]
+    [% IF j < 6 %]
+        [% FOR vkernel = vkernel.contained_kernel.contained_objects %]
+            [%INCLUDE 'Kernel/kernel-js.tt' i=j%]
+        [% END %]
+    [% END %]

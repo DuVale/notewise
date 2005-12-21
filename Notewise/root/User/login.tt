@@ -1,0 +1,13 @@
+<form action='[% c.req.uri %]' method='POST'>
+    <table>
+        <tr>
+            <td>Email:</td>
+            <td><input name='email'/></td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td><input name='password' type='password'/></td>
+        </tr>
+    </table>
+    <input value='Login' type='submit'/>
+</form>
