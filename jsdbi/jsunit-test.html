@@ -57,9 +57,9 @@
         });
 
         Music.Track.fields(['trackid', 'cd', 'position', 'title']);
-//        Music.Track.contentField('title');
+        Music.Track.contentField('title');
         Music.Track.url('http://localhost:3004/rest/track');
-        Music.Track.elementTag('cd');
+        Music.Track.elementTag('track');
         Music.Track.has_a('cd', 'Music.Cd');
 
         artist = Music.Artist.insert({name: 'Billy'});
@@ -125,17 +125,18 @@
         cd2.destroy();
     }
 
-//    function testContentAttribute() {
-//        debug("testContentAttribute()");
-//        var cd = Music.Cd.insert({title: 'Rock n roll all night', year: 1954});
-//        track = Music.Track.insert({cd: cd, position: 42, title: 'Rock in the workplace'});
-//
-//        assertEquals('cd',cd+'',track.cd()+'');
-//        assertEquals('position',42,track.postion());
-//        assertEquals('title','Rock in the workplace',track.title());
-//        assert('trackid',track.trackid() > 0);
-//        assert('id',track.id() > 0);
-//    }
+    function testContentAttribute() {
+        debug("testContentAttribute()");
+        var cd = Music.Cd.insert({title: 'Rock n roll all night', year: 1954});
+//        debugger;
+        track = Music.Track.insert({cd: cd, position: '42', title: 'Rock in the workplace'});
+
+        assertEquals('cd',cd+'',track.cd()+'');
+        assertEquals('position','42',track.position());
+        assertEquals('title','Rock in the workplace',track.title());
+        assert('trackid',track.trackid() > 0);
+        assert('id',track.id() > 0);
+    }
 
     function tearDown() {
         debug('tearDown()');

@@ -146,7 +146,11 @@ JSDBI.prototype = {
         }
         for(var i=0;i<this.__fields.length;i++){
             var field = this.__fields[i];
-            this[field](xml.getAttribute(field));
+            if(field == this.__contentField){
+                this[field](xml.textContent);
+            } else {
+                this[field](xml.getAttribute(field));
+            }
         }
         this.internalUrl(this.url());
     },
@@ -251,6 +255,15 @@ JSDBI.fields = function (fields) {
     }
 };
 
+// gets/sets the field that receives the text content of the xml tag.
+JSDBI.contentField = function (fieldName) {
+    if(fieldName){
+        return this.prototype.__contentField = fieldName;
+    } else {
+        return this.prototype.__contentField;
+    }
+};
+
 // This may optionally be used to specify multiple primary keys.  You should
 // also include these fields in the general list of fields.
 JSDBI.primaryKeys = function (keyNames) {
@@ -299,6 +312,7 @@ JSDBI.retrieve = function (id) {
                                      asynchronous: false } );
 
     if(!request.transport.responseXML){
+        debugger;
         alert("Got bogus xml response to retrieve: "+request.transport.responseText);
     }
     object.__populate(request.transport.responseXML);
@@ -318,6 +332,7 @@ JSDBI.insert = function (values) {
                                           parameters: params,
                                           asynchronous: false} );
     if(!request.transport.responseXML){
+        debugger;
         alert("Got bogus xml response to insert: "+request.transport.responseText);
     }
     object.__populate(request.transport.responseXML);
