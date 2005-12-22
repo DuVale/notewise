@@ -146,7 +146,11 @@ JSDBI.prototype = {
         }
         for(var i=0;i<this.__fields.length;i++){
             var field = this.__fields[i];
-            this[field](xml.getAttribute(field));
+            if(field == this.__contentField){
+                this[field](xml.textContent);
+            } else {
+                this[field](xml.getAttribute(field));
+            }
         }
         this.internalUrl(this.url());
     },
@@ -248,6 +252,15 @@ JSDBI.fields = function (fields) {
         return this.prototype.__fields = fields;
     } else {
         return this.prototype.__fields;
+    }
+};
+
+// gets/sets the field that receives the text content of the xml tag.
+JSDBI.contentField = function (fieldName) {
+    if(fieldName){
+        return this.prototype.__contentField = fieldName;
+    } else {
+        return this.prototype.__contentField;
     }
 };
 
