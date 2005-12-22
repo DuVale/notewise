@@ -15,6 +15,7 @@ var Prototype = {
   emptyFunction: function() {}
 }
 
+// creates a constructor which creates a blank object, and then immediate calls initialize()
 var Class = {
   create: function() {
     return function() { 
@@ -391,26 +392,6 @@ document.getElementsByClassName = function(className) {
         elements.push(child);
         break;
       }
-    }
-  }
-  
-  return elements;
-}
-
-HTMLElement.prototype.getElementsByClassName = function(className) {
-  var children = this.childNodes;
-  var elements = new Array();
-  
-  for (var i = 0; i < children.length; i++) {
-    var child = children[i];
-    if(child.className !== undefined){
-        var classNames = child.className.split(' ');
-        for (var j = 0; j < classNames.length; j++) {
-          if (classNames[j] == className) {
-            elements.push(child);
-            break;
-          }
-        }
     }
   }
   

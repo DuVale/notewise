@@ -5,7 +5,6 @@ BEGIN { $ENV{CATALYST_ENGINE} ||= 'CGI' }
 use strict;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
-use lib "$FindBin::Bin/../../perl/lib";
 use Music;
 
 Music->run;
@@ -32,7 +31,7 @@ Sebastian Riedel, C<sri@oook.de>
 
 Copyright 2004 Sebastian Riedel. All rights reserved.
 
-This library is free software. You can redistribute it and/or modify
-it under the same terms as perl itself.
+This library is free software, you can redistribute it and/or modify
+it under the same terms as Perl itself.
 
 =cut

@@ -60,6 +60,22 @@ sub view : Private {
     $c->forward('Music::V::XML');
 }
 
+sub find : Local {
+    my ( $self, $c, $id, $type) = @_;
+
+    my @cds = Music::M::CDBI::Cd->search({artist=>$id});
+    my @cd_hashes;
+    foreach my $cd (@cds){
+        my %cd_hash;
+        foreach my $column (Music::M::CDBI::Cd->columns) {
+            $cd_hash{$column} = $cd->$column;
+        }
+        push @cd_hashes, \%cd_hash;
+    }
+    $c->stash->{cd}=\@cd_hashes;
+    $c->forward('Music::V::XML');
+}
+
 sub add : Private {
     my ( $self, $c) = @_;
 
