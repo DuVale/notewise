@@ -7,7 +7,8 @@ our $VERSION = '0.01';
 
 Music->config( name => 'Music' );
 
-Music->setup;
+Music->setup( qw/Static::Simple/ );
+Music->config->{static}->{ignore_extensions} = [];
 
 =head1 NAME
 
