@@ -1,6 +1,7 @@
 // This javascript module presents a simple CRUD interface for REST web services.
 // Requires Prototype.js 1.3.1 - http://prototype.conio.net/
 //
+//
 // Use it like the following:
 //
 //      // Basic class setup
