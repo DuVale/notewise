@@ -53,14 +53,14 @@ is($mech->status,201,'Status of PUT is 201');
 
 my ($note_id) = $mech->content =~ /<note.+id="(\d+)"/;
 
-is_xml($mech->content,qq#<response><note id="$note_id" container_object="$kernel_id" created="2005-01-01 01:02:03" h="400" lastmodified="2005-02-02 03:04:05" source="myuri" w="300" x="100" y="200" acontent="a test note\na new line">
+is_xml($mech->content,qq#<response><note id="$note_id" container_object="$kernel_id" created="2005-01-01 01:02:03" h="400" lastmodified="2005-02-02 03:04:05" source="myuri" w="300" x="100" y="200">a test note\na new line
 </note>
 </response>#,"check PUT result");
 
 # Try and get it back again
 
 $mech->get_ok("/rest/note/$note_id");
-is_xml($mech->content,qq#<response><note id="$note_id" container_object="$kernel_id" created="2005-01-01 01:02:03" h="400" lastmodified="2005-02-02 03:04:05" source="myuri" w="300" x="100" y="200" acontent="a test note\na new line">
+is_xml($mech->content,qq#<response><note id="$note_id" container_object="$kernel_id" created="2005-01-01 01:02:03" h="400" lastmodified="2005-02-02 03:04:05" source="myuri" w="300" x="100" y="200">a test note\na new line
 </note>
 </response>#,"check PUT result");
 
@@ -79,7 +79,7 @@ $mech->content_lacks('ERROR');
 $mech->content_lacks('FORBIDDEN');
 
 $mech->get_ok("/rest/note/$note_id");
-is_xml($mech->content,qq#<response><note id="$note_id" container_object="$kernel2_id" created="2005-01-01 01:02:03" h="800" lastmodified="2005-02-02 03:04:05" source="myuri2" w="700" x="500" y="600" acontent="a test note\nwith a new line">
+is_xml($mech->content,qq#<response><note id="$note_id" container_object="$kernel2_id" created="2005-01-01 01:02:03" h="800" lastmodified="2005-02-02 03:04:05" source="myuri2" w="700" x="500" y="600">a test note\nwith a new line
 </note>
 </response>#,"check PUT result");
 

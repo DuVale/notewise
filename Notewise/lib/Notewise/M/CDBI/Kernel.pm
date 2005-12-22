@@ -53,7 +53,7 @@ sub to_xml_hash_shallow {
     my $self = shift;
     return {
             id => $self->object_id->id,
-            user => $self->id->user->id,
+            user => $self->user->id,
             name => $self->name,
             uri => $self->uri,
             source => $self->source,
