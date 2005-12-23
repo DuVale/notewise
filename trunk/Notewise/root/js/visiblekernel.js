@@ -672,7 +672,6 @@ KernelCornerDraggable.prototype = (new Draggable()).extend( {
     },
 
     endDrag: function() {
-       this.sizeFromCorner(); // XXX 12/19 just turned this back on - could be an issue
        this.vkernel.notifyEndChangeListeners();
        this.vkernel.layoutCorner();
        this.vkernel.update();
