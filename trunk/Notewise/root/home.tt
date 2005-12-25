@@ -1,5 +1,8 @@
 <h1>Notewise</h1>
 
+base: [% base %]<br/>
+catalyst version: [% PERL %]print $Catalyst::VERSION[% END %]
+
 <p>You might want to do one of the following things:</p>
 
 <ul>
@@ -13,7 +16,7 @@
     <li>View a kernel:
         <ul>
             [% FOR kernel = kernels %]
-                <li><a href="/kernel/view/[%kernel.id%]">[%kernel.name ? kernel.name : 'unnamed' %]</a></li>
+                <li><a href="[% base %][% kernel.user.username %]/[%kernel.id%]">[%kernel.name ? kernel.name : 'unnamed' %]</a></li>
             [% END %]
         </ul>
     </li>

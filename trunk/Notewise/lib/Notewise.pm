@@ -1,18 +1,22 @@
 package Notewise;
 
 use strict;
-use Catalyst qw/-Debug FormValidator Session::FastMmap Authentication::CDBI/;
+use YAML ();
+use Catalyst qw/FormValidator Session::FastMmap Authentication::CDBI/;
+#use Catalyst qw/-Debug FormValidator Session::FastMmap Authentication::CDBI/;
 
 our $VERSION = '0.01';
 
-Notewise->config( name => 'Notewise',
-                 'Notewise::V::TT' => {
-                     TIMER => 0,
-                 },
-                );
+__PACKAGE__->config( YAML::LoadFile( __PACKAGE__->path_to('config.yml') ) );
 
-Notewise->setup( qw/Static::Simple/ );
-Notewise->config->{static}->{ignore_extensions} = [];
+# Allow us to use catalyst to serve static content, or serve it via apache, with a Static config toggle
+if(__PACKAGE__->config->{Static}){
+    __PACKAGE__->config->{static}->{ignore_extensions} = [];
+    __PACKAGE__->config->{static}->{include_path} = [__PACKAGE__->config->{home}.'static'];
+    __PACKAGE__->setup( qw/Static::Simple/ );
+} else {
+    __PACKAGE__->setup();
+}
 
 __PACKAGE__->config->{authentication} = {
                user_class           => 'Notewise::M::CDBI::User',
@@ -21,30 +25,15 @@ __PACKAGE__->config->{authentication} = {
                #password_hash        => 'md5',
            };
 
-=head1 NAME
-
-Notewise - Catalyst based application
-
-=head1 SYNOPSIS
-
-    script/popweb_server.pl
-
-=head1 DESCRIPTION
-
-Catalyst based application.
-
-=head1 METHODS
-
-=over 4
-
-=item default
-
-=cut
-
 sub default : Private {
     my ( $self, $c ) = @_;
     $c->stash->{template}='home.tt';
     $c->stash->{kernels}=[map $_->object, Notewise::M::CDBI::ObjectId->search(type=>'kernel',user=>$c->req->{user_id})];
+}
+
+sub begin : Private {
+    my ( $self, $c ) = @_;
+    $c->req->base( new URI($self->config->{'BaseUrl'} ) );
 }
 
 sub end : Private {
@@ -79,6 +68,12 @@ sub auto : Local {
     # otherwise forward to display the login page, and break the auto chain
     $c->forward('/user/login');
     return 0;
+}
+
+# Allow us to toggle catalyst debug output via the config file
+sub debug {
+    my $self = shift;
+    return $self->config->{Debug};
 }
 
 =back

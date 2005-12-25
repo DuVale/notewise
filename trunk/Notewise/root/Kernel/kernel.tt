@@ -14,16 +14,14 @@
         [% name_length = 1.05%]
     [% END %]
     <input class="namefield" style="width: [% name_length %]em;" value="[% vkernel.contained_kernel.name %]" autocomplete="off"/>
-    <a class="namelink" style="width: [% name_length %]em;" href="[% base _ '/kernel/view/' _ vkernel.contained_kernel.id %]">
+    <a class="namelink" style="width: [% name_length %]em;" href="[% base _ vkernel.contained_kernel.user.username _ '/' _ vkernel.contained_kernel.id %]">
         [% vkernel.contained_kernel.name %]
     </a>
     <div class="body">
-        [% UNLESS vkernel.collapsed %]
-            [% j = i + 1 %]
-            [% IF i < 4 %]
-                [% FOR vkernel = vkernel.contained_kernel.contained_objects %]
-                    [%INCLUDE 'Kernel/kernel.tt' i=j%]
-                [% END %]
+        [% j = i + 1 %]
+        [% IF i < 6 %] [%# XXX not sure why this needs to be 6, when kernel-js.tt has only 4.  If it's 5 or 4, then we get errors because there's js for kernels that don't have any html %]
+            [% FOR vkernel = vkernel.contained_kernel.contained_objects %]
+                [%INCLUDE 'Kernel/kernel.tt' i=j%]
             [% END %]
         [% END %]
     </div>

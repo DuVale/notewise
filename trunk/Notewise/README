@@ -1,1 +1,3 @@
+Copy config-sample.yml to config.yml and edit as appropriate
+
 Run script/popweb_server.pl to test the application.

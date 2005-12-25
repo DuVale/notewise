@@ -1,0 +1,11 @@
+name: Notewise
+V::TT:
+    TIMER: 0
+Debug: 0
+Static: 0
+M::CDBI:
+    dsn: dbi:mysql:dbname=notewise_beta
+    user: notewise
+    password: password
+StaticUrl:  http://notewise.com/beta/static/
+BaseUrl: http://notewise.com/beta/

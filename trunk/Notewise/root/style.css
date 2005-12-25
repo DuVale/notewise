@@ -252,7 +252,7 @@ body, html {
 }
 
 .leftgrippie {
-    background: url('/images/gripper.png');
+    background: url('images/gripper.png');
     z-index:0;
     width: 10px;
     height: 1.2em;
@@ -269,7 +269,7 @@ body, html {
 
 .corner {
     position: absolute;
-    background: url('/images/corner.gif');
+    background: url('images/corner.gif');
     width: 15px;
     height: 15px;
     cursor: se-resize;
@@ -378,17 +378,17 @@ div.dummyDiv {
 
     color: #999;
     font-family: Verdana; font-size: 12px; font-weight: bold;
-    background: url(/images/menupane_back.gif) repeat-x;
+    background: url(images/menupane_back.gif) repeat-x;
 }
 
 .twistbutton {
     width: 20px; height: 20px;
     float: left; cursor: pointer;
-    background: url(/images/expand_open.gif);
+    background: url(images/expand_open.gif);
 }
 
 .closed {
-    background: url(/images/expand_closed.gif);
+    background: url(images/expand_closed.gif);
 }
 
 .nobutton {

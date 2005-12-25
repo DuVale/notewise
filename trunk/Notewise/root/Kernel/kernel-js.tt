@@ -15,7 +15,7 @@
 </script>
 
     [% j = i + 1 %]
-    [% IF j < 6 %]
+    [% IF j < 4 %]
         [% FOR vkernel = vkernel.contained_kernel.contained_objects %]
             [%INCLUDE 'Kernel/kernel-js.tt' i=j%]
         [% END %]
