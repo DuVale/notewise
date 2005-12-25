@@ -5,9 +5,6 @@ use base 'Catalyst::Model::CDBI';
 use XML::Simple;
 
 __PACKAGE__->config(
-    dsn           => 'dbi:mysql:dbname=popweb',
-    user          => 'root',
-    password      => '',
     options       => {},
     relationships => 1,
     additional_base_classes => [qw/Class::DBI::FromForm Class::DBI::AsForm Class::DBI::AbstractSearch/],

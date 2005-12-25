@@ -42,10 +42,10 @@ CREATE TABLE IF NOT EXISTS note (
     w SMALLINT,
     h SMALLINT,
     FULLTEXT INDEX notes (content),
-    INDEX containerNotes (container),
+    INDEX containerNotes (container_object),
     PRIMARY KEY (object_id),
     FOREIGN KEY (object_id) REFERENCES object_id(id),
-    FOREIGN KEY (container) REFERENCES object_id(id)
+    FOREIGN KEY (container_object) REFERENCES object_id(id)
 ) ENGINE = MYISAM;
 
 CREATE TABLE IF NOT EXISTS relationship_type (
@@ -125,6 +125,7 @@ CREATE TABLE IF NOT EXISTS quicksearch_choice (
 CREATE TABLE IF NOT EXISTS user (
     id MEDIUMINT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT,
     name varchar(255) not null,
+    username varchar(255) not null,
     email varchar(255) unique not null,
     password varchar(100) not null
 );

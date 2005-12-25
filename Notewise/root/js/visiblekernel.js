@@ -12,7 +12,7 @@ VisibleKernel.fields(['container_object',
                       'x',
                       'y']);
 VisibleKernel.primaryKeys(['container_object', 'contained_object']);
-VisibleKernel.url('/rest/vkernel');
+VisibleKernel.url('rest/vkernel');
 VisibleKernel.elementTag('visiblekernel');
 VisibleKernel.has_a('contained_object','Kernel');
 VisibleKernel.has_a('container_object','Kernel');

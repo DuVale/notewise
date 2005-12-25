@@ -10,7 +10,7 @@
             $stash->set(postmatch=>$');
         }
     [% END -%]
-    <li><a href="/kernel/view/[%kernel.id%]">[%prematch%]<b>[%match%]</b>[%postmatch%]</a></li>
+    <li><a href="[%base%]kernel/view/[%kernel.id%]">[%prematch%]<b>[%match%]</b>[%postmatch%]</a></li>
 [%- END -%]
 <li><a href="">more results...</a></li>
 </ul>

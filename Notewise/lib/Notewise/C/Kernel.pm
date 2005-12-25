@@ -130,8 +130,10 @@ Fetches a row and sets a template.
 
 =cut
 
-sub view : Local {
+sub view : Regex('^(\w+)/(\d+)') {
     my ( $self, $c, $id ) = @_;
+    my $username = $c->req->snippets->[0];
+    my $id = $c->req->snippets->[1];
     my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
     unless ($kernel->has_permission($c->req->{user_id},'view')){
         $c->res->status(403); # Forbidden

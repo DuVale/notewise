@@ -99,7 +99,7 @@ Relationship.superclass = JSDBI;
 //                      'x',
 //                      'y']);
 //Relationship.primaryKeys(['container_object', 'contained_object']);
-//Relationship.url('/rest/vkernel');
+//Relationship.url('rest/vkernel');
 //Relationship.elementTag('visiblekernel');
 Relationship.prototype = (new JSDBI()).extend( {
     initialize: function (vkernel1,vkernel2){
