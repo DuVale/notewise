@@ -131,7 +131,7 @@ Fetches a row and sets a template.
 =cut
 
 sub view : Regex('^(\w+)/(\d+)') {
-    my ( $self, $c, $id ) = @_;
+    my ( $self, $c ) = @_;
     my $username = $c->req->snippets->[0];
     my $id = $c->req->snippets->[1];
     my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);

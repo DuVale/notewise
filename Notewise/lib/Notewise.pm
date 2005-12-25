@@ -11,9 +11,8 @@ __PACKAGE__->config( YAML::LoadFile( __PACKAGE__->path_to('config.yml') ) );
 
 # Allow us to use catalyst to serve static content, or serve it via apache, with a Static config toggle
 if(__PACKAGE__->config->{Static}){
-    __PACKAGE__->config->{static}->{ignore_extensions} = [];
-    __PACKAGE__->config->{static}->{include_path} = [__PACKAGE__->config->{home}.'static'];
     __PACKAGE__->setup( qw/Static::Simple/ );
+    __PACKAGE__->config->{static}->{ignore_extensions} = [];
 } else {
     __PACKAGE__->setup();
 }
@@ -33,7 +32,9 @@ sub default : Private {
 
 sub begin : Private {
     my ( $self, $c ) = @_;
-    $c->req->base( new URI($self->config->{'BaseUrl'} ) );
+    if($self->config->{'BaseUrl'}){
+        $c->req->base( new URI($self->config->{'BaseUrl'} ) );
+    }
 }
 
 sub end : Private {
