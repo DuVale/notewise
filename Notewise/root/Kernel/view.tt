@@ -27,7 +27,7 @@
                 <div class="panecontent" id="parents_content">
                     <ul>
                         [% FOR parent = kernel.parents %]
-                            <li><a href="[% base %][%parent.user.username%]/[%parent.id%]">[%parent.name%]</a></li>
+                            <li><a href="[% base %]kernel/view/[%parent.id%]">[%parent.name%]</a></li>
                         [% END %]
                     </ul>
                 </div>
@@ -40,7 +40,7 @@
                 <div class="panecontent" id="rel_content">
                     <ul>
                         [% FOR sibling = kernel.related_kernels %]
-                            <li><a href="[% base %][% sibling.user.username %]/view/[%sibling.id%]">[%sibling.name%]</a></li>
+                        <li><a href="[% base %]kernel/view/[%sibling.id%]">[%sibling.name%]</a></li>
                         [% END %]
                     </ul>
                 </div>
