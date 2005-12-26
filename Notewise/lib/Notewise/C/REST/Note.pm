@@ -56,8 +56,12 @@ sub add : Private {
 
     $c->form( optional => [ Notewise::M::CDBI::Note->columns ],
               field_filter_regexp_map => {
-                  qr/^created|lastmodified|lastviewed$/i => sub { return DateTime::Format::DateParse->parse_datetime(shift); }
-              }
+                  qr/^created|lastmodified|lastviewed$/i => sub { return DateTime::Format::DateParse->parse_datetime(shift); },
+              },
+              defaults => {
+                  content => '',
+              },
+              missing_optional_valid=>1,
             );
     if ($c->form->has_missing) {
         $c->res->status(400); # Bad Request
