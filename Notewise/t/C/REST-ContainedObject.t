@@ -1,4 +1,5 @@
 use Test::More tests => 25;
+use Test::XML;
 use Test::WWW::Mechanize::Catalyst 'Notewise';
 use Notewise::TestUtils;
 use_ok('Notewise::C::REST::ContainedObject');
@@ -30,9 +31,11 @@ my ($kernel_id) = $mech->content =~ /<kernel.+id="(\d+)"/;
 isnt($kernel_id,0,"kernel id isn't zero");
 
 $mech->get_ok("http://localhost/rest/vkernel/$container_id/$kernel_id");
-$mech->content_like(qr#<visiblekernel collapsed="1" contained_object="$kernel_id" container_object="$container_id" height="400" width="300" x="100" y="200">
-\s+<kernel name="" created="\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}" id="$kernel_id" lastModified="\d+" source="" uri="" user="$user_id" />
-\s+</visiblekernel># );
+($created) = $mech->content =~ /<kernel.+created="(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"/;
+($lastmodified) = $mech->content =~ /<kernel.+lastmodified="(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"/;
+is_xml($mech->content,qq#<response><visiblekernel collapsed="1" contained_object="$kernel_id" container_object="$container_id" height="400" width="300" x="100" y="200">
+<kernel name="" created="$created" id="$kernel_id" lastmodified="$lastmodified" source="" uri="" user="$user_id" />
+</visiblekernel></response># );
 
 # Try updating it
 

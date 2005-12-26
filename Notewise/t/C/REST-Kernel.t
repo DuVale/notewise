@@ -1,4 +1,5 @@
 use Test::More tests => 11;
+use Test::XML;
 use_ok( Catalyst::Test, 'Notewise' );
 use_ok('Notewise::C::REST::Kernel');
 use Test::WWW::Mechanize::Catalyst 'Notewise';
@@ -23,19 +24,20 @@ $mech->request($req);
 is($mech->status,201,'Status of PUT is 201');
 
 my ($kernel_id) = $mech->content =~ /<kernel.+id="(\d+)"/;
+my ($lastmodified) = $mech->content =~ /<kernel.+lastmodified="(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"/;
 
-$mech->content_like(qr#<kernel name="harrypotter" created="2005-01-01 01:02:03" id="$kernel_id" lastModified="\d+" source="mysource" uri="myuri">
-\s+<containedObjects>
-\s+</containedObjects>
-\s+</kernel># );
+is_xml($mech->content,qq#<response><kernel name="harrypotter" created="2005-01-01 01:02:03" id="$kernel_id" lastmodified="$lastmodified" source="mysource" uri="myuri">
+<containedObjects>
+</containedObjects>
+</kernel></response># );
 
 # Try and get it back again
 
 $mech->get_ok("/rest/kernel/$kernel_id");
-$mech->content_like(qr#<kernel name="harrypotter" created="2005-01-01 01:02:03" id="$kernel_id" lastModified="\d+" source="mysource" uri="myuri">
-\s+<containedObjects>
-\s+</containedObjects>
-\s+</kernel># );
+is_xml($mech->content,qq#<response><kernel name="harrypotter" created="2005-01-01 01:02:03" id="$kernel_id" lastmodified="$lastmodified" source="mysource" uri="myuri">
+<containedObjects>
+</containedObjects>
+</kernel></response># );
 
 # update it
 
@@ -49,10 +51,11 @@ $mech->content_lacks('ERROR');
 $mech->content_lacks('FORBIDDEN');
 
 $mech->get_ok("/rest/kernel/$kernel_id");
-$mech->content_like(qr#<kernel name="fred" created="2004-02-03 02:03:04" id="$kernel_id" lastModified="\d+" source="anothersource" uri="anotheruri">
-\s+<containedObjects>
-\s+</containedObjects>
-\s+</kernel># );
+($lastmodified) = $mech->content =~ /<kernel.+lastmodified="(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"/;
+is_xml($mech->content,qq#<response><kernel name="fred" created="2004-02-03 02:03:04" id="$kernel_id" lastmodified="$lastmodified" source="anothersource" uri="anotheruri">
+<containedObjects>
+</containedObjects>
+</kernel></response># );
 
 $user->delete;
 Notewise::M::CDBI::Kernel->retrieve($kernel_id)->delete;

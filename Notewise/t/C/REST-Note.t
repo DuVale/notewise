@@ -1,4 +1,4 @@
-use Test::More tests => 19;
+use Test::More tests => 21;
 use Test::XML;
 use Test::WWW::Mechanize::Catalyst 'Notewise';
 use Notewise::TestUtils;
@@ -64,6 +64,29 @@ is_xml($mech->content,qq#<response><note id="$note_id" container_object="$kernel
 </note>
 </response>#,"check PUT result");
 
+#test create with no created date or lastmodified
+
+$req = new_request('PUT', "http://localhost/rest/note",
+                    {container_object=>$kernel_id,
+                     content=>"another test note\na new line",
+                     source=>'myuri',
+                     x=>100,
+                     y=>200,
+                     w=>300,
+                     h=>400 });
+$mech->request($req);
+
+is($mech->status,201,'Status of PUT is 201');
+
+my ($note2_id) = $mech->content =~ /<note.+id="(\d+)"/;
+my ($created) = $mech->content =~ /<note.+created="(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"/;
+my ($lastmodified) = $mech->content =~ /<note.+lastmodified="(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"/;
+
+is_xml($mech->content,qq#<response><note id="$note2_id" container_object="$kernel_id" created="$created" h="400" lastmodified="$lastmodified" source="myuri" w="300" x="100" y="200">another test note\na new line
+</note>
+</response>#,"check PUT result with no created or lastmodified");
+$req = new_request('DELETE', "http://localhost/rest/note/$note2_id");
+
 # update it
 
 $req = new_request('POST', "http://localhost/rest/note/$note_id",
@@ -79,7 +102,10 @@ $mech->content_lacks('ERROR');
 $mech->content_lacks('FORBIDDEN');
 
 $mech->get_ok("/rest/note/$note_id");
-is_xml($mech->content,qq#<response><note id="$note_id" container_object="$kernel2_id" created="2005-01-01 01:02:03" h="800" lastmodified="2005-02-02 03:04:05" source="myuri2" w="700" x="500" y="600">a test note\nwith a new line
+
+($lastmodified) = $mech->content =~ /<note.+lastmodified="(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"/;
+
+is_xml($mech->content,qq#<response><note id="$note_id" container_object="$kernel2_id" created="2005-01-01 01:02:03" h="800" lastmodified="$lastmodified" source="myuri2" w="700" x="500" y="600">a test note\nwith a new line
 </note>
 </response>#,"check PUT result");
 
