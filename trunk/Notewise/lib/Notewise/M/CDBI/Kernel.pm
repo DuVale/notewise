@@ -7,8 +7,15 @@ use Data::Dumper;
 
 __PACKAGE__->has_a(object_id => 'Notewise::M::CDBI::ObjectId');
 
+__PACKAGE__->has_a(created => 'DateTime', inflate=> \&Notewise::M::CDBI::inflate_datetime,
+                                          deflate=> \&Notewise::M::CDBI::deflate_datetime);
+__PACKAGE__->has_a(lastmodified => 'DateTime', inflate=> \&Notewise::M::CDBI::inflate_timestamp,
+                                               deflate=> \&Notewise::M::CDBI::deflate_timestamp);
+__PACKAGE__->has_a(lastViewed => 'DateTime', inflate=> \&Notewise::M::CDBI::inflate_timestamp,
+                                             deflate=> \&Notewise::M::CDBI::deflate_timestamp);
+
 __PACKAGE__->add_trigger(before_create => \&create_id);
-__PACKAGE__->add_trigger(before_create => \&add_created_date);
+__PACKAGE__->add_trigger(before_create => \&Notewise::M::CDBI::add_created_date);
 
 __PACKAGE__->columns(TEMP => qw/user/);
 
@@ -36,15 +43,6 @@ sub create_id {
     $self->_attribute_store(object_id => $object_id->id);
 }
 
-sub add_created_date {
-    my $self=shift;
-    unless($self->created){
-        # XXX this returns UTC, not server time
-        my $now = DateTime->now();
-        $self->_attribute_store(created => $now->ymd('-').' '.$now->hms);
-    }
-}
-
 sub to_xml_hash {
     return to_xml_hash_shallow(@_);
 }
@@ -57,8 +55,8 @@ sub to_xml_hash_shallow {
             name => $self->name,
             uri => $self->uri,
             source => $self->source,
-            created => $self->created,
-            lastModified => $self->lastModified,
+            created => $self->created ? $self->created->strftime($self->strf_format) : '',
+            lastmodified => $self->lastModified ? $self->lastModified->strftime($self->strf_format): '',
     };
 }
 
@@ -72,8 +70,8 @@ sub to_xml_hash_deep {
                 name => $self->name,
                 uri => $self->uri,
                 source => $self->source,
-                created => $self->created,
-                lastModified => $self->lastModified,
+                created => $self->created ? $self->created->strftime($self->strf_format) : '',
+                lastmodified => $self->lastModified ? $self->lastModified->strftime($self->strf_format): '',
                 containedObjects => {
                     visiblekernel => [ @contained_kernels ],
                     note => [ @contained_notes ],

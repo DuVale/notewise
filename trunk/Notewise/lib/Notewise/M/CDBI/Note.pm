@@ -7,6 +7,13 @@ __PACKAGE__->has_a(object_id => 'Notewise::M::CDBI::ObjectId');
 __PACKAGE__->add_trigger(before_create => \&create_id);
 __PACKAGE__->columns(TEMP => qw/user/);
 
+__PACKAGE__->has_a(created => 'DateTime', inflate=> \&Notewise::M::CDBI::inflate_datetime,
+                                          deflate=> \&Notewise::M::CDBI::deflate_datetime);
+__PACKAGE__->has_a(lastmodified => 'DateTime', inflate=> \&Notewise::M::CDBI::inflate_timestamp,
+                                               deflate=> \&Notewise::M::CDBI::deflate_timestamp);
+
+__PACKAGE__->add_trigger(before_create => \&Notewise::M::CDBI::add_created_date);
+
 __PACKAGE__->add_trigger(after_create => \&hydrate_object_id);
 sub hydrate_object_id {
     my $self = shift;
@@ -38,8 +45,8 @@ sub to_xml_hash {
         container_object => $self->container_object,
         content => $self->content,
         source => $self->source,
-        created => $self->created,
-        lastmodified => $self->lastModified,
+        created => $self->created->strftime($self->strf_format),
+        lastmodified => $self->lastModified->strftime($self->strf_format),
         x => $self->x,
         y => $self->y,
         w => $self->w,

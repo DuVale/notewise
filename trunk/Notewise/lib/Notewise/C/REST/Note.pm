@@ -2,6 +2,7 @@ package Notewise::C::REST::Note;
 
 use strict;
 use base 'Catalyst::Base';
+use DateTime::Format::DateParse;
 
 =head1 NAME
 
@@ -53,7 +54,11 @@ sub view : Private {
 sub add : Private {
     my ( $self, $c) = @_;
 
-    $c->form( optional => [ Notewise::M::CDBI::Note->columns ] );
+    $c->form( optional => [ Notewise::M::CDBI::Note->columns ],
+              field_filter_regexp_map => {
+                  qr/^created|lastmodified|lastviewed$/i => sub { return DateTime::Format::DateParse->parse_datetime(shift); }
+              }
+            );
     if ($c->form->has_missing) {
         $c->res->status(400); # Bad Request
     } elsif ($c->form->has_invalid) {
