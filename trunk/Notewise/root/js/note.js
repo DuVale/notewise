@@ -1,40 +1,34 @@
-// A visible kernel is a normal kernel on a view that's draggable and renameable.
-
-var VisibleKernel = Class.create();
-VisibleKernel.extend(JSDBI);
-
-// multiple inheritance from both JSDBI and Draggable
-VisibleKernel.prototype = {};
-VisibleKernel.inherit(new JSDBI());
-VisibleKernel.inherit(new Draggable());
-VisibleKernel.inherit(new KernelObject());
+var Note = Class.create();
+Note.extend(JSDBI);
+Note.prototype = {};
+Note.inherit(new JSDBI());
+Note.inherit(new Draggable());
 
 // Setup the JSDBI data access
-VisibleKernel.fields(['container_object',
-                      'contained_object',
-                      'collapsed',
-                      'height',
-                      'width',
-                      'x',
-                      'y']);
-VisibleKernel.primaryKeys(['container_object', 'contained_object']);
-VisibleKernel.url('rest/vkernel');
-VisibleKernel.elementTag('visiblekernel');
-VisibleKernel.has_a('contained_object','Kernel');
-VisibleKernel.has_a('container_object','Kernel');
+Note.fields(['id', 'container_object', 'content', 'height', 'width', 'x', 'y']);
+Note.url('rest/note');
+Note.elementTag('note');
+Note.contentField('content');
+Note.has_a('container_object','Kernel');
 
-VisibleKernel.prototype.extend({
-    initialize: function(container_object,contained_object,htmlElement,x,y,width,height,collapsed) {
-        KernelObject.prototype.initialize.call(this, htmlElement);
+// multiple inheritance from both JSDBI and Draggable
+Note.prototype.extend({
     
-        this.type        = 'Kernel';
+    initialize: function(id,container_object,htmlElement,x,y,width,height,content) {
+        
+        if(htmlElement != undefined) {
+            this.htmlElement = htmlElement;
+            this.setup();
+        }
+        
+        this.type        = 'Note';
+        this.id(id);
         this.container_object(container_object);
-        this.contained_object(contained_object);
         this.__x=x;
         this.__y=y;
         this.__width=width;
         this.__height=height;
-        this.__collapsed=collapsed;
+        this.__content=content;
 
         // listeners that get notified when this visible kernel moves
         this.__moveListeners = [];
@@ -44,54 +38,33 @@ VisibleKernel.prototype.extend({
         this.__startChangeListeners = [];
         // listeners that get notified when this visible kernel stops moving or changing size (end of the drag)
         this.__endChangeListeners = [];
-
         JSDBI.prototype.initialize.call(this);
     },
-
     setup: function () {
-        KernelObject.prototype.setup.call(this);
-
-        // add this object as a property of the htmlElement, so we can get back
-        // to it if all we have is the element
-        this.htmlElement.kernel = this;
+        this.fetchElements();
+        this.registerHandlers();
     },
-
-    // returns the id in the form '1/2' where the first number is the
-    // container_id and the second number is the contained_id
-    idString: function() {
-        var id = this.id().join('/');
-        return id;
-    },
-
     // creates the actual html for this kernel
     // XXX this is a bunch of garbage - need to unify this html with the stuff in root/Kernel/kernel.tt.  Maybe think about shipping the html as part of the xml?  Or maybe a seperate ajax call?
     realize: function(parent) {
+        
         this.htmlElement = document.createElement('div');
-        this.htmlElement.id="vkernel"+this.idString();
-        this.htmlElement.className="vkernel collapsed";
-        var expandButtonLabel = this.collapsed() ? '+' : '-';
-        var name;
-        if(this.kernel().name() === undefined){
-            name = '';
-        } else {
-            name = this.kernel().name();
-        }
+        this.htmlElement.id="note"+this.id();
+        this.htmlElement.className="note";
         var innerHTML =
            "<div class=\"leftgrippie\"></div>"
-           +"<input type=button value='"+expandButtonLabel+"' class='expandbutton'/>"
            +"<input type=button value='X' class='removebutton'/>"
            +"<input type=button value='R' class='relationshipbutton'/>"
-           +"<input value=\"\" type=\"text\" class=\"namefield\" autocomplete=\"off\" value=\""+name+"\"/>"
-           +"<a class=\"namelink\" href=\"/kernel/view/"+this.__getField('contained_object')+"\">"
-           +name+"</a>"
            +"<div class=\"rightgrippie\"/></div>"
-           +"<div class=\"body\">"
-           +"</div>"
+           +"<textarea class='body'>"
+           + this.content()
+           +"</textarea>"
            +"<div class=\"corner\">"
            +"</div>";
         this.htmlElement.innerHTML = innerHTML;
         parent.appendChild(this.htmlElement);
-        this.setup();
+        this.fetchElements();
+        this.registerHandlers();
         this.x(this.x());
         this.y(this.y());
         this.setWidth(this.width());
@@ -99,51 +72,29 @@ VisibleKernel.prototype.extend({
         this.layout();
     },
 
-    // create html elements for the child objects
-    hydrateChildren: function() {
-        var children = this.kernel().children();
-        for(var i=0; i<children.length; i++){
-            var child = children[i];
-            child.realize(this.body);
-        }
-    },
-
-    kernel: function() {
-        return this.contained_object();
-    },
-
-    kernel_id: function() {
-        return this.__getField('contained_object');
-    },
-
     // retrieves references to all the relevant html elements and stores them
     // as properties in this object
     fetchElements: function () {
-        KernelObject.prototype.fetchElements.call(this);
-        this.body = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
-        this.namelink = Utils.getElementsByClassName(this.htmlElement, 'namelink')[0];
         this.body = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
         this.corner = Utils.getElementsByClassName(this.htmlElement, 'corner')[0];
         this.relationshipbutton = Utils.getElementsByClassName(this.htmlElement, 'relationshipbutton')[0];
-        this.expandbutton = Utils.getElementsByClassName(this.htmlElement, 'expandbutton')[0];
         this.removebutton = Utils.getElementsByClassName(this.htmlElement, 'removebutton')[0];
     },
 
     // setup all the event listeners
     registerHandlers: function() {
-        KernelObject.prototype.registerHandlers.call(this);
-
-        // TODO check to see if all these terminate event listeners are necessary
-
+        
         // set up the dnd
         dndMgr.registerDraggable( this );
         dndMgr.registerDraggable( new KernelCornerDraggable(this.corner, this) );
 
+        // setup the blur handler for the textarea
+        this.body.onblur = this.contentChanged.bindAsEventListener(this);
+
         // setup the click handlers
-        Utils.registerEventListener(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
-        Utils.registerEventListener(this.namefield,'click', this.selectAndTerminate.bindAsEventListener(this));
-        Utils.registerEventListener(this.namelink,'click', Utils.terminateEvent.bindAsEventListener(this));
-        Utils.registerEventListener(this.namelink,'mousedown', Utils.terminateEvent.bindAsEventListener(this));
+        // Utils.registerEventListener(this.namefield,'click', this.selectAndTerminate.bindAsEventListener(this));
+        // Utils.registerEventListener(this.namelink,'click', Utils.terminateEvent.bindAsEventListener(this));
+        // Utils.registerEventListener(this.namelink,'mousedown', Utils.terminateEvent.bindAsEventListener(this));
         
         // setup the relationship button
         Utils.registerEventListener(this.relationshipbutton,
@@ -155,21 +106,11 @@ VisibleKernel.prototype.extend({
                                    'click',
                                    this.destroy.bind(this));
 
-        // setup the collapsed button
-        Utils.registerEventListener(this.expandbutton,
-                                   'click',
-                                   this.toggleCollapsed.bind(this));
-
         // TODO DRY - consolidate these into a big list of element/event pairs
         // Setup action terminators
-        Utils.registerEventListener(this.body,
-                                   'mousedown',
-                                   this.clearSelectionAndTerminate.bindAsEventListener(this));
+
         // dragging on any of the buttons shouldn't drag the object
         Utils.registerEventListener(this.relationshipbutton,
-                                   'mousedown',
-                                   Utils.terminateEvent.bindAsEventListener(this));
-        Utils.registerEventListener(this.expandbutton,
                                    'mousedown',
                                    Utils.terminateEvent.bindAsEventListener(this));
         Utils.registerEventListener(this.removebutton,
@@ -178,9 +119,6 @@ VisibleKernel.prototype.extend({
 
         // doubleclicking on any of the buttons shouldn't do anything
         Utils.registerEventListener(this.relationshipbutton,
-                                   'dblclick',
-                                   Utils.terminateEvent.bindAsEventListener(this));
-        Utils.registerEventListener(this.expandbutton,
                                    'dblclick',
                                    Utils.terminateEvent.bindAsEventListener(this));
         Utils.registerEventListener(this.removebutton,
@@ -194,12 +132,6 @@ VisibleKernel.prototype.extend({
         dndMgr.updateSelection(this,false);
         this.namefield.focus();
         Utils.terminateEvent(e)
-    },
-
-    // make this kernel into the current view (ie, switch the url to this kernel)
-    makeView: function(e){
-        window.location = '/kernel/view/'+this.kernel().id();
-        Utils.terminateEvent(e);
     },
 
     // starts the process of creating a relationship
@@ -216,8 +148,8 @@ VisibleKernel.prototype.extend({
     // performs internal visual layout of the html elements for this kernel
     layout: function(){
         this.layoutResize();
-//        this.layoutCorner();
-        this.layoutNamefield();
+    //    this.layoutCorner();
+    //    this.layoutNamefield();
     },
 
     // causes the resize corner to relayout
@@ -232,16 +164,6 @@ VisibleKernel.prototype.extend({
     layoutResize: function() {
     },
 
-    // Size the namefield appropriate
-    layoutNamefield: function() {
-        var width = KernelObject.prototype.layoutNamefield.call(this);
-        if(this.collapsed()){
-            this.setFixedWidth(true,width);
-        } else {
-            this.setFixedWidth(false,width);
-        }
-    },
-
     // Toggles whether the kernel is fixed width or not
     // Accepts:
     //   fixed - a boolean indicating whether the kernel should be fixed width
@@ -254,51 +176,7 @@ VisibleKernel.prototype.extend({
             this.htmlElement.style.maxWidth = '';
         }
         this.htmlElement.style.minWidth = width+'px';
-    },
-
-    // Toggles whether the kernel is collapsed or not
-    toggleCollapsed: function() {
-        if(this.expandbutton.value == '-'){
-            this.expandbutton.value = '+';
-        } else {
-            this.expandbutton.value = '-';
-        }
-        if(this.collapsed()){
-            this.collapsed(false);
-        } else {
-            this.collapsed(true);
-        }
-        this.update();
-    },
-
-    // Just sets the internal collapsed value but don't change the display
-    setCollapsed: function(collapsed) {
-        return this.superclass.collapsed.call(this, collapsed);
-    },
-
-    // Set whether the kernel is collapsed
-    collapsed: function(collapsed) {
-        if(collapsed == undefined) {
-            // skip it
-            var results = this.superclass.collapsed.call(this);
-            return results;
-        } if(collapsed){
-            var results = this.superclass.collapsed.call(this, 1);
-            if(this.htmlElement){
-                this.htmlElement.className += ' collapsed';
-                this.setFixedWidth(true,this.getNameFieldWidth());
-            }
-            this.notifyEndChangeListeners();
-            return results;
-        } else {
-            var results = this.superclass.collapsed.call(this, 0);
-            if(this.htmlElement){
-                this.htmlElement.className = this.htmlElement.className.replace(/ collapsed|collapsed /, '');
-                this.setFixedWidth(false,this.getNameFieldWidth());
-            }
-            this.notifyEndChangeListeners();
-            return results;
-        }
+        window.status = "setFixedWidth set minWidth to "+width;
     },
 
     // Just sets the internal x coordinate but don't change the display
@@ -558,11 +436,6 @@ VisibleKernel.prototype.extend({
         this.x((pos.x-parentPos.x)*100/parentElement.clientWidth);
         this.y((pos.y-parentPos.y)*100/parentElement.clientHeight);
         this.setWidth(width*100/parentElement.clientWidth);
-        if(!this.collapsed()){
-            // don't set the height if we're collapsed, cause it'll wipe
-            // out the currently saved height
-            this.setHeight(height*100/parentElement.clientHeight);
-        }
 
         // move the object to the frontmost layer
         dndMgr.moveToFront(this.htmlElement);
@@ -573,6 +446,15 @@ VisibleKernel.prototype.extend({
         // itself, since we don't really need it right now
         this.container_object(vkernel.kernel_id());
         this.update();
+    },
+    
+    contentChanged: function (e) {
+        var text = this.body.value;
+        if(text != this.content()) {
+            alert("note " + this.id() + " contents changed to: " + text);
+            this.content(text);
+            this.update();
+        }
     },
 
     // Returns whether or not this kernel is currently selected
@@ -654,91 +536,3 @@ VisibleKernel.prototype.extend({
         this.notifyEndChangeListeners();
     }
 });
-
-// This is totally a hack, but it more or less works.  The idea is that we think of the corner image as it's own separate draggable object.  However, the duringDrag event that fires while it is being dragged resizes the associate kernel appropriately. When the drag finishes, the size of the kernel is written out.
-
-var KernelCornerDraggable = Class.create();
-KernelCornerDraggable.prototype = (new Draggable()).extend( {
-    initialize: function( htmlElement, vkernel ) {
-        this.type        = 'KernelCorner';
-        this.htmlElement = htmlElement;
-        this.vkernel        = vkernel;
-    },
- 
-    startDrag: function() {
-       this.vkernel.notifyStartChangeListeners();
-    },
- 
-    cancelDrag: function() {
-       this.sizeFromCorner(); // XXX 12/19 just turned this back on - could be an issue
-       this.vkernel.notifyEndChangeListeners();
-    },
-
-    endDrag: function() {
-       this.vkernel.notifyEndChangeListeners();
-       this.vkernel.layoutCorner();
-       this.vkernel.update();
-    },
- 
-    duringDrag: function() {
-        this.sizeFromCorner();
-    },
-
-    // size the associated kernel based on the position of the corner
-    sizeFromCorner: function(){
-        var cornerWidth = this.htmlElement.clientWidth;
-        var cornerHeight = this.htmlElement.clientHeight;
-        var w = Number(chopPx(this.htmlElement.style.left)) + cornerWidth;
-        var h = Number(chopPx(this.htmlElement.style.top)) + cornerHeight;
-        //if(!this.vkernel.collapsed()){
-        this.vkernel.setHeight(h*100/this.vkernel.htmlElement.parentNode.clientHeight);
-        //}
-        this.vkernel.setWidth(w*100/this.vkernel.htmlElement.parentNode.clientWidth);
-        this.vkernel.layoutResize();
-    },
- 
-    select: function() {
-    }
- 
-} );
-
-var CustomDropzone = Class.create();
-
-CustomDropzone.prototype = (new Dropzone()).extend( {
-
-   initialize: function( htmlElement, vkernel ) {
-        this.type        = 'Kernel';
-        this.htmlElement = htmlElement;
-        this.vkernel        = vkernel;
-   },
-
-   accept: function(draggableObjects) {
-       for(var i=0;i<draggableObjects.length;i++){
-           if(draggableObjects[i].type != 'Kernel'){
-               continue;
-           }
-           draggableObjects[i].reparent(this.vkernel);
-       }
-   },
-
-   // XXX showHover and hideHover are all broken, because rico dnd doesn't understand layers
-   showHover: function() {
-//        this.htmlElement.className += ' activated';
-   },
-
-   hideHover: function() {
-//        this.htmlElement.className = this.htmlElement.className.replace(/activated/, '');
-//       alert("hid hover: "+this.htmlElement.className);
-   },
-
-   activate: function() {
-   },
-
-   deactivate: function() {
-   }
-});
-
-// chops any 'px' from the end of the string
-function chopPx (str) {
-    return str.replace(/[a-z]+/i, '');
-}

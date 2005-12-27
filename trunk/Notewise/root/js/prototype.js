@@ -30,6 +30,7 @@ Object.extend = function(destination, source) {
   for (property in source) {
     destination[property] = source[property];
   }
+    
   return destination;
 }
 

@@ -19,4 +19,7 @@
         [% FOR vkernel = vkernel.contained_kernel.contained_objects %]
             [%INCLUDE 'Kernel/kernel-js.tt' i=j%]
         [% END %]
+        [% FOR note = vkernel.contained_kernel.notes %]
+            [%INCLUDE 'Kernel/note-js.tt' %]
+        [% END %]
     [% END %]

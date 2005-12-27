@@ -49,8 +49,8 @@ sub to_xml_hash {
         lastmodified => $self->lastModified->strftime($self->strf_format),
         x => $self->x,
         y => $self->y,
-        w => $self->w,
-        h => $self->h,
+        width => $self->width,
+        height => $self->height,
     };
 }
 

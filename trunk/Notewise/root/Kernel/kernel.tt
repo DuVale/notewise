@@ -23,6 +23,9 @@
             [% FOR vkernel = vkernel.contained_kernel.contained_objects %]
                 [%INCLUDE 'Kernel/kernel.tt' i=j%]
             [% END %]
+            [% FOR note = vkernel.contained_kernel.notes %]
+                [%INCLUDE 'Kernel/note.tt' %]
+            [% END %]
         [% END %]
     </div>
     <div class="corner" style="right: 0px; bottom: 0px;">

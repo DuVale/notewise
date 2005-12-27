@@ -140,6 +140,7 @@ sub view : Local {
     }
     $c->stash->{kernel} = Notewise::M::CDBI::Kernel->retrieve($id);
     $c->stash->{visible_kernels} = [Notewise::M::CDBI::ContainedObject->search({container_object=>$id})];
+    $c->stash->{notes} = [Notewise::M::CDBI::Note->search({container_object=>$id})];
     $c->stash->{template} = 'Kernel/view.tt';
 }
 
