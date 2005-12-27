@@ -126,7 +126,6 @@ LayerManager.prototype = {
             return null;
         }
         if(layer !== undefined){
-            window.status="assign layer index "+layer;
             return element.style.zIndex=layer;
         } else {
             return element.style.zIndex || this.defaultIndex;
