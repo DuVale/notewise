@@ -192,6 +192,7 @@ JSDBI.prototype = {
 // means they can't be called on instantiated objects
 
 // TODO write docs
+JSDBI.prototype.__base_url = '';
 JSDBI.base_url = function (url) {
     if(url){
         return this.prototype.__base_url = url;
@@ -321,7 +322,6 @@ JSDBI.retrieve = function (id) {
                                      asynchronous: false } );
 
     if(!request.transport.responseXML){
-        debugger;
         alert("Got bogus xml response to retrieve: "+request.transport.responseText);
     }
     object.__populate(request.transport.responseXML);
@@ -336,12 +336,12 @@ JSDBI.insert = function (values) {
         object[key](value);
     }
     var params = object.__getParams();
+//    debugger;
     var request = new Ajax.Request(this.url(),
                                         { method: 'put',
                                           parameters: params,
                                           asynchronous: false} );
     if(!request.transport.responseXML){
-        debugger;
         alert("Got bogus xml response to insert: "+request.transport.responseText);
     }
     object.__populate(request.transport.responseXML);
