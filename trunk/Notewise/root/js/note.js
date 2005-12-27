@@ -506,6 +506,8 @@ Note.prototype.extend({
         // TODO need to make sure at the end of the drag, the element ends up back down inside a kernel body
         delete this.oldParentNode;
         this.notifyEndChangeListeners();
+        
+        this.update();
     },
  
     duringDrag: function() {
