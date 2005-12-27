@@ -328,15 +328,16 @@ DragAndDrop.prototype.extend({
    // turns off and on which drop zones currently have hover indicators on
    _updateDropZonesHover: function(e) {
       var n = this.dropZones.length;
-      for ( var i = 0 ; i < n ; i++ ) {
-         if ( ! this._mousePointInDropZone( e, this.dropZones[i] ) )
-            this.dropZones[i].hideHover();
-      }
+
+      var currentDropZone = this._getCurrentDropZone(e);
 
       for ( var i = 0 ; i < n ; i++ ) {
-         if ( this._mousePointInDropZone( e, this.dropZones[i] ) ) {
+         if ( ! this.dropZones[i] != currentDropZone )
+            this.dropZones[i].hideHover();
+
+         if ( ! this.dropZones[i] == currentDropZone ){
             if ( this.dropZones[i].canAccept(this.currentDragObjects) )
-               this.dropZones[i].showHover();
+                this.dropZones[i].showHover();
          }
       }
    },
@@ -412,8 +413,11 @@ DragAndDrop.prototype.extend({
    _placeDraggableInDropZone: function(e) {
       var foundDropZone = false;
       var n = this.dropZones.length;
+
+      var currentDropZone = this._getCurrentDropZone(e);
+
       for ( var i = 0 ; i < n ; i++ ) {
-         if ( this._mousePointInDropZone( e, this.dropZones[i] ) ) {
+         if ( this.dropZones[i] == currentDropZone ) {
             if ( this.dropZones[i].canAccept(this.currentDragObjects) ) {
                this.dropZones[i].accept(this.currentDragObjects);
                foundDropZone = true;
@@ -427,6 +431,34 @@ DragAndDrop.prototype.extend({
       }
 
       return foundDropZone;
+   },
+
+   // gets the drop zone that the mouse is currently inside
+   _getCurrentDropZone: function(e){
+      var currentDropZone = null;
+      var n = this.dropZones.length;
+      for ( var i = 0 ; i < n ; i++ ) {
+         var dropZone = this.dropZones[i];
+         if ( this._mousePointInDropZone( e, this.dropZones[i] ) ) {
+            if(currentDropZone == null){
+               currentDropZone=dropZone;
+               continue;
+            }
+            if(Utils.hasAncestor(dropZone.htmlElement,
+                                 currentDropZone.htmlElement)){
+               currentDropZone=dropZone;
+               continue;
+            }
+            if(currentDropZone.htmlElement.parentNode ==
+               dropZone.htmlElement.parentNode
+               && dropZone.htmlElement.zIndex >
+                  currentDropZone.htmlElement.zIndex){
+               currentDropZone=dropZone;
+               continue;
+            }
+         }
+      }
+      return currentDropZone;
    },
 
    // call cancelDrag on each of the draggables
