@@ -70,6 +70,7 @@ var JSDBI = Class.create();
 JSDBI.Version = '0.2';
 JSDBI.prototype = {
     initialize: function () {
+        //this.__fields = new Array();
         if(this.fields() && this.fields().length > 0){
             // only do this if the class has been properly initialized
             this.__internalUrl = this.url();
@@ -108,6 +109,7 @@ JSDBI.prototype = {
         if(!this.__updated){
             return;
         }
+        debugger;
         var params = this.__getParams();
         var request = new Ajax.Request(this.internalUrl(), { method: 'post',
                                                      parameters: params,
@@ -212,9 +214,9 @@ JSDBI.url = function (url) {
             var chunks = url.split('/');
             this.elementTag(chunks[chunks.length-1]);
         }
-        return this.base_url() + (this.prototype.__url = url);
+        return JSDBI.base_url() + (this.prototype.__url = url);
     } else {
-        return this.base_url() + this.prototype.__url;
+        return JSDBI.base_url() + this.prototype.__url;
     }
 };
 
@@ -255,7 +257,11 @@ JSDBI.fields = function (fields) {
         // create all the new accessors
         for(var i=0; i<fields.length;i++){
             var field = fields[i];
-            this.prototype[field] = this.__createAccessor(field);
+            
+            var obj = {}
+            obj[field] = this.__createAccessor(field);
+            this.inherit(obj);
+            //this.prototype[field] = this.__createAccessor(field);
         }
 
         // set the list of accessors
@@ -336,7 +342,7 @@ JSDBI.insert = function (values) {
         object[key](value);
     }
     var params = object.__getParams();
-//    debugger;
+    debugger;
     var request = new Ajax.Request(this.url(),
                                         { method: 'put',
                                           parameters: params,
@@ -414,3 +420,12 @@ JSDBI.has_many = function (field, className, key, retrieveUrl) {
     };
 };
 
+// TODO - document this up
+Object.prototype.inherit = function (source) {
+    if(this.superclass == undefined) {
+         this.superclass = {};
+         this.prototype.superclass = this.superclass;
+    }
+    this.superclass.extend(source);
+    this.prototype.extend(source);
+};

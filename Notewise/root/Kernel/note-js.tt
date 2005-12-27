@@ -1,0 +1,15 @@
+[% id = note.id %]
+[% content = note.content.replace('\n', '\\n'); %]
+[% content = content.replace('"', '\"'); %]
+<script>
+    var noteDiv = document.getElementById('note[%id%]');
+    var noteObj = new Note([%id%],[% note.container_object %],
+                        noteDiv,
+                        [%note.x%],
+                        [%note.y%],
+                        [%note.width%],
+                        [%note.height%],
+                        "[% content %]");
+                        
+    noteObj.layout();
+</script>

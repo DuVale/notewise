@@ -17,8 +17,8 @@ KernelObject.prototype = {
         dndMgr.registerDropZone( new CustomDropzone(this.body,this) );
 
         // setup the click handlers
-        Utils.registerEventListener(this.body,'dblclick', this.addNewKernel.bindAsEventListener(this));
-
+        Utils.registerEventListener(this.body,'dblclick', this.addNewElement.bindAsEventListener(this));
+        
         // setup the namefield actions
         Utils.registerEventListener(this.namefield,'blur', this.updateName.bindAsEventListener(this));
         Utils.registerEventListener(this.namefield,'keyup', this.layoutNamefield.bind(this));
@@ -134,6 +134,46 @@ KernelObject.prototype = {
            e.returnValue = false;
     },
 
+    addNewElement: function (e) {
+        if (!e) var e = window.event
+        if(e.shiftKey) {
+            this.addNewNote(e);
+        } else {
+            this.addNewKernel(e);
+        }
+    },
+    
+    addNewNote: function (e) {
+        // get the event coords
+        var posx = 0;
+        var posy = 0;
+        
+        if (!e) var e = e.window.event;
+        if (e.pageX || e.pageY) {
+            posx = e.pageX;
+            posy = e.pageY;
+        } else if (e.clientX || e.clientY) {
+            posx = e.clientX + document.body.scrollLeft;
+            posy = e.clientY + document.body.scrollTop; 
+        }
+        
+        var parentPos = Utils.toViewportPosition(this.body);
+        
+        var x = (posx - parentPos.x) * 100 / this.body.clientWidth;
+        var y = (posy - parentPos.y) * 100 / this.body.clientHeight;
+        var dummyDiv = document.createElement('div');
+        dummyDiv.className = 'dummyDiv';
+        dummyDiv.style.left = x + '%';
+        dummyDiv.style.top = y + '%';
+        dummyDiv.style.width = '30%';
+        dummyDiv.style.height = '34px'; // XXX I still hate this :P
+        this.body.appendChild(dummyDiv);
+        
+        // give the brower some time to paint the dummy div
+        window.setTimeout(this.createNote.bind(this), 5, x, y, dummyDiv);
+        Utils.terminateEvent(e);
+    },
+
     // Adds a new kernel to the kernel body for the mouse event given (currently called from a double click)
     addNewKernel: function (e){
         // get the mouse event coordinates
@@ -175,10 +215,24 @@ KernelObject.prototype = {
                                             width: 30,
                                             height: 30,
                                             collapsed: 1});
+        alert(vkernel.type);
         // XXX make sure that this is the right order - whatever order doesn't cause a blink is fine
         this.body.removeChild(dummyDiv);
         vkernel.realize(this.body);
         dndMgr.updateSelection(vkernel,false);
         vkernel.namefield.focus();
     },
+    
+    createNote: function (x, y, dummyDiv) {
+        var note = Note.insert({container_object: this.kernel(),
+                                x: x,
+                                y: y,
+                                width: 30,
+                                height: 30,
+                                content: ""});
+        this.body.removeChild(dummyDiv);
+        note.realize(this.body);
+        dndMgr.updateSelection(note, false);
+        note.body.focus();
+    }
 };

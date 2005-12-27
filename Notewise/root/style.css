@@ -69,7 +69,7 @@ body, html {
     margin-left: auto;
     margin-right: auto;
     top: 10px;
-    height: ;
+    height: 2em;
     text-align: center;
     font-size: 2em;
 }
@@ -82,6 +82,27 @@ body, html {
     min-width: 99px;
     min-height: 100px;
 }
+
+.note {
+    border: 2px solid #00F;
+    position: absolute;
+    background: green;
+    z-index: 1;
+    min-width: 99px;
+    min-height: 100px;
+}
+
+.note .body {
+    background: white;
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    top: 1.5em;
+    bottom: 2px;
+    clear: both;
+}
+
+.note.selected { border: 2px solid #21bbff; }
 
 .vkernel.selected {
     border: 2px solid #21bbff;
@@ -112,6 +133,12 @@ body, html {
 .relationshipbutton {
     margin-left: 48%;
     top: -30px;
+}
+
+.note.selected > .expandbutton,
+.note.selected > .removebutton,
+.note.selected > .relationshipbutton {
+    display: block;
 }
 
 .vkernel.selected > .expandbutton,
@@ -266,7 +293,9 @@ body, html {
 .vkernel.collapsed .corner {
     display: none;
 }
-
+.note .corner {
+    right: 0; bottom: 0;
+}
 .corner {
     position: absolute;
     background: url('images/corner.gif');

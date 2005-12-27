@@ -67,6 +67,9 @@
         [% FOR vkernel = visible_kernels %]
             [%INCLUDE 'Kernel/kernel.tt' i=0 %]
         [%END%]
+        [% FOR note = notes %]
+            [%INCLUDE 'Kernel/note.tt' i=0 %]
+        [%END%]
     </div>
     <script type="text/javascript" src="[%base%]js/MochiKit.js"></script>
     <script type="text/javascript" src="[%base%]js/wz_jsgraphics.js"></script>
@@ -81,6 +84,7 @@
     <script type="text/javascript" src="[%base%]js/viewkernel.js"></script>
     <script type="text/javascript" src="[%base%]js/kernel.js"></script>
     <script type="text/javascript" src="[%base%]js/visiblekernel.js"></script>
+    <script type="text/javascript" src="[%base%]js/note.js"></script>
     <script type="text/javascript" src="[%base%]js/controls.js"></script>
     <script type="text/javascript" src="[%base%]js/effects.js"></script>
     [%#
@@ -97,6 +101,10 @@
     [% FOR vkernel = visible_kernels %]
         [% i = 0 %]
         [%INCLUDE 'Kernel/kernel-js.tt'%]
+    [%END%]
+    [% FOR note = notes %]
+        [% i = 0 %]
+        [%INCLUDE 'Kernel/note-js.tt'%]
     [%END%]
     <script>
 
