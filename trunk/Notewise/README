@@ -1,3 +1,40 @@
-Copy config-sample.yml to config.yml and edit as appropriate
+To setup a notewise development environment:
 
-Run script/popweb_server.pl to test the application.
+Install the following perl modules:
+
+    Bundle::Catalyst
+    Class::DBI
+    Class::DBI::mysql
+    YAML
+    DateTime
+    DateTime::Format::DateParse
+    DateTime::Format::MySQL
+    Test::XML
+    Test::WWW::Mechanize::Catalyst
+    Data::Dumper
+    Test::More
+    XML::Simple
+    Catalyst::View::REST::XML
+
+    You can install perl modules by running:
+
+    sudo perl -MCPAN -eshell
+    > install Module::Name
+    
+Create a new mysql database:
+
+    mysql -uroot -p -e 'create database notewise'
+
+Import the database schema:
+
+    mysql -uroot -p notewise < createTablesMySql.sql
+
+Create a test user and starting kernel:
+    mysql -uroot -p notewise
+    > insert into user (id,name,email,password) values (1,'Your Name','youremail@notewise.com','password');
+    > insert into object_id values (1,1,'kernel');
+    > insert into kernel (id, name) values (1,'start');
+
+Copy config-sample.yml to config.yml and edit as appropriate.
+
+Run script/notewise_server.pl to test the application.  The default port number is 3000.  To change the port number, use 'script/notewise_server.pl -p 3005'.
