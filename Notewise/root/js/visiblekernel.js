@@ -714,7 +714,7 @@ CustomDropzone.prototype = (new Dropzone()).extend( {
 
    accept: function(draggableObjects) {
        for(var i=0;i<draggableObjects.length;i++){
-           if(draggableObjects[i].type != 'Kernel'){
+           if(draggableObjects[i].type != 'Kernel' && draggableObjects[i].type != 'Note'){
                continue;
            }
            draggableObjects[i].reparent(this.vkernel);
