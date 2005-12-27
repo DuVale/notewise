@@ -130,9 +130,9 @@ JSDBI.prototype = {
         var url;
         if(typeof this.id() == 'number'
            || typeof this.id() == 'string'){
-            url = this.__url+'/'+this.id();
+            url = JSDBI.base_url()+this.__url+'/'+this.id();
         } else if (typeof this.id() == 'object'){
-            url = this.__url+'/'+this.id().join('/');
+            url = JSDBI.base_url()+this.__url+'/'+this.id().join('/');
         }
         return url;
     },

@@ -130,9 +130,9 @@ JSDBI.prototype = {
         var url;
         if(typeof this.id() == 'number'
            || typeof this.id() == 'string'){
-            url = this.__url+'/'+this.id();
+            url = JSDBI.base_url()+this.__url+'/'+this.id();
         } else if (typeof this.id() == 'object'){
-            url = this.__url+'/'+this.id().join('/');
+            url = JSDBI.base_url()+this.__url+'/'+this.id().join('/');
         }
         return url;
     },
@@ -192,6 +192,7 @@ JSDBI.prototype = {
 // means they can't be called on instantiated objects
 
 // TODO write docs
+JSDBI.prototype.__base_url = '';
 JSDBI.base_url = function (url) {
     if(url){
         return this.prototype.__base_url = url;
@@ -321,7 +322,6 @@ JSDBI.retrieve = function (id) {
                                      asynchronous: false } );
 
     if(!request.transport.responseXML){
-        debugger;
         alert("Got bogus xml response to retrieve: "+request.transport.responseText);
     }
     object.__populate(request.transport.responseXML);
@@ -336,12 +336,12 @@ JSDBI.insert = function (values) {
         object[key](value);
     }
     var params = object.__getParams();
+//    debugger;
     var request = new Ajax.Request(this.url(),
                                         { method: 'put',
                                           parameters: params,
                                           asynchronous: false} );
     if(!request.transport.responseXML){
-        debugger;
         alert("Got bogus xml response to insert: "+request.transport.responseText);
     }
     object.__populate(request.transport.responseXML);
