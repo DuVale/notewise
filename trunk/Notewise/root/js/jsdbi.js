@@ -109,7 +109,6 @@ JSDBI.prototype = {
         if(!this.__updated){
             return;
         }
-        debugger;
         var params = this.__getParams();
         var request = new Ajax.Request(this.internalUrl(), { method: 'post',
                                                      parameters: params,
@@ -342,7 +341,6 @@ JSDBI.insert = function (values) {
         object[key](value);
     }
     var params = object.__getParams();
-    debugger;
     var request = new Ajax.Request(this.url(),
                                         { method: 'put',
                                           parameters: params,
