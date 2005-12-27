@@ -1,7 +1,6 @@
 // This javascript module presents a simple CRUD interface for REST web services.
 // Requires Prototype.js 1.3.1 - http://prototype.conio.net/
 //
-//
 // Use it like the following:
 //
 //      // Basic class setup
@@ -192,6 +191,15 @@ JSDBI.prototype = {
 // These are class methods, and thus, aren't included in the prototype.  This
 // means they can't be called on instantiated objects
 
+// TODO write docs
+JSDBI.base_url = function (url) {
+    if(url){
+        return this.prototype.__base_url = url;
+    } else {
+        return this.prototype.__base_url;
+    }
+};
+
 // gets/sets the base REST url for this class.  All actions are performed
 // against this url.  If the object is specific to an already existing object,
 // then the object primary key field is appended to the url, separated by
@@ -203,9 +211,9 @@ JSDBI.url = function (url) {
             var chunks = url.split('/');
             this.elementTag(chunks[chunks.length-1]);
         }
-        return this.prototype.__url = url;
+        return this.base_url() + (this.prototype.__url = url);
     } else {
-        return this.prototype.__url;
+        return this.base_url() + this.prototype.__url;
     }
 };
 
