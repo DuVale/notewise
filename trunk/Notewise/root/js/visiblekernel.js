@@ -250,7 +250,6 @@ VisibleKernel.prototype.extend( {
             this.htmlElement.style.maxWidth = '';
         }
         this.htmlElement.style.minWidth = width+'px';
-        window.status = "setFixedWidth set minWidth to "+width;
     },
 
     // Toggles whether the kernel is collapsed or not

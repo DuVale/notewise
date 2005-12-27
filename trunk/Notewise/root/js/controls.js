@@ -140,7 +140,6 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
       if(this.update.firstChild && this.update.firstChild.childNodes) {
         this.entry_count = 
           this.update.firstChild.childNodes.length;
-        window.status="entry_count: "+this.entry_count;
         for (var i = 0; i < this.entry_count; i++) {
           entry = this.get_entry(i);
           entry.autocompleteIndex = i;
