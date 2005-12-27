@@ -40,6 +40,9 @@ Utils = {
 
     // Tests to see if this element has the given element as a parent
     hasAncestor: function(childElement, parentElement) {
+        if(childElement == null || parentElement == null){
+            return false;
+        }
         var element = childElement;
         while(element != document){
             if(element == parentElement){
