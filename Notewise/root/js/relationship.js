@@ -397,5 +397,5 @@ Relationship.prototype = (new JSDBI()).extend( {
     // Returns whether or not this relationship is currently selected
     isSelected: function () {
         return this.htmlElement.className.indexOf('selected') != -1;
-    },
+    }
 });

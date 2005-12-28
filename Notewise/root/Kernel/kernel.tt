@@ -1,6 +1,6 @@
 [% i = i + 1%]
 [% id = vkernel.container_kernel.id _ '/' _ vkernel.contained_kernel.id %]
-<div id="vkernel[%id%]" class="vkernel [%IF vkernel.collapsed%]collapsed[%END%]"
+<div id="vkernel[%id%]" class="vkernel [%IF vkernel.collapsed%]collapsed[%END%] notselected"
          style="left: [% vkernel.x %]%; top: [% vkernel.y %]%;
                 width: [% vkernel.width %]%;
                 height: [% vkernel.height %]%;">

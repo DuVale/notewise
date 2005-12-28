@@ -285,7 +285,7 @@ VisibleKernel.prototype.extend({
         } if(collapsed){
             var results = this.superclass.collapsed.call(this, 1);
             if(this.htmlElement){
-                this.htmlElement.className += ' collapsed';
+                Element.addClassName(this.htmlElement,'collapsed');
                 this.setFixedWidth(true,this.getNameFieldWidth());
             }
             this.notifyEndChangeListeners();
@@ -293,7 +293,7 @@ VisibleKernel.prototype.extend({
         } else {
             var results = this.superclass.collapsed.call(this, 0);
             if(this.htmlElement){
-                this.htmlElement.className = this.htmlElement.className.replace(/ collapsed|collapsed /, '');
+                Element.removeClassName(this.htmlElement,'collapsed');
                 this.setFixedWidth(false,this.getNameFieldWidth());
             }
             this.notifyEndChangeListeners();
@@ -577,7 +577,7 @@ VisibleKernel.prototype.extend({
 
     // Returns whether or not this kernel is currently selected
     isSelected: function () {
-        return this.htmlElement.className.indexOf('selected') != -1;
+        return Element.hasClassName(this.htmlElement,'selected');
     },
 
     // Rico draggable stuff
@@ -585,7 +585,8 @@ VisibleKernel.prototype.extend({
     // Select this kernel
     select: function () {
         if( !this.isSelected() ){
-            this.htmlElement.className += ' selected';
+            Element.removeClassName(this.htmlElement,'notselected');
+            Element.addClassName(this.htmlElement,'selected');
         }
         dndMgr.moveToFront(this.htmlElement);
     },
@@ -593,7 +594,8 @@ VisibleKernel.prototype.extend({
     // Mark this kernel as not selected
     deselect: function () {
         if( this.isSelected()){
-            this.htmlElement.className = this.htmlElement.className.replace(/ selected/, '');
+            Element.removeClassName(this.htmlElement,'selected');
+            Element.addClassName(this.htmlElement,'notselected');
         }
     },
 
@@ -723,11 +725,11 @@ CustomDropzone.prototype = (new Dropzone()).extend( {
 
    // XXX showHover and hideHover are all broken, because rico dnd doesn't understand layers
    showHover: function() {
-//        this.htmlElement.className += ' activated';
+//        Element.addClassName(this.htmlElement,'activated');
    },
 
    hideHover: function() {
-//        this.htmlElement.className = this.htmlElement.className.replace(/activated/, '');
+//        Element.removeClassName(this.htmlElement,'activated');
 //       alert("hid hover: "+this.htmlElement.className);
    },
 
