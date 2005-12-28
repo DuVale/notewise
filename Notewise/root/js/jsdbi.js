@@ -259,7 +259,7 @@ JSDBI.fields = function (fields) {
             
             var obj = {}
             obj[field] = this.__createAccessor(field);
-            this.inherit(obj);
+            JSDBI.inherit(this,obj);
             //this.prototype[field] = this.__createAccessor(field);
         }
 
@@ -327,7 +327,7 @@ JSDBI.retrieve = function (id) {
                                      asynchronous: false } );
 
     if(!request.transport.responseXML){
-        alert("Got bogus xml response to retrieve: "+request.transport.responseText);
+//        alert("Got bogus xml response to retrieve: "+request.transport.responseText);
     }
     object.__populate(request.transport.responseXML);
     return object;
@@ -346,7 +346,7 @@ JSDBI.insert = function (values) {
                                           parameters: params,
                                           asynchronous: false} );
     if(!request.transport.responseXML){
-        alert("Got bogus xml response to insert: "+request.transport.responseText);
+//        alert("Got bogus xml response to insert: "+request.transport.responseText);
     }
     object.__populate(request.transport.responseXML);
     return object;
@@ -419,11 +419,11 @@ JSDBI.has_many = function (field, className, key, retrieveUrl) {
 };
 
 // TODO - document this up
-Object.prototype.inherit = function (source) {
-    if(this.superclass == undefined) {
-         this.superclass = {};
-         this.prototype.superclass = this.superclass;
+JSDBI.inherit = function (destination,source) {
+    if(destination.superclass == undefined) {
+         destination.superclass = {};
+         destination.prototype.superclass = destination.superclass;
     }
-    this.superclass.extend(source);
-    this.prototype.extend(source);
+    destination.superclass.extend(source);
+    destination.prototype.extend(source);
 };

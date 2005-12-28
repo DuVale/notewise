@@ -5,9 +5,9 @@ VisibleKernel.extend(JSDBI);
 
 // multiple inheritance from both JSDBI and Draggable
 VisibleKernel.prototype = {};
-VisibleKernel.inherit(new JSDBI());
-VisibleKernel.inherit(new Draggable());
-VisibleKernel.inherit(new KernelObject());
+JSDBI.inherit(VisibleKernel,new JSDBI());
+JSDBI.inherit(VisibleKernel,new Draggable());
+JSDBI.inherit(VisibleKernel,new KernelObject());
 
 // Setup the JSDBI data access
 VisibleKernel.fields(['container_object',

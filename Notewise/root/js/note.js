@@ -1,8 +1,8 @@
 var Note = Class.create();
 Note.extend(JSDBI);
 Note.prototype = {};
-Note.inherit(new JSDBI());
-Note.inherit(new Draggable());
+JSDBI.inherit(Note,new JSDBI());
+JSDBI.inherit(Note,new Draggable());
 
 // Setup the JSDBI data access
 Note.fields(['id', 'container_object', 'content', 'height', 'width', 'x', 'y']);

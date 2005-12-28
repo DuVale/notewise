@@ -114,7 +114,7 @@
         function clearSelection (e) {
             VisibleKernel.prototype.clearSelectionAndTerminate(e);
         }
-        view.htmlElement.addEventListener("mousedown", clearSelection, false);
+        Utils.registerEventListener(view.htmlElement,"mousedown",clearSelection);
 
         var vkernel1=vkernelCache['682/1597'];
         var vkernel2=vkernelCache['682/1596'];
