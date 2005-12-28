@@ -216,7 +216,9 @@ KernelObject.prototype = {
                                             height: 30,
                                             collapsed: 1});
         // XXX make sure that this is the right order - whatever order doesn't cause a blink is fine
-        this.body.removeChild(dummyDiv);
+        if(dummyDiv != undefined){
+            this.body.removeChild(dummyDiv);
+        }
         vkernel.realize(this.body);
         dndMgr.updateSelection(vkernel,false);
         vkernel.namefield.focus();

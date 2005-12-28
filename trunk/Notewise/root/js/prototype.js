@@ -233,13 +233,14 @@ Ajax.Request.prototype = (new Ajax.Base()).extend({
                            || this.options.method == 'put') ? body : null);
 
     } catch (e) {
+        debugger;
     }
   },
 
   setRequestHeaders: function() {
     var requestHeaders = 
       ['X-Requested-With', 'XMLHttpRequest',
-       'X-Prototype-Version', Prototype.version];
+       'X-Prototype-Version', Prototype.Version];
 
     if (this.options.method == 'post' ||
         this.options.method == 'put') {
