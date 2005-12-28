@@ -1,4 +1,6 @@
 package Notewise::TestUtils;
+use Notewise;
+use Notewise::M::CDBI::User;
 
 @EXPORT = qw(new_request login_user);
 

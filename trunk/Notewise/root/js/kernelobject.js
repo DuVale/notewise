@@ -69,7 +69,7 @@ KernelObject.prototype = {
         // TODO make 20 into a constant - min namefield width
         return Math.max(this.getTextWidth(this.namefield.value,
                                           this.getStyle(this.namefield,
-                                                        'font-size'))*1.15+10,20);
+                                                        'fontSize'))*1.15+10,20);
     },
 
     // Gets the size of the given text, in the given font
@@ -215,7 +215,6 @@ KernelObject.prototype = {
                                             width: 30,
                                             height: 30,
                                             collapsed: 1});
-        alert(vkernel.type);
         // XXX make sure that this is the right order - whatever order doesn't cause a blink is fine
         this.body.removeChild(dummyDiv);
         vkernel.realize(this.body);
