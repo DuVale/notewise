@@ -2,6 +2,10 @@
 // and VisibleKernel.  It contains all the shared logic between these classes.
 
 var KernelObject = Class.create();
+
+// cache for memoizing getTextWidth
+KernelObject.__getTextWidthCache = {};
+
 KernelObject.prototype = {
     initialize: function(htmlElement){
         this.htmlElement = htmlElement;
@@ -79,7 +83,10 @@ KernelObject.prototype = {
         // be possible to set the text in the span (and set the font of the
         // span to the right size), and then check the size of the span.
 
-        // TODO this method should be tested for candidacy for memoization
+        if(KernelObject.__getTextWidthCache[size+":"+text] !== undefined ){
+            return KernelObject.__getTextWidthCache[size+":"+text];
+        }
+
         if(KernelObject.textSizingBox === undefined){
             KernelObject.textSizingBox = document.createElement('span');
             KernelObject.textSizingBox.innerHTML = 'a';
@@ -91,7 +98,9 @@ KernelObject.prototype = {
         }
         KernelObject.textSizingBox.style.fontSize = size;
         KernelObject.textSizingBox.firstChild.data = text;
-        return KernelObject.textSizingBox.offsetWidth;
+        var width = KernelObject.textSizingBox.offsetWidth;
+        KernelObject.__getTextWidthCache[size+":"+text] = width;
+        return width;
     },
 
     setup: function () {
