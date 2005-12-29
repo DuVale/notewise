@@ -76,7 +76,6 @@ body, html {
     position: absolute;
     background: blue;
     z-index: 1;
-    min-width: 99px;
     min-height: 100px;
 }
 
