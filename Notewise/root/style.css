@@ -266,15 +266,32 @@ body, html {
     background: white;
 }
 
-.vkernel.selected .namelink {
-    display: none;
-}
-
 .vkernel.notselected .namefield {
     display: none;
 }
 
+.vkernel.notselected .vkernel.selected .namefield {
+    display: block;
+    background: white;
+}
+
+.vkernel.selected .vkernel.notselected .namefield {
+    display: none;
+}
+
+.vkernel.selected .namelink {
+    display: none;
+}
+
 .vkernel.notselected .namelink {
+    display: block;
+}
+
+.vkernel.notselected .vkernel.selected .namelink {
+    display: none;
+}
+
+.vkernel.selected .vkernel.notselected .namelink {
     display: block;
 }
 
