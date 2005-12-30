@@ -269,12 +269,15 @@ body, html {
 .vkernel .body {
     background: white;
     position: absolute;
-    left: 2px;
-    right: 2px;
-    top: 1.5em;
-    bottom: 2px;
+    left: 2px; right: 2px;
+    top: 1.5em; bottom: 2px;
     clear: both;
     overflow: hidden;
+}
+
+* html .vkernel .body {
+    width: 99%;
+    height: 90%;
 }
 
 .vkernel .body.activated {
@@ -309,9 +312,12 @@ body, html {
 .note .corner {
     right: 0; bottom: 0;
 }
+
 .corner {
     position: absolute;
     background: url('images/corner.gif');
+    right: 0px;
+    bottom: 0px;
     width: 15px;
     height: 15px;
     cursor: se-resize;

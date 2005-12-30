@@ -8,6 +8,16 @@ ViewKernel.prototype.extend( {
     initialize: function(id, htmlElement) {
         this.__kernel_id = id;
         KernelObject.prototype.initialize.call(this,htmlElement);
+        window.onresize = this.layoutResize.bindAsEventListener(this);
+    },
+
+    layoutResize: function() {
+        this.resizeChildren();
+    },
+
+    // dummy method - this is used by resizeChildren.
+    collapsed: function() {
+        return false;
     },
 
     kernel: function() {

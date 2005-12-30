@@ -140,9 +140,11 @@ JSDBI.prototype = {
 
     // Takes in an xml element or document, and populates the fields for this object from it
     __populate: function(xml) {
-        var elements = xml.getElementsByTagName(this.__docTag);
-        elements = elements[0].getElementsByTagName(this.__elementTag);
-        xml = elements[0];
+        if(xml.nodeName != this.__elementTag){
+            var elements = xml.getElementsByTagName(this.__docTag);
+            elements = elements[0].getElementsByTagName(this.__elementTag);
+            xml = elements[0];
+        }
         for(var i=0;i<this.__fields.length;i++){
             var field = this.__fields[i];
             if(field == this.__contentField){
@@ -325,7 +327,7 @@ JSDBI.retrieve = function (id) {
                                      asynchronous: false } );
 
     if(!request.transport.responseXML){
-//        alert("Got bogus xml response to retrieve: "+request.transport.responseText);
+        alert("Got bogus xml response to retrieve: "+request.transport.responseText);
     }
     object.__populate(request.transport.responseXML);
     return object;
@@ -344,7 +346,7 @@ JSDBI.insert = function (values) {
                                           parameters: params,
                                           asynchronous: false} );
     if(!request.transport.responseXML){
-//        alert("Got bogus xml response to insert: "+request.transport.responseText);
+        alert("Got bogus xml response to insert: "+request.transport.responseText);
     }
     object.__populate(request.transport.responseXML);
     return object;
