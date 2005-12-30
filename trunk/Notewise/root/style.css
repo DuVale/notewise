@@ -154,6 +154,18 @@ body, html {
     display: none;
 }
 
+.vkernel.notselected .vkernel.selected .expandbutton,
+.vkernel.notselected .vkernel.selected .removebutton,
+.vkernel.notselected .vkernel.selected .relationshipbutton {
+    display: block;
+}
+
+.vkernel.selected .vkernel.notselected .expandbutton,
+.vkernel.selected .vkernel.notselected .removebutton,
+.vkernel.selected .vkernel.notselected .relationshipbutton {
+    display: none;
+}
+
 .relationship.selected .removebutton,
 .relationship.selected .hidebutton {
     display: block;
