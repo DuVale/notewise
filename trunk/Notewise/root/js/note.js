@@ -451,7 +451,6 @@ Note.prototype.extend({
     contentChanged: function (e) {
         var text = this.body.value;
         if(text != this.content()) {
-            alert("note " + this.id() + " contents changed to: " + text);
             this.content(text);
             this.update();
         }
