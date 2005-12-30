@@ -97,6 +97,9 @@ VisibleKernel.prototype.extend({
         this.setWidth(this.width());
         this.setHeight(this.height());
         this.layout();
+        
+        // clean out whitespace only child nodes, in the hopes of improving layoutResize speed
+        Element.cleanWhitespace(this.htmlElement);
     },
 
     // create html elements for the child objects
@@ -230,6 +233,11 @@ VisibleKernel.prototype.extend({
 
     // causes the internal elements to resize if necessary
     layoutResize: function() {
+        if(this.body != undefined){
+            this.body.style.width = (this.htmlElement.clientWidth - 4) + 'px';
+            this.body.style.height = (this.htmlElement.clientHeight - 2 - this.body.offsetTop) + 'px';
+        }
+        this.resizeChildren();
     },
 
     // Size the namefield appropriate
@@ -278,27 +286,28 @@ VisibleKernel.prototype.extend({
 
     // Set whether the kernel is collapsed
     collapsed: function(collapsed) {
+        var results;
         if(collapsed == undefined) {
             // skip it
-            var results = this.superclass.collapsed.call(this);
+            results = this.superclass.collapsed.call(this);
             return results;
-        } if(collapsed){
-            var results = this.superclass.collapsed.call(this, 1);
+        } else if(collapsed){
+            results = this.superclass.collapsed.call(this, 1);
             if(this.htmlElement){
                 Element.addClassName(this.htmlElement,'collapsed');
                 this.setFixedWidth(true,this.getNameFieldWidth());
             }
             this.notifyEndChangeListeners();
-            return results;
         } else {
-            var results = this.superclass.collapsed.call(this, 0);
+            results = this.superclass.collapsed.call(this, 0);
             if(this.htmlElement){
                 Element.removeClassName(this.htmlElement,'collapsed');
                 this.setFixedWidth(false,this.getNameFieldWidth());
             }
             this.notifyEndChangeListeners();
-            return results;
         }
+        this.layoutResize();
+        return results;
     },
 
     // Just sets the internal x coordinate but don't change the display
@@ -343,7 +352,6 @@ VisibleKernel.prototype.extend({
             if(this.htmlElement){
                 this.htmlElement.style.width = results+"%";
             }
-            this.layoutResize();
             this.layoutCorner();
         } else {
             results = this.width(this.checkWidth(width));
@@ -369,7 +377,6 @@ VisibleKernel.prototype.extend({
             if(this.htmlElement){
                 this.htmlElement.style.height = results+"%";
             }
-            this.layoutResize();
             this.layoutCorner();
         } else {
             results = this.height(this.checkHeight(height));
@@ -566,6 +573,9 @@ VisibleKernel.prototype.extend({
 
         // move the object to the frontmost layer
         dndMgr.moveToFront(this.htmlElement);
+
+        // relayout
+        this.layoutResize();
 
         // update the db
 

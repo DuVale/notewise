@@ -67,6 +67,22 @@ KernelObject.prototype = {
         return width;
     },
 
+    resizeChildren: function() {
+        // resize children
+        if(this.body != undefined
+           && ! this.collapsed()){
+            var children = this.body.childNodes;
+            for(var i=0; i<children.length; i++){
+                var child = children[i];
+                if(child.className != undefined
+                   && Element.hasClassName(child,'vkernel')
+                   && child.kernel != undefined){
+                    child.kernel.layoutResize();
+                }
+            }
+        }
+    },
+
     // returns the desired width of the name field.  Usually the width of the
     // text in the field, but bounded by the minimum width
     getNameFieldWidth: function(){
