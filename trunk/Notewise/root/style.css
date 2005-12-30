@@ -398,7 +398,7 @@ div.dummyDiv {
     margin: 3px;
 }
 
-#mysearchfield:focus {
+#mysearchfield.focus {
     background-color: #9ff; color: #333;
 }
 
