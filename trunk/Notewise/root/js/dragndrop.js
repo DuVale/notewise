@@ -183,7 +183,17 @@ DragAndDrop.prototype.extend({
          this.currentDragObjects[i].deselect();
       this.currentDragObjects = new Array();
       this.lastSelectedDraggable = null;
+   },
+
+   giveSearchBoxFocus: function() {
+      // this allows IE to work correctly.  If we call .focus() directly, we
+      // get the onfocus event, but no cursor.
+      setTimeout(this.__giveSearchBoxFocus.bind(this), 1);
+   },
+
+   __giveSearchBoxFocus: function() {
       document.getElementById('mysearchfield').focus();
+      document.getElementById('mysearchfield').select();
    },
 
    // returns true if there are currently any objects selected

@@ -146,9 +146,10 @@ KernelObject.prototype = {
 
     // Clear the selection (resetting focus to the search box) and terminate the event
     clearSelectionAndTerminate: function(e){
-        dndMgr.clearSelection();
         Utils.terminateEvent(e);
         this.preventDefault(e);
+        dndMgr.clearSelection();
+        dndMgr.giveSearchBoxFocus();
     },
 
     // prevents the default browser action for this event from occuring
