@@ -162,7 +162,7 @@ KernelObject.prototype = {
 
     addNewElement: function (e) {
         if (!e) var e = window.event
-        if(e.shiftKey) {
+        if(e.shiftKey || e.ctrlKey) {
             this.addNewNote(e);
         } else {
             this.addNewKernel(e);
