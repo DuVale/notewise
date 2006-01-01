@@ -94,7 +94,7 @@ KernelObject.prototype = {
         // TODO make 20 into a constant - min namefield width
         return Math.max(this.getTextWidth(this.namefield.value,
                                           this.getStyle(this.namefield,
-                                                        'fontSize'))*1.15+10,20);
+                                                        'font-size'))*1.15+10,20);
     },
 
     // Gets the size of the given text, in the given font
@@ -116,6 +116,7 @@ KernelObject.prototype = {
             body.appendChild(KernelObject.textSizingBox);
             KernelObject.textSizingBox.style.position = 'absolute';
             KernelObject.textSizingBox.style.left = '-2000px';
+            KernelObject.textSizingBox.style.bottom = '20px';
         }
         KernelObject.textSizingBox.style.fontSize = size;
         KernelObject.textSizingBox.firstChild.data = text;
