@@ -79,6 +79,11 @@ KernelObject.prototype = {
                    && child.kernel != undefined){
                     child.kernel.layoutResize();
                 }
+                if(child.className != undefined
+                   && Element.hasClassName(child,'relationship')
+                   && child.relationship != undefined){
+                    child.relationship.layoutResize();
+                }
             }
         }
     },
