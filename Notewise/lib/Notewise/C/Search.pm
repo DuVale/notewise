@@ -24,9 +24,9 @@ Catalyst component.
 
 =cut
 
-sub default : Private {
+sub search : Path {
     my ( $self, $c ) = @_;
-    $c->res->output('Congratulations, Notewise::C::Search is on Catalyst!');
+    $c->res->output('Extended search goes here');
 }
 
 sub ac : Global {
