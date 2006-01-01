@@ -98,8 +98,24 @@ sub related_kernels {
     my $self = shift;
     my @relationships1 = Notewise::M::CDBI::Relationship->search(part1 => $self->id);
     my @relationships2 = Notewise::M::CDBI::Relationship->search(part2 => $self->id);
-    my @related_kernels = ((map $_->part2->object, @relationships1),(map $_->part1->object, @relationships2));
-    return @related_kernels;
+    my @related_objects = ((map $_->part2->object, @relationships1),(map $_->part1->object, @relationships2));
+    @related_objects = grep {ref($_) =~ /::Kernel$/} @related_objects;
+    return @related_objects;
+}
+
+sub related_objects {
+    my $self = shift;
+    my @relationships1 = Notewise::M::CDBI::Relationship->search(part1 => $self->id);
+    my @relationships2 = Notewise::M::CDBI::Relationship->search(part2 => $self->id);
+    my @related_objects = ((map $_->part2->object, @relationships1),(map $_->part1->object, @relationships2));
+    return @related_objects;
+}
+
+sub relationships {
+    my $self = shift;
+    my @relationships1 = Notewise::M::CDBI::Relationship->search(part1 => $self->id);
+    my @relationships2 = Notewise::M::CDBI::Relationship->search(part2 => $self->id);
+    return (@relationships1,@relationships2);
 }
 
 sub notes {
@@ -111,6 +127,28 @@ sub notes {
 sub has_permission {
     my $self = shift;
     return $self->object_id->has_permission(@_);
+}
+
+# returns all the relationships that are visible on this kernel - all relationships for which both endpoints are on this kernel
+sub visible_relationships {
+    my $self = shift;
+    my @notes = $self->notes;
+    my @kernels = map $_->contained_kernel, $self->contained_objects;
+
+    # give us fast O(1) access to find out if an object is on this view,
+    # without hitting the db any more than is necessary
+    my %object_ids = map {$_->id => 1} (@notes,@kernels);
+    my %visible_relationships;
+
+    foreach my $object (@notes, @kernels){
+        foreach my $relationship ($object->relationships){
+            if($object_ids{$relationship->part1->id}
+               && $object_ids{$relationship->part2->id}){
+               $visible_relationships{$relationship} = $relationship;
+            }
+        }
+    }
+    return values %visible_relationships;
 }
 
 =head1 NAME
