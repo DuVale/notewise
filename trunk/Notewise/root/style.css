@@ -241,12 +241,16 @@ body, html {
     font-size: 1em;
 }
 
-.vkernel .namelink a {
+.vkernel a.namelink {
     color: white;
 }
 
-.vkernel .namelink a:hover {
+.vkernel a.namelink:hover {
     color: #21bbf4;
+}
+
+.vkernel a.namelink:active {
+    color: red;
 }
 
 .vkernel .namefield {
@@ -256,8 +260,8 @@ body, html {
     position: relative;
     margin-left: auto;
     margin-right: auto;
-    top: 0px;
-    height: 1.1em;
+    top: 1px;
+    height: 1.0em;
     text-align: center;
     font-size: 1em;
 }
