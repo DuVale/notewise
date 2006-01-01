@@ -1,5 +1,5 @@
 <ul>
-<li><a href="">new '[%c.req.params.s%]'</a></li>
+<li><a href="[%base%]kernel/add?name=[%c.req.params.s%]">new '[%c.req.params.s%]'</a></li>
 [%- FOR kernel = kernels -%]
     [%- PERL %]
         my $search = $stash->get('c')->req->params->{s};
@@ -12,5 +12,5 @@
     [% END -%]
     <li><a href="[%base%]kernel/view/[%kernel.id%]">[%prematch%]<b>[%match%]</b>[%postmatch%]</a></li>
 [%- END -%]
-<li><a href="">more results...</a></li>
+<li><a href="[%base%]search?s=[%c.req.params.s%]">more results...</a></li>
 </ul>

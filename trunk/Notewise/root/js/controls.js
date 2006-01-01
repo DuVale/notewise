@@ -54,7 +54,7 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
     this.options.onComplete   = this.onComplete.bind(this)
     this.options.frequency    = this.options.frequency || 0.4;
     this.options.min_chars    = this.options.min_chars || 1;
-    this.options.method       = 'post';
+    this.options.method       = 'get';
     
     this.options.onShow = this.options.onShow || 
       function(element, update){ 
@@ -65,10 +65,10 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
           update.style.top  = (offsets[1] + element.offsetHeight) + 'px';
           update.style.width = element.offsetWidth + 'px';
         }
-        new Effect.Appear(update,{duration:0.3});
+        new Effect.Appear(update,{duration:0.2});
       };
     this.options.onHide = this.options.onHide || 
-      function(element, update){ new Effect.Fade(update,{duration:0.3}) };
+      function(element, update){ new Effect.Fade(update,{duration:0.5}) };
     
     
     if(this.options.indicator)
@@ -151,7 +151,14 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
       
       this.stopIndicator();
       
-      this.index = 0;
+      if(this.entry_count == 2){
+          // if there were no actual search results, then "new..." should be
+          // the default selection
+          this.index = 0;
+      } else {
+          // The first actual search result should be selected
+          this.index = 1;
+      }
       this.render();
     }
   },
@@ -256,6 +263,8 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
     this.active = false;
     value = Element.collectTextNodesIgnoreClass(this.get_current_entry(), 'informal').unescapeHTML();
     this.element.value = value;
-    this.element.focus();
+//    debugger;
+    var link=this.get_current_entry().getElementsByTagName('a')[0];
+    window.location=link.href;
   }
 });
