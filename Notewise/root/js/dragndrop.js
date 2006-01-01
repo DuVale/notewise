@@ -263,7 +263,7 @@ DragAndDrop.prototype.extend({
       // object and only drags the other one.  This seems counter intuitive
 
       // add the draggable to the selection
-      this.updateSelection( draggableObject, e.ctrlKey );
+      this.updateSelection( draggableObject, e.ctrlKey || e.shiftKey );
 
       // clear the drop zones position cache...
       if ( this.hasSelection() )
