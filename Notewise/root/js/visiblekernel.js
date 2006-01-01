@@ -255,6 +255,8 @@ VisibleKernel.prototype.extend({
     //   fixed - a boolean indicating whether the kernel should be fixed width
     //   width - the number of pixels for the min width (and max width, in the case it is fixed width)
     setFixedWidth: function(fixed, width){
+        var oldWidth = this.htmlElement.clientWidth;
+        var oldMinWidth = this.htmlElement.style.minWidth;
         width = (width+50);
         if(fixed){
             this.htmlElement.style.maxWidth = width+'px';
@@ -262,6 +264,11 @@ VisibleKernel.prototype.extend({
             this.htmlElement.style.maxWidth = '';
         }
         this.htmlElement.style.minWidth = width+'px';
+
+        if(oldWidth < width
+           || oldMinWidth != (width+'px') ){
+            this.layoutResize();
+        }
     },
 
     // Toggles whether the kernel is collapsed or not
