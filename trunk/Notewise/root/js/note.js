@@ -458,7 +458,7 @@ Note.prototype.extend({
 
     // Returns whether or not this kernel is currently selected
     isSelected: function () {
-        return this.htmlElement.className.indexOf('selected') != -1;
+        return Element.hasClassName(this.htmlElement,'selected');
     },
 
     // Rico draggable stuff
@@ -466,7 +466,8 @@ Note.prototype.extend({
     // Select this kernel
     select: function () {
         if( !this.isSelected() ){
-            this.htmlElement.className += ' selected';
+            Element.removeClassName(this.htmlElement,'notselected');
+            Element.addClassName(this.htmlElement,'selected');
         }
         dndMgr.moveToFront(this.htmlElement);
     },
@@ -474,7 +475,8 @@ Note.prototype.extend({
     // Mark this kernel as not selected
     deselect: function () {
         if( this.isSelected()){
-            this.htmlElement.className = this.htmlElement.className.replace(/ selected/, '');
+            Element.removeClassName(this.htmlElement,'selected');
+            Element.addClassName(this.htmlElement,'notselected');
         }
     },
 

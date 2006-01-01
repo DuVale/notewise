@@ -143,6 +143,18 @@ body, html {
     display: none;
 }
 
+.notselected .note.selected .expandbutton,
+.notselected .note.selected .removebutton,
+.notselected .note.selected .relationshipbutton {
+    display: block;
+}
+
+.selected .note.notselected .expandbutton,
+.selected .note.notselected .removebutton,
+.selected .note.notselected .relationshipbutton {
+    display: none;
+}
+
 .vkernel.selected .expandbutton,
 .vkernel.selected .removebutton,
 .vkernel.selected .relationshipbutton {
