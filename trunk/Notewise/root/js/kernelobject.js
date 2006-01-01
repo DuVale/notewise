@@ -45,13 +45,13 @@ KernelObject.prototype = {
         if (targ.nodeType == 3) // defeat Safari bug
             targ = targ.parentNode;
 
-        // Update the link text
-        // XXX this only works for visible kernels
-        this.namelink.innerHTML = targ.value;
+        if(this.namelink != undefined){
+            // Update the link text
+            this.namelink.innerHTML = targ.value;
+        }
 
         this.kernel().name(targ.value);
         this.kernel().update();
-
     },
 
     // causes the namefield to relayout
