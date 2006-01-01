@@ -113,6 +113,7 @@ Relationship.prototype.extend( {
         this.htmlElement = document.createElement('div');
         this.htmlElement.className='relationship';
         this.htmlElement.id=this.idString();
+        this.htmlElement.relationship=this;
         this.part1ContainedObject.htmlElement.parentNode.appendChild(this.htmlElement);
         this.line = new LineDraw.Line(this.part1ContainedObject.htmlElement.parentNode,
                                       (this.part1ContainedObject.x()+this.part1ContainedObject.currentWidth()/2)+'%',
@@ -171,11 +172,20 @@ Relationship.prototype.extend( {
             this.arrowCanvases[i] = new jsGraphics('canvas'+i+'/'+this.idString());
         }
         this.updateArrows();
-   },
+    },
+
+    layoutResize: function() {
+        this.updateArrows();
+        this.updatePosition1();
+        this.updatePosition2();
+//        this.line.update();
+    },
 
     updatePosition1: function(){
-        this.line.setP1((this.part1ContainedObject.x()+this.part1ContainedObject.currentWidth()/2)+'%',
-                        (this.part1ContainedObject.y()+this.part1ContainedObject.currentHeight()/2)+'%'
+        this.line.setP1((this.part1ContainedObject.x()
+                         +this.part1ContainedObject.currentWidth()/2)+'%',
+                        (this.part1ContainedObject.y()
+                         +this.part1ContainedObject.currentHeight()/2)+'%'
                        );
     },
 
