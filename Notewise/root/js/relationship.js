@@ -85,38 +85,40 @@ Rectangle.prototype = {
     }
 };
 
-
 var Relationship = Class.create();
 Relationship.extend(JSDBI);
-Relationship.superclass = JSDBI;
+Relationship.prototype = {};
+JSDBI.inherit(Relationship,new JSDBI());
 
-// TODO 
-//Relationship.fields(['container_object',
-//                      'contained_object',
-//                      'collapsed',
-//                      'height',
-//                      'width',
-//                      'x',
-//                      'y']);
-//Relationship.primaryKeys(['container_object', 'contained_object']);
-//Relationship.url('rest/vkernel');
-//Relationship.elementTag('visiblekernel');
-Relationship.prototype = (new JSDBI()).extend( {
-    initialize: function (vkernel1,vkernel2){
-        this.vkernel1=vkernel1;
-        this.vkernel2=vkernel2;
+Relationship.fields(['id',
+                     'nav',
+                     'part1',
+                     'part2',
+                     'type']);
+Relationship.url('rest/relationship');
+Relationship.elementTag('relationship');
+
+Relationship.prototype.extend( {
+    initialize: function (id,part1,part2,type,nav){
+        this.__id=id;
+        this.__part1=part1.contained_object();
+        this.__part2=part2.contained_object();
+        this.part1ContainedObject=part1;
+        this.part2ContainedObject=part2;
+        this.__type=type;
+        this.__nav=nav;
         this.intersect1={x:0, y:0};
         this.intersect2={x:0, y:0};
         this.showArrow = [true, true];
         this.htmlElement = document.createElement('div');
         this.htmlElement.className='relationship';
         this.htmlElement.id=this.idString();
-        this.vkernel1.htmlElement.parentNode.appendChild(this.htmlElement);
-        this.line = new LineDraw.Line(this.vkernel1.htmlElement.parentNode,
-                                      (this.vkernel1.x()+this.vkernel1.currentWidth()/2)+'%',
-                                      (this.vkernel1.y()+this.vkernel1.currentHeight()/2)+'%',
-                                      (this.vkernel2.x()+this.vkernel2.currentWidth()/2)+'%',
-                                      (this.vkernel2.y()+this.vkernel2.currentHeight()/2)+'%');
+        this.part1ContainedObject.htmlElement.parentNode.appendChild(this.htmlElement);
+        this.line = new LineDraw.Line(this.part1ContainedObject.htmlElement.parentNode,
+                                      (this.part1ContainedObject.x()+this.part1ContainedObject.currentWidth()/2)+'%',
+                                      (this.part1ContainedObject.y()+this.part1ContainedObject.currentHeight()/2)+'%',
+                                      (this.part2ContainedObject.x()+this.part2ContainedObject.currentWidth()/2)+'%',
+                                      (this.part2ContainedObject.y()+this.part2ContainedObject.currentHeight()/2)+'%');
         this.createLabel();
         this.createButtons();
         this.createArrows();
@@ -124,7 +126,7 @@ Relationship.prototype = (new JSDBI()).extend( {
     },
 
     idString: function() {
-        return 'relationship'+this.vkernel1.idString()+'/'+this.vkernel2.idString();
+        return 'relationship'+this.part1ContainedObject+'/'+this.part2ContainedObject;
     },
 
     createLabel: function() {
@@ -134,7 +136,7 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.htmlElement.appendChild(this.labelDiv);
 
         this.label = document.createElement('input');
-        this.label.value = 'asdfasdfasdfas';
+        this.label.value = this.type();
         this.label.className = 'relationshipLabel';
         this.labelDiv.appendChild(this.label);
     },
@@ -172,14 +174,14 @@ Relationship.prototype = (new JSDBI()).extend( {
    },
 
     updatePosition1: function(){
-        this.line.setP1((this.vkernel1.x()+this.vkernel1.currentWidth()/2)+'%',
-                        (this.vkernel1.y()+this.vkernel1.currentHeight()/2)+'%'
+        this.line.setP1((this.part1ContainedObject.x()+this.part1ContainedObject.currentWidth()/2)+'%',
+                        (this.part1ContainedObject.y()+this.part1ContainedObject.currentHeight()/2)+'%'
                        );
     },
 
     updatePosition2: function(){
-        this.line.setP2((this.vkernel2.x()+this.vkernel2.currentWidth()/2)+'%',
-                        (this.vkernel2.y()+this.vkernel2.currentHeight()/2)+'%'
+        this.line.setP2((this.part2ContainedObject.x()+this.part2ContainedObject.currentWidth()/2)+'%',
+                        (this.part2ContainedObject.y()+this.part2ContainedObject.currentHeight()/2)+'%'
                        );
     },
 
@@ -190,19 +192,21 @@ Relationship.prototype = (new JSDBI()).extend( {
         this.arrowCanvases[1].clear();
         this.arrowCanvases[1].setColor("#000000");
 
-        var vkernel1Pos = Utils.toViewportPosition(this.vkernel1.htmlElement);
-        var vkernel2Pos = Utils.toViewportPosition(this.vkernel2.htmlElement);
+        var vkernel1Pos = Utils.toViewportPosition(this.part1ContainedObject.htmlElement);
+        var vkernel2Pos = Utils.toViewportPosition(this.part2ContainedObject.htmlElement);
 
-        var angle = Math.atan2(vkernel2Pos.y+this.vkernel2.htmlElement.clientHeight/2
-                               - (vkernel1Pos.y+this.vkernel1.htmlElement.clientHeight/2),
-                               vkernel1Pos.x + this.vkernel1.htmlElement.clientWidth/2
-                               - (vkernel2Pos.x+this.vkernel2.htmlElement.clientWidth/2));
+        var angle = Math.atan2(vkernel2Pos.y+this.part2ContainedObject.htmlElement.clientHeight/2
+                               - (vkernel1Pos.y+this.part1ContainedObject.htmlElement.clientHeight/2),
+                               vkernel1Pos.x + this.part1ContainedObject.htmlElement.clientWidth/2
+                               - (vkernel2Pos.x+this.part2ContainedObject.htmlElement.clientWidth/2));
 
-        if(this.showArrow[0]){
+        if(this.nav() == 'fromleft'
+           || this.nav() == 'bi'){
             this.drawArrow(this.arrowCanvases[0],17,17,angle);
             this.arrowCanvases[0].paint();
         }
-        if(this.showArrow[1]){
+        if(this.nav() == 'fromright'
+           || this.nav() == 'bi'){
             this.drawArrow(this.arrowCanvases[1],17,17,angle+Math.PI);
             this.arrowCanvases[1].paint();
         }
@@ -217,19 +221,19 @@ Relationship.prototype = (new JSDBI()).extend( {
 
     moveArrows: function() {
         // figure out the intersection between each box and the line between them
-        var rect1 = new Rectangle(this.vkernel1.x(),
-                                  this.vkernel1.y(),
-                                  this.vkernel1.currentWidth(),
-                                  this.vkernel1.currentHeight());
-        var rect2 = new Rectangle(this.vkernel2.x(),
-                                  this.vkernel2.y(),
-                                  this.vkernel2.currentWidth(),
-                                  this.vkernel2.currentHeight());
+        var rect1 = new Rectangle(this.part1ContainedObject.x(),
+                                  this.part1ContainedObject.y(),
+                                  this.part1ContainedObject.currentWidth(),
+                                  this.part1ContainedObject.currentHeight());
+        var rect2 = new Rectangle(this.part2ContainedObject.x(),
+                                  this.part2ContainedObject.y(),
+                                  this.part2ContainedObject.currentWidth(),
+                                  this.part2ContainedObject.currentHeight());
 
-        line = [{x: this.vkernel1.x()+this.vkernel1.currentWidth()/2,
-                 y: this.vkernel1.y()+this.vkernel1.currentHeight()/2},
-                {x: this.vkernel2.x()+this.vkernel2.currentWidth()/2,
-                 y: this.vkernel2.y()+this.vkernel2.currentHeight()/2}];
+        line = [{x: this.part1ContainedObject.x()+this.part1ContainedObject.currentWidth()/2,
+                 y: this.part1ContainedObject.y()+this.part1ContainedObject.currentHeight()/2},
+                {x: this.part2ContainedObject.x()+this.part2ContainedObject.currentWidth()/2,
+                 y: this.part2ContainedObject.y()+this.part2ContainedObject.currentHeight()/2}];
 
         this.intersect1 = rect1.getLineIntersect(line);
         this.intersect2 = rect2.getLineIntersect(line);
@@ -278,10 +282,10 @@ Relationship.prototype = (new JSDBI()).extend( {
     },
 
     registerListeners: function() {
-        this.vkernel1.addStartChangeListener(this.startChange.bind(this));
-        this.vkernel2.addStartChangeListener(this.startChange.bind(this));
-        this.vkernel1.addEndChangeListener(this.endChange.bind(this));
-        this.vkernel2.addEndChangeListener(this.endChange.bind(this));
+        this.part1ContainedObject.addStartChangeListener(this.startChange.bind(this));
+        this.part2ContainedObject.addStartChangeListener(this.startChange.bind(this));
+        this.part1ContainedObject.addEndChangeListener(this.endChange.bind(this));
+        this.part2ContainedObject.addEndChangeListener(this.endChange.bind(this));
 
         Utils.registerEventListener(this.label,
                                     'mousedown',
@@ -290,6 +294,9 @@ Relationship.prototype = (new JSDBI()).extend( {
         Utils.registerEventListener(this.label,
                                     'click',
                                     this.selectAndTerminate.bindAsEventListener(this));
+        Utils.registerEventListener(this.label,
+                                    'blur',
+                                    this.recordLabel.bindAsEventListener(this));
 
         Utils.registerEventListener(this.removeButton,
                                     'mousedown',
@@ -331,10 +338,10 @@ Relationship.prototype = (new JSDBI()).extend( {
                                     'click',
                                     this.arrow2click.bindAsEventListener(this));
 
-        this.vkernel1.addMoveListener(this.updatePosition1.bind(this));
-        this.vkernel1.addSizeListener(this.updatePosition1.bind(this));
-        this.vkernel2.addMoveListener(this.updatePosition2.bind(this));
-        this.vkernel2.addSizeListener(this.updatePosition2.bind(this));
+        this.part1ContainedObject.addMoveListener(this.updatePosition1.bind(this));
+        this.part1ContainedObject.addSizeListener(this.updatePosition1.bind(this));
+        this.part2ContainedObject.addMoveListener(this.updatePosition2.bind(this));
+        this.part2ContainedObject.addSizeListener(this.updatePosition2.bind(this));
     },
 
     hideButtonClick: function(e){
@@ -348,13 +355,36 @@ Relationship.prototype = (new JSDBI()).extend( {
     },
 
     arrow1click: function(e){
-        this.showArrow[0] =  !this.showArrow[0];
+        if(this.nav() == 'fromleft'){
+            this.nav('non');
+        } else if(this.nav() == 'non'){
+            this.nav('fromleft');
+        } else if(this.nav() == 'fromright'){
+            this.nav('bi');
+        } else if(this.nav() == 'bi'){
+            this.nav('fromright');
+        }
         this.updateArrows();
+        this.update();
     },
 
     arrow2click: function(e){
-        this.showArrow[1] =  !this.showArrow[1];
+        if(this.nav() == 'fromright'){
+            this.nav('non');
+        } else if(this.nav() == 'non'){
+            this.nav('fromright');
+        } else if(this.nav() == 'fromleft'){
+            this.nav('bi');
+        } else if(this.nav() == 'bi'){
+            this.nav('fromleft');
+        }
         this.updateArrows();
+        this.update();
+    },
+
+    recordLabel: function(e){
+        this.type(this.label.value);
+        this.update();
     },
 
     startChange: function(vkernel) {

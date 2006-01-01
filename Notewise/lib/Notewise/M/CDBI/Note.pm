@@ -59,6 +59,13 @@ sub has_permission {
     return $self->object_id->has_permission(@_);
 }
 
+sub relationships {
+    my $self = shift;
+    my @relationships1 = Notewise::M::CDBI::Relationship->search(part1 => $self->id);
+    my @relationships2 = Notewise::M::CDBI::Relationship->search(part2 => $self->id);
+    return (@relationships1,@relationships2);
+}
+
 =head1 NAME
 
 Notewise::M::CDBI::Note - CDBI Model Component Table Class
