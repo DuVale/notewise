@@ -120,7 +120,7 @@
         Utils.registerEventListener(view.htmlElement,"mousedown",clearSelection);
 
 
-        new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '[%base%]ac', {frequency: .2});
+        new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '[%base%]ac', {frequency: .1});
     </script>
 </body>
 </html>
