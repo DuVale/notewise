@@ -89,6 +89,8 @@ Note.prototype.extend({
         dndMgr.registerDraggable( new KernelCornerDraggable(this.corner, this) );
 
         // setup the blur handler for the textarea
+        this.body.__hasFocus = false;
+        this.body.onfocus = this.bodyFocus.bindAsEventListener(this);
         this.body.onblur = this.contentChanged.bindAsEventListener(this);
 
         // setup the click handlers
@@ -166,6 +168,11 @@ Note.prototype.extend({
 
     // causes the internal elements to resize if necessary
     layoutResize: function() {
+      if(this.body != undefined){
+          this.body.style.border = '1px solid red';
+          this.body.style.width = '100%'
+          this.body.style.height = (this.htmlElement.clientHeight - 2 - this.body.offsetTop) + 'px';
+      }
     },
 
     // Toggles whether the kernel is fixed width or not
@@ -452,12 +459,17 @@ Note.prototype.extend({
         this.update();
     },
     
+    bodyFocus: function (e) {
+      this.body.__hasFocus = true;
+    },
+    
     contentChanged: function (e) {
         var text = this.body.value;
         if(text != this.content()) {
             this.content(text);
             this.update();
         }
+        this.body.__hasFocus = false;
     },
 
     // Returns whether or not this kernel is currently selected
@@ -469,6 +481,10 @@ Note.prototype.extend({
 
     // Select this kernel
     select: function () {
+  
+        if (this.body.__hasFocus) this.retainFocus = true;
+        else this.retainFocus = false;
+  
         if( !this.isSelected() ){
             Element.removeClassName(this.htmlElement,'notselected');
             Element.addClassName(this.htmlElement,'selected');
@@ -478,6 +494,7 @@ Note.prototype.extend({
 
     // Mark this kernel as not selected
     deselect: function () {
+      this.body.retainFocus = false;
         if( this.isSelected()){
             Element.removeClassName(this.htmlElement,'selected');
             Element.addClassName(this.htmlElement,'notselected');
@@ -486,6 +503,13 @@ Note.prototype.extend({
 
     startDrag: function() {
         this.notifyStartChangeListeners();
+        
+        if (this.body.__hasFocus) { 
+          this.body.retainFocus = true; 
+        }
+        else { 
+          this.body.retainFocus = false; 
+        }
 
         // change the startx/starty offsets so they're correct when we pop up
         // into the document body
@@ -513,6 +537,10 @@ Note.prototype.extend({
         this.notifyEndChangeListeners();
         
         this.update();
+        
+        if(this.retainFocus) {
+          this.body.focus();
+        }
     },
  
     duringDrag: function() {
@@ -541,5 +569,8 @@ Note.prototype.extend({
         elementStyle.height = (height*100/parentElement.clientHeight) + '%';
 
         this.notifyEndChangeListeners();
+        
+        if(this.retainFocus)
+          this.body.focus();
     }
 });
