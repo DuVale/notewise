@@ -138,16 +138,25 @@ KernelObject.prototype = {
         };
     },
 
-    // XXX not quite sure why this is necessary.  Need to check that. Seems to
-    // check a particular property of the style for a particular element,
-    // though
+    // fetches the current value for a property, even if there wasn't one explicitly set.
     getStyle: function(el,styleProp) {
 	if (el.currentStyle){
 		var y = el.currentStyle[styleProp];
 	}else if (window.getComputedStyle){
 		var y = document.defaultView.getComputedStyle(el,null).getPropertyValue(styleProp);
         }
-	return y;
+
+        if (y === undefined){
+            // must be internet explorer
+            var words = styleProp.split('-');
+            styleProp=words[0];
+            for(var i=1; i < words.length; i++){
+                styleProp = styleProp + words[i].substr(0,1).toUpperCase() + words[i].substr(1);
+            }
+            return this.getStyle(el,styleProp);
+        } else {
+            return y;
+        }
     },
 
     // Clear the selection (resetting focus to the search box) and terminate the event
