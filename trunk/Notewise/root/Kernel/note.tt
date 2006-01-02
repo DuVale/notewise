@@ -10,7 +10,6 @@
     <input type=button value='R' class='relationshipbutton'/>
     
     <div class="rightgrippie"/></div>
-    
     <textarea class='body'>[% note.content %]</textarea>
     
     <div class="corner"></div>

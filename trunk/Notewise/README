@@ -10,6 +10,7 @@ Install the following perl modules:
     DateTime::Format::DateParse
     DateTime::Format::MySQL
     Test::XML
+    Test::WWW::Mechanize
     Test::WWW::Mechanize::Catalyst
     Data::Dumper
     Test::More

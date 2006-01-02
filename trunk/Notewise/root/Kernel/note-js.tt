@@ -1,5 +1,7 @@
 [% id = note.id %]
-[% content = note.content.replace('\n', '\\n'); %]
+[% PERL %]
+    $stash->{content} =~ s/\n/\\n/g;
+[% END %]
 [% content = content.replace('"', '\"'); %]
 <script>
     var noteDiv = document.getElementById('note[%id%]');
