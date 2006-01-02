@@ -13,7 +13,7 @@ __PACKAGE__->config( YAML::LoadFile( __PACKAGE__->path_to('config.yml') ) );
 if(__PACKAGE__->config->{Static}){
     __PACKAGE__->setup( qw/Static::Simple/ );
     __PACKAGE__->config->{static}->{ignore_extensions} = [];
-    __PACKAGE__->config->{static}->{no_logs} = 0;
+    __PACKAGE__->config->{static}->{no_logs} = 1;
 } else {
     __PACKAGE__->setup();
 }
