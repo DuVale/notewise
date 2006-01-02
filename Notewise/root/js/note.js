@@ -109,6 +109,10 @@ Note.prototype.extend({
         // TODO DRY - consolidate these into a big list of element/event pairs
         // Setup action terminators
 
+        // dragging on the body shouldn't drag the object
+        Utils.registerEventListener(this.body, 'mousedown',
+                                    Utils.terminateEvent.bindAsEventListener(this));
+
         // dragging on any of the buttons shouldn't drag the object
         Utils.registerEventListener(this.relationshipbutton,
                                    'mousedown',
