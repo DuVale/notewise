@@ -38,10 +38,28 @@ Object.prototype.extend = function(object) {
   return Object.extend.apply(this, [this, object]);
 }
 
-Function.prototype.bind = function(object) {
+Prototype.argumentsToArray = function(args){
+    var args_array = new Array(args.length);
+    for(var i=0; i<args.length; i++){
+        args_array[i]=args[i];
+    }
+    return args_array;
+}
+
+Function.prototype.bind = function() {
   var __method = this;
+  var __this = arguments[0];
+  var __args = [];
+  if(arguments.length > 1){
+      __args = Prototype.argumentsToArray(arguments).slice(1);
+  }
   return function() {
-    __method.apply(object, arguments);
+      if(arguments.length > 0){
+          var newargs = Prototype.argumentsToArray(arguments).concat(__args);
+          __method.apply(__this, newargs);
+      } else {
+          __method.apply(__this, __args);
+      }
   }
 }
 
