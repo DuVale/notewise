@@ -211,7 +211,7 @@ KernelObject.prototype = {
         this.body.appendChild(dummyDiv);
         
         // give the brower some time to paint the dummy div
-        window.setTimeout(this.createNote.bind(this), 5, x, y, dummyDiv);
+        window.setTimeout(this.createNote.bind(this, x, y, dummyDiv), 5);
         Utils.terminateEvent(e);
     },
 
@@ -243,7 +243,7 @@ KernelObject.prototype = {
         this.body.appendChild(dummyDiv);
 
         // Give the browser a little bit of time to refresh, so the dummyDiv paints
-        window.setTimeout(this.createVKernel.bind(this),5,x,y,dummyDiv);
+        window.setTimeout(this.createVKernel.bind(this,x,y,dummyDiv),5);
         Utils.terminateEvent(e);
     },
 
