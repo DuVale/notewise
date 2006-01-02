@@ -37,7 +37,7 @@
                     </ul>
                 </div>
                 
-                <div class="panetitle" onmousedown="resizeMenu_drag('parents_content');">
+                <div class="panetitle">
                     <div class="twistbutton" onclick="expandMenu(this, 'rel_content');">&nbsp;</div>
                     relationships ([%kernel.related_kernels.size or '0'%])
 

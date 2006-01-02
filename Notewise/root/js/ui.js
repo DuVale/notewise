@@ -17,18 +17,15 @@ function expandMenu(button, paneId) {
 
 	pane.__expand.toggle();
 	if(pane.hidden) {
-	    button.className = "twistbutton closed";
+	    Element.removeClassName(button, 'open');
+	    Element.addClassName(button, 'closed');
 	    pane.style.borderBottom = "0";
-	} else {
-            // TODO switch this for the regex version in visiblekernel.js
-	    button.className = "twistbutton";
-        pane.style.borderBottom = "1px solid #bebebe;";
-    }
+  } else {
+      // TODO switch this for the regex version in visiblekernel.js
+	    Element.removeClassName(button, 'closed');
+	    Element.addClassName(button, 'open');
+      pane.style.borderBottom = "1px solid #bebebe";
+  }
     
 	sandbox.style.height = "100%"
-}
-
-function resizeMenu_drag(paneId, event) {
-    var pane = document.getElementById(paneId);
-    alert("," + document.screen.y);
 }
