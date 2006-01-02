@@ -423,19 +423,19 @@ Relationship.prototype.extend( {
     // Select this relationship
     select: function () {
         if( !this.isSelected() ){
-            this.htmlElement.className += ' selected';
+          Element.addClassName(this.htmlElement, 'selected');
         }
     },
 
     // Mark this relationship as not selected
     deselect: function () {
         if( this.isSelected()){
-            this.htmlElement.className = this.htmlElement.className.replace(/ selected|selected /, '');
+            Element.removeClassName(this.htmlElement, 'selected');
         }
     },
 
     // Returns whether or not this relationship is currently selected
     isSelected: function () {
-        return this.htmlElement.className.indexOf('selected') != -1;
+        Element.hasClassName(this.htmlElement, 'selected');
     }
 });
