@@ -148,10 +148,10 @@ DragAndDrop.prototype.extend({
       this.currentDragObjectVisible = false;
       this.interestedInMotionEvents = false;
       // denotes that the current event was actually a drag, and not just a
-      // click.  See bug #99
+      // click.  See bug #79
       this.wasDrag                  = false;
       // denotes whether we just selected something on a mousedown, so we don't
-      // deselect it on a mouseup - see bug #99
+      // deselect it on a mouseup - see bug #79
       this.newlySelected            = false;
    },
 
