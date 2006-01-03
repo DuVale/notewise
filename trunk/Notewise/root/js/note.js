@@ -115,6 +115,12 @@ Note.prototype.extend({
         Utils.registerEventListener(this.body, 'mousedown',
                                     Utils.terminateEvent.bindAsEventListener(this));
 
+        Utils.registerEventListener(this.body, 'dblclick',
+                                    Utils.terminateEvent.bindAsEventListener(this));
+                                    
+        Utils.registerEventListener(this.body, 'click',
+                                    Utils.terminateEvent.bindAsEventListener(this));
+
         // dragging on any of the buttons shouldn't drag the object
         Utils.registerEventListener(this.relationshipbutton,
                                    'mousedown',

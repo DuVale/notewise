@@ -96,6 +96,14 @@ body, html {
     clear: both;
 }
 
+.note .body textarea {
+    overflow: auto;
+}
+
+.vkernel .note .body textarea {
+    overflow: auto;
+}
+
 .note.selected { border: 2px solid #21bbff; }
 
 .vkernel.selected {
