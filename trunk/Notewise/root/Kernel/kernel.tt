@@ -5,7 +5,9 @@
 <div id="vkernel[%id%]" class="vkernel [%IF vkernel.collapsed%]collapsed[%END%] notselected"
          style="left: [% vkernel.x %]%; top: [% vkernel.y %]%;
                 width: [% vkernel.width %]%;
-                height: [% vkernel.height %]%;">
+                [% IF ! vkernel.collapsed %]
+                    height: [% vkernel.height %]%;
+                [% END %]">
     <input type=button value="[%IF vkernel.collapsed%]+[%ELSE%]-[%END%]" class="expandbutton"/>
     <input type=button value='X' class="removebutton"/>
     <input type=button value='R' class="relationshipbutton"/>
