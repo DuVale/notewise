@@ -243,32 +243,28 @@ VisibleKernel.prototype.extend({
     // Size the namefield appropriate
     layoutNamefield: function() {
         var width = KernelObject.prototype.layoutNamefield.call(this);
-        if(this.collapsed()){
-            this.setFixedWidth(true,width);
-        } else {
-            this.setFixedWidth(false,width);
-        }
+        this.setFixedSize(this.collapsed());
     },
 
-    // Toggles whether the kernel is fixed width or not
+    // Toggles whether the kernel is fixed width or not, and updates the width if it is.
     // Accepts:
     //   fixed - a boolean indicating whether the kernel should be fixed width
-    //   width - the number of pixels for the min width (and max width, in the case it is fixed width)
-    setFixedWidth: function(fixed, width){
-        var oldWidth = this.htmlElement.clientWidth;
-        var oldMinWidth = this.htmlElement.style.minWidth;
-        width = (width+50);
+    setFixedSize: function(fixed){
+//        var oldWidth = this.htmlElement.clientWidth;
+//        var oldMinWidth = this.htmlElement.style.minWidth;
+        width = (this.getNameFieldWidth()+50);
         if(fixed){
-            this.htmlElement.style.maxWidth = width+'px';
+            this.htmlElement.style.width = width+'px';
+            this.htmlElement.style.height = '';
         } else {
-            this.htmlElement.style.maxWidth = '';
+            this.htmlElement.style.width = this.width() + '%';
+            this.htmlElement.style.height = this.height() + '%';
         }
-        this.htmlElement.style.minWidth = width+'px';
 
-        if(oldWidth < width
-           || oldMinWidth != (width+'px') ){
+//        if(oldWidth < width
+//           || oldMinWidth != (width+'px') ){
             this.layoutResize();
-        }
+//        }
     },
 
     // Toggles whether the kernel is collapsed or not
@@ -302,14 +298,14 @@ VisibleKernel.prototype.extend({
             results = this.superclass.collapsed.call(this, 1);
             if(this.htmlElement){
                 Element.addClassName(this.htmlElement,'collapsed');
-                this.setFixedWidth(true,this.getNameFieldWidth());
+                this.setFixedSize(true);
             }
             this.notifyEndChangeListeners();
         } else {
             results = this.superclass.collapsed.call(this, 0);
             if(this.htmlElement){
                 Element.removeClassName(this.htmlElement,'collapsed');
-                this.setFixedWidth(false,this.getNameFieldWidth());
+                this.setFixedSize(false);
             }
             this.notifyEndChangeListeners();
         }
@@ -419,81 +415,36 @@ VisibleKernel.prototype.extend({
     },
 
     // checks to make sure the height is ok, and returns a corrected value if it isn't
+    // height should be in percentage
     checkHeight: function(h){
-        //TODO fix this to work with the new percentages
-//        var minHeight=this.getMinHeight();
-//        var maxHeight=this.getMaxHeight();
-//        if(h < minHeight){
-//            h = minHeight;
-//        } else if(h > maxHeight){
-//            h = maxHeight;
-//        }
+        var minHeight=this.getMinHeight();
+        var parentHeight=this.htmlElement.parentNode.clientHeight;
+        var heightPixels=(parentHeight * h)/100;
+        if(heightPixels < minHeight){
+            h = minHeight*100/parentHeight;
+        }
         return h;
     },
 
     // checks to make sure the width is ok, and returns a corrected value if it isn't
+    // width should be in percentage
     checkWidth: function(w){
-        //TODO fix this to work with the new percentages
-//        var minWidth=this.getMinWidth();
-//        var maxWidth=this.getMaxWidth();
-//        if(w < minWidth){
-//            w = minWidth;
-//        } else if(w > maxWidth){
-//            w = maxWidth;
-//        }
+        var minWidth=this.getMinWidth();
+        var parentWidth=this.htmlElement.parentNode.clientWidth;
+        var widthPixels=(parentWidth * w)/100;
+        if(widthPixels < minWidth){
+            w = minWidth*100/parentWidth;
+        }
         return w;
     },
 
     getMinHeight: function() {
-        //TODO
-        if(this.collapsed()){
-            return 0;
-        } else {
-            return 100;
-        }
-    },
-
-    getMaxHeight: function() {
-        //TODO
-        if(this.collapsed()){
-            return 30; // height of name field
-        } else {
-            return 2000;
-        }
+        return 100;
     },
 
     getMinWidth: function() {
-        var nameFieldWidth =  this.getNameFieldWidth()+30;
-        if(this.collapsed()){
-            return nameFieldWidth;
-        } else {
-            return Math.max(nameFieldWidth,100);
-        }
-    },
-
-    getMaxWidth: function() {
-        //TODO
-        return 2000;
-    },
-
-    getMinX: function() {
-        //TODO
-        return 0;
-    },
-
-    getMaxX: function() {
-        //TODO
-        return 2000;
-    },
-
-    getMinY: function() {
-        //TODO
-        return 0;
-    },
-
-    getMaxY: function() {
-        //TODO
-        return 2000;
+        var nameFieldWidth =  this.getNameFieldWidth()+50;
+        return Math.max(nameFieldWidth,100);
     },
 
     // Adds a movement listener.  The notify method will called whenever this
@@ -571,11 +522,11 @@ VisibleKernel.prototype.extend({
         // switch all the position and size info to match the new parent
         this.x((pos.x-parentPos.x)*100/parentElement.clientWidth);
         this.y((pos.y-parentPos.y)*100/parentElement.clientHeight);
-        this.setWidth(width*100/parentElement.clientWidth);
         if(!this.collapsed()){
-            // don't set the height if we're collapsed, cause it'll wipe
-            // out the currently saved height
+            // don't set the size if we're collapsed, cause it'll wipe
+            // out the currently saved size
             this.setHeight(height*100/parentElement.clientHeight);
+            this.setWidth(width*100/parentElement.clientWidth);
         }
 
         // move the object to the frontmost layer
