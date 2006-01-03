@@ -147,6 +147,12 @@ DragAndDrop.prototype.extend({
       this.lastSelectedDraggable    = null;
       this.currentDragObjectVisible = false;
       this.interestedInMotionEvents = false;
+      // denotes that the current event was actually a drag, and not just a
+      // click.  See bug #99
+      this.wasDrag                  = false;
+      // denotes whether we just selected something on a mousedown, so we don't
+      // deselect it on a mouseup - see bug #99
+      this.newlySelected            = false;
    },
 
    // registers a given drop zone with the dndMgr
@@ -231,16 +237,7 @@ DragAndDrop.prototype.extend({
       }
    },
 
-   // the actual handler for mouse down events
-   _mouseDownHandler: function(e) {
-      if ( arguments.length == 0 )
-         e = event;
-
-      // if not button 1 ignore it...
-      var nsEvent = e.which != undefined;
-      if ( (nsEvent && e.which != 1) || (!nsEvent && e.button != 1))
-         return;
-
+   _getDraggable: function (e) {
       var eventTarget      = e.target ? e.target : e.srcElement; //compat
       var draggableObject  = eventTarget.draggable;
 
@@ -251,19 +248,30 @@ DragAndDrop.prototype.extend({
          candidate = candidate.parentNode;
          draggableObject = candidate.draggable;
       }
+      return draggableObject
+   },
+
+   // the actual handler for mouse down events
+   _mouseDownHandler: function(e) {
+      if ( arguments.length == 0 )
+         e = event;
+
+      // if not button 1 ignore it...
+      var nsEvent = e.which != undefined;
+      if ( (nsEvent && e.which != 1) || (!nsEvent && e.button != 1))
+         return;
+
+      var draggableObject = this._getDraggable(e);
    
       if ( draggableObject == null ){
          // we didn't actually find a draggable, so don't do anything
          return;
       }
 
-      // XXX - should this really happen on the mouse down?  The problem is
-      // that if you click on something, and then ctrl-click on something else,
-      // and then mousedown-drag on one of the objects, it deselects that
-      // object and only drags the other one.  This seems counter intuitive
-
-      // add the draggable to the selection
-      this.updateSelection( draggableObject, e.ctrlKey || e.shiftKey );
+      if( ! draggableObject.isSelected()){
+         this.updateSelection( draggableObject, e.ctrlKey || e.shiftKey );
+         this.newlySelected = true;
+      }
 
       // clear the drop zones position cache...
       if ( this.hasSelection() )
@@ -332,6 +340,7 @@ DragAndDrop.prototype.extend({
          dragObjectStyle.left = (e.screenX - currentDragObject.startx) + "px"
          dragObjectStyle.top  = (e.screenY - currentDragObject.starty) + "px";
          currentDragObject.duringDrag();
+         this.wasDrag = true;
       }
    },
 
@@ -364,6 +373,15 @@ DragAndDrop.prototype.extend({
       if ( ! this.hasSelection() ){
          return;
       }
+
+      if ( ! this.wasDrag
+           && ! this.newlySelected
+           && (e.shiftKey || e.ctrlKey) ) {
+         var draggableObject = this._getDraggable(e);
+         this.updateSelection( draggableObject, true );
+      }
+      this.wasDrag = false;
+      this.newlySelected = false;
 
       var nsEvent = e.which != undefined;
       if ( (nsEvent && e.which != 1) || (!nsEvent && e.button != 1)){
