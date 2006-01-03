@@ -77,7 +77,6 @@ body, html {
     position: absolute;
     background: blue;
     z-index: 1;
-    min-height: 100px;
 }
 
 .note {
@@ -85,8 +84,6 @@ body, html {
     position: absolute;
     background: green;
     z-index: 1;
-    min-width: 99px;
-    min-height: 100px;
 }
 
 .note .body {
@@ -331,8 +328,7 @@ body, html {
 }
 
 .vkernel.collapsed {
-    min-height: 1.5em;
-    max-height: 1.5em;
+    height: 1.5em;
 }
 
 .vkernel.collapsed .body {
