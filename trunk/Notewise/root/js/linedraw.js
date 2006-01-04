@@ -188,17 +188,10 @@ LineDraw.Line.prototype = {
      }
 }
 
+
 // precache images
 
-var image_cache=[];
-
-function precache(imageName){
-    var i = image_cache.length;
-    image_cache[i] = new Image();
-    image_cache[i].src="/images/"+imageName;
-}
-
-dims = [
+var dims = [
     [12,6],
     [14,7],
     [18,9],
@@ -221,11 +214,25 @@ dims = [
     [1292,646]
 ];
 
-for(var i=0; i<dims.length; i++){
-    directions = ['r','l'];
-    for(var j=0; j<2; j++){
-        var direction = directions[j];
-        precache(direction+dims[i][0]+'x'+dims[i][1]+'.png');
-        precache(direction+dims[i][1]+'x'+dims[i][0]+'.png');
-    }
+var image_cache=[];
+
+function precache(imageName){
+    var i = image_cache.length;
+    image_cache[i] = new Image();
+    image_cache[i].src="/images/"+imageName;
 }
+
+function do_image_precache() {
+    for(var i=0; i<dims.length; i++){
+        directions = ['r','l'];
+        for(var j=0; j<2; j++){
+            var direction = directions[j];
+            precache(direction+dims[i][0]+'x'+dims[i][1]+'.png');
+            precache(direction+dims[i][1]+'x'+dims[i][0]+'.png');
+        }
+    }
+    precache('l1x5.png');
+    precache('l5x1.png');
+}
+
+window.setTimeout(do_image_precache, 5); //get image caching to happen in separate thread
