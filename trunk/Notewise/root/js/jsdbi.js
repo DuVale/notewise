@@ -122,7 +122,7 @@ JSDBI.prototype = {
     //  XXX it won't let me name this delete - is destroy a good name?
     destroy: function() {
         var request = new Ajax.Request(this.internalUrl(), { method: 'delete',
-                                                     asynchronous: false} );
+                                                     asynchronous: true} );
         return;
     },
 
