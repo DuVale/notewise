@@ -191,7 +191,6 @@ Relationship.prototype.extend( {
         }
         x = (x + this.part1ContainedObject.currentWidth(this.part1ContainedObject.oldParentNode)/2)+'%';
         y = (y + this.part1ContainedObject.currentHeight(this.part1ContainedObject.oldParentNode)/2)+'%';
-        window.status = "notified move listeners with "+x+", "+y+" arguments.length: "+arguments.length;
         this.line.setP1(x,y);
     },
 
@@ -205,7 +204,6 @@ Relationship.prototype.extend( {
         }
         x = (x + this.part2ContainedObject.currentWidth(this.part2ContainedObject.oldParentNode)/2)+'%';
         y = (y + this.part2ContainedObject.currentHeight(this.part2ContainedObject.oldParentNode)/2)+'%';
-        window.status = "notified move listeners with "+x+", "+y+" arguments.length: "+arguments.length;
         this.line.setP2(x,y);
     },
 
