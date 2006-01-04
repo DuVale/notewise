@@ -181,18 +181,32 @@ Relationship.prototype.extend( {
 //        this.line.update();
     },
 
-    updatePosition1: function(){
-        this.line.setP1((this.part1ContainedObject.x()
-                         +this.part1ContainedObject.currentWidth()/2)+'%',
-                        (this.part1ContainedObject.y()
-                         +this.part1ContainedObject.currentHeight()/2)+'%'
-                       );
+    updatePosition1: function(x,y){
+        if(x == null || y == null){
+            x = this.part1ContainedObject.x();
+            y = this.part1ContainedObject.y();
+        } else {
+            x = Number(chopPx(arguments[1]));
+            y = Number(chopPx(arguments[2]));
+        }
+        x = (x + this.part1ContainedObject.currentWidth(this.part1ContainedObject.oldParentNode)/2)+'%';
+        y = (y + this.part1ContainedObject.currentHeight(this.part1ContainedObject.oldParentNode)/2)+'%';
+        window.status = "notified move listeners with "+x+", "+y+" arguments.length: "+arguments.length;
+        this.line.setP1(x,y);
     },
 
-    updatePosition2: function(){
-        this.line.setP2((this.part2ContainedObject.x()+this.part2ContainedObject.currentWidth()/2)+'%',
-                        (this.part2ContainedObject.y()+this.part2ContainedObject.currentHeight()/2)+'%'
-                       );
+    updatePosition2: function(x,y){
+        if(x == null || y == null){
+            x = this.part2ContainedObject.x();
+            y = this.part2ContainedObject.y();
+        } else {
+            x = Number(chopPx(arguments[1]));
+            y = Number(chopPx(arguments[2]));
+        }
+        x = (x + this.part2ContainedObject.currentWidth(this.part2ContainedObject.oldParentNode)/2)+'%';
+        y = (y + this.part2ContainedObject.currentHeight(this.part2ContainedObject.oldParentNode)/2)+'%';
+        window.status = "notified move listeners with "+x+", "+y+" arguments.length: "+arguments.length;
+        this.line.setP2(x,y);
     },
 
     updateArrows: function() {

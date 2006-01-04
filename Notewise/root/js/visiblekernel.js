@@ -397,18 +397,24 @@ VisibleKernel.prototype.extend({
     },
 
     // returns the current actual onscreen size of the object in percent
-    currentHeight: function() {
+    currentHeight: function(parentElement) {
+        if(parentElement == null){
+            parentElement=this.htmlElement.parentNode;
+        }
         if(this.collapsed()){
-            return this.htmlElement.clientHeight*100/this.htmlElement.parentNode.clientHeight;
+            return this.htmlElement.clientHeight*100/parentElement.clientHeight;
         } else {
             return this.height();
         }
     },
 
     // returns the current actual onscreen size of the object in percent
-    currentWidth: function() {
+    currentWidth: function(parentElement) {
+        if(parentElement == null){
+            parentElement=this.htmlElement.parentNode;
+        }
         if(this.collapsed()){
-            return this.htmlElement.clientWidth*100/this.htmlElement.parentNode.clientWidth;
+            return this.htmlElement.clientWidth*100/parentElement.clientWidth;
         } else {
             return this.width();
         }
@@ -598,10 +604,11 @@ VisibleKernel.prototype.extend({
  
     duringDrag: function() {
         var parentPos = Utils.toViewportPosition(this.oldParentNode);
-        this.setX(Number(chopPx(this.htmlElement.style.left))*100
-                       / this.oldParentNode.clientWidth);
-        this.setY((Number(chopPx(this.htmlElement.style.top))-parentPos.y)*100
-                       / this.oldParentNode.clientHeight);
+        var x = Number(chopPx(this.htmlElement.style.left)-parentPos.x)*100
+                       / this.oldParentNode.clientWidth;
+        var y = (Number(chopPx(this.htmlElement.style.top))-parentPos.y)*100
+                       / this.oldParentNode.clientHeight;
+        this.notifyMoveListeners(x+'%',y+'%');
     },
  
     cancelDrag: function() {
@@ -710,5 +717,5 @@ CustomDropzone.prototype = (new Dropzone()).extend( {
 
 // chops any 'px' from the end of the string
 function chopPx (str) {
-    return str.replace(/[a-z]+/i, '');
+    return str.replace(/[a-z%]+/i, '');
 }
