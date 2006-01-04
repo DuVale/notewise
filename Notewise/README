@@ -42,7 +42,7 @@ Copy config-sample.yml to config.yml and edit as appropriate.
 	set Debig to 1
 	set BaseUrl to / or the hostname where things will be loaded
 
-Run script/notewise_server.pl to test the application.  The default port number is 3000.  To change the port number, use 'script/notewise_server.pl -p 3005'.
+Run 'script/notewise_server.pl -k -r' to test the application.  The default port number is 3000.  To change the port number, use 'script/notewise_server.pl -k -r -p 3005'.
 
 
 To run the command line unit tests, do:
