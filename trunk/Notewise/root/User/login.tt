@@ -1,4 +1,3 @@
-[% base _ c.req.path.replace('beta-perl/?','') %]
 <form action='[% base _ path %]' method='POST'>
     <table>
         <tr>
