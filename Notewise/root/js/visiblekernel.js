@@ -36,16 +36,8 @@ VisibleKernel.prototype.extend({
         this.__height=height;
         this.__collapsed=collapsed;
 
-        // listeners that get notified when this visible kernel moves
-        this.__moveListeners = [];
-        // listeners that get notified when this visible kernel changes size
-        this.__sizeListeners = [];
-        // listeners that get notified when this visible kernel starts moving or changing size (start of the drag)
-        this.__startChangeListeners = [];
-        // listeners that get notified when this visible kernel stops moving or changing size (end of the drag)
-        this.__endChangeListeners = [];
-
         JSDBI.prototype.initialize.call(this);
+        WiseObject.prototype.initialize.call(this);
     },
 
     setup: function () {
@@ -90,16 +82,7 @@ VisibleKernel.prototype.extend({
            +"<div class=\"corner\">"
            +"</div>";
         this.htmlElement.innerHTML = innerHTML;
-        parent.appendChild(this.htmlElement);
-        this.setup();
-        this.x(this.x());
-        this.y(this.y());
-        this.setWidth(this.width());
-        this.setHeight(this.height());
-        this.layout();
-        
-        // clean out whitespace only child nodes, in the hopes of improving layoutResize speed
-        Element.cleanWhitespace(this.htmlElement);
+        WiseObject.prototype.realize.call(this,parent);
     },
 
     // create html elements for the child objects
@@ -123,13 +106,9 @@ VisibleKernel.prototype.extend({
     // as properties in this object
     fetchElements: function () {
         KernelObject.prototype.fetchElements.call(this);
-        this.body = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
+        WiseObject.prototype.fetchElements.call(this);
         this.namelink = Utils.getElementsByClassName(this.htmlElement, 'namelink')[0];
-        this.body = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
-        this.corner = Utils.getElementsByClassName(this.htmlElement, 'corner')[0];
-        this.relationshipbutton = Utils.getElementsByClassName(this.htmlElement, 'relationshipbutton')[0];
         this.expandbutton = Utils.getElementsByClassName(this.htmlElement, 'expandbutton')[0];
-        this.removebutton = Utils.getElementsByClassName(this.htmlElement, 'removebutton')[0];
     },
 
     // setup all the event listeners
