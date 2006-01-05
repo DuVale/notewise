@@ -6,7 +6,7 @@ VisibleKernel.extend(JSDBI);
 // multiple inheritance from both JSDBI and Draggable
 VisibleKernel.prototype = {};
 JSDBI.inherit(VisibleKernel,new JSDBI());
-JSDBI.inherit(VisibleKernel,new Draggable());
+JSDBI.inherit(VisibleKernel,new WiseObject());
 JSDBI.inherit(VisibleKernel,new KernelObject());
 
 // Setup the JSDBI data access
@@ -213,7 +213,7 @@ VisibleKernel.prototype.extend({
     // removes the html element from the view, and then notifies the server
     destroy: function () {
         this.htmlElement.parentNode.removeChild(this.htmlElement);
-        return this.superclass.destroy.call(this);
+        return VisibleKernel.superclass.destroy.call(this);
     },
 
     // performs internal visual layout of the html elements for this kernel
@@ -284,7 +284,7 @@ VisibleKernel.prototype.extend({
 
     // Just sets the internal collapsed value but don't change the display
     setCollapsed: function(collapsed) {
-        return this.superclass.collapsed.call(this, collapsed);
+        return VisibleKernel.superclass.collapsed.call(this, collapsed);
     },
 
     // Set whether the kernel is collapsed
@@ -292,17 +292,17 @@ VisibleKernel.prototype.extend({
         var results;
         if(collapsed == undefined) {
             // skip it
-            results = this.superclass.collapsed.call(this);
+            results = VisibleKernel.superclass.collapsed.call(this);
             return results;
         } else if(collapsed){
-            results = this.superclass.collapsed.call(this, 1);
+            results = VisibleKernel.superclass.collapsed.call(this, 1);
             if(this.htmlElement){
                 Element.addClassName(this.htmlElement,'collapsed');
                 this.setFixedSize(true);
             }
             this.notifyEndChangeListeners();
         } else {
-            results = this.superclass.collapsed.call(this, 0);
+            results = VisibleKernel.superclass.collapsed.call(this, 0);
             if(this.htmlElement){
                 Element.removeClassName(this.htmlElement,'collapsed');
                 this.setFixedSize(false);
@@ -316,7 +316,7 @@ VisibleKernel.prototype.extend({
     // Just sets the internal x coordinate but don't change the display
     setX: function(x) {
         this.notifyMoveListeners(x+'%',this.y()+'%');
-        return this.superclass.x.call(this, x);
+        return VisibleKernel.superclass.x.call(this, x);
     },
 
     // Sets the x coordinate as a percentage of the parent object's width and moves the object accordingly
@@ -325,13 +325,13 @@ VisibleKernel.prototype.extend({
             this.htmlElement.style.left = x+"%";
             this.notifyMoveListeners(x+'%',this.y()+'%');
         }
-        return this.superclass.x.call(this, x);
+        return VisibleKernel.superclass.x.call(this, x);
     },
 
     // Just sets the internal y coordinate but don't change the display
     setY: function(y) {
         this.notifyMoveListeners(this.x()+'%',y+'%');
-        return this.superclass.y.call(this, y);
+        return VisibleKernel.superclass.y.call(this, y);
     },
 
     // Sets the y coordinate as a percentage of the parent object's height and moves the object accordingly
@@ -340,7 +340,7 @@ VisibleKernel.prototype.extend({
             this.htmlElement.style.top = y+"%";
             this.notifyMoveListeners(this.x()+'%',y+'%');
         }
-        return this.superclass.y.call(this, y);
+        return VisibleKernel.superclass.y.call(this, y);
     },
 
     // TODO setWidth/width and setHeight/height are backwards from setX/x and
@@ -364,7 +364,7 @@ VisibleKernel.prototype.extend({
 
     // Just sets the internal width
     width: function(width) {
-        var results = this.superclass.width.call(this, width);
+        var results = VisibleKernel.superclass.width.call(this, width);
         if(width != undefined){
             this.notifySizeListeners();
         }
@@ -389,7 +389,7 @@ VisibleKernel.prototype.extend({
 
     // Just sets the internal height  but don't change the display
     height: function(height) {
-        var results = this.superclass.height.call(this, height);
+        var results = VisibleKernel.superclass.height.call(this, height);
         if(height != undefined){
             this.notifySizeListeners();
         }
