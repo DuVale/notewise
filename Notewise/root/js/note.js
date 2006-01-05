@@ -175,8 +175,7 @@ Note.prototype.extend({
     // causes the internal elements to resize if necessary
     layoutResize: function() {
       if(this.body != undefined){
-          this.body.style.border = '1px solid red';
-          this.body.style.width = '100%'
+          this.body.style.width = (this.htmlElement.clientWidth - 4) + 'px';
           this.body.style.height = (this.htmlElement.clientHeight - 2 - this.body.offsetTop) + 'px';
       }
     },
