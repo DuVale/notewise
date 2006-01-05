@@ -80,7 +80,7 @@ body, html {
 }
 
 .note {
-    border: 2px solid #00F;
+    border: 2px solid green;
     position: absolute;
     background: green;
     z-index: 1;
@@ -94,13 +94,11 @@ body, html {
     top: 1.5em;
     bottom: 2px;
     clear: both;
-}
-
-.note .body textarea {
+    border: 0px;
     overflow: auto;
 }
 
-.vkernel .note .body textarea {
+.vkernel .note .body {
     overflow: auto;
 }
 
