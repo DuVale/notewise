@@ -102,11 +102,15 @@ body, html {
     overflow: auto;
 }
 
-.note.selected { border: 2px solid #21bbff; }
 
-.vkernel.selected {
+.selected {
     border: 2px solid #21bbff;
 }
+
+.relationship {
+    border: 0px;
+}
+
 
 .expandbutton,
 .removebutton,
@@ -189,6 +193,16 @@ body, html {
 
 .relationship.notselected .removebutton,
 .relationship.notselected .hidebutton {
+    display: none;
+}
+
+.notselected .relationship.selected .removebutton,
+.notselected .relationship.selected .hidebutton {
+    display: block;
+}
+
+.selected .relationship.notselected .removebutton,
+.selected .relationship.notselected .hidebutton {
     display: none;
 }
 

@@ -111,7 +111,7 @@ Relationship.prototype.extend( {
         this.intersect2={x:0, y:0};
         this.showArrow = [true, true];
         this.htmlElement = document.createElement('div');
-        this.htmlElement.className='relationship';
+        this.htmlElement.className='relationship notselected';
         this.htmlElement.id=this.idString();
         this.htmlElement.relationship=this;
         this.part1ContainedObject.htmlElement.parentNode.appendChild(this.htmlElement);
@@ -133,7 +133,7 @@ Relationship.prototype.extend( {
     createLabel: function() {
         // this div holds the label and associated buttons, so they can be easily moved as a single unit
         this.labelDiv = document.createElement('div');
-        this.labelDiv.className='labelDiv selected';
+        this.labelDiv.className='labelDiv';
         this.htmlElement.appendChild(this.labelDiv);
 
         this.label = document.createElement('input');
@@ -435,6 +435,7 @@ Relationship.prototype.extend( {
     // Select this relationship
     select: function () {
         if( !this.isSelected() ){
+          Element.removeClassName(this.htmlElement, 'notselected');
           Element.addClassName(this.htmlElement, 'selected');
         }
     },
@@ -443,11 +444,12 @@ Relationship.prototype.extend( {
     deselect: function () {
         if( this.isSelected()){
             Element.removeClassName(this.htmlElement, 'selected');
+            Element.addClassName(this.htmlElement, 'notselected');
         }
     },
 
     // Returns whether or not this relationship is currently selected
     isSelected: function () {
-        Element.hasClassName(this.htmlElement, 'selected');
+        return Element.hasClassName(this.htmlElement, 'selected');
     }
 });
