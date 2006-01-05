@@ -2,7 +2,7 @@ var Note = Class.create();
 Note.extend(JSDBI);
 Note.prototype = {};
 JSDBI.inherit(Note,new JSDBI());
-JSDBI.inherit(Note,new Draggable());
+JSDBI.inherit(Note,new WiseObject());
 
 // Setup the JSDBI data access
 Note.fields(['id', 'container_object', 'content', 'height', 'width', 'x', 'y']);
@@ -154,7 +154,7 @@ Note.prototype.extend({
     // removes the html element from the view, and then notifies the server
     destroy: function () {
         this.htmlElement.parentNode.removeChild(this.htmlElement);
-        return this.superclass.destroy.call(this);
+        return Note.superclass.destroy.call(this);
     },
 
     // performs internal visual layout of the html elements for this kernel
@@ -198,7 +198,7 @@ Note.prototype.extend({
     // Just sets the internal x coordinate but don't change the display
     setX: function(x) {
         this.notifyMoveListeners(x+'%',this.y()+'%');
-        return this.superclass.x.call(this, x);
+        return Note.superclass.x.call(this, x);
     },
 
     // Sets the x coordinate as a percentage of the parent object's width and moves the object accordingly
@@ -207,13 +207,13 @@ Note.prototype.extend({
             this.htmlElement.style.left = x+"%";
             this.notifyMoveListeners(x+'%',this.y()+'%');
         }
-        return this.superclass.x.call(this, x);
+        return Note.superclass.x.call(this, x);
     },
 
     // Just sets the internal y coordinate but don't change the display
     setY: function(y) {
         this.notifyMoveListeners(this.x()+'%',y+'%');
-        return this.superclass.y.call(this, y);
+        return Note.superclass.y.call(this, y);
     },
 
     // Sets the y coordinate as a percentage of the parent object's height and moves the object accordingly
@@ -222,7 +222,7 @@ Note.prototype.extend({
             this.htmlElement.style.top = y+"%";
             this.notifyMoveListeners(this.x()+'%',y+'%');
         }
-        return this.superclass.y.call(this, y);
+        return Note.superclass.y.call(this, y);
     },
 
     // TODO setWidth/width and setHeight/height are backwards from setX/x and
@@ -247,7 +247,7 @@ Note.prototype.extend({
 
     // Just sets the internal width
     width: function(width) {
-        var results = this.superclass.width.call(this, width);
+        var results = Note.superclass.width.call(this, width);
         if(width != undefined){
             this.notifySizeListeners(width+'%',this.height()+'%');
         }
@@ -273,7 +273,7 @@ Note.prototype.extend({
 
     // Just sets the internal height  but don't change the display
     height: function(height) {
-        var results = this.superclass.height.call(this, height);
+        var results = Note.superclass.height.call(this, height);
         if(height != undefined){
             this.notifySizeListeners(this.width()+'%',height+'%');
         }
