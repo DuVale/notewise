@@ -366,7 +366,7 @@ VisibleKernel.prototype.extend({
     width: function(width) {
         var results = this.superclass.width.call(this, width);
         if(width != undefined){
-            this.notifySizeListeners(width+'%',this.height()+'%');
+            this.notifySizeListeners();
         }
         return results;
     },
@@ -391,7 +391,7 @@ VisibleKernel.prototype.extend({
     height: function(height) {
         var results = this.superclass.height.call(this, height);
         if(height != undefined){
-            this.notifySizeListeners(this.width()+'%',height+'%');
+            this.notifySizeListeners();
         }
         return results;
     },
@@ -454,13 +454,14 @@ VisibleKernel.prototype.extend({
     },
 
     // Adds a movement listener.  The notify method will called whenever this
-    // visible kernel moves, with the parameters this object, newX, and new Y
+    // visible kernel moves, with the parameters this object, newX, and new Y,
+    // in terms of the parent at the start of the drag
     addMoveListener: function (notifyMethod){
         this.__moveListeners.push(notifyMethod);
     },
 
     // Adds a size listener.  The notify method will called whenever this
-    // visible kernel is resized, with the parameters this object, new width,
+    // visible kernel is resized, with this object as the parameter.
     // and new height
     addSizeListener: function (notifyMethod){
         this.__sizeListeners.push(notifyMethod);
@@ -486,9 +487,12 @@ VisibleKernel.prototype.extend({
         }
     },
 
-    notifySizeListeners: function (width, height){
-        for(var i=0;i<this.__sizeListeners.length;i++){
-            this.__sizeListeners[i](this,width,height);
+    notifySizeListeners: function (){
+        if(this.htmlElement){
+            var parentElement = this.htmlElement.parentNode;
+            for(var i=0;i<this.__sizeListeners.length;i++){
+                this.__sizeListeners[i](this);
+            }
         }
     },
 
@@ -613,6 +617,7 @@ VisibleKernel.prototype.extend({
  
     cancelDrag: function() {
         var parentElement = this.oldParentNode;
+        delete this.oldParentNode;
 
         var pos = Utils.toViewportPosition(this.htmlElement);
         var parentPos = Utils.toViewportPosition(parentElement);
@@ -667,9 +672,7 @@ KernelCornerDraggable.prototype = (new Draggable()).extend( {
         var cornerHeight = this.htmlElement.clientHeight;
         var w = Number(chopPx(this.htmlElement.style.left)) + cornerWidth;
         var h = Number(chopPx(this.htmlElement.style.top)) + cornerHeight;
-        //if(!this.vkernel.collapsed()){
         this.vkernel.setHeight(h*100/this.vkernel.htmlElement.parentNode.clientHeight);
-        //}
         this.vkernel.setWidth(w*100/this.vkernel.htmlElement.parentNode.clientWidth);
         this.vkernel.layoutResize();
     },
