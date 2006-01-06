@@ -356,6 +356,10 @@ body, html {
     display: none;
 }
 
+.note .leftgrippie {
+    background: url('images/note-gripper.png');
+}
+
 .leftgrippie {
     background: url('images/gripper.png');
     z-index:0;
@@ -373,6 +377,7 @@ body, html {
 }
 .note .corner {
     right: 0; bottom: 0;
+    background: url('images/note-corner.gif');
 }
 
 .corner {
