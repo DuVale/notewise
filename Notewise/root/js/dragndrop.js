@@ -377,7 +377,9 @@ DragAndDrop.prototype.extend({
       if ( ! this.wasDrag
            && ! this.newlySelected ) {
          var draggableObject = this._getDraggable(e);
-         this.updateSelection( draggableObject, (e.shiftKey || e.ctrlKey) );
+         if(draggableObject != null){
+             this.updateSelection( draggableObject, (e.shiftKey || e.ctrlKey) );
+         }
       }
       this.wasDrag = false;
       this.newlySelected = false;
