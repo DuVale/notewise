@@ -31,6 +31,9 @@ KernelObject.prototype = {
         Utils.registerEventListener(this.namefield,
                                    'mousedown',
                                    Utils.terminateEvent.bindAsEventListener(this));
+        Utils.registerEventListener(this.namefield,
+                                   'mouseup',
+                                   Utils.terminateEvent.bindAsEventListener(this));
         // double click in namefield should select text, not create kernel
         Utils.registerEventListener(this.namefield,
                                    'dblclick',
