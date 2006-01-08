@@ -418,7 +418,6 @@ DragAndDrop.prototype.extend({
 
       this._deactivateRegisteredDropZones();
       this._endDrag();
-//      this.clearSelection();
       this.dragElement = null;
       this.currentDragObjectVisible = false;
       this._terminateEvent(e);
