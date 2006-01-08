@@ -132,9 +132,6 @@ VisibleKernel.prototype.extend({
 
         // TODO DRY - consolidate these into a big list of element/event pairs
         // Setup action terminators
-        Utils.registerEventListener(this.body,
-                                   'mousedown',
-                                   this.clearSelectionAndTerminate.bindAsEventListener(this));
         // dragging on any of the buttons shouldn't drag the object
         Utils.registerEventListener(this.expandbutton,
                                    'mousedown',
