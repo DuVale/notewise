@@ -18,6 +18,23 @@ Utils = {
         dndMgr._terminateEvent(e);
     },
 
+    // Clear the selection (resetting focus to the search box) and terminate the event
+    clearSelectionAndTerminate: function(e){
+        Utils.terminateEvent(e);
+        Utils.preventDefault(e);
+        dndMgr.clearSelection();
+        dndMgr.giveSearchBoxFocus();
+    },
+
+    // prevents the default browser action for this event from occuring
+    preventDefault: function(e) {
+        if ( e.preventDefault != undefined )
+           e.preventDefault();
+        else
+           e.returnValue = false;
+    },
+
+
     getElementsByClassName: function(parentElement,className) {
       var children = parentElement.childNodes;
       var elements = new Array();

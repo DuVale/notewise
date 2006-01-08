@@ -22,10 +22,14 @@ KernelObject.prototype = {
 
         // setup the click handlers
         Utils.registerEventListener(this.body,'dblclick', this.addNewElement.bindAsEventListener(this));
+        Utils.registerEventListener(this.body,
+                                   'mousedown',
+                                   Utils.clearSelectionAndTerminate.bindAsEventListener(this));
         
         // setup the namefield actions
         Utils.registerEventListener(this.namefield,'blur', this.updateName.bindAsEventListener(this));
         Utils.registerEventListener(this.namefield,'keyup', this.layoutNamefield.bind(this));
+        Utils.registerEventListener(this.namefield,'keypress', this.loseFocusOnEnter.bindAsEventListener(this));
 
         // drag in namefield should select text, not drag object
         Utils.registerEventListener(this.namefield,
@@ -68,6 +72,13 @@ KernelObject.prototype = {
         // scroll all the way to the left
         this.namefield.value = this.namefield.value;
         return width;
+    },
+
+    loseFocusOnEnter: function(e) {
+        window.status = "got key press: "+e.keyCode;
+        if(e.keyCode == Event.KEY_RETURN) {
+            Utils.clearSelectionAndTerminate(e);
+        }
     },
 
     resizeChildren: function() {
@@ -160,22 +171,6 @@ KernelObject.prototype = {
         } else {
             return y;
         }
-    },
-
-    // Clear the selection (resetting focus to the search box) and terminate the event
-    clearSelectionAndTerminate: function(e){
-        Utils.terminateEvent(e);
-        this.preventDefault(e);
-        dndMgr.clearSelection();
-        dndMgr.giveSearchBoxFocus();
-    },
-
-    // prevents the default browser action for this event from occuring
-    preventDefault: function(e) {
-        if ( e.preventDefault != undefined )
-           e.preventDefault();
-        else
-           e.returnValue = false;
     },
 
     addNewElement: function (e) {

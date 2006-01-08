@@ -121,12 +121,6 @@
         var viewKernelId=[%kernel.id%];
         var view = new ViewKernel([%kernel.id%],$('viewkernel'));
 
-        function clearSelection (e) {
-            VisibleKernel.prototype.clearSelectionAndTerminate(e);
-        }
-        Utils.registerEventListener(view.htmlElement,"mousedown",clearSelection);
-
-
         new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '[%base%]ac', {frequency: .1, min_chars: 2});
         $('mysearchfield').focus();
     </script>
