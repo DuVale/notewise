@@ -122,7 +122,6 @@ VisibleKernel.prototype.extend({
 
         // setup the click handlers
         Utils.registerEventListener(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
-        Utils.registerEventListener(this.namefield,'click', this.selectAndTerminate.bindAsEventListener(this));
         Utils.registerEventListener(this.namelink,'click', Utils.terminateEvent.bindAsEventListener(this));
         Utils.registerEventListener(this.namelink,'mousedown', Utils.terminateEvent.bindAsEventListener(this));
         
