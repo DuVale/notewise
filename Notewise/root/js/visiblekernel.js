@@ -35,6 +35,7 @@ VisibleKernel.prototype.extend({
         this.__width=width;
         this.__height=height;
         this.__collapsed=collapsed;
+        this.superclass=VisibleKernel.superclass;
 
         JSDBI.prototype.initialize.call(this);
         WiseObject.prototype.initialize.call(this);
@@ -115,11 +116,9 @@ VisibleKernel.prototype.extend({
     registerHandlers: function() {
         KernelObject.prototype.registerHandlers.call(this);
 
-        // TODO check to see if all these terminate event listeners are necessary
+        WiseObject.prototype.registerHandlers.call(this);
 
-        // set up the dnd
-        dndMgr.registerDraggable( this );
-        dndMgr.registerDraggable( new KernelCornerDraggable(this.corner, this) );
+        // TODO check to see if all these terminate event listeners are necessary
 
         // setup the click handlers
         Utils.registerEventListener(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
@@ -127,16 +126,6 @@ VisibleKernel.prototype.extend({
         Utils.registerEventListener(this.namelink,'click', Utils.terminateEvent.bindAsEventListener(this));
         Utils.registerEventListener(this.namelink,'mousedown', Utils.terminateEvent.bindAsEventListener(this));
         
-        // setup the relationship button
-        Utils.registerEventListener(this.relationshipbutton,
-                                   'mousedown',
-                                   this.startCreateRelationship.bindAsEventListener(this));
-
-        // setup the remove button
-        Utils.registerEventListener(this.removebutton,
-                                   'click',
-                                   this.destroy.bind(this));
-
         // setup the collapsed button
         Utils.registerEventListener(this.expandbutton,
                                    'click',
@@ -148,34 +137,20 @@ VisibleKernel.prototype.extend({
                                    'mousedown',
                                    this.clearSelectionAndTerminate.bindAsEventListener(this));
         // dragging on any of the buttons shouldn't drag the object
-        Utils.registerEventListener(this.relationshipbutton,
-                                   'mousedown',
-                                   Utils.terminateEvent.bindAsEventListener(this));
         Utils.registerEventListener(this.expandbutton,
-                                   'mousedown',
-                                   Utils.terminateEvent.bindAsEventListener(this));
-        Utils.registerEventListener(this.removebutton,
                                    'mousedown',
                                    Utils.terminateEvent.bindAsEventListener(this));
 
         // doubleclicking on any of the buttons shouldn't do anything
-        Utils.registerEventListener(this.relationshipbutton,
-                                   'dblclick',
-                                   Utils.terminateEvent.bindAsEventListener(this));
         Utils.registerEventListener(this.expandbutton,
-                                   'dblclick',
-                                   Utils.terminateEvent.bindAsEventListener(this));
-        Utils.registerEventListener(this.removebutton,
                                    'dblclick',
                                    Utils.terminateEvent.bindAsEventListener(this));
     },
 
     // Select this object and terminate the event
     selectAndTerminate: function(e) {
-        dndMgr.clearSelection();
-        dndMgr.updateSelection(this,false);
+        WiseObject.prototype.selectAndTerminate.call(this);
         this.namefield.focus();
-        Utils.terminateEvent(e)
     },
 
     // make this kernel into the current view (ie, switch the url to this kernel)
@@ -184,38 +159,15 @@ VisibleKernel.prototype.extend({
         Utils.terminateEvent(e);
     },
 
-    // starts the process of creating a relationship
-    startCreateRelationship: function(e){
-        newRelationship.startDrag(e,this);
-    },
-
-    // removes the html element from the view, and then notifies the server
-    destroy: function () {
-        this.htmlElement.parentNode.removeChild(this.htmlElement);
-        return VisibleKernel.superclass.destroy.call(this);
-    },
-
     // performs internal visual layout of the html elements for this kernel
     layout: function(){
-        this.layoutResize();
-//        this.layoutCorner();
+        WiseObject.prototype.layout.call(this);
         this.layoutNamefield();
-    },
-
-    // causes the resize corner to relayout
-    layoutCorner: function() {
-        this.corner.style.left = '';
-        this.corner.style.top = '';
-        this.corner.style.right = '0px';
-        this.corner.style.bottom = '0px';
     },
 
     // causes the internal elements to resize if necessary
     layoutResize: function() {
-        if(this.body != undefined){
-            this.body.style.width = (this.htmlElement.clientWidth - 4) + 'px';
-            this.body.style.height = (this.htmlElement.clientHeight - 2 - this.body.offsetTop) + 'px';
-        }
+        WiseObject.prototype.layoutResize.call(this);
         this.resizeChildren();
     },
 
@@ -229,8 +181,6 @@ VisibleKernel.prototype.extend({
     // Accepts:
     //   fixed - a boolean indicating whether the kernel should be fixed width
     setFixedSize: function(fixed){
-//        var oldWidth = this.htmlElement.clientWidth;
-//        var oldMinWidth = this.htmlElement.style.minWidth;
         width = (this.getNameFieldWidth()+50);
         if(fixed){
             this.htmlElement.style.width = width+'px';
@@ -240,10 +190,7 @@ VisibleKernel.prototype.extend({
             this.htmlElement.style.height = this.height() + '%';
         }
 
-//        if(oldWidth < width
-//           || oldMinWidth != (width+'px') ){
-            this.layoutResize();
-//        }
+        this.layoutResize();
     },
 
     // Toggles whether the kernel is collapsed or not
@@ -292,137 +239,6 @@ VisibleKernel.prototype.extend({
         return results;
     },
 
-    // Just sets the internal x coordinate but don't change the display
-    setX: function(x) {
-        this.notifyMoveListeners(x+'%',this.y()+'%');
-        return VisibleKernel.superclass.x.call(this, x);
-    },
-
-    // Sets the x coordinate as a percentage of the parent object's width and moves the object accordingly
-    x: function(x) {
-        if(x && this.htmlElement){
-            this.htmlElement.style.left = x+"%";
-            this.notifyMoveListeners(x+'%',this.y()+'%');
-        }
-        return VisibleKernel.superclass.x.call(this, x);
-    },
-
-    // Just sets the internal y coordinate but don't change the display
-    setY: function(y) {
-        this.notifyMoveListeners(this.x()+'%',y+'%');
-        return VisibleKernel.superclass.y.call(this, y);
-    },
-
-    // Sets the y coordinate as a percentage of the parent object's height and moves the object accordingly
-    y: function(y) {
-        if(y && this.htmlElement){
-            this.htmlElement.style.top = y+"%";
-            this.notifyMoveListeners(this.x()+'%',y+'%');
-        }
-        return VisibleKernel.superclass.y.call(this, y);
-    },
-
-    // TODO setWidth/width and setHeight/height are backwards from setX/x and
-    // setY/y - unify
-
-    // Sets the width as a percentage of the parent object's width and moves
-    // the object accordingly
-    setWidth: function(width) {
-        var results;
-        if(width != undefined){
-            results = this.width(this.checkWidth(width));
-            if(this.htmlElement){
-                this.htmlElement.style.width = results+"%";
-            }
-            this.layoutCorner();
-        } else {
-            results = this.width(this.checkWidth(width));
-        }
-        return results;
-    },
-
-    // Just sets the internal width
-    width: function(width) {
-        var results = VisibleKernel.superclass.width.call(this, width);
-        if(width != undefined){
-            this.notifySizeListeners();
-        }
-        return results;
-    },
-
-    // Sets the height as a percentage of the parent object's width and moves
-    // the object accordingly
-    setHeight: function(height) {
-        var results;
-        if(height != undefined){
-            results = this.height(this.checkHeight(height));
-            if(this.htmlElement){
-                this.htmlElement.style.height = results+"%";
-            }
-            this.layoutCorner();
-        } else {
-            results = this.height(this.checkHeight(height));
-        }
-        return results;
-    },
-
-    // Just sets the internal height  but don't change the display
-    height: function(height) {
-        var results = VisibleKernel.superclass.height.call(this, height);
-        if(height != undefined){
-            this.notifySizeListeners();
-        }
-        return results;
-    },
-
-    // returns the current actual onscreen size of the object in percent
-    currentHeight: function(parentElement) {
-        if(parentElement == null){
-            parentElement=this.htmlElement.parentNode;
-        }
-        if(this.collapsed()){
-            return this.htmlElement.clientHeight*100/parentElement.clientHeight;
-        } else {
-            return this.height();
-        }
-    },
-
-    // returns the current actual onscreen size of the object in percent
-    currentWidth: function(parentElement) {
-        if(parentElement == null){
-            parentElement=this.htmlElement.parentNode;
-        }
-        if(this.collapsed()){
-            return this.htmlElement.clientWidth*100/parentElement.clientWidth;
-        } else {
-            return this.width();
-        }
-    },
-
-    // checks to make sure the height is ok, and returns a corrected value if it isn't
-    // height should be in percentage
-    checkHeight: function(h){
-        var minHeight=this.getMinHeight();
-        var parentHeight=this.htmlElement.parentNode.clientHeight;
-        var heightPixels=(parentHeight * h)/100;
-        if(heightPixels < minHeight){
-            h = minHeight*100/parentHeight;
-        }
-        return h;
-    },
-
-    // checks to make sure the width is ok, and returns a corrected value if it isn't
-    // width should be in percentage
-    checkWidth: function(w){
-        var minWidth=this.getMinWidth();
-        var parentWidth=this.htmlElement.parentNode.clientWidth;
-        var widthPixels=(parentWidth * w)/100;
-        if(widthPixels < minWidth){
-            w = minWidth*100/parentWidth;
-        }
-        return w;
-    },
-
     getMinHeight: function() {
         return 100;
     },
@@ -430,236 +246,8 @@ VisibleKernel.prototype.extend({
     getMinWidth: function() {
         var nameFieldWidth =  this.getNameFieldWidth()+50;
         return Math.max(nameFieldWidth,100);
-    },
-
-    // Adds a movement listener.  The notify method will called whenever this
-    // visible kernel moves, with the parameters this object, newX, and new Y,
-    // in terms of the parent at the start of the drag
-    addMoveListener: function (notifyMethod){
-        this.__moveListeners.push(notifyMethod);
-    },
-
-    // Adds a size listener.  The notify method will called whenever this
-    // visible kernel is resized, with this object as the parameter.
-    // and new height
-    addSizeListener: function (notifyMethod){
-        this.__sizeListeners.push(notifyMethod);
-    },
-
-    // Adds a start change listener.  The notify method will called whenever
-    // this visible kernel starts resizing or moving.  The notify method will
-    // get this object as a parameter.
-    addStartChangeListener: function (notifyMethod){
-        this.__startChangeListeners.push(notifyMethod);
-    },
-
-    // Adds an end change listener.  The notify method will called whenever
-    // this visible kernel stops resizing or moving.  The notify method will
-    // get this object as a parameter.
-    addEndChangeListener: function (notifyMethod){
-        this.__endChangeListeners.push(notifyMethod);
-    },
-
-    notifyMoveListeners: function (x,y){
-        for(var i=0;i<this.__moveListeners.length;i++){
-            this.__moveListeners[i](this,x,y);
-        }
-    },
-
-    notifySizeListeners: function (){
-        if(this.htmlElement){
-            var parentElement = this.htmlElement.parentNode;
-            for(var i=0;i<this.__sizeListeners.length;i++){
-                this.__sizeListeners[i](this);
-            }
-        }
-    },
-
-    notifyStartChangeListeners: function (){
-        for(var i=0;i<this.__startChangeListeners.length;i++){
-            this.__startChangeListeners[i](this);
-        }
-    },
-
-    notifyEndChangeListeners: function (){
-        for(var i=0;i<this.__endChangeListeners.length;i++){
-            this.__endChangeListeners[i](this);
-        }
-    },
-
-    // accepts the vkernel to reparent to, and whether or not to notify the server about it
-    reparent: function(vkernel, do_update) {
-        var parentElement = vkernel.body;
-
-        // Can't make element child of it's own child and don't reparent it if
-        // it's already in the right element
-        if(Utils.hasAncestor(parentElement,this.htmlElement)
-          || this.htmlElement.parentNode == parentElement){
-            return;
-        }
-
-        // Save all the old position and size info in pixels, so we can
-        // recalculate it with the new parent
-        var pos = Utils.toViewportPosition(this.htmlElement);
-        var parentPos = Utils.toViewportPosition(parentElement);
-        var width = this.htmlElement.clientWidth;
-        var height = this.htmlElement.clientHeight;
-
-        // actually reparent
-        parentElement.appendChild(this.htmlElement);
-
-        // switch all the position and size info to match the new parent
-        this.x((pos.x-parentPos.x)*100/parentElement.clientWidth);
-        this.y((pos.y-parentPos.y)*100/parentElement.clientHeight);
-        if(!this.collapsed()){
-            // don't set the size if we're collapsed, cause it'll wipe
-            // out the currently saved size
-            this.setHeight(height*100/parentElement.clientHeight);
-            this.setWidth(width*100/parentElement.clientWidth);
-        }
-
-        // move the object to the frontmost layer
-        dndMgr.moveToFront(this.htmlElement);
-
-        // relayout
-        this.layoutResize();
-
-        // update the db
-
-        // this is a hack to avoid having to retrieve the kernel object
-        // itself, since we don't really need it right now
-        this.container_object(vkernel.kernel_id());
-        this.update();
-    },
-
-    // Returns whether or not this kernel is currently selected
-    isSelected: function () {
-        return Element.hasClassName(this.htmlElement,'selected');
-    },
-
-    // Rico draggable stuff
-
-    // Select this kernel
-    select: function () {
-        if( !this.isSelected() ){
-            Element.removeClassName(this.htmlElement,'notselected');
-            Element.addClassName(this.htmlElement,'selected');
-        }
-        dndMgr.moveToFront(this.htmlElement);
-    },
-
-    // Mark this kernel as not selected
-    deselect: function () {
-        if( this.isSelected()){
-            Element.removeClassName(this.htmlElement,'selected');
-            Element.addClassName(this.htmlElement,'notselected');
-        }
-    },
-
-    startDrag: function() {
-        this.notifyStartChangeListeners();
-
-        // change the startx/starty offsets so they're correct when we pop up
-        // into the document body
-        var parentPos = Utils.toViewportPosition(this.htmlElement.parentNode);
-        this.startx -= parentPos.x;
-        this.starty -= parentPos.y;
-
-        // make sure the original position is relative to the viewport, not the
-        // parent, so it ends up back in the same place if the drag is canceled
-        this.origPos = Utils.toViewportPosition(this.htmlElement);
-
-        // convert this element to pixels, so it doesn't change size as we reparent
-        this.htmlElement.style.width=this.htmlElement.clientWidth+'px';
-        this.htmlElement.style.height=this.htmlElement.clientHeight+'px';
-
-        // pop the element up into the document body, so it can drag anywhere
-        this.oldParentNode = this.htmlElement.parentNode;
-        this.htmlElement.parentNode.removeChild(this.htmlElement);
-        document.body.appendChild(this.htmlElement);
-    },
- 
-    endDrag: function() {
-        // TODO need to make sure at the end of the drag, the element ends up back down inside a kernel body
-        delete this.oldParentNode;
-        this.notifyEndChangeListeners();
-    },
- 
-    duringDrag: function() {
-        var parentPos = Utils.toViewportPosition(this.oldParentNode);
-        var x = Number(chopPx(this.htmlElement.style.left)-parentPos.x)*100
-                       / this.oldParentNode.clientWidth;
-        var y = (Number(chopPx(this.htmlElement.style.top))-parentPos.y)*100
-                       / this.oldParentNode.clientHeight;
-        this.notifyMoveListeners(x+'%',y+'%');
-    },
- 
-    cancelDrag: function() {
-        var parentElement = this.oldParentNode;
-        delete this.oldParentNode;
-
-        var pos = Utils.toViewportPosition(this.htmlElement);
-        var parentPos = Utils.toViewportPosition(parentElement);
-        var width = this.htmlElement.clientWidth;
-        var height = this.htmlElement.clientHeight;
-
-        parentElement.appendChild(this.htmlElement);
-
-
-        var elementStyle = this.htmlElement.style;
-        elementStyle.left = ((pos.x-parentPos.x)*100/parentElement.clientWidth) + '%';
-        elementStyle.top = ((pos.y-parentPos.y)*100/parentElement.clientHeight) + '%';
-        elementStyle.width = (width*100/parentElement.clientWidth) + '%';
-        elementStyle.height = (height*100/parentElement.clientHeight) + '%';
-
-        this.notifyEndChangeListeners();
     }
 });
-
-// This is totally a hack, but it more or less works.  The idea is that we think of the corner image as it's own separate draggable object.  However, the duringDrag event that fires while it is being dragged resizes the associate kernel appropriately. When the drag finishes, the size of the kernel is written out.
-
-var KernelCornerDraggable = Class.create();
-KernelCornerDraggable.prototype = (new Draggable()).extend( {
-    initialize: function( htmlElement, vkernel ) {
-        this.type        = 'KernelCorner';
-        this.htmlElement = htmlElement;
-        this.vkernel        = vkernel;
-    },
- 
-    startDrag: function() {
-       this.vkernel.notifyStartChangeListeners();
-    },
- 
-    cancelDrag: function() {
-       this.sizeFromCorner(); // XXX 12/19 just turned this back on - could be an issue
-       this.vkernel.notifyEndChangeListeners();
-    },
-
-    endDrag: function() {
-       this.vkernel.notifyEndChangeListeners();
-       this.vkernel.layoutCorner();
-       this.vkernel.update();
-    },
- 
-    duringDrag: function() {
-        this.sizeFromCorner();
-    },
-
-    // size the associated kernel based on the position of the corner
-    sizeFromCorner: function(){
-        var cornerWidth = this.htmlElement.clientWidth;
-        var cornerHeight = this.htmlElement.clientHeight;
-        var w = Number(chopPx(this.htmlElement.style.left)) + cornerWidth;
-        var h = Number(chopPx(this.htmlElement.style.top)) + cornerHeight;
-        this.vkernel.setHeight(h*100/this.vkernel.htmlElement.parentNode.clientHeight);
-        this.vkernel.setWidth(w*100/this.vkernel.htmlElement.parentNode.clientWidth);
-        this.vkernel.layoutResize();
-    },
- 
-    select: function() {
-    }
- 
-} );
 
 var CustomDropzone = Class.create();
 
