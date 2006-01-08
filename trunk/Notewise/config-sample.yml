@@ -4,10 +4,10 @@ V::TT:
     # display template rendering timing information in the html
     TIMER: 0
 # Show debug output in the server logs
-Debug: 0
+Debug: 1
 # Serve static files from within catalyst.  This should only be off in
 # production, when apache handles it.
-Static: 0
+Static: 1
 # Database connection info
 M::CDBI:
     dsn: dbi:mysql:dbname=notewise_beta
