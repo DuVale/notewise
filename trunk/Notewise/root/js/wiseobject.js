@@ -97,6 +97,8 @@ WiseObject.prototype.extend({
         if(this.htmlElement.parentNode != null){
             this.htmlElement.parentNode.removeChild(this.htmlElement);
         }
+        dndMgr.clearSelection();
+        dndMgr.giveSearchBoxFocus();
         return JSDBI.prototype.destroy.call(this);
     },
 
