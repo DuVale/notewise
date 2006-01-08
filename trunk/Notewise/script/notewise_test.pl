@@ -19,18 +19,18 @@ print request($ARGV[0])->content . "\n";
 
 =head1 NAME
 
-popweb_test.pl - Catalyst Test
+notewise_test.pl - Catalyst Test
 
 =head1 SYNOPSIS
 
-popweb_test.pl [options] uri
+notewise_test.pl [options] uri
 
  Options:
    -help    display this help and exits
 
  Examples:
-   popweb_test.pl http://localhost/some_action
-   popweb_test.pl /some_action
+   notewise_test.pl http://localhost/some_action
+   notewise_test.pl /some_action
 
  See also:
    perldoc Catalyst::Manual

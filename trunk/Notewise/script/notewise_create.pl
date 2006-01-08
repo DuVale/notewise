@@ -4,24 +4,18 @@ use strict;
 use Getopt::Long;
 use Pod::Usage;
 use Catalyst::Helper;
-use lib ('./lib');
-use Notewise;
-
 
 my $force = 0;
 my $help  = 0;
-my $short = 0;
 
 GetOptions(
     'nonew|force' => \$force,
-    'help|?'      => \$help,
-    'short'       => \$short
+    'help|?'      => \$help
  );
 
 pod2usage(1) if ( $help || !$ARGV[0] );
 
-my $helper =
-    Catalyst::Helper->new( { '.newfiles' => !$force, short => $short } );
+my $helper = Catalyst::Helper->new( { '.newfiles' => !$force } );
 
 pod2usage(1) unless $helper->mk_component( 'Notewise', @ARGV );
 
@@ -29,25 +23,24 @@ pod2usage(1) unless $helper->mk_component( 'Notewise', @ARGV );
 
 =head1 NAME
 
-popweb_create.pl - Create a new Catalyst Component
+notewise_create.pl - Create a new Catalyst Component
 
 =head1 SYNOPSIS
 
-popweb_create.pl [options] model|view|controller name [helper] [options]
+notewise_create.pl [options] model|view|controller name [helper] [options]
 
  Options:
    -force    don't create a .new file where a file to be created exists
    -help     display this help and exits
-   -short    use short types, like C instead of Controller...
 
  Examples:
-   popweb_create.pl controller My::Controller
-   popweb_create.pl view My::View
-   popweb_create.pl view MyView TT
-   popweb_create.pl view TT TT
-   popweb_create.pl model My::Model
-   popweb_create.pl model SomeDB CDBI dbi:SQLite:/tmp/my.db
-   popweb_create.pl model AnotherDB CDBI dbi:Pg:dbname=foo root 4321
+   notewise_create.pl controller My::Controller
+   notewise_create.pl view My::View
+   notewise_create.pl view MyView TT
+   notewise_create.pl view TT TT
+   notewise_create.pl model My::Model
+   notewise_create.pl model SomeDB CDBI dbi:SQLite:/tmp/my.db
+   notewise_create.pl model AnotherDB CDBI dbi:Pg:dbname=foo root 4321
 
  See also:
    perldoc Catalyst::Manual
