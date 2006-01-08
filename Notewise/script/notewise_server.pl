@@ -2,7 +2,7 @@
 
 BEGIN { 
     $ENV{CATALYST_ENGINE} ||= 'HTTP';
-    $ENV{CATALYST_SCRIPT_GEN} = 19;
+    $ENV{CATALYST_SCRIPT_GEN} = 23;
 }  
 
 use strict;
@@ -44,6 +44,8 @@ if ( $debug ) {
     $ENV{CATALYST_DEBUG} = 1;
 }
 
+# This is require instead of use so that the above environment
+# variables can be set at runtime.
 require Notewise;
 
 Notewise->run( $port, $host, {
@@ -59,11 +61,11 @@ Notewise->run( $port, $host, {
 
 =head1 NAME
 
-popweb_server.pl - Catalyst Testserver
+notewise_server.pl - Catalyst Testserver
 
 =head1 SYNOPSIS
 
-popweb_server.pl [options]
+notewise_server.pl [options]
 
  Options:
    -d -debug          force debug mode

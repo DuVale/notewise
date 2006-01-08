@@ -36,11 +36,11 @@ Notewise->run(
 
 =head1 NAME
 
-popweb_fastcgi.pl - Catalyst FastCGI
+notewise_fastcgi.pl - Catalyst FastCGI
 
 =head1 SYNOPSIS
 
-popweb_fastcgi.pl [options]
+notewise_fastcgi.pl [options]
  
  Options:
    -? -help      display this help and exits

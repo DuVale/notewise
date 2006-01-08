@@ -13,7 +13,7 @@ Notewise->run;
 
 =head1 NAME
 
-popweb_cgi.pl - Catalyst CGI
+notewise_cgi.pl - Catalyst CGI
 
 =head1 SYNOPSIS
 
