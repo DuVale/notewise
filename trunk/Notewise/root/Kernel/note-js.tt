@@ -14,4 +14,5 @@
                         "[% content %]");
                         
     noteObj.layout();
+    objectCache['[%note.container_object%]/[%note.id%]']=noteObj;
 </script>

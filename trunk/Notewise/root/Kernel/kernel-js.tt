@@ -11,7 +11,7 @@
                                     [%vkernel.collapsed%]
                                     );
     vkernel.layout();
-    vkernelCache['[%vkernel.container_kernel.id%]/[%vkernel.contained_kernel.id%]']=vkernel;
+    objectCache['[%vkernel.container_kernel.id%]/[%vkernel.contained_kernel.id%]']=vkernel;
 </script>
     [% contained_kernel = vkernel.contained_kernel %]
 

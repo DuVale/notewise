@@ -228,16 +228,26 @@ body, html {
 
 .arrowdiv {
     position: absolute;
+    /* This is necessary to make the arrows clickable in IE.  Otherwise the click is stolen by the line image. */
+    background: url('images/clear.png');
+}
+
+/* XXX DEBUG */
+img {
+    border: 1px solid black;
+    z-index: -100;
 }
 
 .arrowcanvas {
-    border: 0px solid green;
+    border: 1px solid green;
     left: -17px;
     top: -17px;
     width: 34px;
     height: 34px;
     position: absolute;
     z-index: 15;
+    /* This is necessary to make the arrows clickable in IE.  Otherwise the click is stolen by the line image. */
+    background: url('images/clear.png');
 }
 
 .labelDiv {

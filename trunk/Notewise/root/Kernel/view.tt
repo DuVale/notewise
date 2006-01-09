@@ -102,7 +102,7 @@
         // configure the base url for jsdbi
         JSDBI.base_url('[% base %]');
         // XXX this is pretty nasty - put this inside the view's vkernel instead
-        var vkernelCache = {};
+        var objectCache = {};
     </script>
 
     [% FOR vkernel = visible_kernels %]
