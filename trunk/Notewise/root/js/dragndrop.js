@@ -209,9 +209,9 @@ DragAndDrop.prototype.extend({
 
    // starts a drag from the given html element
    setStartDragFromDraggable: function( e, draggableObject ) {
-      this.origPos = Utils.toDocumentPosition(draggableObject.getMouseDownHTMLElement());
-      draggableObject.startx = e.screenX - this.origPos.x
-      draggableObject.starty = e.screenY - this.origPos.y
+      draggableObject.origPos = Utils.toDocumentPosition(draggableObject.getMouseDownHTMLElement());
+      draggableObject.startx = e.screenX - draggableObject.origPos.x
+      draggableObject.starty = e.screenY - draggableObject.origPos.y
 
       this.interestedInMotionEvents = this.hasSelection();
       this._terminateEvent(e);
@@ -400,12 +400,15 @@ DragAndDrop.prototype.extend({
          this._completeDropOperation(e);
       } else {
          this._terminateEvent(e);
-         new Effect.Position( this.dragElement,
-                              this.origPos.x,
-                              this.origPos.y,
-                              100,
-                              20,
-                              { complete : this._doCancelDragProcessing.bind(this) } );
+         for ( var i = 0 ; i < this.currentDragObjects.length ; i++ ){
+            var dragObject = this.currentDragObjects[i];
+            new Effect.Position( dragObject.htmlElement,
+                                 dragObject.origPos.x,
+                                 dragObject.origPos.y,
+                                 100,
+                                 20,
+                                 { complete : this._doCancelDragProcessing.bindWithParams(this,dragObject) } );
+         }
       }
    },
 
@@ -423,11 +426,12 @@ DragAndDrop.prototype.extend({
       this._terminateEvent(e);
    },
 
-   _doCancelDragProcessing: function() {
-      this._cancelDrag();
+   _doCancelDragProcessing: function(dragObject) {
+      dragObject.cancelDrag();
 
       // remove the drag element if it was added just for the drag
-      if ( this.dragElement != this.currentDragObjects[0].getMouseDownHTMLElement() ) {
+      if ( this.dragElement != null &&
+           this.dragElement != this.currentDragObjects[0].getMouseDownHTMLElement() ) {
          if ( this.dragElement.parentNode != null ) {
             this.dragElement.parentNode.removeChild(this.dragElement);
          }
@@ -487,12 +491,6 @@ DragAndDrop.prototype.extend({
          }
       }
       return currentDropZone;
-   },
-
-   // call cancelDrag on each of the draggables
-   _cancelDrag: function() {
-      for ( var i = 0 ; i < this.currentDragObjects.length ; i++ )
-         this.currentDragObjects[i].cancelDrag();
    },
 
    // call endDrag on each of the draggables
@@ -874,3 +872,5 @@ Effect.SizeAndPosition.prototype = {
          style.height  = (currentHeight + intDifH) + "px";
    }
 }
+
+// vim set:sw=3

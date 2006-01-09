@@ -246,7 +246,7 @@ img {
     position: absolute;
     z-index: 15;
     /* This is necessary to make the arrows clickable in IE.  Otherwise the click is stolen by the line image. */
-    background: url('images/clear.png');
+    background: url('images/clear.gif');
 }
 
 .labelDiv {
