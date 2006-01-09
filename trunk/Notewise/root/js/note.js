@@ -30,6 +30,7 @@ Note.prototype.extend({
         this.__height=height;
         this.__content=content;
         this.superclass=Note.superclass;
+        this.htmlElement.note=this;
 
         JSDBI.prototype.initialize.call(this);
         WiseObject.prototype.initialize.call(this);

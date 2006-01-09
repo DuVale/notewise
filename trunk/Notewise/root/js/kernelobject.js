@@ -88,6 +88,7 @@ KernelObject.prototype = {
             var children = this.body.childNodes;
             for(var i=0; i<children.length; i++){
                 var child = children[i];
+                // XXX Icky - DRY
                 if(child.className != undefined
                    && Element.hasClassName(child,'vkernel')
                    && child.kernel != undefined){
@@ -97,6 +98,11 @@ KernelObject.prototype = {
                    && Element.hasClassName(child,'relationship')
                    && child.relationship != undefined){
                     child.relationship.layoutResize();
+                }
+                if(child.className != undefined
+                   && Element.hasClassName(child,'note')
+                   && child.note != undefined){
+                    child.note.layoutResize();
                 }
             }
         }
