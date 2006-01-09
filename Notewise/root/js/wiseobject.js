@@ -22,6 +22,11 @@ WiseObject.prototype.extend({
     setup: function () {
         this.fetchElements();
         this.registerHandlers();
+        
+        // clean out whitespace only child nodes, in the hopes of improving layoutResize speed
+        if(this.htmlElement){
+            Element.cleanWhitespace(this.htmlElement);
+        }
     },
 
     // creates the actual html for this object. Subclasses should override thi,
@@ -34,9 +39,6 @@ WiseObject.prototype.extend({
         this.moveWidth(this.width());
         this.moveHeight(this.height());
         this.layout();
-        
-        // clean out whitespace only child nodes, in the hopes of improving layoutResize speed
-        Element.cleanWhitespace(this.htmlElement);
     },
 
     // retrieves references to all the relevant html elements and stores them
