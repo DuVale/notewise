@@ -36,7 +36,9 @@ Note.prototype.extend({
     },
 
     // creates the actual html for this kernel
-    // XXX this is a bunch of garbage - need to unify this html with the stuff in root/Kernel/kernel.tt.  Maybe think about shipping the html as part of the xml?  Or maybe a seperate ajax call?
+    // XXX this is a bunch of garbage - need to unify this html with the stuff
+    // in root/Kernel/kernel.tt.  Maybe think about shipping the html as part
+    // of the xml?  Or maybe a seperate ajax call?
     realize: function(parent) {
         
         this.htmlElement = document.createElement('div');
@@ -141,5 +143,11 @@ Note.prototype.extend({
         
         if(this.retainFocus)
           this.body.focus();
+    },
+
+    // makes notes compatible with visible ojbects for relationships
+    // (see initialize() in js/relationship.js)
+    contained_object: function() {
+        return this;
     }
 });

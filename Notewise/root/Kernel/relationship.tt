@@ -1,9 +1,9 @@
 <script>
-var vkernel1=vkernelCache['[%kernel.id%]/[%relationship.part1.id%]'];
-var vkernel2=vkernelCache['[%kernel.id%]/[%relationship.part2.id%]'];
-if(vkernel1 && vkernel2){
-    var relationship = new Relationship([%relationship.id%],vkernel1,vkernel2,'[%relationship.type.relationship_type%]','[%relationship.nav%]');
+var object1=objectCache['[%kernel.id%]/[%relationship.part1.id%]'];
+var object2=objectCache['[%kernel.id%]/[%relationship.part2.id%]'];
+if(object1 && object2){
+    var relationship = new Relationship([%relationship.id%],object1,object2,'[%relationship.type.relationship_type%]','[%relationship.nav%]');
 } else {
-//            alert("couldn't find the right kernels to create the relationship");
+            alert("couldn't find the right objects to create the relationship");
 }
 </script>

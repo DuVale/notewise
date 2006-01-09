@@ -663,12 +663,7 @@ Draggable.prototype = {
 
    getDroppedGUI: function() {
       return this.htmlElement;
-   },
-
-   toString: function() {
-      return this.type + ":" + this.htmlElement + ":";
    }
-
 }
 
 

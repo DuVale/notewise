@@ -93,7 +93,7 @@ JSDBI.prototype = {
     },
 
     toString: function() {
-            return this.id().toString();
+        return this.id().toString();
     },
 
     internalUrl: function (value) {

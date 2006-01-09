@@ -127,7 +127,7 @@ Relationship.prototype.extend( {
     },
 
     idString: function() {
-        return 'relationship'+this.part1ContainedObject+'/'+this.part2ContainedObject;
+        return 'relationship'+this.part1ContainedObject.id()+'/'+this.part2ContainedObject.id();
     },
 
     createLabel: function() {
