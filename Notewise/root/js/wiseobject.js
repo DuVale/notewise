@@ -118,7 +118,7 @@ WiseObject.prototype.extend({
     // causes the internal elements to resize if necessary
     layoutResize: function() {
       if(this.body != undefined){
-          this.body.style.width = (this.htmlElement.clientWidth - 4) + 'px';
+          this.body.style.width = Math.max(0,this.htmlElement.clientWidth - 4) + 'px';
           this.body.style.height = Math.max(0,this.htmlElement.clientHeight - 2 - this.body.offsetTop) + 'px';
       }
     },
