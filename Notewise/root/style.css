@@ -234,12 +234,11 @@ body, html {
 
 /* XXX DEBUG */
 img {
-    border: 1px solid black;
     z-index: -100;
 }
 
 .arrowcanvas {
-    border: 1px solid green;
+    border: 0px solid green;
     left: -17px;
     top: -17px;
     width: 34px;
