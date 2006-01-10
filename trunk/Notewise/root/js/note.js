@@ -18,6 +18,7 @@ Note.prototype.extend({
         
         if(htmlElement != undefined) {
             this.htmlElement = htmlElement;
+            this.htmlElement.note=this;
             this.setup();
         }
         
@@ -30,7 +31,6 @@ Note.prototype.extend({
         this.__height=height;
         this.__content=content;
         this.superclass=Note.superclass;
-        this.htmlElement.note=this;
 
         JSDBI.prototype.initialize.call(this);
         WiseObject.prototype.initialize.call(this);
@@ -56,6 +56,7 @@ Note.prototype.extend({
            +"<div class=\"corner\">"
            +"</div>";
         this.htmlElement.innerHTML = innerHTML;
+        this.htmlElement.note=this;
         WiseObject.prototype.realize.call(this,parent);
     },
 
