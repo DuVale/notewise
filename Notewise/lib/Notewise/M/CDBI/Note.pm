@@ -3,6 +3,7 @@ package Notewise::M::CDBI::Note;
 use strict;
 
 __PACKAGE__->has_a(object_id => 'Notewise::M::CDBI::ObjectId');
+__PACKAGE__->has_a(container_object => 'Notewise::M::CDBI::ObjectId');
 
 __PACKAGE__->add_trigger(before_create => \&create_id);
 __PACKAGE__->columns(TEMP => qw/user/);
@@ -64,6 +65,11 @@ sub relationships {
     my @relationships1 = Notewise::M::CDBI::Relationship->search(part1 => $self->id);
     my @relationships2 = Notewise::M::CDBI::Relationship->search(part2 => $self->id);
     return (@relationships1,@relationships2);
+}
+
+sub kernel {
+    my $self = shift;
+    return $self->container_object->object;
 }
 
 =head1 NAME
