@@ -253,7 +253,7 @@ Ajax.Request.prototype = (new Ajax.Base()).extend({
                            || this.options.method == 'put') ? body : null);
 
     } catch (e) {
-        debugger;
+        alert('Ajax.Request generated an error: '+e.name+' - '+e.message);
     }
   },
 

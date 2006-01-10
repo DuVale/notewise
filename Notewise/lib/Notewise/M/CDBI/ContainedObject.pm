@@ -7,6 +7,7 @@ __PACKAGE__->has_a(container_object => 'Notewise::M::CDBI::ObjectId');
 
 sub to_xml_hash_deep {
     my $self = shift;
+    my $base_url = shift;
     return {
         x=>$self->x,
         y=>$self->y,
@@ -15,7 +16,7 @@ sub to_xml_hash_deep {
         collapsed=>$self->collapsed,
         container_object=>$self->container_object->id,
         contained_object=>$self->contained_object->id,
-        kernel=>[$self->contained_object->object->to_xml_hash_shallow],
+        kernel=>[$self->contained_object->object->to_xml_hash_shallow($base_url)],
     };
 }
 

@@ -75,7 +75,7 @@ VisibleKernel.prototype.extend({
            +"<input type=button value='X' class='removebutton'/>"
            +"<input type=button value='R' class='relationshipbutton'/>"
            +"<input value=\"\" type=\"text\" class=\"namefield\" autocomplete=\"off\" value=\""+name+"\"/>"
-           +"<a class=\"namelink\" href=\"/kernel/view/"+this.__getField('contained_object')+"\">"
+           +"<a class=\"namelink\" href=\""+this.url()+"\">"
            +name+"</a>"
            +"<div class=\"rightgrippie\"/></div>"
            +"<div class=\"body\">"

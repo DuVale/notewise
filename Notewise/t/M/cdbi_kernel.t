@@ -1,4 +1,4 @@
-use Test::More tests => 11;
+use Test::More tests => 13;
 use_ok( Catalyst::Test, 'Notewise' );
 use_ok('Notewise::M::CDBI::Kernel');
 use Data::Dumper;
@@ -11,8 +11,8 @@ use warnings;
 map $_->delete, Notewise::M::CDBI::User->search({email=>'fred@flintstone.com'});
 map $_->delete, Notewise::M::CDBI::User->search({email=>'fred2@flintstone.com'});
 
-my $user = Notewise::M::CDBI::User->create({name=>'Fred Flintstone1',email=>'fred@flintstone.com',password=>'password'});
-my $user2 = Notewise::M::CDBI::User->create({name=>'Fred Flintstone2',email=>'fred2@flintstone.com',password=>'password'});
+my $user = Notewise::M::CDBI::User->create({name=>'Fred Flintstone1',email=>'fred@flintstone.com',password=>'password',username=>'fred'});
+my $user2 = Notewise::M::CDBI::User->create({name=>'Fred Flintstone2',email=>'fred2@flintstone.com',password=>'password',username=>'fred2'});
 my $kernel = Notewise::M::CDBI::Kernel->create({name=>'foo',user=>$user->id});
 my @objects_to_delete = ($user,$user2,$kernel);
 
@@ -22,6 +22,12 @@ isnt($kernel->object_id, 0, 'object exists');
 $kernel = Notewise::M::CDBI::Kernel->retrieve($kernel->object_id->id);
 is($kernel->user, $user->id, 'user id is correct after kernel rehydration');
 
+# test url generation
+
+is($kernel->relative_url, 'fred/foo/'.$kernel->object_id->id,'test relative_url');
+$kernel->name('This is a name with  spaces ');
+$kernel->update;
+is($kernel->relative_url, 'fred/This_is_a_name_with_spaces/'.$kernel->object_id->id,'test relative_url 2');
 # test permissions
 ok($kernel->has_permission($user,'view'), "users can view their own kernel");
 ok($kernel->has_permission($user,'modify'), "users can modify their own kernel");

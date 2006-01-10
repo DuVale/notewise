@@ -61,7 +61,7 @@ sub view : Private {
         $c->res->output('ERROR');
         return;
     }
-    $c->stash->{kernel}=$kernel->to_xml_hash_deep;
+    $c->stash->{kernel}=$kernel->to_xml_hash_deep($c->req->base);
     $c->forward('Notewise::V::XML');
 }
 

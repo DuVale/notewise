@@ -109,6 +109,7 @@ body, html {
 
 .relationship {
     border: 0px;
+    z-index: 5;
 }
 
 
@@ -229,12 +230,8 @@ body, html {
 .arrowdiv {
     position: absolute;
     /* This is necessary to make the arrows clickable in IE.  Otherwise the click is stolen by the line image. */
-    background: url('images/clear.png');
-}
-
-/* XXX DEBUG */
-img {
-    z-index: -100;
+    background: url('images/clear.gif');
+    z-index: 5;
 }
 
 .arrowcanvas {

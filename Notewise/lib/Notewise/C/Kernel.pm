@@ -52,17 +52,29 @@ Fetches a row and sets a template.
 
 =cut
 
-sub view : Local {
-    my ( $self, $c, $id ) = @_;
-    my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
+sub view : Regex('^([^r].*)/(.*)/(\d+)') {
+    my ( $self, $c ) = @_;
+    my $username = $c->req->snippets->[0];
+    my $name = $c->req->snippets->[0];
+    my $id = $c->req->snippets->[2];
+    if ($id){
+        $c->stash->{kernel} = Notewise::M::CDBI::Kernel->retrieve($id);
+        $c->forward('view_kernel');
+    } else {
+        die "TODO - write kernel disambiguation page";
+    }
+}
+
+sub view_kernel : Private {
+    my ( $self, $c ) = @_;
+    my $kernel = $c->stash->{kernel};
     unless ($kernel->has_permission($c->req->{user_id},'view')){
         $c->res->status(403); # Forbidden
         #TODO make this screen prettier
         return $c->res->output('You do not have access to this kernel');
     }
-    $c->stash->{kernel} = Notewise::M::CDBI::Kernel->retrieve($id);
-    $c->stash->{visible_kernels} = [Notewise::M::CDBI::ContainedObject->search({container_object=>$id})];
-    $c->stash->{notes} = [Notewise::M::CDBI::Note->search({container_object=>$id})];
+    $c->stash->{visible_kernels} = [Notewise::M::CDBI::ContainedObject->search({container_object=>$kernel->id})];
+    $c->stash->{notes} = [Notewise::M::CDBI::Note->search({container_object=>$kernel->id})];
     $c->stash->{visible_relationships} = [$c->stash->{kernel}->visible_relationships];
     $c->stash->{template} = 'Kernel/view.tt';
 }

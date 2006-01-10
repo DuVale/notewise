@@ -25,12 +25,13 @@ sub new_request {
 
 
 sub login_user {
-    my ($email,$password)=@_;
+    my ($email,$password,$username)=@_;
     my $mech = Test::WWW::Mechanize::Catalyst->new;
 
     # login
-    my $user = Notewise::M::CDBI::User->find_or_create({email=>$email,
-                                                        password=>$password});
+    my $user = Notewise::M::CDBI::User->find_or_create({email=>$email});
+    $user->password($password);
+    $user->username($username);
     $user->name('automated testing account');
     $user->update;
     $mech->get_ok("http://localhost/?email=$email&password=$password");
