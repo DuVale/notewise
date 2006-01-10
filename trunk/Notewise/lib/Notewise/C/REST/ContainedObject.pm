@@ -51,7 +51,7 @@ sub view : Private {
     }
 
     # XXX the following hashkey should really be containedobject, no visiblekernel, to allow both /rest/containedobject and /rest/visiblekernel
-    $c->stash->{visiblekernel}=$contained_object->to_xml_hash_deep;
+    $c->stash->{visiblekernel}=$contained_object->to_xml_hash_deep($c->req->base);
     $c->forward('Notewise::V::XML');
 }
 

@@ -13,7 +13,7 @@
     <li>View a kernel:
         <ul>
             [% FOR kernel = kernels %]
-                <li><a href="[% base %]kernel/view/[%kernel.id%]">[%kernel.name ? kernel.name : 'unnamed' %]</a></li>
+                <li><a href="[% base _ kernel.relative_url %]">[%kernel.name ? kernel.name : 'unnamed' %]</a></li>
             [% END %]
         </ul>
     </li>

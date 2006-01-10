@@ -15,12 +15,13 @@
 </script>
     [% contained_kernel = vkernel.contained_kernel %]
 
+
     [% j = i + 1 %]
     [% IF j < 4 %]
-        [% FOR vkernel = vkernel.contained_kernel.contained_objects %]
+        [% FOR vkernel = contained_kernel.contained_objects %]
             [%INCLUDE 'Kernel/kernel-js.tt' i=j%]
         [% END %]
-        [% FOR note = vkernel.contained_kernel.notes %]
+        [% FOR note = contained_kernel.notes %]
             [%INCLUDE 'Kernel/note-js.tt' %]
         [% END %]
     [% END %]

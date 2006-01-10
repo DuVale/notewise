@@ -20,6 +20,7 @@ __PACKAGE__->add_trigger(before_create => \&Notewise::M::CDBI::add_created_date)
 __PACKAGE__->columns(TEMP => qw/user/);
 
 __PACKAGE__->add_trigger(after_create => \&hydrate_object_id);
+
 sub hydrate_object_id {
     my $self = shift;
     my $object_id = Notewise::M::CDBI::ObjectId->retrieve($self->object_id);
@@ -49,19 +50,23 @@ sub to_xml_hash {
 
 sub to_xml_hash_shallow {
     my $self = shift;
+    my $base_url = shift;
     return {
             id => $self->object_id->id,
             user => $self->user->id,
             name => $self->name,
             uri => $self->uri,
+            object_url => $base_url . $self->relative_url,
             source => $self->source,
             created => $self->created ? $self->created->strftime($self->strf_format) : '',
             lastmodified => $self->lastModified ? $self->lastModified->strftime($self->strf_format): '',
     };
 }
 
+# TODO merge this with to_xml_hash_shallow - DRY
 sub to_xml_hash_deep {
     my $self = shift;
+    my $base_url = shift;
     my @contained_kernels = map $_->to_xml_hash_deep(), $self->contained_objects;
     my @contained_notes = map $_->to_xml_hash, $self->notes;
     my @contained_relationships; #= $self->visible_relationships;
@@ -69,6 +74,7 @@ sub to_xml_hash_deep {
                 id => $self->object_id->id,
                 name => $self->name,
                 uri => $self->uri,
+                object_url => $base_url . $self->relative_url,
                 source => $self->source,
                 created => $self->created ? $self->created->strftime($self->strf_format) : '',
                 lastmodified => $self->lastModified ? $self->lastModified->strftime($self->strf_format): '',
@@ -150,6 +156,17 @@ sub visible_relationships {
         }
     }
     return values %visible_relationships;
+}
+
+# Returns the url relative to the url base
+sub relative_url {
+    my $self = shift;
+    my $name = $self->name || '';
+    if($name){
+        $name =~ s/\s+$//;
+        $name =~ s/\s+/_/g;
+    }
+    return $self->user->username."/".$name."/".$self->id;
 }
 
 =head1 NAME

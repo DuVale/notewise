@@ -29,7 +29,7 @@
                     <ul>
                         [% FOR parent = kernel.parents %]
                             <li>
-                                <a href="[% base %]kernel/view/[%parent.id%]">
+                                <a href="[% base _ parent.relative_url %]">
                                     [%parent.name.defined ? parent.name : 'unnamed' %]
                                 </a>
                             </li>
@@ -45,7 +45,7 @@
                 <div class="panecontent" id="rel_content">
                     <ul>
                         [% FOR sibling = kernel.related_kernels %]
-                        <li><a href="[% base %]kernel/view/[%sibling.id%]">
+                        <li><a href="[% base _ sibling.relative_url %]">
                             [%sibling.name.defined ? sibling.name : 'unnamed' %]
                         </a></li>
                         [% END %]

@@ -52,20 +52,30 @@ KernelObject.prototype = {
         if (targ.nodeType == 3) // defeat Safari bug
             targ = targ.parentNode;
 
+        this.kernel().name(targ.value);
+
         if(this.namelink != undefined){
             // Update the link text
-            this.namelink.innerHTML = targ.value;
+            this.namelink.innerHTML = this.kernel().name();
         }
 
-        this.kernel().name(targ.value);
-        this.kernel().update();
+        this.kernel().update(this.updateNamelink.bind(this));
+    },
+
+    updateNamelink: function () {
+        if(this.namelink != undefined){
+            // Update the link url
+            this.namelink.href = this.kernel().object_url();
+        }
     },
 
     // causes the namefield to relayout
     layoutNamefield: function() {
         var width = this.getNameFieldWidth();
         this.namefield.style.width = width+'px';
-        this.namelink.style.width = width+'px';
+        if(this.namelink != undefined){
+            this.namelink.style.width = width+'px';
+        }
 
         // scroll the text field all the way to the left again - apparently
         // setting the value of a text input field again causes it to properly
@@ -75,7 +85,6 @@ KernelObject.prototype = {
     },
 
     loseFocusOnEnter: function(e) {
-        window.status = "got key press: "+e.keyCode;
         if(e.keyCode == Event.KEY_RETURN) {
             Utils.clearSelectionAndTerminate(e);
         }

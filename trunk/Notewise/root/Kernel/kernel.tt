@@ -18,7 +18,7 @@
         [% name_length = 1.05%]
     [% END %]
     <input class="namefield" style="width: [% name_length %]em;" value="[% vkernel.contained_kernel.name %]" autocomplete="off"/>
-    <a class="namelink" style="width: [% name_length %]em;" href="[% base _ 'kernel/view/' _ vkernel.contained_kernel.id %]">
+    <a class="namelink" style="width: [% name_length %]em;" href="[% base _ vkernel.contained_kernel.relative_url %]">
         [% vkernel.contained_kernel.name %]
     </a>
     <div class="body">

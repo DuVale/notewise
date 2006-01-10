@@ -105,17 +105,28 @@ JSDBI.prototype = {
     },
 
     // Sends any updated fields in the object to the server.
-    update: function() {
+    update: function(callback) {
         if(!this.__updated){
             return;
         }
         var params = this.__getParams();
-        var request = new Ajax.Request(this.internalUrl(), { method: 'post',
+        this.request = new Ajax.Request(this.internalUrl(), { method: 'post',
                                                      parameters: params,
-                                                     asynchronous: true} );
+                                                     asynchronous: true,
+                                                     onComplete: this.afterUpdate.bindWithParams(this,callback) } );
         this.internalUrl(this.url());
         this.__updated = false;
         return;
+    },
+
+    afterUpdate: function (callback) {
+        // XXX this is total crap.  Really need a way to detect if xml was received
+        if(this.request.transport.responseText != 'OK'){
+            this.__populate(this.request.transport.responseXML);
+        }
+        if(callback != null){
+            callback();
+        }
     },
 
     // Deletes this object from the server.
