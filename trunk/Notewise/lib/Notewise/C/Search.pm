@@ -29,7 +29,22 @@ sub search : Path {
     $c->res->output('Extended search goes here');
 }
 
+# quick search
+sub s : Global {
+    my ( $self, $c ) = @_;
+    $c->stash->{template} = 'Search/quicksearch-results.tt';
+    $c->forward('quick_search');
+}
+
+# kernel autocomplete
 sub ac : Global {
+    my ( $self, $c ) = @_;
+    $c->stash->{template} = 'Search/autocomplete-results.tt';
+    $c->forward('quick_search');
+}
+
+# actual search code for s and ac
+sub quick_search : Private {
     # TODO refactor this
     my ( $self, $c ) = @_;
     my $max_results = 15;
@@ -62,8 +77,7 @@ sub ac : Global {
                     content => { 'like', "% ".$searchstring."%" });
     }
 
-    # only show up to max_results and don't show duplicates and only show
-    # things which we have access to
+    # only show up to max_results and don't show duplicates
     my %objects_seen;
     my @objects_to_return;
     foreach my $object (@objects){
@@ -75,8 +89,6 @@ sub ac : Global {
     }
 
     $c->stash->{objects} = [@objects_to_return];
-
-    $c->stash->{template} = 'Search/autocomplete-results.tt';
 }
 
 =back

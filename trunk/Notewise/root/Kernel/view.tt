@@ -121,7 +121,7 @@
         var viewKernelId=[%kernel.id%];
         var view = new ViewKernel([%kernel.id%],$('viewkernel'));
 
-        new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '[%base%]ac', {frequency: .1, min_chars: 2});
+        new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '[%base%]s', {frequency: .1, min_chars: 2});
         $('mysearchfield').focus();
     </script>
 </body>
