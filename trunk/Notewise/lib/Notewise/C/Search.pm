@@ -30,41 +30,51 @@ sub search : Path {
 }
 
 sub ac : Global {
+    # TODO refactor this
     my ( $self, $c ) = @_;
     my $max_results = 15;
 
     my $searchstring = $c->req->params->{s};
-    my @objects = Notewise::M::CDBI::Kernel->search_where(
+    my @objects = grep {$_->has_permission($c->req->{user_id},'view')}
+                    Notewise::M::CDBI::Kernel->search_where(
                             name => { 'like', $searchstring."%" });
     if(@objects < $max_results){
         # if we didn't get enough, get some more
-        push @objects, Notewise::M::CDBI::Kernel->search_where(
-                            name => { 'like', "% ".$searchstring."%" });
+        push @objects,
+            grep {$_->has_permission($c->req->{user_id},'view')}
+                Notewise::M::CDBI::Kernel->search_where(
+                    name => { 'like', "% ".$searchstring."%" });
     }
 
-#    if(@objects < $max_results){
-#        # if we didn't get enough, get some more
-#        push @objects, Notewise::M::CDBI::Note->search_where(
-#                            content => { 'like', $searchstring."%" });
-#    }
-#
-#    if(@objects < $max_results){
-#        # if we didn't get enough, get some more
-#        push @objects, Notewise::M::CDBI::Note->search_where(
-#                            content => { 'like', "% ".$searchstring."%" });
-#    }
+    if(@objects < $max_results){
+        # if we didn't get enough, get some more
+        push @objects,
+            grep {$_->kernel->has_permission($c->req->{user_id},'view')}
+                Notewise::M::CDBI::Note->search_where(
+                    content => { 'like', $searchstring."%" });
+    }
+
+    if(@objects < $max_results){
+        # if we didn't get enough, get some more
+        push @objects,
+            grep {$_->kernel->has_permission($c->req->{user_id},'view')}
+                Notewise::M::CDBI::Note->search_where(
+                    content => { 'like', "% ".$searchstring."%" });
+    }
 
     # only show up to max_results and don't show duplicates and only show
     # things which we have access to
-    my %objects_to_return;
+    my %objects_seen;
+    my @objects_to_return;
     foreach my $object (@objects){
-        last if(keys %objects_to_return >= $max_results);
-        next unless $object->has_permission($c->req->{user_id},'view');
-        #$objects_to_return{get_type($object).$object->id} = $object;
-        $objects_to_return{$object->id} = $object;
+        last if(@objects_to_return >= $max_results);
+        if(!$objects_seen{$object->id}){
+            $objects_seen{$object->id} = $object;
+            push @objects_to_return, $object;
+        }
     }
 
-    $c->stash->{kernels} = [values %objects_to_return];
+    $c->stash->{objects} = [@objects_to_return];
 
     $c->stash->{template} = 'Search/autocomplete-results.tt';
 }
