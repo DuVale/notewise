@@ -119,10 +119,12 @@ JSDBI.prototype = {
         return;
     },
 
-    afterUpdate: function (callback) {
+    afterUpdate: function (callback,transport) {
         // XXX this is total crap.  Really need a way to detect if xml was received
-        if(this.request.transport.responseText != 'OK'){
-            this.__populate(this.request.transport.responseXML);
+        if(transport.responseText != 'OK' &&
+           transport.responseText != 'ERROR' &&
+           transport.responseXML != null){
+            this.__populate(transport.responseXML);
         }
         if(callback != null){
             callback();

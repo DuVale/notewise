@@ -44,8 +44,7 @@ sub children : Private {
 
     my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
     unless($kernel){
-        $c->response->status(404);
-        $c->res->output('ERROR');
+        $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
         return;
     }
     $c->stash->{visiblekernel}=[map $_->to_xml_hash_deep, $kernel->contained_objects];
@@ -57,8 +56,7 @@ sub view : Private {
 
     my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
     unless($kernel){
-        $c->response->status(404);
-        $c->res->output('ERROR');
+        $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
         return;
     }
     $c->stash->{kernel}=$kernel->to_xml_hash_deep($c->req->base);
@@ -70,9 +68,9 @@ sub add : Private {
 
     $c->form( optional => [ Notewise::M::CDBI::Kernel->columns ] );
     if ($c->form->has_missing) {
-        $c->res->status(400); # Bad Request
+        $c->detach('/rest/error',['missing fields']);
     } elsif ($c->form->has_invalid) {
-        $c->res->status(400); # Bad Request
+        $c->detach('/rest/error',['invalid fields']);
     } else {
         my $kernel = Notewise::M::CDBI::Kernel->create_from_form( $c->form );
         $kernel->user($c->req->{user_id});
@@ -87,16 +85,14 @@ sub update : Private {
 
     $c->form( optional => [ Notewise::M::CDBI::Kernel->columns ] );
     if ($c->form->has_missing) {
-        $c->res->status(400); # Bad Request
-        $c->res->output('ERROR');
+        $c->detach('/rest/error',['missing fields']);
     } elsif ($c->form->has_invalid) {
-        $c->res->status(400); # Bad Request
-        $c->res->output('ERROR');
+        $c->detach('/rest/error',['invalid fields']);
     } else {
+        # XXX need permissions check here!
         my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
         unless($kernel){
-            $c->res->status(404); # Not found
-            return $c->res->output('ERROR');
+            $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
         }
         $kernel->update_from_form( $c->form );
         $c->res->status(200); # OK
@@ -112,7 +108,7 @@ sub delete : Private {
         $kernel->delete();
         $c->res->status(200);
     } else {
-        $c->res->status(404);
+        $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
     }
     $c->res->output('OK');
 }

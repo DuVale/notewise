@@ -61,7 +61,8 @@ Function.prototype.bindWithParams = function() {
       __args = Prototype.argumentsToArray(arguments).slice(1);
   }
   return function() {
-      __method.apply(__this, __args);
+      var args = Prototype.argumentsToArray(arguments);
+      __method.apply(__this, __args.concat(args));
   }
 }
 
