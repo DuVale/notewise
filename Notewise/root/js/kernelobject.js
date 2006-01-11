@@ -27,9 +27,9 @@ KernelObject.prototype = {
                                    Utils.clearSelectionAndTerminate.bindAsEventListener(this));
         
         // setup the namefield actions
-        Utils.registerEventListener(this.namefield,'blur', this.updateName.bindAsEventListener(this));
+        Utils.registerEventListener(this.namefield,'blur', this.updateName.bind(this));
         Utils.registerEventListener(this.namefield,'keyup', this.layoutNamefield.bind(this));
-        Utils.registerEventListener(this.namefield,'keypress', this.loseFocusOnEnter.bindAsEventListener(this));
+//        Utils.registerEventListener(this.namefield,'keypress', this.loseFocusOnEnter.bindAsEventListener(this));
 
         // drag in namefield should select text, not drag object
         Utils.registerEventListener(this.namefield,
@@ -45,24 +45,33 @@ KernelObject.prototype = {
     },
 
     // Updates the kernel name on the server.  Called from an event handler when the name is changed.
-    updateName: function (e) {
-        var targ;
-        if (e.target) targ = e.target;
-        else if (e.srcElement) targ = e.srcElement;
-        if (targ.nodeType == 3) // defeat Safari bug
-            targ = targ.parentNode;
+    updateName: function () {
+        // This is a hack to avoid persisting a newly created kernel, since
+        // we're probably just going to be deleting it anyway
+        if(this.newlyCreated){
+            return;
+        }
 
-        this.kernel().name(targ.value);
+        this.kernel().name(this.namefield.value);
 
+        this.updateNamelinkText();
+
+        this.kernel().update(this.updateNamelinkUrl.bind(this));
+    },
+
+    updateNamelink: function () {
+        this.updateNamelinkText();
+        this.updateNamelinkUrl();
+    },
+
+    updateNamelinkText: function () {
         if(this.namelink != undefined){
             // Update the link text
             this.namelink.innerHTML = this.kernel().name();
         }
-
-        this.kernel().update(this.updateNamelink.bind(this));
     },
 
-    updateNamelink: function () {
+    updateNamelinkUrl: function () {
         if(this.namelink != undefined){
             // Update the link url
             this.namelink.href = this.kernel().object_url();
@@ -276,6 +285,7 @@ KernelObject.prototype = {
         vkernel.realize(this.body);
         dndMgr.updateSelection(vkernel,false);
         vkernel.namefield.focus();
+        vkernel.newlyCreated = true;
     },
     
     createNote: function (x, y, dummyDiv) {

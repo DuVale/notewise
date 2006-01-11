@@ -60,10 +60,9 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
       function(element, update){ 
         if(!update.style.position || update.style.position=='absolute') {
           update.style.position = 'absolute';
-          var offsets = Position.cumulativeOffset(element);
-          update.style.left = offsets[0] + 'px';
-          update.style.top  = (offsets[1] + element.offsetHeight) + 'px';
-          update.style.width = element.offsetWidth + 'px';
+          var offsets = Utils.toViewportPosition(element);
+          update.style.left = element.offsetLeft + 'px';
+          update.style.top  = (element.offsetTop + element.offsetHeight) + 'px';
         }
         new Effect.Appear(update,{duration:0.2});
       };
@@ -84,24 +83,10 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
   
   show: function() {
     if(this.update.style.display=='none') this.options.onShow(this.element, this.update);
-    if(!this.iefix && (navigator.appVersion.indexOf('MSIE')>0) && this.update.style.position=='absolute') {
-      new Insertion.After(this.update, 
-       '<iframe id="' + this.update.id + '_iefix" '+
-       'style="display:none;filter:progid:DXImageTransform.Microsoft.Alpha(apacity=0);" ' +
-       'src="javascript:;" frameborder="0" scrolling="no"></iframe>');
-      this.iefix = $(this.update.id+'_iefix');
-    }
-    if(this.iefix) {
-      Position.clone(this.update, this.iefix);
-      this.iefix.style.zIndex = 1;
-      this.update.style.zIndex = 2;
-      Element.show(this.iefix);
-    }
   },
   
   hide: function() {
     if(this.update.style.display=='') this.options.onHide(this.element, this.update);
-    if(this.iefix) Element.hide(this.iefix);
   },
   
   startIndicator: function() {
@@ -129,6 +114,10 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
   addObservers: function(element) {
     Event.observe(element, "mouseover", this.onHover.bindAsEventListener(this));
     Event.observe(element, "click", this.onClick.bindAsEventListener(this));
+    var links = element.getElementsByTagName('a');
+    for(var i=0; i<links.length; i++){
+        Event.observe(links[i], "click", this.onClick.bindAsEventListener(this));
+    }
   },
   
   onComplete: function(request) {
@@ -151,13 +140,9 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
       
       this.stopIndicator();
       
-      if(this.entry_count == 2){
-          // if there were no actual search results, then "new..." should be
-          // the default selection
-          this.index = 0;
-      } else {
-          // The first actual search result should be selected
-          this.index = 1;
+      this.index = 0;
+      if(this.options.onComplete){
+          this.options.on_complete(this);
       }
       this.render();
     }
@@ -214,7 +199,7 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
     var element = Event.findElement(event, 'LI');
     this.index = element.autocompleteIndex;
     this.select_entry();
-//    Event.stop(event);
+    Event.stop(event);
   },
   
   onBlur: function(event) {
@@ -261,10 +246,8 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
   
   select_entry: function() {
     this.active = false;
-    value = Element.collectTextNodesIgnoreClass(this.get_current_entry(), 'informal').unescapeHTML();
-    this.element.value = value;
-//    debugger;
-    var link=this.get_current_entry().getElementsByTagName('a')[0];
-    window.location=link.href;
+    if(this.options.on_select != null){
+        this.options.on_select(this.get_current_entry());
+    }
   }
 });

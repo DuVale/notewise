@@ -43,9 +43,7 @@ sub view : Private {
 
     my $note = Notewise::M::CDBI::Note->retrieve($id);
     unless($note){
-        $c->response->status(404);
-        $c->res->output('ERROR');
-        return;
+        $c->detach('/rest/notfound',["Couldn't find note $id"]);
     }
     $c->stash->{note}=$note->to_xml_hash;
     $c->forward('Notewise::V::XML');
@@ -64,9 +62,9 @@ sub add : Private {
               missing_optional_valid=>1,
             );
     if ($c->form->has_missing) {
-        $c->res->status(400); # Bad Request
+        $c->detach('/rest/error',['missing fields']);
     } elsif ($c->form->has_invalid) {
-        $c->res->status(400); # Bad Request
+        $c->detach('/rest/error',['invalid fields']);
     } else {
         # check permissions
         my $container_object=Notewise::M::CDBI::Kernel->retrieve($c->form->valid('container_object'));
@@ -85,15 +83,13 @@ sub update : Private {
 
     $c->form( optional => [ Notewise::M::CDBI::Note->columns ] );
     if ($c->form->has_missing) {
-        $c->res->status(400); # Bad Request
-        $c->res->output('ERROR');
+        $c->detach('/rest/error',['missing fields']);
     } elsif ($c->form->has_invalid) {
-        $c->res->status(400); # Bad Request
-        $c->res->output('ERROR');
+        $c->detach('/rest/error',['invalid fields']);
     } else {
         my $note = Notewise::M::CDBI::Note->retrieve($id);
         unless($note){
-            $c->res->status(404); # Not found
+            $c->detach('/rest/notfound',["couldn't find note $id"]);
             return $c->res->output('ERROR');
         }
         if(check_user_is_owner($c, $note)){
@@ -109,9 +105,7 @@ sub check_user_is_owner {
 
     # check permissions
     if ($object->user->id != $c->req->{user_id}){
-        $c->res->status(403); # Forbidden
-        $c->res->output('FORBIDDEN');
-        return 0;
+        $c->detach('/rest/forbidden',["user ".$c->req->{user_id}."isn't the owner of object ".$object->id]);
     }
     return 1;
 }
@@ -125,7 +119,7 @@ sub delete : Private {
             $note->delete();
             $c->res->status(200);
         } else {
-            $c->res->status(404);
+            $c->detach('/rest/notfound',["couldn't find note $id"]);
         }
         $c->res->output('OK');
     }

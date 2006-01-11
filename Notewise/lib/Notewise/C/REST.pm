@@ -27,21 +27,25 @@ sub ok: Private {
 }
 
 sub error: Private {
-    my ( $self, $c) = @_;
-    $c->res->status(400); # Error
-    return $c->res->output('ERROR');
+    my ( $self, $c, $message) = @_;
+    $c->forward('do_error',[400,"ERROR - $message"]);
 }
 
 sub forbidden: Private {
-    my ( $self, $c) = @_;
-    $c->res->status(403); # Forbidden
-    return $c->res->output('FORBIDDEN');
+    my ( $self, $c, $message) = @_;
+    $c->forward('do_error',[403,"FORBIDDEN - $message"]);
 }
 
 sub notfound: Private {
-    my ( $self, $c) = @_;
-    $c->res->status(404); # Not found
-    return $c->res->output('ERROR');
+    my ( $self, $c, $message) = @_;
+    $c->forward('do_error',[404,"ERROR - $message"]);
+}
+
+sub do_error : Private {
+    my ( $self, $c, $status_code, $message) = @_;
+    $c->res->status($status_code);
+    $c->log->info($message);
+    $c->res->output($message);
 }
 
 

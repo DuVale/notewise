@@ -47,6 +47,54 @@ VisibleKernel.prototype.extend({
         // add this object as a property of the htmlElement, so we can get back
         // to it if all we have is the element
         this.htmlElement.kernel = this;
+
+        // Setup autocomplete on the namefield.  TODO figure out how to factor this up to kernelobject
+        new Ajax.Autocompleter(this.namefield, this.searchresults, '/ac',
+                               {frequency: .1,
+                                min_chars: 2,
+                                on_select: this.on_autocomplete_select.bind(this),
+                                on_complete: this.on_autocomplete_complete.bind(this)});
+    },
+
+    on_autocomplete_select: function (selected_element) {
+        var id=selected_element.getElementsByTagName('a')[0].getAttribute('href');
+        var results = id.match(/\/(\d+)/);
+        if(results){
+            id = results[1];
+        }
+        if(Number(id) == 0){
+            this.newlyCreated = false;
+            this.updateName();
+        } else {
+            this.swap_kernels(Kernel.retrieve(id));
+            this.newlyCreated = false;
+        }
+        
+        dndMgr.clearSelection();
+        dndMgr.giveSearchBoxFocus();
+    },
+
+    on_autocomplete_complete: function (autocompleter) {
+        if(autocompleter.entry_count == 1){
+            // if there were no actual search results, then "new..." should be
+            // the default selection
+            autocompleter.index = 0;
+        } else {
+            // The first actual search result should be selected
+            autocompleter.index = 1;
+        }
+    },
+
+    swap_kernels: function (kernel) {
+        if(this.newlyCreated){
+            this.contained_object().destroy();
+        }
+        this.contained_object(kernel);
+        this.namefield.value = kernel.name();
+        this.layout();
+        this.updateNamelink();
+        this.update();
+        // TODO hydrate kernel contents
     },
 
     // returns the id in the form '1/2' where the first number is the
@@ -74,7 +122,8 @@ VisibleKernel.prototype.extend({
            +"<input type=button value='"+expandButtonLabel+"' class='expandbutton'/>"
            +"<input type=button value='X' class='removebutton'/>"
            +"<input type=button value='R' class='relationshipbutton'/>"
-           +"<input value=\"\" type=\"text\" class=\"namefield\" autocomplete=\"off\" value=\""+name+"\"/>"
+           +"<input value=\"\" type=\"text\" class=\"namefield\" autocomplete=\"off\" name=\"s\" value=\""+name+"\"/>"
+           +"<div class=\"searchresults\" style=\"display: none\"></div>"
            +"<a class=\"namelink\" href=\""+this.url()+"\">"
            +name+"</a>"
            +"<div class=\"rightgrippie\"/></div>"
@@ -109,6 +158,7 @@ VisibleKernel.prototype.extend({
         KernelObject.prototype.fetchElements.call(this);
         WiseObject.prototype.fetchElements.call(this);
         this.namelink = Utils.getElementsByClassName(this.htmlElement, 'namelink')[0];
+        this.searchresults = Utils.getElementsByClassName(this.htmlElement, 'searchresults')[0];
         this.expandbutton = Utils.getElementsByClassName(this.htmlElement, 'expandbutton')[0];
     },
 

@@ -468,32 +468,36 @@ div.dummyDiv {
 }
 
 #mysearchresults {
+    width: 50%;
+}
+
+.searchresults {
     position:absolute;
-    width: 200px;
+    width: 400px;
     border: 1px solid black;
     background: white;
     z-index:100;
 }
-#mysearchresults ul {
+
+.searchresults ul {
   border:1px solid #888;
   margin:0;
   padding:0;
   width:100%;
   list-style-type:none;
 }
-#mysearchresults ul li {
+.searchresults ul li {
   margin:0;
   padding:3px;
 }
-#mysearchresults ul li.selected { 
+.searchresults ul li.selected { 
   background-color: #ffb; 
 }
-#mysearchresults ul strong.highlight { 
+.searchresults ul strong.highlight { 
   color: #800; 
   margin:0;
   padding:0;
 }
-
 
 .panetitle {
     height: 20px; width: 100%; /* width not specified */

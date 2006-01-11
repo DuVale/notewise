@@ -42,8 +42,7 @@ sub view : Private {
 
     my $relationship = Notewise::M::CDBI::Relationship->retrieve($id);
     unless($relationship){
-        $c->response->status(404);
-        $c->res->output('ERROR');
+        $c->detach('/rest/notfound',["couldn't find relationship with id $id"]);
         return;
     }
     my %relationship_hash;
@@ -56,9 +55,9 @@ sub add : Private {
 
     $c->form( optional => [ Notewise::M::CDBI::Relationship->columns ] );
     if ($c->form->has_missing) {
-        $c->res->status(400); # Bad Request
+        $c->detach('/rest/error',['missing fields']);
     } elsif ($c->form->has_invalid) {
-        $c->res->status(400); # Bad Request
+        $c->detach('/rest/error',['invalid fields']);
     } else {
         my $relationship = Notewise::M::CDBI::Relationship->create_from_form( $c->form );
 
@@ -76,16 +75,13 @@ sub update : Private {
 
     $c->form( optional => [ Notewise::M::CDBI::Relationship->columns ] );
     if ($c->form->has_missing) {
-        $c->res->status(400); # Bad Request
-        $c->res->output('ERROR');
+        $c->detach('/rest/error',['missing fields']);
     } elsif ($c->form->has_invalid) {
-        $c->res->status(400); # Bad Request
-        $c->res->output('ERROR');
+        $c->detach('/rest/error',['invalid fields']);
     } else {
         my $relationship = Notewise::M::CDBI::Relationship->retrieve($id);
         unless($relationship){
-            $c->res->status(404); # Not found
-            return $c->res->output('ERROR');
+            $c->detach('/rest/notfound',["couldn't find relationship with id $id"]);
         }
         $relationship->update_from_form( $c->form );
 
@@ -107,7 +103,7 @@ sub delete : Private {
         $relationship->delete();
         $c->res->status(200);
     } else {
-        $c->res->status(404);
+        $c->detach('/rest/notfound',["couldn't find relationship with id $id"]);
     }
     $c->res->output('OK');
 }
