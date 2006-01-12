@@ -105,7 +105,7 @@ sub check_user_is_owner {
 
     # check permissions
     if ($object->user->id != $c->req->{user_id}){
-        $c->detach('/rest/forbidden',["user ".$c->req->{user_id}."isn't the owner of object ".$object->id]);
+        $c->detach('/rest/forbidden',["user ".$c->req->{user_id}." isn't the owner of object ".$object->id]);
     }
     return 1;
 }

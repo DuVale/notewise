@@ -28,17 +28,32 @@ sub ok: Private {
 
 sub error: Private {
     my ( $self, $c, $message) = @_;
-    $c->forward('do_error',[400,"ERROR - $message"]);
+    if($message){
+        $message="ERROR - $message";
+    } else {
+        $message="ERROR";
+    }
+    $c->forward('do_error',[400,$message]);
 }
 
 sub forbidden: Private {
     my ( $self, $c, $message) = @_;
-    $c->forward('do_error',[403,"FORBIDDEN - $message"]);
+    if($message){
+        $message="FORBIDDEN - $message";
+    } else {
+        $message="FORBIDDEN";
+    }
+    $c->forward('do_error',[403,$message]);
 }
 
 sub notfound: Private {
     my ( $self, $c, $message) = @_;
-    $c->forward('do_error',[404,"ERROR - $message"]);
+    if($message){
+        $message="ERROR - $message";
+    } else {
+        $message="ERROR";
+    }
+    $c->forward('do_error',[404,$message]);
 }
 
 sub do_error : Private {

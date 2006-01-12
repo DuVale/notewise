@@ -153,7 +153,7 @@ $req = new_request('PUT', "http://localhost/rest/note",
                      height=>400 });
 $mech->request($req);
 is($mech->status,403,'Status of PUT is 403');
-$mech->content_is("FORBIDDEN", "adding notes to other users' kernels is forbidden");
+$mech->content_is("FORBIDDEN - user $user2_id isn't the owner of object $kernel_id", "adding notes to other users' kernels is forbidden");
 
 $req = new_request('POST', "http://localhost/rest/note/$note_id",
                     {container_object=>$kernel_id,
@@ -167,12 +167,12 @@ $req = new_request('POST', "http://localhost/rest/note/$note_id",
                      height=>500 });
 $mech->request($req);
 is($mech->status,403,'Status of POST is 403');
-$mech->content_is("FORBIDDEN", "updating other users' notes is forbidden");
+$mech->content_is("FORBIDDEN - user $user2_id isn't the owner of object $note_id", "updating notes to other users' kernels is forbidden");
 
 $req = new_request('DELETE', "http://localhost/rest/note/$note_id");
 $mech->request($req);
 is($mech->status,403,'Status of DELETE is 403');
-$mech->content_is("FORBIDDEN", "deleting other users' notes is forbidden");
+$mech->content_is("FORBIDDEN - user $user2_id isn't the owner of object $note_id", "deleting other users' notes is forbidden");
 
 # Cleanup
 
