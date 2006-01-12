@@ -43,7 +43,7 @@ sub to_xml_hash {
     my $self = shift;
     return {
         id => $self->object_id->id,
-        container_object => $self->container_object,
+        container_object => $self->container_object->id,
         content => $self->content,
         source => $self->source,
         created => $self->created->strftime($self->strf_format),

@@ -42,12 +42,12 @@ sub view : Private {
 
     my $contained_object = (Notewise::M::CDBI::ContainedObject->search(container_object=>$container_id, contained_object=>$contained_id))[0];
     unless($contained_object){
-        $c->detach('/rest/notfound');
+        $c->detach('/rest/notfound',["contained object $container_id/$contained_id was not found"]);
     }
 
     # check permissions
     unless ($contained_object->has_permission($c->req->{user_id},'view')){
-        $c->detach('/rest/forbidden');
+        $c->detach('/rest/forbidden',["You do not have access to view contained object $container_id/$contained_id"]);
     }
 
     # XXX the following hashkey should really be containedobject, no visiblekernel, to allow both /rest/containedobject and /rest/visiblekernel
@@ -60,9 +60,9 @@ sub add : Private {
 
     $c->form( optional => [ Notewise::M::CDBI::ContainedObject->columns ] );
     if ($c->form->has_missing) {
-        $c->detach('/rest/error');
+        $c->detach('/rest/error',["missing fields"]);
     } elsif ($c->form->has_invalid) {
-        $c->detach('/rest/error');
+        $c->detach('/rest/error',["invalid fields"]);
     }
 
     # This is a bit of a hack to allow us to add a newly created kernel to
@@ -76,7 +76,7 @@ sub add : Private {
                            $c->form->valid('container_object')
                          );
     unless ($container_object->has_permission($c->req->{user_id},'modify')){
-        $c->detach('/rest/forbidden');
+        $c->detach('/rest/forbidden',["You can't create that contained object because you do not have permission to modify ".$container_object->id]);
     }
 
     # figure out if we need to create the kernel as well
@@ -93,7 +93,7 @@ sub add : Private {
                                $c->form->valid('contained_object')
                              );
         unless ($contained_object->has_permission($c->req->{user_id},'view')){
-            $c->detach('/rest/forbidden');
+            $c->detach('/rest/forbidden',["You can't create that contained object because you do not have permission to view ".$contained_object->id]);
         }
     }
 
@@ -113,13 +113,13 @@ sub update : Private {
     my ( $self, $c, $container_id, $contained_id) = @_;
 
     $c->form( optional => [ Notewise::M::CDBI::ContainedObject->columns ] );
-    if ($c->form->has_missing) { $c->detach('/rest/error'); }
-    elsif ($c->form->has_invalid) { $c->detach('/rest/error'); }
+    if ($c->form->has_missing) { $c->detach('/rest/error',['missing fields']); }
+    elsif ($c->form->has_invalid) { $c->detach('/rest/error',['invalid fields']); }
 
     # check permissions
     my $container=Notewise::M::CDBI::Kernel->retrieve($container_id);
     unless ($container->has_permission($c->req->{user_id},'modify')){
-        $c->detach('/rest/forbidden');
+        $c->detach('/rest/forbidden',["You do not have permission to modify $container_id"]);
     }
 
     # do the update
@@ -140,7 +140,7 @@ sub delete : Private {
 
     # check permissions
     unless ($containedobject->container_object->has_permission($c->req->{user_id},'modify')){
-        $c->detach('/rest/forbidden');
+        $c->detach('/rest/forbidden',["You do not have permission to delete $container_id/$contained_id"]);
     }
 
     if($containedobject){

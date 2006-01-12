@@ -40,7 +40,7 @@ ok(!$kernel->has_permission($user2,'delete'), "other users can't view other user
 # test visible_relationships
 my $kernel2 = Notewise::M::CDBI::Kernel->create({name=>'onfoo1',user=>$user});
 my $kernel3 = Notewise::M::CDBI::Kernel->create({name=>'onfoo2',user=>$user});
-my $note1 = Notewise::M::CDBI::Note->create({container_object=>$kernel,
+my $note1 = Notewise::M::CDBI::Note->create({container_object=>$kernel->object_id,
                                              content=>'onfoo3',
                                              x=>10,
                                              y=>10,
@@ -48,7 +48,7 @@ my $note1 = Notewise::M::CDBI::Note->create({container_object=>$kernel,
                                              height=>10,
                                              user=>$user});
 my $kernel4 = Notewise::M::CDBI::Kernel->create({name=>'offfoo1',user=>$user});
-my $note2 = Notewise::M::CDBI::Note->create({container_object=>$kernel4,
+my $note2 = Notewise::M::CDBI::Note->create({container_object=>$kernel4->object_id,
                                              content=>'offfoo2',
                                              x=>10,
                                              y=>10,

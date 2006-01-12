@@ -66,7 +66,7 @@ $req = new_request('PUT', "http://localhost/rest/vkernel",
                      collapsed=>1});
 $mech->request($req);
 is($mech->status,403,'Status of PUT is 403');
-$mech->content_is("FORBIDDEN", "adding to other users' kernels is forbidden");
+$mech->content_is("FORBIDDEN - You can't create that contained object because you do not have permission to modify $container_id", "adding to other users' kernels is forbidden");
 
 # Try modifying a kernel that isn't owned by this user
 $req = new_request('POST', "http://localhost/rest/vkernel/$container_id/$kernel_id",
@@ -79,7 +79,7 @@ $req = new_request('POST', "http://localhost/rest/vkernel/$container_id/$kernel_
                      collapsed=>1});
 $mech->request($req);
 is($mech->status,403,'Status of POST is 403');
-$mech->content_is("FORBIDDEN", "updating other users' contained objects is forbidden");
+$mech->content_is("FORBIDDEN - You do not have permission to modify $container_id", "updating other users' contained objects is forbidden");
 
 # Try adding someone else's kernel to your own kernel
 my $container2 = Notewise::M::CDBI::Kernel->create({user=>$user2_id});
@@ -94,20 +94,20 @@ $req = new_request('PUT', "http://localhost/rest/vkernel",
                      collapsed=>1});
 $mech->request($req);
 is($mech->status,403,'Status of PUT is 403');
-$mech->content_is("FORBIDDEN", "adding someone else's kernel to your own is forbidden (currently)");
+$mech->content_is("FORBIDDEN - You can't create that contained object because you do not have permission to view $kernel_id", "adding someone else's kernel to your own is forbidden (currently)");
 $container2->delete;
 
 # test view permissions
 $req = new_request('GET', "http://localhost/rest/vkernel/$container_id/$kernel_id");
 $mech->request($req);
 is($mech->status,403,'Status of GET is 403');
-$mech->content_is("FORBIDDEN", "viewing other users' contained objects is forbidden");
+$mech->content_is("FORBIDDEN - You do not have access to view contained object $container_id/$kernel_id", "viewing other users' contained objects is forbidden");
 
 # test deletion permissions
 $req = new_request('DELETE', "http://localhost/rest/vkernel/$container_id/$kernel_id");
 $mech->request($req);
 is($mech->status,403,'Status of DELETE is 403');
-$mech->content_is("FORBIDDEN", "deleting other users' kernels is forbidden");
+$mech->content_is("FORBIDDEN - You do not have permission to delete $container_id/$kernel_id", "deleting other users' kernels is forbidden");
 
 ### test allowed deletion
 ($mech, $user) = login_user('test@tester.scottyallen.com','password');
@@ -120,7 +120,7 @@ $mech->content_is("OK", "delete our own kernel");
 $req = new_request('GET', "http://localhost/rest/vkernel/$container_id/$kernel_id");
 $mech->request($req);
 is($mech->status,404,'Status of GET is 404');
-$mech->content_is("ERROR", "object is truely deleted");
+$mech->content_is("ERROR - contained object $container_id/$kernel_id was not found", "object is truely deleted");
 
 # Cleanup
 
