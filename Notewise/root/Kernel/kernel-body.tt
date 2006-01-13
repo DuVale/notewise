@@ -1,0 +1,12 @@
+[% notes = kernel.notes %]
+[% vkernels = kernel.contained_objects %]
+
+[%- j = i + 1 %]
+[% IF i < 6 %] [%# XXX not sure why this needs to be 6, when kernel-js.tt has only 4.  If it's 5 or 4, then we get errors because there's js for kernels that don't have any html %]
+    [% FOR vkernel = vkernels %]
+        [%INCLUDE 'Kernel/kernel.tt' i=j%]
+    [% END %]
+[% END %]
+[% FOR note = notes %]
+    [%INCLUDE 'Kernel/note.tt' %]
+[% END %]

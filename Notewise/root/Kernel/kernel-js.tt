@@ -13,19 +13,4 @@
     vkernel.layout();
     objectCache['[%vkernel.container_kernel.id%]/[%vkernel.contained_kernel.id%]']=vkernel;
 </script>
-    [% contained_kernel = vkernel.contained_kernel %]
-
-
-    [% j = i + 1 %]
-    [% IF j < 4 %]
-        [% FOR vkernel = contained_kernel.contained_objects %]
-            [%INCLUDE 'Kernel/kernel-js.tt' i=j%]
-        [% END %]
-        [% FOR note = contained_kernel.notes %]
-            [%INCLUDE 'Kernel/note-js.tt' %]
-        [% END %]
-    [% END %]
-
-    [% FOR relationship = contained_kernel.visible_relationships %]
-        [%INCLUDE 'Kernel/relationship.tt' kernel=contained_kernel%]
-    [%END%]
+    [% INCLUDE 'Kernel/kernel-innerjs.tt' kernel=vkernel.contained_kernel%]

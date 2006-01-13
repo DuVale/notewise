@@ -1,7 +1,5 @@
 [% i = i + 1%]
 [% id = vkernel.container_kernel.id _ '/' _ vkernel.contained_kernel.id %]
-[% notes = vkernel.contained_kernel.notes %]
-[% vkernels = vkernel.contained_kernel.contained_objects %]
 <div id="vkernel[%id%]" class="vkernel [%IF vkernel.collapsed%]collapsed[%END%] notselected"
          style="left: [% vkernel.x %]%; top: [% vkernel.y %]%;
                 width: [% vkernel.width %]%;
@@ -23,15 +21,7 @@
         [% vkernel.contained_kernel.name %]
     </a>
     <div class="body">
-        [% j = i + 1 %]
-        [% IF i < 6 %] [%# XXX not sure why this needs to be 6, when kernel-js.tt has only 4.  If it's 5 or 4, then we get errors because there's js for kernels that don't have any html %]
-            [% FOR vkernel = vkernels %]
-                [%INCLUDE 'Kernel/kernel.tt' i=j%]
-            [% END %]
-        [% END %]
-        [% FOR note = notes %]
-            [%INCLUDE 'Kernel/note.tt' %]
-        [% END %]
+        [% INCLUDE 'Kernel/kernel-body.tt' kernel=vkernel.contained_kernel%]
     </div>
     <div class="corner" style="right: 0px; bottom: 0px;">
     </div>

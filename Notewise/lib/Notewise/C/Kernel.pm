@@ -52,7 +52,7 @@ Fetches a row and sets a template.
 
 =cut
 
-sub view : Regex('^([^r].*)/(.*)/(\d+)') {
+sub view : Regex('^([^rk].*)/(.*)/(\d+)') {
     my ( $self, $c ) = @_;
     my $username = $c->req->snippets->[0];
     my $name = $c->req->snippets->[0];
@@ -77,6 +77,12 @@ sub view_kernel : Private {
     $c->stash->{notes} = [Notewise::M::CDBI::Note->search({container_object=>$kernel->id})];
     $c->stash->{visible_relationships} = [$c->stash->{kernel}->visible_relationships];
     $c->stash->{template} = 'Kernel/view.tt';
+}
+
+sub innerhtml : Local {
+    my ( $self, $c, $id ) = @_;
+    $c->stash->{kernel} = Notewise::M::CDBI::Kernel->retrieve($id);
+    $c->stash->{template} = 'Kernel/kernel-innerhtml.tt';
 }
 
 =back
