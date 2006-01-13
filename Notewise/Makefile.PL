@@ -1,29 +1,17 @@
-    unless ( eval "use Module::Build::Compat 0.02; 1" ) {
-        print "This module requires Module::Build to install itself.\n";
+use inc::Module::Install;
 
-        require ExtUtils::MakeMaker;
-        my $yn =
-          ExtUtils::MakeMaker::prompt( '  Install Module::Build now from CPAN?',            'y' );
+name('Notewise');
+abstract('Catalyst Application');
+author('Scotty Allen');
+version_from('lib/Notewise.pm');
+license('perl');
 
-        unless ( $yn =~ /^y/i ) {
-            die " *** Cannot install without Module::Build.  Exiting ...\n";
-        }
+include('ExtUtils::AutoInstall');
 
-        require Cwd;
-        require File::Spec;
-        require CPAN;
+requires( Catalyst => '5.60' );
 
-        # Save this 'cause CPAN will chdir all over the place.
-        my $cwd      = Cwd::cwd();
-        my $makefile = File::Spec->rel2abs($0);
+catalyst_files();
 
-        CPAN::Shell->install('Module::Build::Compat')
-          or die " *** Cannot install without Module::Build.  Exiting ...\n";
-
-        chdir $cwd or die "Cannot chdir() back to $cwd: $!";
-    }
-    eval "use Module::Build::Compat 0.02; 1" or die $@;
-    use lib '_build/lib';
-    Module::Build::Compat->run_build_pl( args => \@ARGV );
-    require Module::Build;
-    Module::Build::Compat->write_makefile( build_class => 'Module::Build' );
+install_script( glob('script/*.pl') );
+auto_install();
+&WriteAll;
