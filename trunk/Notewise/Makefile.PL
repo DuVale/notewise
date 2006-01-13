@@ -10,8 +10,8 @@ include('ExtUtils::AutoInstall');
 
 requires( Catalyst => '5.60' );
 requires( 'Class::DBI' => 0 );
-requires( 'Class::DBI' => 0 );
 requires( 'Class::DBI::mysql' => 0 );
+requires( 'Class::DBI::Plugin::Type' => 0 );
 requires( 'YAML' => 0 );
 requires( 'DateTime' => 0 );
 requires( 'DateTime::Format::DateParse' => 0 );
