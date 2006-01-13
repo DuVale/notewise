@@ -1,10 +1,21 @@
 To setup a notewise development environment:
 
+Checkout from svn:
+
+svn co svn+ssh://notewise.com/home/advanced/notewise/svn/trunk notewise
+
 Install the following perl modules:
 
     Bundle::Catalyst
+    Catalyst::Plugin::Authentication::CDBI
+    Catalyst::Plugin::FormValidator
+    Catalyst::View::TT
     Class::DBI
     Class::DBI::mysql
+    Class::DBI::FromForm
+    Class::DBI::AsForm
+    Class::DBI::Plugin::Type
+    Class::DBI::AbstractSearch
     YAML
     DateTime
     DateTime::Format::DateParse
