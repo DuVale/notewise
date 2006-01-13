@@ -16,6 +16,7 @@ Install the following perl modules:
     Test::More
     XML::Simple
     Catalyst::View::REST::XML
+    Module::Install
 
     You can install perl modules by running:
 
