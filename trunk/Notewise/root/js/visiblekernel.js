@@ -94,7 +94,7 @@ VisibleKernel.prototype.extend({
         this.layout();
         this.updateNamelink();
         this.update();
-        // TODO hydrate kernel contents
+        this.hydrateChildren();
     },
 
     // returns the id in the form '1/2' where the first number is the
@@ -137,11 +137,8 @@ VisibleKernel.prototype.extend({
 
     // create html elements for the child objects
     hydrateChildren: function() {
-        var children = this.kernel().children();
-        for(var i=0; i<children.length; i++){
-            var child = children[i];
-            child.realize(this.body);
-        }
+        var url = JSDBI.base_url()+'kernel/innerhtml/'+this.kernel_id();
+        new Ajax.Updater(this.body, url, {method: 'get'});
     },
 
     kernel: function() {
@@ -321,7 +318,6 @@ CustomDropzone.prototype = (new Dropzone()).extend( {
 
    hideHover: function() {
 //        Element.removeClassName(this.htmlElement,'activated');
-//       alert("hid hover: "+this.htmlElement.className);
    },
 
    activate: function() {

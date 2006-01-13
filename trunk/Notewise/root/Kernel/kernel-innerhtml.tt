@@ -1,0 +1,2 @@
+[% INCLUDE 'Kernel/kernel-body.tt' i=0 %]
+[% INCLUDE 'Kernel/kernel-innerjs.tt' i=0 %]
