@@ -52,11 +52,8 @@ Fetches a row and sets a template.
 
 =cut
 
-sub view : Regex('^([^rk].*)/(.*)/(\d+)') {
-    my ( $self, $c ) = @_;
-    my $username = $c->req->snippets->[0];
-    my $name = $c->req->snippets->[0];
-    my $id = $c->req->snippets->[2];
+sub view : Private {
+    my ( $self, $c, $username, $name, $id ) = @_;
     if ($id){
         $c->stash->{kernel} = Notewise::M::CDBI::Kernel->retrieve($id);
         $c->forward('view_kernel');

@@ -26,7 +26,10 @@ __PACKAGE__->config->{authentication} = {
            };
 
 sub default : Private {
-    my ( $self, $c ) = @_;
+    my ( $self, $c, $username, $name, $id ) = @_;
+    if($name || $id) {
+        $c->detach('/kernel/view',[$username,$name,$id]);
+    }
     $c->stash->{template}='home.tt';
     $c->stash->{kernels}=[map $_->object, Notewise::M::CDBI::ObjectId->search(type=>'kernel',user=>$c->req->{user_id})];
 }
