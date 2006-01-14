@@ -1,4 +1,4 @@
-use Test::More tests => 11;
+use Test::More tests => 15;
 use Test::XML;
 use_ok( Catalyst::Test, 'Notewise' );
 use_ok('Notewise::C::REST::Kernel');
@@ -57,7 +57,31 @@ is_xml($mech->content,qq#<response><kernel name="fred" created="2004-02-03 02:03
 </containedObjects>
 </kernel></response># );
 
+# login again with a different user
+($mech, $user2) = login_user('test2@tester.scottyallen.com','password','test2');
+my $user2_id=$user2->id;
+
+# Try to get someone else's kernel
+$mech->get("/rest/kernel/$kernel_id");
+$mech->content_contains('FORBIDDEN');
+
+# Try to update someone else's kernel
+$req = new_request('POST', "http://localhost/rest/kernel/$kernel_id",
+                    {name=>'fred2',
+                     uri=>'anotheruri2',
+                     source=>'anothersource2',
+                     created=>'2004-02-03 02:03:04'});
+
+$mech->request($req);
+$mech->content_contains('FORBIDDEN');
+
+# Try to delete someone else's kernel
+$req = new_request('DELETE', "http://localhost/rest/kernel/$kernel_id");
+$mech->request($req);
+$mech->content_contains('FORBIDDEN');
+
 $user->delete;
+$user2->delete;
 Notewise::M::CDBI::Kernel->retrieve($kernel_id)->delete;
 
 # vim:ft=perl
