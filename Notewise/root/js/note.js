@@ -34,6 +34,13 @@ Note.prototype.extend({
 
         JSDBI.prototype.initialize.call(this);
         WiseObject.prototype.initialize.call(this);
+
+        // XXX blah, hackage.  For some reason, toString doesn't get inherited from
+        // JSDBI.prototype via JSDBI.inherit(), nor can we set it up like all our other methods.
+
+        this.toString = function () {
+            return JSDBI.prototype.toString.call(this);
+        }
     },
 
     // creates the actual html for this kernel

@@ -1,10 +1,10 @@
 var Rectangle = Class.create();
 Rectangle.prototype = {
     initialize: function(x,y,w,h){
-        this.x=x;
-        this.y=y;
-        this.w=w;
-        this.h=h;
+        this.x=Number(x);
+        this.y=Number(y);
+        this.w=Number(w);
+        this.h=Number(h);
     },
 
     getCenter: function (){
@@ -103,13 +103,14 @@ Relationship.prototype.extend( {
         this.__id=id;
         this.__part1=part1.contained_object();
         this.__part2=part2.contained_object();
-        this.part1ContainedObject=part1;
-        this.part2ContainedObject=part2;
         this.__type=type;
         this.__nav=nav;
+        JSDBI.prototype.initialize.call(this);
+
+        this.part1ContainedObject=part1;
+        this.part2ContainedObject=part2;
         this.intersect1={x:0, y:0};
         this.intersect2={x:0, y:0};
-        this.showArrow = [true, true];
         this.htmlElement = document.createElement('div');
         this.htmlElement.className='relationship notselected';
         this.htmlElement.id=this.idString();
@@ -183,8 +184,8 @@ Relationship.prototype.extend( {
 
     updatePosition1: function(x,y){
         if(x == null || y == null){
-            x = this.part1ContainedObject.x();
-            y = this.part1ContainedObject.y();
+            x = Number(this.part1ContainedObject.x());
+            y = Number(this.part1ContainedObject.y());
         } else {
             x = Number(chopPx(arguments[1]));
             y = Number(chopPx(arguments[2]));
@@ -196,8 +197,8 @@ Relationship.prototype.extend( {
 
     updatePosition2: function(x,y){
         if(x == null || y == null){
-            x = this.part2ContainedObject.x();
-            y = this.part2ContainedObject.y();
+            x = Number(this.part2ContainedObject.x());
+            y = Number(this.part2ContainedObject.y());
         } else {
             x = Number(chopPx(arguments[1]));
             y = Number(chopPx(arguments[2]));
@@ -252,10 +253,10 @@ Relationship.prototype.extend( {
                                   this.part2ContainedObject.currentWidth(),
                                   this.part2ContainedObject.currentHeight());
 
-        line = [{x: this.part1ContainedObject.x()+this.part1ContainedObject.currentWidth()/2,
-                 y: this.part1ContainedObject.y()+this.part1ContainedObject.currentHeight()/2},
-                {x: this.part2ContainedObject.x()+this.part2ContainedObject.currentWidth()/2,
-                 y: this.part2ContainedObject.y()+this.part2ContainedObject.currentHeight()/2}];
+        line = [{x: Number(this.part1ContainedObject.x())+Number(this.part1ContainedObject.currentWidth())/2,
+                 y: Number(this.part1ContainedObject.y())+Number(this.part1ContainedObject.currentHeight())/2},
+                {x: Number(this.part2ContainedObject.x())+Number(this.part2ContainedObject.currentWidth())/2,
+                 y: Number(this.part2ContainedObject.y())+Number(this.part2ContainedObject.currentHeight())/2}];
 
         this.intersect1 = rect1.getLineIntersect(line);
         this.intersect2 = rect2.getLineIntersect(line);
