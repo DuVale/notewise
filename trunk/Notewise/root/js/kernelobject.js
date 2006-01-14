@@ -131,7 +131,7 @@ KernelObject.prototype = {
     getNameFieldWidth: function(){
         // TODO make 20 into a constant - min namefield width
         return Math.max(this.getTextWidth(this.namefield.value,
-                                          this.getStyle(this.namefield,
+                                          Utils.getStyle(this.namefield,
                                                         'font-size'))*1.15+10,20);
     },
 
@@ -174,27 +174,6 @@ KernelObject.prototype = {
         if(this.htmlElement){
             this.namefield = Utils.getElementsByClassName(this.htmlElement, 'namefield')[0];
         };
-    },
-
-    // fetches the current value for a property, even if there wasn't one explicitly set.
-    getStyle: function(el,styleProp) {
-	if (el.currentStyle){
-		var y = el.currentStyle[styleProp];
-	}else if (window.getComputedStyle){
-		var y = document.defaultView.getComputedStyle(el,null).getPropertyValue(styleProp);
-        }
-
-        if (y === undefined){
-            // must be internet explorer
-            var words = styleProp.split('-');
-            styleProp=words[0];
-            for(var i=1; i < words.length; i++){
-                styleProp = styleProp + words[i].substr(0,1).toUpperCase() + words[i].substr(1);
-            }
-            return this.getStyle(el,styleProp);
-        } else {
-            return y;
-        }
     },
 
     addNewElement: function (e) {

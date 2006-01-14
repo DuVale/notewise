@@ -191,5 +191,44 @@ Utils = {
           return document.body.scrollTop;
        else
           return 0;
+    },
+
+    // fetches the current value for a property, even if there wasn't one explicitly set.
+    // styleProp should be of the form "font-size" not "fontSize"
+    getStyle: function(el,styleProp) {
+	if (el.currentStyle){
+		var y = el.currentStyle[styleProp];
+	}else if (window.getComputedStyle){
+		var y = document.defaultView.getComputedStyle(el,null).getPropertyValue(styleProp);
+        }
+
+        if (y === undefined){
+            // must be internet explorer
+            var words = styleProp.split('-');
+            styleProp=words[0];
+            for(var i=1; i < words.length; i++){
+                styleProp = styleProp + words[i].substr(0,1).toUpperCase() + words[i].substr(1);
+            }
+            return this.getStyle(el,styleProp);
+        } else {
+            return y;
+        }
+    },
+
+    cumulativeOffsetWithBorders: function(element) {
+        var valueT = 0, valueL = 0;
+        do {
+            valueT += element.offsetTop  || 0;
+            valueT += Utils.chopPx(Utils.getStyle(element,'border-top-width'))  || 0;
+            valueL += element.offsetLeft || 0;
+            valueL += Utils.chopPx(Utils.getStyle(element,'border-left-width'))  || 0;
+            element = element.offsetParent;
+        } while (element);
+        return [valueL, valueT];
+    },
+
+    // chops any 'px' or '%' from the end of the string and returns a number
+    chopPx: function (str) {
+        return Number(str.replace(/[a-z%]+/i, ''));
     }
 };

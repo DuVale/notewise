@@ -123,7 +123,6 @@ VisibleKernel.prototype.extend({
            +"<input type=button value='X' class='removebutton'/>"
            +"<input type=button value='R' class='relationshipbutton'/>"
            +"<input value=\"\" type=\"text\" class=\"namefield\" autocomplete=\"off\" name=\"s\" value=\""+name+"\"/>"
-           +"<div class=\"searchresults\" style=\"display: none\"></div>"
            +"<a class=\"namelink\" href=\""+this.url()+"\">"
            +name+"</a>"
            +"<div class=\"rightgrippie\"/></div>"
@@ -155,7 +154,15 @@ VisibleKernel.prototype.extend({
         KernelObject.prototype.fetchElements.call(this);
         WiseObject.prototype.fetchElements.call(this);
         this.namelink = Utils.getElementsByClassName(this.htmlElement, 'namelink')[0];
-        this.searchresults = Utils.getElementsByClassName(this.htmlElement, 'searchresults')[0];
+        this.searchresults = document.getElementById('visiblekernelsearchresults');
+        if(!this.searchresults){
+            this.searchresults = document.createElement('div');
+            this.searchresults.id = 'visiblekernelsearchresults';
+            this.searchresults.className = 'searchresults';
+            Element.hide(this.searchresults);
+            var body=document.getElementsByTagName('body')[0];
+            body.appendChild(this.searchresults);
+        }
         this.expandbutton = Utils.getElementsByClassName(this.htmlElement, 'expandbutton')[0];
     },
 
@@ -326,8 +333,3 @@ CustomDropzone.prototype = (new Dropzone()).extend( {
    deactivate: function() {
    }
 });
-
-// chops any 'px' from the end of the string
-function chopPx (str) {
-    return str.replace(/[a-z%]+/i, '');
-}
