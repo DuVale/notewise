@@ -59,6 +59,10 @@ sub view : Private {
         $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
         return;
     }
+    # check permissions
+    unless ($kernel->has_permission($c->req->{user_id},'view')){
+        $c->detach('/rest/forbidden',["You do not have access to view object $id"]);
+    }
     $c->stash->{kernel}=$kernel->to_xml_hash_deep($c->req->base);
     $c->forward('Notewise::V::XML');
 }
@@ -89,11 +93,16 @@ sub update : Private {
     } elsif ($c->form->has_invalid) {
         $c->detach('/rest/error',['invalid fields']);
     } else {
-        # XXX need permissions check here!
         my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
         unless($kernel){
             $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
         }
+
+        # check permissions
+        unless ($kernel->has_permission($c->req->{user_id},'modify')){
+            $c->detach('/rest/forbidden',["You do not have access to modify object $id"]);
+        }
+
         $kernel->update_from_form( $c->form );
         $c->res->status(200); # OK
     	return $c->forward('view',[$id]);
@@ -105,6 +114,11 @@ sub delete : Private {
 
     my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
     if($kernel){
+        # check permissions
+        unless ($kernel->has_permission($c->req->{user_id},'delete')){
+            $c->detach('/rest/forbidden',["You do not have access to delete object $id"]);
+        }
+
         $kernel->delete();
         $c->res->status(200);
     } else {
