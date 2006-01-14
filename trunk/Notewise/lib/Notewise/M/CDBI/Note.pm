@@ -5,7 +5,6 @@ use strict;
 __PACKAGE__->has_a(object_id => 'Notewise::M::CDBI::ObjectId');
 __PACKAGE__->has_a(container_object => 'Notewise::M::CDBI::ObjectId');
 
-__PACKAGE__->add_trigger(before_create => \&create_id);
 __PACKAGE__->columns(TEMP => qw/user/);
 
 __PACKAGE__->has_a(created => 'DateTime', inflate=> \&Notewise::M::CDBI::inflate_datetime,
@@ -13,9 +12,14 @@ __PACKAGE__->has_a(created => 'DateTime', inflate=> \&Notewise::M::CDBI::inflate
 __PACKAGE__->has_a(lastmodified => 'DateTime', inflate=> \&Notewise::M::CDBI::inflate_timestamp,
                                                deflate=> \&Notewise::M::CDBI::deflate_timestamp);
 
+__PACKAGE__->add_trigger(before_create => \&create_id);
 __PACKAGE__->add_trigger(before_create => \&Notewise::M::CDBI::add_created_date);
-
 __PACKAGE__->add_trigger(after_create => \&hydrate_object_id);
+__PACKAGE__->add_trigger(after_delete => sub {
+                                                 my $self = shift;
+                                                 $self->object_id->delete;
+                        });
+
 sub hydrate_object_id {
     my $self = shift;
     my $object_id = Notewise::M::CDBI::ObjectId->retrieve($self->object_id);

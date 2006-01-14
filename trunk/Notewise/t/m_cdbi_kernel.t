@@ -1,4 +1,4 @@
-use Test::More tests => 13;
+use Test::More tests => 14;
 use_ok( Catalyst::Test, 'Notewise' );
 use_ok('Notewise::M::CDBI::Kernel');
 use Data::Dumper;
@@ -21,6 +21,15 @@ my @objects_to_delete = ($user,$user2,$kernel);
 isnt($kernel->object_id, 0, 'object exists');
 $kernel = Notewise::M::CDBI::Kernel->retrieve($kernel->object_id->id);
 is($kernel->user, $user->id, 'user id is correct after kernel rehydration');
+
+
+# Test that when a kernel is deleted, so is the object_id
+
+my $kernel_to_delete = Notewise::M::CDBI::Kernel->create({name=>'foo',user=>$user->id});
+my $kernel_id = $kernel_to_delete->object_id->id();
+$kernel_to_delete->delete;
+my $object_id = Notewise::M::CDBI::ObjectId->retrieve($kernel_id);
+is($object_id,undef,'object_id is deleted when kernel is deleted');
 
 # test url generation
 
