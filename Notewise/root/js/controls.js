@@ -60,9 +60,9 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
       function(element, update){ 
         if(!update.style.position || update.style.position=='absolute') {
           update.style.position = 'absolute';
-          var offsets = Utils.toViewportPosition(element);
-          update.style.left = element.offsetLeft + 'px';
-          update.style.top  = (element.offsetTop + element.offsetHeight) + 'px';
+          var offsets = Utils.cumulativeOffsetWithBorders(element);
+          update.style.left = offsets[0] + 'px';
+          update.style.top  = (offsets[1] + element.offsetHeight) + 'px';
         }
         new Effect.Appear(update,{duration:0.2});
       };

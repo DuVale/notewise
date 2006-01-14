@@ -407,9 +407,9 @@ WiseObject.prototype.extend({
  
     duringDrag: function() {
         var parentPos = Utils.toViewportPosition(this.oldParentNode);
-        var x = Number(chopPx(this.htmlElement.style.left)-parentPos.x)*100
+        var x = Number(Utils.chopPx(this.htmlElement.style.left)-parentPos.x)*100
                        / this.oldParentNode.clientWidth;
-        var y = (Number(chopPx(this.htmlElement.style.top))-parentPos.y)*100
+        var y = (Number(Utils.chopPx(this.htmlElement.style.top))-parentPos.y)*100
                        / this.oldParentNode.clientHeight;
         this.notifyMoveListeners(x+'%',y+'%');
     },
@@ -469,8 +469,8 @@ ResizeCornerDraggable.prototype = (new Draggable()).extend( {
     sizeFromCorner: function(){
         var cornerWidth = this.htmlElement.clientWidth;
         var cornerHeight = this.htmlElement.clientHeight;
-        var w = Number(chopPx(this.htmlElement.style.left)) + cornerWidth;
-        var h = Number(chopPx(this.htmlElement.style.top)) + cornerHeight;
+        var w = Number(Utils.chopPx(this.htmlElement.style.left)) + cornerWidth;
+        var h = Number(Utils.chopPx(this.htmlElement.style.top)) + cornerHeight;
         this.wiseobject.moveHeight(h*100/this.wiseobject.htmlElement.parentNode.clientHeight);
         this.wiseobject.moveWidth(w*100/this.wiseobject.htmlElement.parentNode.clientWidth);
         this.wiseobject.layoutResize();

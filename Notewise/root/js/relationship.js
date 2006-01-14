@@ -187,8 +187,8 @@ Relationship.prototype.extend( {
             x = Number(this.part1ContainedObject.x());
             y = Number(this.part1ContainedObject.y());
         } else {
-            x = Number(chopPx(arguments[1]));
-            y = Number(chopPx(arguments[2]));
+            x = Number(Utils.chopPx(arguments[1]));
+            y = Number(Utils.chopPx(arguments[2]));
         }
         x = (x + this.part1ContainedObject.currentWidth(this.part1ContainedObject.oldParentNode)/2)+'%';
         y = (y + this.part1ContainedObject.currentHeight(this.part1ContainedObject.oldParentNode)/2)+'%';
@@ -200,8 +200,8 @@ Relationship.prototype.extend( {
             x = Number(this.part2ContainedObject.x());
             y = Number(this.part2ContainedObject.y());
         } else {
-            x = Number(chopPx(arguments[1]));
-            y = Number(chopPx(arguments[2]));
+            x = Number(Utils.chopPx(arguments[1]));
+            y = Number(Utils.chopPx(arguments[2]));
         }
         x = (x + this.part2ContainedObject.currentWidth(this.part2ContainedObject.oldParentNode)/2)+'%';
         y = (y + this.part2ContainedObject.currentHeight(this.part2ContainedObject.oldParentNode)/2)+'%';
