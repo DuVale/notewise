@@ -16,7 +16,10 @@ __PACKAGE__->has_a(lastViewed => 'DateTime', inflate=> \&Notewise::M::CDBI::infl
 
 __PACKAGE__->add_trigger(before_create => \&create_id);
 __PACKAGE__->add_trigger(before_create => \&Notewise::M::CDBI::add_created_date);
-
+__PACKAGE__->add_trigger(after_delete => sub {
+                                                 my $self = shift;
+                                                 $self->object_id->delete;
+                        });
 __PACKAGE__->columns(TEMP => qw/user/);
 
 __PACKAGE__->add_trigger(after_create => \&hydrate_object_id);
