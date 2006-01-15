@@ -26,8 +26,8 @@ sub kernel : Path {
     my ( $self, $c, $id, $action) = @_;
 
     my $method = $c->req->method;
-    if(defined $action && $action eq 'children'){
-        $c->forward('children');
+    if(defined $action && $action){
+        $c->forward($action);
     } elsif($method eq 'GET'){
         $c->forward('view');
     } elsif($method eq 'PUT'){
@@ -48,6 +48,18 @@ sub children : Private {
         return;
     }
     $c->stash->{visiblekernel}=[map $_->to_xml_hash_deep, $kernel->contained_objects];
+    $c->forward('Notewise::V::XML');
+}
+
+sub visible_relationships : Private {
+    my ( $self, $c, $id) = @_;
+
+    my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
+    unless($kernel){
+        $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
+        return;
+    }
+    $c->stash->{relationship}=[map $_->to_xml_hash, $kernel->visible_relationships];
     $c->forward('Notewise::V::XML');
 }
 

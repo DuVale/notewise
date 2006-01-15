@@ -86,6 +86,7 @@ VisibleKernel.prototype.extend({
     },
 
     swap_kernels: function (kernel) {
+        delete objectCache[this.idString()];
         if(this.newlyCreated){
             this.contained_object().destroy();
         }
@@ -94,7 +95,9 @@ VisibleKernel.prototype.extend({
         this.layout();
         this.updateNamelink();
         this.update();
+        objectCache[this.idString()]=this;
         this.hydrateChildren();
+        this.hydrateRelationships();
     },
 
     // returns the id in the form '1/2' where the first number is the
@@ -138,6 +141,18 @@ VisibleKernel.prototype.extend({
     hydrateChildren: function() {
         var url = JSDBI.base_url()+'kernel/innerhtml/'+this.kernel_id();
         new Ajax.Updater(this.body, url, {method: 'get'});
+    },
+
+    // create html elements for the relationships that are visible for this object
+    hydrateRelationships: function() {
+        var rels = this.container_object().visible_relationships();
+        for(var i=0; i<rels.length; i++){
+            var rel = rels[i];
+            if(rel.part1() == this.kernel_id() ||
+               rel.part2() == this.kernel_id()){
+                rel.realize(this.container_object().id());
+            }
+        }
     },
 
     kernel: function() {
