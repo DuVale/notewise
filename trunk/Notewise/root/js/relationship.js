@@ -101,14 +101,16 @@ Relationship.elementTag('relationship');
 Relationship.prototype.extend( {
     initialize: function (id,part1,part2,type,nav){
         this.__id=id;
-        this.__part1=part1.contained_object();
-        this.__part2=part2.contained_object();
+        this.__part1=part1;
+        this.__part2=part2;
         this.__type=type;
         this.__nav=nav;
         JSDBI.prototype.initialize.call(this);
+    },
 
-        this.part1ContainedObject=part1;
-        this.part2ContainedObject=part2;
+    realize: function(parent_id){
+        this.part1ContainedObject=objectCache[parent_id+'/'+this.part1()];
+        this.part2ContainedObject=objectCache[parent_id+'/'+this.part2()];
         this.intersect1={x:0, y:0};
         this.intersect2={x:0, y:0};
         this.htmlElement = document.createElement('div');
@@ -117,10 +119,10 @@ Relationship.prototype.extend( {
         this.htmlElement.relationship=this;
         this.part1ContainedObject.htmlElement.parentNode.appendChild(this.htmlElement);
         this.line = new LineDraw.Line(this.part1ContainedObject.htmlElement.parentNode,
-                                      (this.part1ContainedObject.x()+this.part1ContainedObject.currentWidth()/2)+'%',
-                                      (this.part1ContainedObject.y()+this.part1ContainedObject.currentHeight()/2)+'%',
-                                      (this.part2ContainedObject.x()+this.part2ContainedObject.currentWidth()/2)+'%',
-                                      (this.part2ContainedObject.y()+this.part2ContainedObject.currentHeight()/2)+'%');
+                                      (Number(this.part1ContainedObject.x())+this.part1ContainedObject.currentWidth()/2)+'%',
+                                      (Number(this.part1ContainedObject.y())+this.part1ContainedObject.currentHeight()/2)+'%',
+                                      (Number(this.part2ContainedObject.x())+this.part2ContainedObject.currentWidth()/2)+'%',
+                                      (Number(this.part2ContainedObject.y())+this.part2ContainedObject.currentHeight()/2)+'%');
         this.createLabel();
         this.createButtons();
         this.createArrows();
