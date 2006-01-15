@@ -47,6 +47,10 @@ sub children : Private {
         $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
         return;
     }
+    # check permissions
+    unless ($kernel->has_permission($c->req->{user_id},'view')){
+        $c->detach('/rest/forbidden',["You do not have access to view object $id"]);
+    }
     $c->stash->{visiblekernel}=[map $_->to_xml_hash_deep, $kernel->contained_objects];
     $c->forward('Notewise::V::XML');
 }

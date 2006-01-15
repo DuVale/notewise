@@ -1,4 +1,4 @@
-use Test::More tests => 15;
+use Test::More tests => 16;
 use Test::XML;
 use_ok( Catalyst::Test, 'Notewise' );
 use_ok('Notewise::C::REST::Kernel');
@@ -73,6 +73,10 @@ $req = new_request('POST', "http://localhost/rest/kernel/$kernel_id",
                      created=>'2004-02-03 02:03:04'});
 
 $mech->request($req);
+$mech->content_contains('FORBIDDEN');
+
+# Try to get someone else's kernel's children
+$mech->get("/rest/kernel/$kernel_id/children");
 $mech->content_contains('FORBIDDEN');
 
 # Try to delete someone else's kernel
