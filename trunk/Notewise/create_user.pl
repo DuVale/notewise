@@ -13,23 +13,24 @@ print "\n\n\n";
 while (!$username){
     print "Username: ";
     $username = <>;
+    chomp $username;
 }
 while (!$name){
     print "Full name: ";
     $name = <>;
+    chomp $name;
 }
 while (!$email){
     print "Email: ";
     $email = <>;
+    chomp $email;
 }
 while (!$password){
     print "Password: ";
     $password = <>;
+    chomp $password;
 }
 
-chomp $username;
-chomp $name;
-chomp $email;
 
 my $user = Notewise::M::CDBI::User->insert({username=>$username,
                                             name    =>$name,
