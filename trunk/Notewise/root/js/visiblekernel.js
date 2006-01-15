@@ -49,11 +49,11 @@ VisibleKernel.prototype.extend({
         this.htmlElement.kernel = this;
 
         // Setup autocomplete on the namefield.  TODO figure out how to factor this up to kernelobject
-        new Ajax.Autocompleter(this.namefield, this.searchresults, JSDBI.base_url()+'/ac',
-                               {frequency: .1,
-                                min_chars: 2,
-                                on_select: this.on_autocomplete_select.bind(this),
-                                on_complete: this.on_autocomplete_complete.bind(this)});
+        this.autocompleter = new Ajax.Autocompleter(this.namefield, this.searchresults, JSDBI.base_url()+'/ac',
+                                                    {frequency: .1,
+                                                     min_chars: 2,
+                                                     on_select: this.on_autocomplete_select.bind(this),
+                                                     on_complete: this.on_autocomplete_complete.bind(this)});
     },
 
     on_autocomplete_select: function (selected_element) {
@@ -181,11 +181,18 @@ VisibleKernel.prototype.extend({
         this.expandbutton = Utils.getElementsByClassName(this.htmlElement, 'expandbutton')[0];
     },
 
+    onNamefieldBlur: function() {
+        this.on_autocomplete_select(this.autocompleter.get_current_entry());
+    },
+
     // setup all the event listeners
     registerHandlers: function() {
         KernelObject.prototype.registerHandlers.call(this);
 
         WiseObject.prototype.registerHandlers.call(this);
+
+        // setup the namefield actions
+        Utils.registerEventListener(this.namefield,'blur', this.onNamefieldBlur.bind(this));
 
         // TODO check to see if all these terminate event listeners are necessary
 
