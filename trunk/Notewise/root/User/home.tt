@@ -1,0 +1,16 @@
+<h1>Notewise for [%user.name%]</h1>
+
+Last [%lastviewed.size%] viewed kernels:
+
+<ul>
+[% FOR kernel = lastviewed %]
+<li><a href="[%base _ kernel.relative_url%]">[%kernel.name||'unnamed'%]</a></li>
+[% END %]
+</ul>
+
+Most recently created [%lastviewed.size%] kernels:
+<ul>
+[% FOR kernel = lastcreated %]
+<li><a href="[%base _ kernel.relative_url%]">[%kernel.name||'unnamed'%]</a></li>
+[% END %]
+</ul>

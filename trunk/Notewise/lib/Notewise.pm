@@ -29,9 +29,11 @@ sub default : Private {
     my ( $self, $c, $username, $name, $id ) = @_;
     if($name || $id) {
         $c->detach('/kernel/view',[$username,$name,$id]);
+    } elsif ($username){
+        $c->detach('/user/home',[$username]);
     }
+    $c->stash->{user}=Notewise::M::CDBI::User->retrieve($c->req->{user_id});
     $c->stash->{template}='home.tt';
-    $c->stash->{kernels}=[map $_->object, Notewise::M::CDBI::ObjectId->search(type=>'kernel',user=>$c->req->{user_id})];
 }
 
 sub begin : Private {
@@ -67,6 +69,11 @@ sub auto : Local {
 
     #check again to see if they got logged in
     if ($c->req->{user_id}){
+        unless($c->req->path){
+            my $user=Notewise::M::CDBI::User->retrieve($c->req->{user_id});
+            $c->res->redirect('/'.$user->username);
+            return 0;
+        }
         return 1;
     }
 
