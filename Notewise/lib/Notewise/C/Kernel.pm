@@ -70,6 +70,10 @@ sub view_kernel : Private {
         #TODO make this screen prettier
         return $c->res->output('You do not have access to this kernel');
     }
+    if($kernel->user->id == $c->req->{user_id}){
+        $kernel->lastviewed(DateTime->now());
+        $kernel->update();
+    }
     $c->stash->{visible_kernels} = [Notewise::M::CDBI::ContainedObject->search({container_object=>$kernel->id})];
     $c->stash->{notes} = [Notewise::M::CDBI::Note->search({container_object=>$kernel->id})];
     $c->stash->{visible_relationships} = [$c->stash->{kernel}->visible_relationships];
