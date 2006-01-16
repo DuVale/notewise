@@ -57,8 +57,20 @@ sub view : Private {
     if ($id){
         $c->stash->{kernel} = Notewise::M::CDBI::Kernel->retrieve($id);
         $c->forward('view_kernel');
+    } elsif ($name) {
+        my @kernels = Notewise::M::CDBI::Kernel->kernels_with_name($name,$c->req->{user_id});
+        if(@kernels == 1){
+            $c->stash->{kernel} = $kernels[0];
+            return $c->forward('view_kernel');
+        } elsif (@kernels > 1) {
+            $c->stash->{kernels} = \@kernels;
+            $c->stash->{template} = 'Kernel/disambiguation.tt';
+        } else {
+            # TODO make this look prettier
+            die "Couldn't find a kernel by that name";
+        }
     } else {
-        die "TODO - write kernel disambiguation page";
+        die "We shouldn't have gotten here - no kernel name or id";
     }
 }
 
