@@ -167,11 +167,25 @@ sub relative_url {
     my $name = $self->name || '';
     if($name){
         $name =~ s/\s+$//;
-        $name =~ s/\s+/_/g;
+        $name =~ s/\s/_/g;
     }
-    return $self->user->username."/".$name."/".$self->id;
+    if(__PACKAGE__->kernels_with_name($name,$self->user->id) > 1){
+        return $self->user->username."/".$name."/".$self->id;
+    } else {
+        return $self->user->username."/".$name;
+    }
 }
 
+sub kernels_with_name {
+    my $class = shift;
+    my $name = shift;
+    my $user_id = shift;
+
+    $name =~ s/_/ /;
+
+    my @kernels = $class->search(name=>$name);
+    return grep {$_->user->id == $user_id} @kernels;
+}
 =head1 NAME
 
 Notewise::M::CDBI::Kernel - CDBI Model Component Table Class
