@@ -169,7 +169,9 @@ sub relative_url {
         $name =~ s/\s+$//;
         $name =~ s/\s/_/g;
     }
-    if(__PACKAGE__->kernels_with_name($name,$self->user->id) > 1){
+    if($name eq ''){
+        return $self->user->username."/".$name."/".$self->id;
+    } elsif(__PACKAGE__->kernels_with_name($name,$self->user->id) > 1){
         return $self->user->username."/".$name."/".$self->id;
     } else {
         return $self->user->username."/".$name;
