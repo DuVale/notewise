@@ -87,18 +87,26 @@ VisibleKernel.prototype.extend({
     },
 
     swap_kernels: function (kernel) {
-        delete objectCache[this.idString()];
-        if(this.newlyCreated){
-            this.contained_object().destroy();
-        }
+        var old_contained_object = this.contained_object();
+        var old_id_string = this.idString();
         this.contained_object(kernel);
         this.namefield.value = kernel.name();
         this.layout();
         this.updateNamelink();
         this.update();
         objectCache[this.idString()]=this;
-        this.hydrateChildren();
+        window.setTimeout(this.after_swap_kernels.bindWithParams(this,old_contained_object,old_id_string),500);
+    },
+
+    // This contains all the things that can happen asynchronously after we
+    // swap out the kernel, in an attempt to make the swap feel more snappy
+    after_swap_kernels: function(old_contained_object,old_id_string){
         this.hydrateRelationships();
+        this.hydrateChildren();
+        delete objectCache[this.idString()];
+        if(this.newlyCreated){
+            this.contained_object().destroy();
+        }
     },
 
     // returns the id in the form '1/2' where the first number is the
