@@ -205,6 +205,10 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
   onBlur: function(event) {
     // needed to make click events working
     setTimeout(this.hide.bind(this), 250);
+    if(this.active &&
+       this.options.on_blur != null){
+        this.options.on_blur(this.get_current_entry());
+    }
     this.has_focus = false;
     this.active = false;     
   }, 

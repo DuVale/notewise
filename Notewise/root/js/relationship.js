@@ -127,6 +127,14 @@ Relationship.prototype.extend( {
         this.createButtons();
         this.createArrows();
         this.registerListeners();
+
+        this.cache();
+    },
+
+    // caches relationship in it's endpoints, so they can remove the relationship if they get removed or reparented
+    cache: function() {
+        this.part1ContainedObject.cacheRelationship(this);
+        this.part2ContainedObject.cacheRelationship(this);
     },
 
     idString: function() {
@@ -307,11 +315,6 @@ Relationship.prototype.extend( {
     },
 
     registerListeners: function() {
-        this.part1ContainedObject.addStartChangeListener(this.startChange.bind(this));
-        this.part2ContainedObject.addStartChangeListener(this.startChange.bind(this));
-        this.part1ContainedObject.addEndChangeListener(this.endChange.bind(this));
-        this.part2ContainedObject.addEndChangeListener(this.endChange.bind(this));
-
         Utils.registerEventListener(this.label,
                                     'mousedown',
                                     Utils.terminateEvent.bindAsEventListener(this));
@@ -363,10 +366,20 @@ Relationship.prototype.extend( {
                                     'click',
                                     this.arrow2click.bindAsEventListener(this));
 
-        this.part1ContainedObject.addMoveListener(this.updatePosition1.bind(this));
-        this.part1ContainedObject.addSizeListener(this.updatePosition1.bind(this));
-        this.part2ContainedObject.addMoveListener(this.updatePosition2.bind(this));
-        this.part2ContainedObject.addSizeListener(this.updatePosition2.bind(this));
+        this.pos1listener = this.updatePosition1.bind(this);
+        this.pos2listener = this.updatePosition2.bind(this);
+        this.startListener = this.startChange.bind(this);
+        this.endListener = this.endChange.bind(this);
+
+        this.part1ContainedObject.addMoveListener(this.pos1listener);
+        this.part1ContainedObject.addSizeListener(this.pos1listener);
+        this.part2ContainedObject.addMoveListener(this.pos2listener);
+        this.part2ContainedObject.addSizeListener(this.pos2listener);
+        this.part1ContainedObject.addStartChangeListener(this.startListener);
+        this.part2ContainedObject.addStartChangeListener(this.startListener);
+        this.part1ContainedObject.addEndChangeListener(this.endListener);
+        this.part2ContainedObject.addEndChangeListener(this.endListener);
+
     },
 
     hideButtonClick: function(e){
@@ -454,5 +467,24 @@ Relationship.prototype.extend( {
     // Returns whether or not this relationship is currently selected
     isSelected: function () {
         return Element.hasClassName(this.htmlElement, 'selected');
+    },
+
+    removeFromView: function () {
+        if(this.htmlElement.parentNode){
+            this.htmlElement.parentNode.removeChild(this.htmlElement);
+        }
+        this.line.destroy();
+        this.part1ContainedObject.removeMoveListener(this.pos1listener);
+        this.part1ContainedObject.removeSizeListener(this.pos1listener);
+        this.part2ContainedObject.removeMoveListener(this.pos2listener);
+        this.part2ContainedObject.removeSizeListener(this.pos2listener);
+        this.part1ContainedObject.removeStartChangeListener(this.startListener);
+        this.part2ContainedObject.removeStartChangeListener(this.startListener);
+        this.part1ContainedObject.removeEndChangeListener(this.endListener);
+        this.part2ContainedObject.removeEndChangeListener(this.endListener);
+
+        // remove it from both object caches
+        this.part1ContainedObject.uncacheRelationship(this);
+        this.part2ContainedObject.uncacheRelationship(this);
     }
 });

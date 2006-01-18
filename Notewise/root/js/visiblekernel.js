@@ -53,6 +53,7 @@ VisibleKernel.prototype.extend({
                                                     {frequency: .1,
                                                      min_chars: 2,
                                                      on_select: this.on_autocomplete_select.bind(this),
+                                                     on_blur: this.onNamefieldBlur.bind(this),
                                                      on_complete: this.on_autocomplete_complete.bind(this)});
     },
 
@@ -126,7 +127,7 @@ VisibleKernel.prototype.extend({
            +"<input type=button value='X' class='removebutton'/>"
            +"<input type=button value='R' class='relationshipbutton'/>"
            +"<input value=\"\" type=\"text\" class=\"namefield\" autocomplete=\"off\" name=\"s\" value=\""+name+"\"/>"
-           +"<a class=\"namelink\" href=\""+this.url()+"\">"
+           +"<a class=\"namelink\" href=\""+this.kernel().object_url()+"\">"
            +name+"</a>"
            +"<div class=\"rightgrippie\"/></div>"
            +"<div class=\"body\">"
@@ -181,8 +182,8 @@ VisibleKernel.prototype.extend({
         this.expandbutton = Utils.getElementsByClassName(this.htmlElement, 'expandbutton')[0];
     },
 
-    onNamefieldBlur: function() {
-        this.on_autocomplete_select(this.autocompleter.get_current_entry());
+    onNamefieldBlur: function(selected_element) {
+        this.on_autocomplete_select(selected_element);
     },
 
     // setup all the event listeners
@@ -190,9 +191,6 @@ VisibleKernel.prototype.extend({
         KernelObject.prototype.registerHandlers.call(this);
 
         WiseObject.prototype.registerHandlers.call(this);
-
-        // setup the namefield actions
-        Utils.registerEventListener(this.namefield,'blur', this.onNamefieldBlur.bind(this));
 
         // TODO check to see if all these terminate event listeners are necessary
 
