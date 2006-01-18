@@ -44,13 +44,37 @@
 
                 </div>
                 <div class="panecontent" id="rel_content">
-                    <ul>
-                        [% FOR sibling = kernel.related_kernels %]
-                        <li><a href="[% base _ sibling.relative_url %]">
-                            [%sibling.name.defined ? sibling.name : 'unnamed' %]
-                        </a></li>
+                        [% FOR relationship = kernel.relationships %]
+
+                            [% IF relationship.part1.object == kernel %]
+                                [% IF relationship.nav == 'fromleft' %]
+                                    &lt;-[%relationship.type.relationship_type%]
+                                [% ELSIF relationship.nav == 'fromright' %]
+                                    [%relationship.type.relationship_type%]-&gt;
+                                [% END %]
+                            [% ELSE %]
+                                [% IF relationship.nav == 'fromleft' %]
+                                    [%relationship.type.relationship_type%]-&gt;
+                                [% ELSIF relationship.nav == 'fromright' %]
+                                    &lt;-[%relationship.type.relationship_type%]
+                                [% END %]
+                            [% END %]
+
+                            [% IF relationship.nav == 'bi' %]
+                                &lt;-[%relationship.type.relationship_type%]-&gt;
+                            [% ELSIF relationship.nav == 'non' %]
+                                -[%relationship.type.relationship_type%]-
+                            [% END %]
+
+                            [% IF relationship.part1.object == kernel %]
+                                [% sibling = relationship.part2.object %]
+                            [% ELSE %]
+                                [% sibling = relationship.part1.object %]
+                            [% END %]
+                            <a href="[% base _ sibling.relative_url %]">
+                                [%sibling.name.defined ? sibling.name : 'unnamed' %]
+                            </a><br/>
                         [% END %]
-                    </ul>
                 </div>
                 
             </td></tr>
