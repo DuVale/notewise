@@ -24,6 +24,7 @@ requires( 'Test::More' => 0 );
 requires( 'XML::Simple' => 0 );
 requires( 'Catalyst::View::REST::XML' => 0 );
 requires( 'Module::Install' => 0 );
+requires( 'URI' => 0 );
 
 catalyst_files();
 

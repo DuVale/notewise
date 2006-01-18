@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use DateTime;
 use Data::Dumper;
+use URI::Escape;
 
 __PACKAGE__->has_a(object_id => 'Notewise::M::CDBI::ObjectId');
 
@@ -170,11 +171,11 @@ sub relative_url {
         $name =~ s/\s/_/g;
     }
     if($name eq ''){
-        return $self->user->username."/".$name."/".$self->id;
+        return uri_escape($self->user->username)."/".uri_escape($name)."/".$self->id;
     } elsif(__PACKAGE__->kernels_with_name($name,$self->user->id) > 1){
-        return $self->user->username."/".$name."/".$self->id;
+        return uri_escape($self->user->username)."/".uri_escape($name)."/".$self->id;
     } else {
-        return $self->user->username."/".$name;
+        return uri_escape($self->user->username)."/".uri_escape($name);
     }
 }
 
@@ -183,7 +184,7 @@ sub kernels_with_name {
     my $name = shift;
     my $user_id = shift;
 
-    $name =~ s/_/ /;
+    $name =~ s/_/ /g;
 
     my @kernels = $class->search(name=>$name);
     return grep {$_->user->id == $user_id} @kernels;
