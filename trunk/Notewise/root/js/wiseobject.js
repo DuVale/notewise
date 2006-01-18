@@ -5,13 +5,13 @@ WiseObject.prototype.extend({
 
     initialize: function() {
         // listeners that get notified when this visible kernel moves
-        this.__moveListeners = [];
+        this.__moveListeners = new Array();
         // listeners that get notified when this visible kernel changes size
-        this.__sizeListeners = [];
+        this.__sizeListeners = new Array();
         // listeners that get notified when this visible kernel starts moving or changing size (start of the drag)
-        this.__startChangeListeners = [];
+        this.__startChangeListeners = new Array();
         // listeners that get notified when this visible kernel stops moving or changing size (end of the drag)
-        this.__endChangeListeners = [];
+        this.__endChangeListeners = new Array();
     },
 
     // XXX this is necessary because inheritance is kinda borked
@@ -99,9 +99,30 @@ WiseObject.prototype.extend({
         if(this.htmlElement.parentNode != null){
             this.htmlElement.parentNode.removeChild(this.htmlElement);
         }
+        this.deleteRelationships();
         dndMgr.clearSelection();
         dndMgr.giveSearchBoxFocus();
         return JSDBI.prototype.destroy.call(this);
+    },
+
+    deleteRelationships: function() {
+        if(this.relationshipCache){
+            for(var i=0; i<this.relationshipCache.length; i++){
+                var relationship = this.relationshipCache[i];
+                relationship.removeFromView();
+            }
+        }
+    },
+
+    cacheRelationship: function(relationship) {
+        if(!this.relationshipCache){
+            this.relationshipCache=[];
+        }
+        this.relationshipCache.push(relationship);
+    },
+
+    uncacheRelationship: function(relationship) {
+        this.relationshipCache.removeItem(relationship);
     },
 
     // performs internal visual layout of the html elements for this kernel
@@ -261,10 +282,18 @@ WiseObject.prototype.extend({
         this.__moveListeners.push(notifyMethod);
     },
 
+    removeMoveListener: function (notifyMethod){
+        this.__moveListeners.removeItem(notifyMethod);
+    },
+
     // Adds a size listener.  The notify method will called whenever this
     // visible kernel is resized, with this object as the parameter.
     addSizeListener: function (notifyMethod){
         this.__sizeListeners.push(notifyMethod);
+    },
+
+    removeSizeListener: function (notifyMethod){
+        this.__sizeListeners.removeItem(notifyMethod);
     },
 
     // Adds a start change listener.  The notify method will called whenever
@@ -274,11 +303,19 @@ WiseObject.prototype.extend({
         this.__startChangeListeners.push(notifyMethod);
     },
 
+    removeStartChangeListener: function (notifyMethod){
+        this.__startChangeListeners.removeItem(notifyMethod);
+    },
+
     // Adds an end change listener.  The notify method will called whenever
     // this visible kernel stops resizing or moving.  The notify method will
     // get this object as a parameter.
     addEndChangeListener: function (notifyMethod){
         this.__endChangeListeners.push(notifyMethod);
+    },
+
+    removeEndChangeListener: function (notifyMethod){
+        this.__endChangeListeners.removeItem(notifyMethod);
     },
 
     notifyMoveListeners: function (x,y){
@@ -478,5 +515,4 @@ ResizeCornerDraggable.prototype = (new Draggable()).extend( {
  
     select: function() {
     }
- 
 } );
