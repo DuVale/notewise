@@ -178,7 +178,7 @@ KernelObject.prototype = {
 
     addNewElement: function (e) {
         if (!e) var e = window.event
-        if(e.shiftKey || e.ctrlKey) {
+        if(e.shiftKey || e.ctrlKey || e.altKey) {
             this.addNewNote(e);
         } else {
             this.addNewKernel(e);
