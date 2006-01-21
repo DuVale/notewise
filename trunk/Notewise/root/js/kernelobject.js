@@ -171,6 +171,7 @@ KernelObject.prototype = {
     // retrieves references to all the relevant html elements and stores them
     // as properties in this object
     fetchElements: function() {
+        this.body = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
         if(this.htmlElement){
             this.namefield = Utils.getElementsByClassName(this.htmlElement, 'namefield')[0];
         };
