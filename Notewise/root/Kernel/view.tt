@@ -7,6 +7,34 @@
     <script src="[%base%]js/moo.fx.js" type="text/javascript"></script>
     <script src="[%base%]js/moo.fx.pack.js" type="text/javascript"></script>
     <script src="[%base%]js/ui.js" type="text/javascript"></script>
+    <script type="text/javascript" src="[%base%]js/wz_jsgraphics.js"></script>
+    <script type="text/javascript" src="[%base%]js/prototype.js"></script>
+    <script type="text/javascript" src="[%base%]js/dragndrop.js"></script>
+    <script type="text/javascript" src="[%base%]js/jsdbi.js"></script>
+    <script type="text/javascript" src="[%base%]js/utils.js"></script>
+    <script type="text/javascript" src="[%base%]js/linedraw.js"></script>
+    <script type="text/javascript" src="[%base%]js/new_relationship.js"></script>
+    <script type="text/javascript" src="[%base%]js/wiseobject.js"></script>
+    <script type="text/javascript" src="[%base%]js/relationship.js"></script>
+    <script type="text/javascript" src="[%base%]js/kernelobject.js"></script>
+    <script type="text/javascript" src="[%base%]js/nonmovingkernel.js"></script>
+    <script type="text/javascript" src="[%base%]js/viewkernel.js"></script>
+    <script type="text/javascript" src="[%base%]js/kernelthumbnail.js"></script>
+    <script type="text/javascript" src="[%base%]js/kernel.js"></script>
+    <script type="text/javascript" src="[%base%]js/visiblekernel.js"></script>
+    <script type="text/javascript" src="[%base%]js/note.js"></script>
+    <script type="text/javascript" src="[%base%]js/controls.js"></script>
+    <script type="text/javascript" src="[%base%]js/effects.js"></script>
+    [%#
+    use this instead of the above garbage to get faster loading of javascript
+    <script type="text/javascript" src="/javascript"></script>
+    %]
+    <script>
+        // configure the base url for jsdbi
+        JSDBI.base_url('[% base %]');
+        // XXX this is pretty nasty - put this inside the view's vkernel instead
+        var objectCache = {};
+    </script>
     <link rel="stylesheet" type="text/css" href="[%base%]style.css"/>
     <link rel="icon" href="[%base%]images/favicon.ico" />
     <link rel="shortcut icon" href="[%base%]images/favicon.ico" />
@@ -27,15 +55,33 @@
                     parents ([%kernel.parents.size or '0'%])
                 </div>
                 <div class="panecontent" id="parents_content">
-                    <ul>
-                        [% FOR parent = kernel.parents %]
-                            <li>
-                                <a href="[% base _ parent.relative_url %]">
-                                    [%parent.name.defined ? parent.name : 'unnamed' %]
+                    [% FOR parent = kernel.parents %]
+                            <div class="vkernel kernelthumbnail notselected" id="parentthumbnail[%parent.id%]">
+                                <div class="leftgrippie"></div>
+                                [% IF parent.name %]
+                                    [% name_length = parent.name.length * 0.55 + 1%]
+                                [% ELSE %]
+                                    [% name_length = 1.05%]
+                                [% END %]
+                                <input class="namefield"
+                                       style="width: [% name_length %]em;"
+                                       name="s"
+                                       value="[% parent.name %]"
+                                       autocomplete="off"/>
+                                <a class="namelink"
+                                   style="width: [% name_length %]em;"
+                                   href="[% base _ parent.relative_url %]">
+                                      [% parent.name %]
                                 </a>
-                            </li>
-                        [% END %]
-                    </ul>
+                                <div class="body">
+                                    [%# set i higher so we don't go so deep %]
+                                    [%INCLUDE 'Kernel/kernel-innerhtml.tt' i=2 kernel=parent highlight=kernel%]
+                                </div>
+                            </div>
+                            <script>
+                                new KernelThumbnail([%parent.id%],$('parentthumbnail[%parent.id%]'));
+                            </script>
+                    [% END %]
                 </div>
                 
                 <div class="panetitle">
@@ -103,32 +149,6 @@
             [%INCLUDE 'Kernel/note.tt' i=0 %]
         [%END%]
     </div>
-    <script type="text/javascript" src="[%base%]js/wz_jsgraphics.js"></script>
-    <script type="text/javascript" src="[%base%]js/prototype.js"></script>
-    <script type="text/javascript" src="[%base%]js/dragndrop.js"></script>
-    <script type="text/javascript" src="[%base%]js/jsdbi.js"></script>
-    <script type="text/javascript" src="[%base%]js/utils.js"></script>
-    <script type="text/javascript" src="[%base%]js/linedraw.js"></script>
-    <script type="text/javascript" src="[%base%]js/new_relationship.js"></script>
-    <script type="text/javascript" src="[%base%]js/wiseobject.js"></script>
-    <script type="text/javascript" src="[%base%]js/relationship.js"></script>
-    <script type="text/javascript" src="[%base%]js/kernelobject.js"></script>
-    <script type="text/javascript" src="[%base%]js/viewkernel.js"></script>
-    <script type="text/javascript" src="[%base%]js/kernel.js"></script>
-    <script type="text/javascript" src="[%base%]js/visiblekernel.js"></script>
-    <script type="text/javascript" src="[%base%]js/note.js"></script>
-    <script type="text/javascript" src="[%base%]js/controls.js"></script>
-    <script type="text/javascript" src="[%base%]js/effects.js"></script>
-    [%#
-    use this instead of the above garbage to get faster loading of javascript
-    <script type="text/javascript" src="/javascript"></script>
-    %]
-    <script>
-        // configure the base url for jsdbi
-        JSDBI.base_url('[% base %]');
-        // XXX this is pretty nasty - put this inside the view's vkernel instead
-        var objectCache = {};
-    </script>
 
     [% FOR vkernel = visible_kernels %]
         [% i = 0 %]

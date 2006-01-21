@@ -3,45 +3,15 @@
 // is).
 
 var ViewKernel = Class.create();
-ViewKernel.prototype = new KernelObject();
+ViewKernel.prototype = new NonMovingKernel();
 ViewKernel.prototype.extend( {
     initialize: function(id, htmlElement) {
-        this.__kernel_id = id;
-        KernelObject.prototype.initialize.call(this,htmlElement);
+        NonMovingKernel.prototype.initialize.call(this,id,htmlElement);
         window.onresize = this.layoutResize.bindAsEventListener(this);
     },
 
-    layoutResize: function() {
-        this.resizeChildren();
-    },
-
-    // setup all the event listeners
-    registerHandlers: function() {
-        KernelObject.prototype.registerHandlers.call(this);
-
-        // setup the namefield actions
-        Utils.registerEventListener(this.namefield,'blur', this.updateName.bind(this));
-    },
-
-    // dummy method - this is used by resizeChildren.
-    collapsed: function() {
-        return false;
-    },
-
-    kernel: function() {
-        if(!this.__kernel){
-            this.__kernel = Kernel.retrieve(this.__kernel_id);
-        }
-
-        return this.__kernel;
-    },
-
-    kernel_id: function() {
-        return this.__kernel_id;
-    },
-
     fetchElements: function () {
+        NonMovingKernel.prototype.fetchElements.call(this);
         this.body = this.htmlElement;
-        KernelObject.prototype.fetchElements.call(this);
     }
 });
