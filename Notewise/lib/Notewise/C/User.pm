@@ -38,7 +38,7 @@ sub home : Local {
     my @lastviewed=map $_->object, Notewise::M::CDBI::ObjectId->search(user=>$user->id,type=>'kernel');
     # XXX this sort is going to be dog slow - need to swap this out for some actual sql
     @lastviewed=sort {$b->lastviewed <=> $a->lastviewed} @lastviewed;
-    my $max = 5;
+    my $max = 15;
     if(@lastviewed < $max){
         $max = @lastviewed;
     }
@@ -47,7 +47,7 @@ sub home : Local {
     my @lastcreated=map $_->object, Notewise::M::CDBI::ObjectId->search(user=>$user->id,type=>'kernel');
     # XXX this sort is going to be dog slow - need to swap this out for some actual sql
     @lastcreated=sort {$b->created <=> $a->created} @lastcreated;
-    $max = 5;
+    $max = 15;
     if(@lastcreated < $max){
         $max = @lastcreated;
     }
