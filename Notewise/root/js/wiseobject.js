@@ -46,9 +46,8 @@ WiseObject.prototype.extend({
     fetchElements: function () {
         this.body = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
         this.corner = Utils.getElementsByClassName(this.htmlElement, 'corner')[0];
+        this.relationshipbutton = Utils.getElementsByClassName(this.htmlElement, 'relationshipbutton')[0];
         this.removebutton = Utils.getElementsByClassName(this.htmlElement, 'removebutton')[0];
-        this.relationshiphalo = Utils.getElementsByClassName(this.htmlElement, 'relationshiphalo')[0];
-        this.newrelationshiparrow = Utils.getElementsByClassName(this.relationshiphalo, 'newrelationshiparrow')[0];
     },
 
     registerHandlers: function() {
@@ -56,40 +55,31 @@ WiseObject.prototype.extend({
         dndMgr.registerDraggable( this );
         dndMgr.registerDraggable( new ResizeCornerDraggable(this.corner, this) );
 
+        // setup the relationship button
+        Utils.registerEventListener(this.relationshipbutton,
+                                   'mousedown',
+                                   this.startCreateRelationship.bindAsEventListener(this));
+
         // setup the remove button
         Utils.registerEventListener(this.removebutton,
                                    'click',
                                    this.destroy.bind(this));
 
         // dragging on any of the buttons shouldn't drag the object
+        Utils.registerEventListener(this.relationshipbutton,
+                                   'mousedown',
+                                   Utils.terminateEvent.bindAsEventListener(this));
         Utils.registerEventListener(this.removebutton,
                                    'mousedown',
                                    Utils.terminateEvent.bindAsEventListener(this));
 
         // doubleclicking on any of the buttons shouldn't do anything
+        Utils.registerEventListener(this.relationshipbutton,
+                                   'dblclick',
+                                   Utils.terminateEvent.bindAsEventListener(this));
         Utils.registerEventListener(this.removebutton,
                                    'dblclick',
                                    Utils.terminateEvent.bindAsEventListener(this));
-
-
-        // setup relationship halo
-        Utils.registerEventListener(this.relationshiphalo,
-                                    'mousemove',
-                                    this.moveInRelationshipHalo.bindAsEventListener(this));
-        Utils.registerEventListener(this.relationshiphalo,
-                                    'mouseover',
-                                    this.enterRelationshipHalo.bindAsEventListener(this));
-        Utils.registerEventListener(this.relationshiphalo,
-                                    'mouseout',
-                                    this.leaveRelationshipHalo.bindAsEventListener(this));
-        Utils.registerEventListener(this.newrelationshiparrow,
-                                    'mouseout',
-                                    this.leaveRelationshipHalo.bindAsEventListener(this));
-
-        // don't let mouseover events on the object itself fall through to the relationship halo
-        Utils.registerEventListener(this.htmlElement,
-                                    'mouseover',
-                                    Utils.terminateEvent.bindAsEventListener(this));
     },
 
     // Select this object and terminate the event
@@ -102,53 +92,6 @@ WiseObject.prototype.extend({
     // starts the process of creating a relationship
     startCreateRelationship: function(e){
         newRelationship.startDrag(e,this);
-    },
-
-    moveInRelationshipHalo: function(e) {
-        var pos = Utils.getEventPosition(e);
-        var parentPos = Utils.toViewportPosition(this.relationshiphalo);
-        var x=pos.x-parentPos.x;
-        var y=pos.y-parentPos.y;
-        var h;
-        var v;
-        var dx=x;
-        var dy=y;
-        if(y > this.relationshiphalo.clientHeight/2){
-            dy = this.relationshiphalo.clientHeight - y;
-        }
-        if(x > this.relationshiphalo.clientWidth/2){
-            dx = this.relationshiphalo.clientWidth - x;
-        }
-
-        if(dx > dy) {
-            if(y < this.relationshiphalo.clientHeight/2){
-                this.newrelationshiparrow.style.top='0px';
-                this.newrelationshiparrow.style.bottom='';
-            } else {
-                this.newrelationshiparrow.style.bottom='0px';
-                this.newrelationshiparrow.style.top='';
-            }
-            this.newrelationshiparrow.style.left=(x-10)+'px';
-            this.newrelationshiparrow.style.right='';
-        } else {
-            if(x < this.relationshiphalo.clientWidth/2){
-                this.newrelationshiparrow.style.left='0px';
-                this.newrelationshiparrow.style.right='';
-            } else {
-                this.newrelationshiparrow.style.right='0px';
-                this.newrelationshiparrow.style.left='';
-            }
-            this.newrelationshiparrow.style.top=(y-10)+'px';
-            this.newrelationshiparrow.style.bottom='';
-        }
-    },
-
-    enterRelationshipHalo: function(e) {
-        Element.show(this.newrelationshiparrow);
-    }, 
-
-    leaveRelationshipHalo: function(e) {
-        Element.hide(this.newrelationshiparrow);
     },
 
     // removes the html element from the view, and then notifies the server
