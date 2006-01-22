@@ -54,9 +54,8 @@ Note.prototype.extend({
         this.htmlElement.className="note";
         var innerHTML =
            "<div class=\"leftgrippie\"></div>"
+           +"<div class=\"relationshiphalo\"></div>"
            +"<input type=button value='X' class='removebutton'/>"
-           +"<input type=button value='R' class='relationshipbutton'/>"
-           +"<div class=\"rightgrippie\"/></div>"
            +"<textarea class='body'>"
            + this.content()
            +"</textarea>"
