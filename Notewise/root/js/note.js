@@ -43,6 +43,15 @@ Note.prototype.extend({
         }
     },
 
+    setup: function () {
+        WiseObject.prototype.setup.call(this);
+
+        // add this object as a property of the htmlElement, so we can get back
+        // to it if all we have is the element
+        this.htmlElement.note = this;
+    },
+
+
     // creates the actual html for this kernel
     // XXX this is a bunch of garbage - need to unify this html with the stuff
     // in root/Kernel/kernel.tt.  Maybe think about shipping the html as part
@@ -54,9 +63,9 @@ Note.prototype.extend({
         this.htmlElement.className="note";
         var innerHTML =
            "<div class=\"leftgrippie\"></div>"
+           +"<div class=\"relationshiphalo\">"
+           +"<div class=\"newrelationshiparrow\"></div></div>"
            +"<input type=button value='X' class='removebutton'/>"
-           +"<input type=button value='R' class='relationshipbutton'/>"
-           +"<div class=\"rightgrippie\"/></div>"
            +"<textarea class='body'>"
            + this.content()
            +"</textarea>"
@@ -158,5 +167,12 @@ Note.prototype.extend({
     // (see initialize() in js/relationship.js)
     contained_object: function() {
         return this;
+    },
+
+    // returns the id in the form '1/2' where the first number is the
+    // container_id and the second number is the note id
+    idString: function() {
+        var id = this.container_object()+'/'+this.id();
+        return id;
     }
 });

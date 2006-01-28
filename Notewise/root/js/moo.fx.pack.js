@@ -199,7 +199,7 @@ fx.RememberText.prototype = Object.extend(new Remember(), {
 
 
 //use to attach effects without using js code, just classnames and rel attributes.
-ParseClassNames = Class.create();
+var ParseClassNames = Class.create();
 ParseClassNames.prototype = {
 	initialize: function(options){
 		var babies = document.getElementsByTagName('*') || document.all;

@@ -482,7 +482,9 @@ Relationship.prototype.extend( {
         this.part2ContainedObject.removeStartChangeListener(this.startListener);
         this.part1ContainedObject.removeEndChangeListener(this.endListener);
         this.part2ContainedObject.removeEndChangeListener(this.endListener);
+    },
 
+    uncache: function () {
         // remove it from both object caches
         this.part1ContainedObject.uncacheRelationship(this);
         this.part2ContainedObject.uncacheRelationship(this);

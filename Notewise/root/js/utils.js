@@ -230,5 +230,22 @@ Utils = {
     // chops any 'px' or '%' from the end of the string and returns a number
     chopPx: function (str) {
         return Number(str.replace(/[a-z%]+/i, ''));
+    },
+
+    // TODO refactor everything to use this
+    getEventPosition: function(e){
+        // get the start point
+        var posx = 0;
+        var posy = 0;
+        if (!e) var e = window.event;
+        if (e.pageX || e.pageY) {
+            posx = e.pageX;
+            posy = e.pageY;
+        }
+        else if (e.clientX || e.clientY) {
+            posx = e.clientX + document.body.scrollLeft;
+            posy = e.clientY + document.body.scrollTop;
+        }
+        return {x: posx, y: posy};
     }
 };

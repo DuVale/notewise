@@ -46,8 +46,9 @@ WiseObject.prototype.extend({
     fetchElements: function () {
         this.body = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
         this.corner = Utils.getElementsByClassName(this.htmlElement, 'corner')[0];
-        this.relationshipbutton = Utils.getElementsByClassName(this.htmlElement, 'relationshipbutton')[0];
         this.removebutton = Utils.getElementsByClassName(this.htmlElement, 'removebutton')[0];
+        this.relationshiphalo = Utils.getElementsByClassName(this.htmlElement, 'relationshiphalo')[0];
+        this.newrelationshiparrow = Utils.getElementsByClassName(this.relationshiphalo, 'newrelationshiparrow')[0];
     },
 
     registerHandlers: function() {
@@ -55,32 +56,39 @@ WiseObject.prototype.extend({
         dndMgr.registerDraggable( this );
         dndMgr.registerDraggable( new ResizeCornerDraggable(this.corner, this) );
 
-        // setup the relationship button
-        Utils.registerEventListener(this.relationshipbutton,
-                                   'mousedown',
-                                   this.startCreateRelationship.bindAsEventListener(this));
-
         // setup the remove button
         Utils.registerEventListener(this.removebutton,
                                    'click',
                                    this.destroy.bind(this));
 
         // dragging on any of the buttons shouldn't drag the object
-        Utils.registerEventListener(this.relationshipbutton,
-                                   'mousedown',
-                                   Utils.terminateEvent.bindAsEventListener(this));
         Utils.registerEventListener(this.removebutton,
                                    'mousedown',
                                    Utils.terminateEvent.bindAsEventListener(this));
 
         // doubleclicking on any of the buttons shouldn't do anything
-        Utils.registerEventListener(this.relationshipbutton,
-                                   'dblclick',
-                                   Utils.terminateEvent.bindAsEventListener(this));
         Utils.registerEventListener(this.removebutton,
                                    'dblclick',
                                    Utils.terminateEvent.bindAsEventListener(this));
-    },
+
+
+        // setup relationship halo
+        Utils.registerEventListener(this.relationshiphalo,
+                                    'mousemove',
+                                    this.moveInRelationshipHalo.bindAsEventListener(this));
+        Utils.registerEventListener(this.relationshiphalo,
+                                    'mouseover',
+                                    this.enterRelationshipHalo.bindAsEventListener(this));
+        Utils.registerEventListener(this.relationshiphalo,
+                                    'mouseout',
+                                    this.leaveRelationshipHalo.bindAsEventListener(this));
+        Utils.registerEventListener(this.newrelationshiparrow,
+                                    'mouseout',
+                                    this.leaveRelationshipHalo.bindAsEventListener(this));
+        Utils.registerEventListener(this.newrelationshiparrow,
+                                    'mousedown',
+                                    this.startCreateRelationship.bindAsEventListener(this));
+      },
 
     // Select this object and terminate the event
     selectAndTerminate: function(e) {
@@ -92,6 +100,55 @@ WiseObject.prototype.extend({
     // starts the process of creating a relationship
     startCreateRelationship: function(e){
         newRelationship.startDrag(e,this);
+        Utils.terminateEvent(e);
+    },
+
+    moveInRelationshipHalo: function(e) {
+        var pos = Utils.getEventPosition(e);
+        var parentPos = Utils.toViewportPosition(this.relationshiphalo);
+        var x=pos.x-parentPos.x;
+        var y=pos.y-parentPos.y;
+        var h;
+        var v;
+        var dx=x;
+        var dy=y;
+        if(y > this.relationshiphalo.clientHeight/2){
+            dy = this.relationshiphalo.clientHeight - y;
+        }
+        if(x > this.relationshiphalo.clientWidth/2){
+            dx = this.relationshiphalo.clientWidth - x;
+        }
+
+        if(dx > dy) {
+            if(y < this.relationshiphalo.clientHeight/2){
+                this.newrelationshiparrow.style.top='0px';
+                this.newrelationshiparrow.style.bottom='';
+            } else {
+                this.newrelationshiparrow.style.bottom='0px';
+                this.newrelationshiparrow.style.top='';
+            }
+            this.newrelationshiparrow.style.left=Math.min(this.relationshiphalo.clientWidth-20,Math.max(0,x-10))+'px';
+            this.newrelationshiparrow.style.right='';
+        } else {
+            if(x < this.relationshiphalo.clientWidth/2){
+                this.newrelationshiparrow.style.left='0px';
+                this.newrelationshiparrow.style.right='';
+            } else {
+                this.newrelationshiparrow.style.right='0px';
+                this.newrelationshiparrow.style.left='';
+            }
+            this.newrelationshiparrow.style.top=Math.min(this.relationshiphalo.clientHeight-20,Math.max(0,y-10))+'px';
+            this.newrelationshiparrow.style.bottom='';
+        }
+        var style = this.newrelationshiparrow.style;
+    },
+
+    enterRelationshipHalo: function(e) {
+        Element.show(this.newrelationshiparrow);
+    }, 
+
+    leaveRelationshipHalo: function(e) {
+        Element.hide(this.newrelationshiparrow);
     },
 
     // removes the html element from the view, and then notifies the server
@@ -110,6 +167,9 @@ WiseObject.prototype.extend({
             for(var i=0; i<this.relationshipCache.length; i++){
                 var relationship = this.relationshipCache[i];
                 relationship.removeFromView();
+            }
+            for(var i=0; i<this.relationshipCache.length; i++){
+                relationship.uncache();
             }
         }
     },
@@ -143,6 +203,11 @@ WiseObject.prototype.extend({
       if(this.body != undefined){
           this.body.style.width = Math.max(0,this.htmlElement.clientWidth - 4) + 'px';
           this.body.style.height = Math.max(0,this.htmlElement.clientHeight - 2 - this.body.offsetTop) + 'px';
+      }
+      // XXX could change this to only do this if the halo is visible, for speed.  We'd need to make sure this gets called when the object gets expanded though
+      if(this.relationshiphalo != undefined){
+          this.relationshiphalo.style.width = Math.max(0,this.htmlElement.clientWidth + 40) + 'px';
+          this.relationshiphalo.style.height = Math.max(0,this.htmlElement.clientHeight + 40) + 'px';
       }
     },
 
@@ -268,7 +333,7 @@ WiseObject.prototype.extend({
         if(parentElement == null){
             parentElement=this.htmlElement.parentNode;
         }
-        if(this.collapsed()){
+        if(this.collapsed() && parentElement){
             return this.htmlElement.clientWidth*100/parentElement.clientWidth;
         } else {
             return this.width();
@@ -398,6 +463,8 @@ WiseObject.prototype.extend({
 
     // Select this object
     select: function () {
+        // make sure the newrelationshiparrow is hidden to start with
+        Element.hide(this.newrelationshiparrow);
         if( !this.isSelected() ){
             Element.removeClassName(this.htmlElement,'notselected');
             Element.addClassName(this.htmlElement,'selected');

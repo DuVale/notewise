@@ -2,7 +2,7 @@
 // comply with license.  I basically just started with Rico, and hacked out
 // anything we didn't need.
 
-Rico = {};
+var Rico = {};
 Rico.ArrayExtensions = new Array();
 
 if (Object.prototype.extend) {
@@ -57,7 +57,7 @@ if (!Array.prototype.indices) {
   Rico.ArrayExtensions[ Rico.ArrayExtensions.length ] = Array.prototype.indices;
 }
 
-LayerManager = Class.create();
+var LayerManager = Class.create();
 LayerManager.prototype = {
     initialize: function() {
     },
@@ -133,7 +133,7 @@ LayerManager.prototype = {
     }
 };
 
-DragAndDrop = Class.create();
+var DragAndDrop = Class.create();
 
 DragAndDrop.prototype = new LayerManager();
 DragAndDrop.prototype.extend({
@@ -287,7 +287,7 @@ DragAndDrop.prototype.extend({
    _mouseMoveHandler: function(e) {
       var nsEvent = e.which != undefined;
       if ( !this.interestedInMotionEvents ) {
-         this._terminateEvent(e);
+//         this._terminateEvent(e);
          return;
       }
 
@@ -589,7 +589,7 @@ var dndMgr = new DragAndDrop();
 dndMgr.initializeEventHandlers();
 
 
-Draggable = Class.create();
+var Draggable = Class.create();
 
 Draggable.prototype = {
 
@@ -665,7 +665,7 @@ Draggable.prototype = {
 }
 
 
-Dropzone = Class.create();
+var Dropzone = Class.create();
 
 Dropzone.prototype = {
 
