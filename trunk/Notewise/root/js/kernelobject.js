@@ -266,6 +266,7 @@ KernelObject.prototype = {
         dndMgr.updateSelection(vkernel,false);
         vkernel.namefield.focus();
         vkernel.newlyCreated = true;
+        objectCache[vkernel.idString()]=vkernel;
     },
     
     createNote: function (x, y, dummyDiv) {
@@ -279,5 +280,6 @@ KernelObject.prototype = {
         note.realize(this.body);
         dndMgr.updateSelection(note, false);
         note.body.focus();
+        objectCache[note.idString()]=note;
     }
 };

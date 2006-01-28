@@ -4,12 +4,11 @@
      style="left: [% note.x %]%; top: [% note.y %]%;
             width: [% note.width %]%; height: [% note.height %]%;">
     
+    <div class="relationshiphalo">
+        <div class="newrelationshiparrow"></div>
+    </div>
     <div class="leftgrippie"></div>
-    
     <input type=button value='X' class='removebutton'/>
-    <input type=button value='R' class='relationshipbutton'/>
-    
-    <div class="rightgrippie"/></div>
     <textarea class='body'>[% note.content %]</textarea>
     
     <div class="corner"></div>

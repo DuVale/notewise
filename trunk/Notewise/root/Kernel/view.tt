@@ -96,15 +96,15 @@
 
                             [% IF relationship.part1.object == kernel %]
                                 [% IF relationship.nav == 'fromleft' %]
-                                    &lt;-[%relationship.type.relationship_type%]
+                                    &lt;-[%relationship.type.relationship_type%]-
                                 [% ELSIF relationship.nav == 'fromright' %]
-                                    [%relationship.type.relationship_type%]-&gt;
+                                    -[%relationship.type.relationship_type%]-&gt;
                                 [% END %]
                             [% ELSE %]
                                 [% IF relationship.nav == 'fromleft' %]
-                                    [%relationship.type.relationship_type%]-&gt;
+                                    -[%relationship.type.relationship_type%]-&gt;
                                 [% ELSIF relationship.nav == 'fromright' %]
-                                    &lt;-[%relationship.type.relationship_type%]
+                                    &lt;-[%relationship.type.relationship_type%]-
                                 [% END %]
                             [% END %]
 

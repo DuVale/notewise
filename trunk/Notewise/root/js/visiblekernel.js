@@ -103,7 +103,7 @@ VisibleKernel.prototype.extend({
     after_swap_kernels: function(old_contained_object,old_id_string){
         this.hydrateRelationships();
         this.hydrateChildren();
-        delete objectCache[this.idString()];
+        delete objectCache[old_id_string];
         if(this.newlyCreated){
             this.contained_object().destroy();
         }
@@ -133,7 +133,8 @@ VisibleKernel.prototype.extend({
            "<div class=\"leftgrippie\"></div>"
            +"<input type=button value='"+expandButtonLabel+"' class='expandbutton'/>"
            +"<input type=button value='X' class='removebutton'/>"
-           +"<input type=button value='R' class='relationshipbutton'/>"
+           +"<div class=\"relationshiphalo\">"
+           +"<div class=\"newrelationshiparrow\"></div></div>"
            +"<input value=\"\" type=\"text\" class=\"namefield\" autocomplete=\"off\" name=\"s\" value=\""+name+"\"/>"
            +"<a class=\"namelink\" href=\""+this.kernel().object_url()+"\">"
            +name+"</a>"

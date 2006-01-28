@@ -224,7 +224,7 @@ function precache(imageName){
 
 function do_image_precache() {
     for(var i=0; i<dims.length; i++){
-        directions = ['r','l'];
+        var directions = ['r','l'];
         for(var j=0; j<2; j++){
             var direction = directions[j];
             precache(direction+dims[i][0]+'x'+dims[i][1]+'.png');
