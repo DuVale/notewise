@@ -1,2 +1,3 @@
-[% INCLUDE 'Kernel/kernel-body.tt' i=0 %]
-[% INCLUDE 'Kernel/kernel-innerjs.tt' i=0 %]
+[% i = i || 0%]
+[% INCLUDE 'Kernel/kernel-body.tt' %]
+[% INCLUDE 'Kernel/kernel-innerjs.tt' %]
