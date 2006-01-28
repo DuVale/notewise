@@ -1,3 +1,5 @@
+[% max_depth=2 %]
+[% thumbnail_start_depth=1 %]
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -75,7 +77,7 @@
                                 </a>
                                 <div class="body">
                                     [%# set i higher so we don't go so deep %]
-                                    [%INCLUDE 'Kernel/kernel-innerhtml.tt' i=2 kernel=parent highlight=kernel%]
+                                    [% INCLUDE 'Kernel/kernel-innerhtml.tt' i=thumbnail_start_depth kernel=parent highlight=kernel%]
                                 </div>
                             </div>
                             <script>

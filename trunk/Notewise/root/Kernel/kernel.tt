@@ -1,4 +1,3 @@
-[% i = i + 1%]
 [% id = vkernel.container_kernel.id _ '/' _ vkernel.contained_kernel.id %]
 <div id="vkernel[%id%]" class="vkernel [%IF vkernel.collapsed%]collapsed[%END%] [%IF highlight.id == vkernel.contained_kernel.id%]highlighted[%END%] notselected"
          style="left: [% vkernel.x %]%; top: [% vkernel.y %]%;
