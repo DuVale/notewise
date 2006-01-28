@@ -1,3 +1,4 @@
 [% i = i || 0%]
+[% max_depth = max_depth || 2%]
 [% INCLUDE 'Kernel/kernel-body.tt' %]
 [% INCLUDE 'Kernel/kernel-innerjs.tt' %]
