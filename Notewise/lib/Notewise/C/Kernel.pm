@@ -42,6 +42,8 @@ sub add : Local {
 	my $kernel = Notewise::M::CDBI::Kernel->create_from_form( $c->form );
         $kernel->user($c->req->{user_id});
         $kernel->update;
+        # this is necessary so that V::TT doesn't kick in, which it does if there's no output
+        $c->res->output(' ');
         return $c->res->redirect($c->req->base."kernel/view/".$kernel->id);
     }
 }
