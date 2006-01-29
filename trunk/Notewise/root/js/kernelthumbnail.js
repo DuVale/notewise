@@ -50,5 +50,5 @@ KernelThumbnail.prototype.extend({
             Element.removeClassName(this.htmlElement,'selected');
             Element.addClassName(this.htmlElement,'notselected');
         }
-    },
+    }
 });
