@@ -170,12 +170,13 @@ sub relative_url {
         $name =~ s/\s+$//;
         $name =~ s/\s/_/g;
     }
+    my $unsafe = '^A-Za-z0-9_\-.!~*\'()';
     if($name eq ''){
-        return uri_escape($self->user->username)."/".uri_escape($name)."/".$self->id;
+        return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe)."/".$self->id;
     } elsif(__PACKAGE__->kernels_with_name($name,$self->user->id) > 1){
-        return uri_escape($self->user->username)."/".uri_escape($name)."/".$self->id;
+        return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe)."/".$self->id;
     } else {
-        return uri_escape($self->user->username)."/".uri_escape($name);
+        return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe);
     }
 }
 

@@ -2,6 +2,7 @@ package Notewise::C::Kernel;
 
 use strict;
 use base 'Catalyst::Base';
+use URI::Escape;
 
 =head1 NAME
 
@@ -60,6 +61,7 @@ sub view : Private {
         $c->stash->{kernel} = Notewise::M::CDBI::Kernel->retrieve($id);
         $c->forward('view_kernel');
     } elsif ($name) {
+        $name = uri_unescape($name);
         my @kernels = Notewise::M::CDBI::Kernel->kernels_with_name($name,$c->req->{user_id});
         if(@kernels == 1){
             $c->stash->{kernel} = $kernels[0];
