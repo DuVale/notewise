@@ -27,5 +27,5 @@ function expandMenu(button, paneId) {
       pane.style.borderBottom = "1px solid #bebebe";
   }
     
-	sandbox.style.height = "100%"
+	sandbox.style.height = "100%";
 }

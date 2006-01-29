@@ -51,7 +51,7 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
 
     this.setOptions(options);
     this.options.asynchronous = true;
-    this.options.onComplete   = this.onComplete.bind(this)
+    this.options.onComplete   = this.onComplete.bind(this);
     this.options.frequency    = this.options.frequency || 0.4;
     this.options.min_chars    = this.options.min_chars || 1;
     this.options.method       = 'get';
