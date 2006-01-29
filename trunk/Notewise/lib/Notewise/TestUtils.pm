@@ -34,7 +34,8 @@ sub login_user {
     $user->username($username);
     $user->name('automated testing account');
     $user->update;
-    $mech->get_ok("http://localhost/?email=$email&password=$password");
+    $mech->get("http://localhost/?email=$email&password=$password");
+    Test::More::is($mech->status,'302');
     return $mech, $user;
 }
 
