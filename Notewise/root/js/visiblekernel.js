@@ -234,7 +234,7 @@ VisibleKernel.prototype.extend({
 
     // make this kernel into the current view (ie, switch the url to this kernel)
     makeView: function(e){
-        window.location = '/kernel/view/'+this.kernel().id();
+        window.location = this.kernel().object_url();
         Utils.terminateEvent(e);
     },
 
