@@ -128,6 +128,9 @@ Relationship.prototype.extend( {
         this.createArrows();
         this.registerListeners();
 
+        this.over1 = false;
+        this.over2 = false;
+
         this.cache();
     },
 
@@ -159,17 +162,12 @@ Relationship.prototype.extend( {
         this.removeButton.className='removebutton';
         this.removeButton.value = 'X';
         this.labelDiv.appendChild(this.removeButton);
-
-        this.hideButton = document.createElement('input');
-        this.hideButton.type='button';
-        this.hideButton.className='hidebutton';
-        this.hideButton.value = 'H';
-        this.labelDiv.appendChild(this.hideButton);
     },
 
     createArrows: function() {
         this.arrowCanvasElements = [];
         this.arrowCanvases = [];
+        this.arrowClickBoxen = [];
         this.arrowDivs = [];
         for(var i=0; i < 2; i++){
             this.arrowDivs[i] = document.createElement('div');
@@ -181,6 +179,10 @@ Relationship.prototype.extend( {
             this.arrowCanvasElements[i].className='arrowcanvas';
             this.arrowDivs[i].appendChild(this.arrowCanvasElements[i]);
             this.arrowCanvases[i] = new jsGraphics('canvas'+i+'/'+this.idString());
+
+            this.arrowClickBoxen[i] = document.createElement('div');
+            this.arrowClickBoxen[i].className='arrowclickbox';
+            this.arrowDivs[i].appendChild(this.arrowClickBoxen[i]);
         }
         this.updateArrows();
     },
@@ -221,9 +223,7 @@ Relationship.prototype.extend( {
     updateArrows: function() {
         this.moveArrows();
         this.arrowCanvases[0].clear();
-        this.arrowCanvases[0].setColor("#000000");
         this.arrowCanvases[1].clear();
-        this.arrowCanvases[1].setColor("#000000");
 
         var vkernel1Pos = Utils.toViewportPosition(this.part1ContainedObject.htmlElement);
         var vkernel2Pos = Utils.toViewportPosition(this.part2ContainedObject.htmlElement);
@@ -234,15 +234,30 @@ Relationship.prototype.extend( {
                                - (vkernel2Pos.x+this.part2ContainedObject.htmlElement.clientWidth/2));
 
         if(this.nav() == 'fromleft'
-           || this.nav() == 'bi'){
+           || this.nav() == 'bi'
+           || this.over1){
+            if(this.nav() == 'fromleft'
+               || this.nav() == 'bi'){
+                this.arrowCanvases[0].setColor('#000000');
+            } else {
+                this.arrowCanvases[0].setColor('#FF0000');
+            }
             this.drawArrow(this.arrowCanvases[0],17,17,angle);
             this.arrowCanvases[0].paint();
         }
         if(this.nav() == 'fromright'
-           || this.nav() == 'bi'){
+           || this.nav() == 'bi'
+           || this.over2){
+            if(this.nav() == 'fromright'
+               || this.nav() == 'bi'){
+                this.arrowCanvases[1].setColor('#000000');
+            } else {
+                this.arrowCanvases[1].setColor('#FF0000');
+            }
             this.drawArrow(this.arrowCanvases[1],17,17,angle+Math.PI);
             this.arrowCanvases[1].paint();
         }
+        this.moveClickBoxes(angle);
         this.justUpdatedArrows=true;
         this.needUpdateArrows=false;
     },
@@ -286,12 +301,44 @@ Relationship.prototype.extend( {
         }
     },
 
+    moveClickBoxes: function(angle) {
+        var extents1 = this.getExtents(this.getArrowCoords(17,17,angle));
+        var extents2 = this.getExtents(this.getArrowCoords(17,17,angle+Math.PI));
+        this.arrowClickBoxen[0].style.left=(extents1.minX-17)+'px';
+        this.arrowClickBoxen[0].style.top=(extents1.minY-17)+'px';
+        this.arrowClickBoxen[0].style.width=(extents1.maxX - extents1.minX)+'px';
+        this.arrowClickBoxen[0].style.height=(extents1.maxY - extents1.minY)+'px';
+        this.arrowClickBoxen[1].style.left=(extents2.minX-17)+'px';
+        this.arrowClickBoxen[1].style.top=(extents2.minY-17)+'px';
+        this.arrowClickBoxen[1].style.width=(extents2.maxX - extents2.minX)+'px';
+        this.arrowClickBoxen[1].style.height=(extents2.maxY - extents2.minY)+'px';
+    },
+
+    getExtents: function(coords) {
+        var minX=900;
+        var minY=900;
+        var maxX=0;
+        var maxY=0;
+        for(var i=0; i<coords[0].length; i++){
+            if(coords[0][i] < minX){ minX = coords[0][i]; }
+            if(coords[0][i] > maxX){ maxX = coords[0][i]; }
+            if(coords[1][i] < minY){ minY = coords[1][i]; }
+            if(coords[1][i] > maxY){ maxY = coords[1][i]; }
+        }
+        return {minX: minX, minY: minY, maxX: maxX, maxY: maxY};
+    },
+
     // draws an arrow with the point of the arow at the x and y coordinates specified, with the angle specified.  A zero angle means the arrow is pointing to the right
     drawArrow: function(canvas, x, y, theta) {
+        var coords = this.getArrowCoords(x,y,theta);
+        canvas.fillPolygon(coords[0], coords[1]);
+    },
+
+    getArrowCoords: function(x,y,theta){
         var coords = [[-15,0,-15], [-7,0,7]];
         this.rotate(coords,theta);
         this.translate(coords,x,y);
-        canvas.fillPolygon(coords[0], coords[1]);
+        return coords;
     },
 
     translate: function(coords,x,y){
@@ -336,35 +383,45 @@ Relationship.prototype.extend( {
                                     'click',
                                     this.removeButtonClick.bindAsEventListener(this));
 
-        Event.observe(this.hideButton,
+        Event.observe(this.arrowCanvasElements[0],
                                     'mousedown',
                                     Utils.terminateEvent.bindAsEventListener(this));
-        Event.observe(this.hideButton,
+        Event.observe(this.arrowCanvasElements[0],
                                     'dblclick',
                                     Utils.terminateEvent.bindAsEventListener(this));
-        Event.observe(this.hideButton,
+        Event.observe(this.arrowCanvasElements[0],
                                     'click',
-                                    this.hideButtonClick.bindAsEventListener(this));
+                                    Utils.terminateEvent.bindAsEventListener(this));
 
-        Event.observe(this.arrowCanvasElements[0],
+        Event.observe(this.arrowCanvasElements[1],
                                     'mousedown',
                                     Utils.terminateEvent.bindAsEventListener(this));
-        Event.observe(this.arrowCanvasElements[0],
+        Event.observe(this.arrowCanvasElements[1],
                                     'dblclick',
                                     Utils.terminateEvent.bindAsEventListener(this));
-        Event.observe(this.arrowCanvasElements[0],
+        Event.observe(this.arrowCanvasElements[1],
+                                    'click',
+                                    Utils.terminateEvent.bindAsEventListener(this));
+
+        Event.observe(this.arrowClickBoxen[0],
                                     'click',
                                     this.arrow1click.bindAsEventListener(this));
+        Event.observe(this.arrowClickBoxen[0],
+                                    'mouseover',
+                                    this.arrowOver1.bindAsEventListener(this));
+        Event.observe(this.arrowClickBoxen[0],
+                                    'mouseout',
+                                    this.arrowOut1.bindAsEventListener(this));
 
-        Event.observe(this.arrowCanvasElements[1],
-                                    'mousedown',
-                                    Utils.terminateEvent.bindAsEventListener(this));
-        Event.observe(this.arrowCanvasElements[1],
-                                    'dblclick',
-                                    Utils.terminateEvent.bindAsEventListener(this));
-        Event.observe(this.arrowCanvasElements[1],
+        Event.observe(this.arrowClickBoxen[1],
                                     'click',
                                     this.arrow2click.bindAsEventListener(this));
+        Event.observe(this.arrowClickBoxen[1],
+                                    'mouseover',
+                                    this.arrowOver2.bindAsEventListener(this));
+        Event.observe(this.arrowClickBoxen[1],
+                                    'mouseout',
+                                    this.arrowOut2.bindAsEventListener(this));
 
         this.pos1listener = this.updatePosition1.bind(this);
         this.pos2listener = this.updatePosition2.bind(this);
@@ -380,11 +437,6 @@ Relationship.prototype.extend( {
         this.part1ContainedObject.addEndChangeListener(this.endListener);
         this.part2ContainedObject.addEndChangeListener(this.endListener);
 
-    },
-
-    hideButtonClick: function(e){
-        // TODO
-        alert("got click on hide button");
     },
 
     removeButtonClick: function(e){
@@ -418,6 +470,26 @@ Relationship.prototype.extend( {
         }
         this.updateArrows();
         this.update();
+    },
+
+    arrowOver1: function(e){
+        this.over1 = true;
+        this.updateArrows();
+    },
+
+    arrowOut1: function(e){
+        this.over1 = false;
+        this.updateArrows();
+    },
+
+    arrowOver2: function(e){
+        this.over2 = true;
+        this.updateArrows();
+    },
+
+    arrowOut2: function(e){
+        this.over2 = false;
+        this.updateArrows();
     },
 
     recordLabel: function(e){

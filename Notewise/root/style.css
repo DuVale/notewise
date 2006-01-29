@@ -143,7 +143,7 @@ body, html {
 
 .relationship {
     border: 0px;
-    z-index: 5;
+    z-index: 10;
 }
 
 
@@ -207,28 +207,23 @@ body, html {
     display: none;
 }
 
-.relationship.selected .removebutton,
-.relationship.selected .hidebutton {
+.relationship.selected .removebutton {
     display: block;
 }
 
-.relationship.notselected .removebutton,
-.relationship.notselected .hidebutton {
+.relationship.notselected .removebutton {
     display: none;
 }
 
-.notselected .relationship.selected .removebutton,
-.notselected .relationship.selected .hidebutton {
+.notselected .relationship.selected .removebutton {
     display: block;
 }
 
-.selected .relationship.notselected .removebutton,
-.selected .relationship.notselected .hidebutton {
+.selected .relationship.notselected .removebutton {
     display: none;
 }
 
-.relationship .removebutton,
-.relationship .hidebutton {
+.relationship .removebutton {
     position: absolute;
     width: 20px;
     height: 20px;
@@ -242,16 +237,15 @@ body, html {
     top: -12px;
 }
 
-.relationship .hidebutton {
-    left: -75px;
-    top: -12px;
+img {
+    z-index: -50;
 }
 
 .arrowdiv {
     position: absolute;
     /* This is necessary to make the arrows clickable in IE.  Otherwise the click is stolen by the line image. */
     background: url('images/clear.gif');
-    z-index: 5;
+    z-index: 0;
 }
 
 .arrowcanvas {
@@ -261,9 +255,15 @@ body, html {
     width: 34px;
     height: 34px;
     position: absolute;
-    z-index: 15;
+    z-index: -15;
     /* This is necessary to make the arrows clickable in IE.  Otherwise the click is stolen by the line image. */
     background: url('images/clear.gif');
+}
+
+.arrowclickbox {
+    position: absolute;
+    border: 0px solid blue;
+    z-index: 50;
 }
 
 .labelDiv {
