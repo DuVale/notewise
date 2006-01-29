@@ -198,8 +198,9 @@ DragAndDrop.prototype.extend({
    },
 
    __giveSearchBoxFocus: function() {
-      document.getElementById('mysearchfield').focus();
-      document.getElementById('mysearchfield').select();
+      $('mysearchfield').focus();
+      $('mysearchfield').select();
+      Element.hide($('mysearchresults'));
    },
 
    // returns true if there are currently any objects selected
