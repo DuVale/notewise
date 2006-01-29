@@ -57,35 +57,35 @@ WiseObject.prototype.extend({
         dndMgr.registerDraggable( new ResizeCornerDraggable(this.corner, this) );
 
         // setup the remove button
-        Utils.registerEventListener(this.removebutton,
+        Event.observe(this.removebutton,
                                    'click',
                                    this.destroy.bind(this));
 
         // dragging on any of the buttons shouldn't drag the object
-        Utils.registerEventListener(this.removebutton,
+        Event.observe(this.removebutton,
                                    'mousedown',
                                    Utils.terminateEvent.bindAsEventListener(this));
 
         // doubleclicking on any of the buttons shouldn't do anything
-        Utils.registerEventListener(this.removebutton,
+        Event.observe(this.removebutton,
                                    'dblclick',
                                    Utils.terminateEvent.bindAsEventListener(this));
 
 
         // setup relationship halo
-        Utils.registerEventListener(this.relationshiphalo,
+        Event.observe(this.relationshiphalo,
                                     'mousemove',
                                     this.moveInRelationshipHalo.bindAsEventListener(this));
-        Utils.registerEventListener(this.relationshiphalo,
+        Event.observe(this.relationshiphalo,
                                     'mouseover',
                                     this.enterRelationshipHalo.bindAsEventListener(this));
-        Utils.registerEventListener(this.relationshiphalo,
+        Event.observe(this.relationshiphalo,
                                     'mouseout',
                                     this.leaveRelationshipHalo.bindAsEventListener(this));
-        Utils.registerEventListener(this.newrelationshiparrow,
+        Event.observe(this.newrelationshiparrow,
                                     'mouseout',
                                     this.leaveRelationshipHalo.bindAsEventListener(this));
-        Utils.registerEventListener(this.newrelationshiparrow,
+        Event.observe(this.newrelationshiparrow,
                                     'mousedown',
                                     this.startCreateRelationship.bindAsEventListener(this));
       },

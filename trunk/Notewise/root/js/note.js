@@ -89,13 +89,13 @@ Note.prototype.extend({
         // Setup action terminators
 
         // dragging on the body shouldn't drag the object
-        Utils.registerEventListener(this.body, 'mousedown',
+        Event.observe(this.body, 'mousedown',
                                     Utils.terminateEvent.bindAsEventListener(this));
 
-        Utils.registerEventListener(this.body, 'dblclick',
+        Event.observe(this.body, 'dblclick',
                                     Utils.terminateEvent.bindAsEventListener(this));
                                     
-        Utils.registerEventListener(this.body, 'click',
+        Event.observe(this.body, 'click',
                                     Utils.terminateEvent.bindAsEventListener(this));
 
     },
