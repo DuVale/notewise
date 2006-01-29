@@ -19,7 +19,7 @@ NonMovingKernel.prototype.extend( {
         KernelObject.prototype.registerHandlers.call(this);
 
         // setup the namefield actions
-        Utils.registerEventListener(this.namefield,'blur', this.updateName.bind(this));
+        Event.observe(this.namefield,'blur', this.updateName.bind(this));
     },
 
     // dummy method - this is used by resizeChildren.

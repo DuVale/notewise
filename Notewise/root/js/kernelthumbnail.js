@@ -19,7 +19,7 @@ KernelThumbnail.prototype.extend({
     registerHandlers: function() {
         NonMovingKernel.prototype.registerHandlers.call(this);
 
-        Utils.registerEventListener(this.leftgrippie,'click', this.selectAndTerminate.bind(this));
+        Event.observe(this.leftgrippie,'click', this.selectAndTerminate.bind(this));
     },
 
     // Select this object and terminate the event

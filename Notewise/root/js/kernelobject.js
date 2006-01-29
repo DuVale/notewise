@@ -21,25 +21,25 @@ KernelObject.prototype = {
         dndMgr.registerDropZone( new CustomDropzone(this.body,this) );
 
         // setup the click handlers
-        Utils.registerEventListener(this.body,'dblclick', this.addNewElement.bindAsEventListener(this));
-        Utils.registerEventListener(this.body,
+        Event.observe(this.body,'dblclick', this.addNewElement.bindAsEventListener(this));
+        Event.observe(this.body,
                                    'mousedown',
                                    Utils.clearSelectionAndTerminate.bindAsEventListener(this));
         
         // setup the namefield actions
-        Utils.registerEventListener(this.namefield,'blur', this.updateName.bind(this));
-        Utils.registerEventListener(this.namefield,'keyup', this.layoutNamefield.bind(this));
-//        Utils.registerEventListener(this.namefield,'keypress', this.loseFocusOnEnter.bindAsEventListener(this));
+        Event.observe(this.namefield,'blur', this.updateName.bind(this));
+        Event.observe(this.namefield,'keyup', this.layoutNamefield.bind(this));
+//        Event.observe(this.namefield,'keypress', this.loseFocusOnEnter.bindAsEventListener(this));
 
         // drag in namefield should select text, not drag object
-        Utils.registerEventListener(this.namefield,
+        Event.observe(this.namefield,
                                    'mousedown',
                                    Utils.terminateEvent.bindAsEventListener(this));
-        Utils.registerEventListener(this.namefield,
+        Event.observe(this.namefield,
                                    'mouseup',
                                    Utils.terminateEvent.bindAsEventListener(this));
         // double click in namefield should select text, not create kernel
-        Utils.registerEventListener(this.namefield,
+        Event.observe(this.namefield,
                                    'dblclick',
                                    Utils.terminateEvent.bindAsEventListener(this));
     },

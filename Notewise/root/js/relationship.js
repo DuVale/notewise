@@ -315,54 +315,54 @@ Relationship.prototype.extend( {
     },
 
     registerListeners: function() {
-        Utils.registerEventListener(this.label,
+        Event.observe(this.label,
                                     'mousedown',
                                     Utils.terminateEvent.bindAsEventListener(this));
 
-        Utils.registerEventListener(this.label,
+        Event.observe(this.label,
                                     'click',
                                     this.selectAndTerminate.bindAsEventListener(this));
-        Utils.registerEventListener(this.label,
+        Event.observe(this.label,
                                     'blur',
                                     this.recordLabel.bindAsEventListener(this));
 
-        Utils.registerEventListener(this.removeButton,
+        Event.observe(this.removeButton,
                                     'mousedown',
                                     Utils.terminateEvent.bindAsEventListener(this));
-        Utils.registerEventListener(this.removeButton,
+        Event.observe(this.removeButton,
                                     'dblclick',
                                     Utils.terminateEvent.bindAsEventListener(this));
-        Utils.registerEventListener(this.removeButton,
+        Event.observe(this.removeButton,
                                     'click',
                                     this.removeButtonClick.bindAsEventListener(this));
 
-        Utils.registerEventListener(this.hideButton,
+        Event.observe(this.hideButton,
                                     'mousedown',
                                     Utils.terminateEvent.bindAsEventListener(this));
-        Utils.registerEventListener(this.hideButton,
+        Event.observe(this.hideButton,
                                     'dblclick',
                                     Utils.terminateEvent.bindAsEventListener(this));
-        Utils.registerEventListener(this.hideButton,
+        Event.observe(this.hideButton,
                                     'click',
                                     this.hideButtonClick.bindAsEventListener(this));
 
-        Utils.registerEventListener(this.arrowCanvasElements[0],
+        Event.observe(this.arrowCanvasElements[0],
                                     'mousedown',
                                     Utils.terminateEvent.bindAsEventListener(this));
-        Utils.registerEventListener(this.arrowCanvasElements[0],
+        Event.observe(this.arrowCanvasElements[0],
                                     'dblclick',
                                     Utils.terminateEvent.bindAsEventListener(this));
-        Utils.registerEventListener(this.arrowCanvasElements[0],
+        Event.observe(this.arrowCanvasElements[0],
                                     'click',
                                     this.arrow1click.bindAsEventListener(this));
 
-        Utils.registerEventListener(this.arrowCanvasElements[1],
+        Event.observe(this.arrowCanvasElements[1],
                                     'mousedown',
                                     Utils.terminateEvent.bindAsEventListener(this));
-        Utils.registerEventListener(this.arrowCanvasElements[1],
+        Event.observe(this.arrowCanvasElements[1],
                                     'dblclick',
                                     Utils.terminateEvent.bindAsEventListener(this));
-        Utils.registerEventListener(this.arrowCanvasElements[1],
+        Event.observe(this.arrowCanvasElements[1],
                                     'click',
                                     this.arrow2click.bindAsEventListener(this));
 

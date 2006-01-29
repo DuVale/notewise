@@ -204,24 +204,24 @@ VisibleKernel.prototype.extend({
         // TODO check to see if all these terminate event listeners are necessary
 
         // setup the click handlers
-        Utils.registerEventListener(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
-        Utils.registerEventListener(this.namelink,'click', Utils.terminateEvent.bindAsEventListener(this));
-        Utils.registerEventListener(this.namelink,'mousedown', Utils.terminateEvent.bindAsEventListener(this));
+        Event.observe(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
+        Event.observe(this.namelink,'click', Utils.terminateEvent.bindAsEventListener(this));
+        Event.observe(this.namelink,'mousedown', Utils.terminateEvent.bindAsEventListener(this));
         
         // setup the collapsed button
-        Utils.registerEventListener(this.expandbutton,
+        Event.observe(this.expandbutton,
                                    'click',
                                    this.toggleCollapsed.bind(this));
 
         // TODO DRY - consolidate these into a big list of element/event pairs
         // Setup action terminators
         // dragging on any of the buttons shouldn't drag the object
-        Utils.registerEventListener(this.expandbutton,
+        Event.observe(this.expandbutton,
                                    'mousedown',
                                    Utils.terminateEvent.bindAsEventListener(this));
 
         // doubleclicking on any of the buttons shouldn't do anything
-        Utils.registerEventListener(this.expandbutton,
+        Event.observe(this.expandbutton,
                                    'dblclick',
                                    Utils.terminateEvent.bindAsEventListener(this));
     },
