@@ -268,7 +268,7 @@ img {
 
 .labelDiv {
     position: absolute;
-    z-index: 5;
+    z-index: 0;
     border: 0px solid purple;
 }
 
@@ -281,6 +281,7 @@ img {
     text-align: center;
     top: -10px;
     left: -50px;
+    z-index: -2;
 }
 
 .vkernel .namelink {
