@@ -138,7 +138,8 @@ $mech = Test::WWW::Mechanize::Catalyst->new; #wipe our cookies
 my $user2 = Notewise::M::CDBI::User->create({email=>'test2@tester.scottyallen.com',
                                           password=>'password',
                                           name=>'automated testing account'});
-$mech->get_ok('http://localhost/?email=test2@tester.scottyallen.com&password=password');
+$mech->get('http://localhost/?email=test2@tester.scottyallen.com&password=password');
+is($mech->status,'302');
 my $user2_id=$user2->id;
 
 $req = new_request('PUT', "http://localhost/rest/note",

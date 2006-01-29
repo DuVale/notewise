@@ -1,4 +1,4 @@
-use Test::More tests => 14;
+use Test::More tests => 16;
 use_ok( Catalyst::Test, 'Notewise' );
 use_ok('Notewise::M::CDBI::Kernel');
 use Data::Dumper;
@@ -33,10 +33,16 @@ is($object_id,undef,'object_id is deleted when kernel is deleted');
 
 # test url generation
 
-is($kernel->relative_url, 'fred/foo/'.$kernel->object_id->id,'test relative_url');
+is($kernel->relative_url, 'fred/foo','test relative_url');
 $kernel->name('This is a name with  spaces ');
 $kernel->update;
-is($kernel->relative_url, 'fred/This_is_a_name_with_spaces/'.$kernel->object_id->id,'test relative_url 2');
+is($kernel->relative_url, 'fred/This_is_a_name_with__spaces','test relative_url 2 - spaces');
+$kernel->name('This is a name with /slashes ');
+$kernel->update;
+is($kernel->relative_url, 'fred/This_is_a_name_with_%2Fslashes','test relative_url 3 - slashes');
+$kernel->name('This is a name with ?question marks ');
+$kernel->update;
+is($kernel->relative_url, 'fred/This_is_a_name_with_%3Fquestion_marks','test relative_url 4 - question marks');
 # test permissions
 ok($kernel->has_permission($user,'view'), "users can view their own kernel");
 ok($kernel->has_permission($user,'modify'), "users can modify their own kernel");

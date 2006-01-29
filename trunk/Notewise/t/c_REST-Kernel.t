@@ -26,7 +26,7 @@ is($mech->status,201,'Status of PUT is 201');
 my ($kernel_id) = $mech->content =~ /<kernel.+id="(\d+)"/;
 my ($lastmodified) = $mech->content =~ /<kernel.+lastmodified="(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"/;
 
-is_xml($mech->content,qq#<response><kernel name="harrypotter" created="2005-01-01 01:02:03" id="$kernel_id" lastmodified="$lastmodified" source="mysource" uri="myuri" object_url="http://localhost/test/harrypotter/$kernel_id">
+is_xml($mech->content,qq#<response><kernel name="harrypotter" created="2005-01-01 01:02:03" id="$kernel_id" lastmodified="$lastmodified" source="mysource" uri="myuri" object_url="http://localhost/test/harrypotter">
 <containedObjects>
 </containedObjects>
 </kernel></response># );
@@ -34,7 +34,7 @@ is_xml($mech->content,qq#<response><kernel name="harrypotter" created="2005-01-0
 # Try and get it back again
 
 $mech->get_ok("/rest/kernel/$kernel_id");
-is_xml($mech->content,qq#<response><kernel name="harrypotter" created="2005-01-01 01:02:03" id="$kernel_id" lastmodified="$lastmodified" source="mysource" uri="myuri" object_url="http://localhost/test/harrypotter/$kernel_id">
+is_xml($mech->content,qq#<response><kernel name="harrypotter" created="2005-01-01 01:02:03" id="$kernel_id" lastmodified="$lastmodified" source="mysource" uri="myuri" object_url="http://localhost/test/harrypotter">
 <containedObjects>
 </containedObjects>
 </kernel></response># );
@@ -52,7 +52,7 @@ $mech->content_lacks('FORBIDDEN');
 
 $mech->get_ok("/rest/kernel/$kernel_id");
 ($lastmodified) = $mech->content =~ /<kernel.+lastmodified="(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"/;
-is_xml($mech->content,qq#<response><kernel name="fred" created="2004-02-03 02:03:04" id="$kernel_id" lastmodified="$lastmodified" source="anothersource" uri="anotheruri" object_url="http://localhost/test/fred/$kernel_id">
+is_xml($mech->content,qq#<response><kernel name="fred" created="2004-02-03 02:03:04" id="$kernel_id" lastmodified="$lastmodified" source="anothersource" uri="anotheruri" object_url="http://localhost/test/fred">
 <containedObjects>
 </containedObjects>
 </kernel></response># );
