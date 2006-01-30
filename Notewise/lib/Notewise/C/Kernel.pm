@@ -60,7 +60,7 @@ sub view : Private {
     if ($id){
         $c->stash->{kernel} = Notewise::M::CDBI::Kernel->retrieve($id);
         $c->forward('view_kernel');
-    } elsif ($name) {
+    } elsif ($name ne '') {
         $name = uri_unescape($name);
         my @kernels = Notewise::M::CDBI::Kernel->kernels_with_name($name,$c->req->{user_id});
         if(@kernels == 1){
