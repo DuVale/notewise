@@ -173,9 +173,13 @@
                                  min_chars: 2,
                                  on_select: function (selected_element){
                                     value = Element.collectTextNodesIgnoreClass(selected_element, 'informal').unescapeHTML();
-                                    $('mysearchfield').value = value;
                                     var link=selected_element.getElementsByTagName('a')[0];
-                                    window.location=link.href;
+                                    if(link.href.search(/^http:\/\/[^\/]\/0$/)){
+                                        window.location=JSDBI.base_url()+'kernel/add?name='+$('mysearchfield').value;
+                                    } else {
+                                        window.location=link.href;
+                                    }
+                                    $('mysearchfield').value = value;
                                  },
                                  on_complete: function(autocompleter){
                                     if(autocompleter.entry_count <= 2){

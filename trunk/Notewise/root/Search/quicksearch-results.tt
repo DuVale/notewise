@@ -1,5 +1,5 @@
 <ul>
-<li><a href="[%base%]kernel/add?name=[%c.req.params.s%]">new '[%c.req.params.s%]'</a></li>
+<li><a href="/0">new '[%c.req.params.s%]'</a></li>
 [%- search = c.req.params.s -%]
 [%- FOR object = objects -%]
     [%- PERL %]
