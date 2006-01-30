@@ -186,6 +186,16 @@
                                         // The first actual search result should be selected
                                         autocompleter.index = 1;
                                     }
+                                 },
+                                 before_complete: function (autocompleter,request) {
+                                     match = request.responseText.match(/>new '(.*?)'</);
+                                     if(match[1] == $('mysearchfield').value){
+                                         // show the results
+                                         return 1;
+                                     } else {
+                                         // don't show the results - they're too old
+                                         return 0;
+                                     }
                                  }
                                 });
         $('mysearchfield').focus();
