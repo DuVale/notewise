@@ -27,7 +27,7 @@ __PACKAGE__->config->{authentication} = {
 
 sub default : Private {
     my ( $self, $c, $username, $name, $id ) = @_;
-    if($name || $id) {
+    if($name ne ''|| $id) {
         $c->detach('/kernel/view',[$username,$name,$id]);
     } elsif ($username){
         $c->detach('/user/home',[$username]);
