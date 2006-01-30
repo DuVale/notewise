@@ -60,7 +60,7 @@ VisibleKernel.prototype.extend({
 
     on_autocomplete_load: function (autocompleter,request) {
         match = request.responseText.match(/>new '(.*?)'</);
-        if(match[1] == this.namefield.value){
+        if(match && match[1] == this.namefield.value){
             // show the results
             return 1;
         } else {
