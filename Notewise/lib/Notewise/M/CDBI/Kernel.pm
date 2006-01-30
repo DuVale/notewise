@@ -165,7 +165,7 @@ sub visible_relationships {
 # Returns the url relative to the url base
 sub relative_url {
     my $self = shift;
-    my $name = $self->name || '';
+    my $name = defined $self->name ? $self->name : '';
     if($name){
         $name =~ s/\s+$//;
         $name =~ s/\s/_/g;
