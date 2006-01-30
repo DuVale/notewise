@@ -49,7 +49,7 @@ VisibleKernel.prototype.extend({
         this.htmlElement.kernel = this;
 
         // Setup autocomplete on the namefield.  TODO figure out how to factor this up to kernelobject
-        this.autocompleter = new Ajax.Autocompleter(this.namefield, this.searchresults, JSDBI.base_url()+'/ac',
+        this.autocompleter = new Ajax.Autocompleter(this.namefield, this.searchresults, JSDBI.base_url()+'ac',
                                                     {frequency: .1,
                                                      min_chars: 2,
                                                      on_select: this.on_autocomplete_select.bind(this),
