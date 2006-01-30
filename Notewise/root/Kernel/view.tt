@@ -174,9 +174,12 @@
                                  on_select: function (selected_element){
                                     value = Element.collectTextNodesIgnoreClass(selected_element, 'informal').unescapeHTML();
                                     var link=selected_element.getElementsByTagName('a')[0];
-                                    if(link.href.search(/^http:\/\/[^\/]\/0$/)){
-                                        window.location=JSDBI.base_url()+'kernel/add?name='+encodeURIComponent($('mysearchfield').value);
+                                    if(link.href.search(/^http:\/\/[^\/]+\/0$/) != -1){
+                                        name = $('mysearchfield').value;
+                                        printfire("Creating new "+name);
+                                        window.location=JSDBI.base_url()+'kernel/add?name='+encodeURIComponent(name);
                                     } else {
+                                        printfire("going to old "+link.href);
                                         window.location=link.href;
                                     }
                                     $('mysearchfield').value = value;
