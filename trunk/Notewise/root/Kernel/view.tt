@@ -175,7 +175,7 @@
                                     value = Element.collectTextNodesIgnoreClass(selected_element, 'informal').unescapeHTML();
                                     var link=selected_element.getElementsByTagName('a')[0];
                                     if(link.href.search(/^http:\/\/[^\/]\/0$/)){
-                                        window.location=JSDBI.base_url()+'kernel/add?name='+$('mysearchfield').value;
+                                        window.location=JSDBI.base_url()+'kernel/add?name='+encodeURIComponent($('mysearchfield').value);
                                     } else {
                                         window.location=link.href;
                                     }
