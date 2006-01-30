@@ -45,7 +45,7 @@ sub add : Local {
         $kernel->update;
         # this is necessary so that V::TT doesn't kick in, which it does if there's no output
         $c->res->output(' ');
-        return $c->res->redirect($c->req->base."kernel/view/".$kernel->id);
+        return $c->res->redirect($c->req->base.$kernel->relative_url);
     }
 }
 
