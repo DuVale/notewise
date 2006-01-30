@@ -1,14 +1,3 @@
-function printfire()
-{
-    if (document.createEvent)
-    {
-        printfire.args = arguments;
-        var ev = document.createEvent("Events");
-        ev.initEvent("printfire", false, true);
-        dispatchEvent(ev);
-    }
-}
-
 var NewRelationship = Class.create();
 NewRelationship.prototype = {
     initialize: function () {
