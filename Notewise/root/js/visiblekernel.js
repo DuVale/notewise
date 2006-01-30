@@ -54,7 +54,19 @@ VisibleKernel.prototype.extend({
                                                      min_chars: 2,
                                                      on_select: this.on_autocomplete_select.bind(this),
                                                      on_blur: this.onNamefieldBlur.bind(this),
+                                                     before_complete: this.on_autocomplete_load.bind(this),
                                                      on_complete: this.on_autocomplete_complete.bind(this)});
+    },
+
+    on_autocomplete_load: function (autocompleter,request) {
+        match = request.responseText.match(/>new '(.*?)'</);
+        if(match[1] == this.namefield.value){
+            // show the results
+            return 1;
+        } else {
+            // don't show the results - they're too old
+            return 0;
+        }
     },
 
     on_autocomplete_select: function (selected_element) {

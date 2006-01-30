@@ -122,6 +122,11 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
   
   onComplete: function(request) {
     if(!this.changed && this.has_focus) {
+      if(this.options.before_complete){
+          if(this.options.before_complete(this, request) == 0){
+              return;
+          }
+      }
       this.update.innerHTML = request.responseText;
       Element.cleanWhitespace(this.update);
       Element.cleanWhitespace(this.update.firstChild);
@@ -141,7 +146,7 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
       this.stopIndicator();
       
       this.index = 0;
-      if(this.options.onComplete){
+      if(this.options.on_complete){
           this.options.on_complete(this);
       }
       this.render();
