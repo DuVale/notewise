@@ -238,3 +238,15 @@ Utils = {
         return {x: posx, y: posy};
     }
 };
+
+function printfire()
+{
+    if (document.createEvent)
+    {
+        printfire.args = arguments;
+        var ev = document.createEvent("Events");
+        ev.initEvent("printfire", false, true);
+        dispatchEvent(ev);
+    }
+}
+
