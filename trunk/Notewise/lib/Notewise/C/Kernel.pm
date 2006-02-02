@@ -81,6 +81,10 @@ sub view : Private {
 sub view_kernel : Private {
     my ( $self, $c ) = @_;
     my $kernel = $c->stash->{kernel};
+    unless ($kernel){
+        $c->res->status(404);
+        return $c->res->output("Sorry, that kernel doesn't seem to exist.");
+    }
     unless ($kernel->has_permission($c->req->{user_id},'view')){
         $c->res->status(403); # Forbidden
         #TODO make this screen prettier
@@ -100,6 +104,26 @@ sub innerhtml : Local {
     my ( $self, $c, $id ) = @_;
     $c->stash->{kernel} = Notewise::M::CDBI::Kernel->retrieve($id);
     $c->stash->{template} = 'Kernel/kernel-innerhtml.tt';
+}
+
+sub delete : Local {
+    my ( $self, $c, $id ) = @_;
+    my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
+    unless($kernel){
+        $c->res->status(404);
+        return $c->res->output('Sorry, it looks like that kernel was already deleted');
+    }
+    unless($kernel->has_permission($c->req->{user_id},'delete')){
+        $c->res->status(403); # Forbidden
+        #TODO make this screen prettier
+        return $c->res->output('You do not have access to delete this kernel');
+    }
+    $kernel->delete;
+
+    # get the most recently viewed kernel
+    my ($lastviewed)=Notewise::M::CDBI::Kernel->most_recently_viewed_kernel($c->req->{user_id},1);
+
+    $c->res->redirect($c->req->base . $lastviewed->relative_url);
 }
 
 =back

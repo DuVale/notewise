@@ -591,3 +591,10 @@ div.dummyDiv {
     background: none; 
     text-align: center;
 }
+
+
+#permanent_delete {
+    padding: 10px;
+    float:right;
+    border: 1px solid black;
+}
