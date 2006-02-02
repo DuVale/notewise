@@ -301,7 +301,14 @@ Relationship.prototype.extend( {
                                     this.selectAndTerminate.bindAsEventListener(this));
         Event.observe(this.label,
                                     'blur',
-                                    this.recordLabel.bindAsEventListener(this));
+                                    this.labelBlur.bindAsEventListener(this));
+
+        Event.observe(this.label,
+                                    'mouseover',
+                                    this.labelOver.bindAsEventListener(this));
+        Event.observe(this.label,
+                                    'mouseout',
+                                    this.labelOut.bindAsEventListener(this));
 
         Event.observe(this.removeButton,
                                     'mousedown',
@@ -371,6 +378,22 @@ Relationship.prototype.extend( {
 
     },
 
+    labelOver: function(e){
+        this.label.style.border='1px solid black';
+    },
+
+    labelOut: function(e){
+        if(!this.isSelected()){
+            this.label.style.border='1px solid white';
+        }
+    },
+
+    labelBlur: function(e){
+        this.label.style.border='1px solid white';
+        this.deselect();
+        this.recordLabel();
+    },
+
     removeButtonClick: function(e){
         // TODO
         alert("got click on remove button");
@@ -424,7 +447,7 @@ Relationship.prototype.extend( {
         this.updateArrows();
     },
 
-    recordLabel: function(e){
+    recordLabel: function(){
         this.type(this.label.value);
         this.update();
     },

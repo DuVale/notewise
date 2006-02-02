@@ -207,6 +207,22 @@ body, html {
     display: none;
 }
 
+.relationship.selected .relationshipLabel {
+    border: 1px solid black;
+}
+
+.relationship.notselected .relationshipLabel {
+    border: 1px solid white;
+}
+
+.notselected .relationship.selected .relationshipLabel {
+    border: 1px solid black;
+}
+
+.selected .relationship.notselected .relationshipLabel {
+    border: 1px solid white;
+}
+
 .relationship.selected .removebutton {
     display: block;
 }
@@ -277,7 +293,7 @@ img {
     width: 100px;
     height: 20px;
     background: white;
-    border: 1px solid black;
+    border: 1px solid white;
     text-align: center;
     top: -10px;
     left: -50px;
