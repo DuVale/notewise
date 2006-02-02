@@ -3,9 +3,6 @@
 
 var KernelObject = Class.create();
 
-// cache for memoizing getTextWidth
-KernelObject.__getTextWidthCache = {};
-
 KernelObject.prototype = {
     initialize: function(htmlElement){
         this.htmlElement = htmlElement;
@@ -130,37 +127,7 @@ KernelObject.prototype = {
     // text in the field, but bounded by the minimum width
     getNameFieldWidth: function(){
         // TODO make 20 into a constant - min namefield width
-        return Math.max(this.getTextWidth(this.namefield.value,
-                                          Utils.getStyle(this.namefield,
-                                                        'font-size'))*1.15+10,20);
-    },
-
-    // Gets the size of the given text, in the given font
-    getTextWidth: function(text,size){
-        // Create the dummy span we will use for checking the size of the text.
-        // The idea is that spans size themselves automatically, so it should
-        // be possible to set the text in the span (and set the font of the
-        // span to the right size), and then check the size of the span.
-
-        if(KernelObject.__getTextWidthCache[size+":"+text] !== undefined ){
-            return KernelObject.__getTextWidthCache[size+":"+text];
-        }
-
-        if(KernelObject.textSizingBox === undefined){
-            KernelObject.textSizingBox = document.createElement('span');
-            KernelObject.textSizingBox.innerHTML = 'a';
-            // put it way off the left side of the page so it's not visible
-            var body = document.getElementsByTagName('body')[0];
-            body.appendChild(KernelObject.textSizingBox);
-            KernelObject.textSizingBox.style.position = 'absolute';
-            KernelObject.textSizingBox.style.left = '-2000px';
-            KernelObject.textSizingBox.style.bottom = '20px';
-        }
-        KernelObject.textSizingBox.style.fontSize = size;
-        KernelObject.textSizingBox.firstChild.data = text;
-        var width = KernelObject.textSizingBox.offsetWidth;
-        KernelObject.__getTextWidthCache[size+":"+text] = width;
-        return width;
+        return Math.max(Utils.getInputTextWidth(this.namefield),20);
     },
 
     setup: function () {
