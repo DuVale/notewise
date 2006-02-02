@@ -236,6 +236,46 @@ Utils = {
             posy = e.clientY + document.body.scrollTop;
         }
         return {x: posx, y: posy};
+    },
+
+    // Gets the size of the given text, in the given font
+    getTextWidth: function(text,size){
+        // Create the dummy span we will use for checking the size of the text.
+        // The idea is that spans size themselves automatically, so it should
+        // be possible to set the text in the span (and set the font of the
+        // span to the right size), and then check the size of the span.
+
+        // cache for memoization
+        if(!Utils.__getTextWidthCache){
+            Utils.__getTextWidthCache = {};
+        }
+
+
+        if(Utils.__getTextWidthCache[size+":"+text] !== undefined ){
+            return Utils.__getTextWidthCache[size+":"+text];
+        }
+
+        if(Utils.textSizingBox === undefined){
+            Utils.textSizingBox = document.createElement('span');
+            Utils.textSizingBox.innerHTML = 'a';
+            // put it way off the left side of the page so it's not visible
+            var body = document.getElementsByTagName('body')[0];
+            body.appendChild(Utils.textSizingBox);
+            Utils.textSizingBox.style.position = 'absolute';
+            Utils.textSizingBox.style.left = '-2000px';
+            Utils.textSizingBox.style.bottom = '20px';
+        }
+        Utils.textSizingBox.style.fontSize = size;
+        Utils.textSizingBox.firstChild.data = text;
+        var width = Utils.textSizingBox.offsetWidth;
+        Utils.__getTextWidthCache[size+":"+text] = width;
+        return width;
+    },
+
+    // returns the widht of the tex tin a given input field
+    getInputTextWidth: function(field){
+        return Utils.getTextWidth(field.value, Utils.getStyle(field,
+                                                            'font-size'))*1.15+10;
     }
 };
 

@@ -277,7 +277,7 @@ img {
     width: 100px;
     height: 20px;
     background: white;
-    border: 0px solid black;
+    border: 1px solid black;
     text-align: center;
     top: -10px;
     left: -50px;

@@ -1,90 +1,3 @@
-var Rectangle = Class.create();
-Rectangle.prototype = {
-    initialize: function(x,y,w,h){
-        this.x=Number(x);
-        this.y=Number(y);
-        this.w=Number(w);
-        this.h=Number(h);
-    },
-
-    getCenter: function (){
-        return {x: this.x+this.w/2,
-                y: this.y+this.h/2};
-    },
-
-    // line should be of the form [{x:0,y:0},{x:10,y:10}]
-    // returns intersect point of the form {x: 2, y:4}
-    getLineIntersect: function(line) {
-        // deal with perfectly vertical lines
-        if(line[0].x == line[1].x){
-            var side = this.y;
-            var lineMinY = Math.min(line[0].y,line[1].y);
-            var lineMaxY = Math.max(line[0].y,line[1].y);
-            if(lineMinY < side
-               && lineMaxY >= side){
-                return {x: line[0].x, y: side};
-            }
-            side = this.y+this.h;
-            if(lineMinY <= side
-               && lineMaxY >= side){
-                return {x: line[0].x, y: side};
-            }
-            return undefined; // no intersection
-        }
-
-        // figure out equation for line y=ax+b
-        var a = (line[1].y - line[0].y)/(line[1].x - line[0].x);
-        var b = line[0].y - a*line[0].x;
-
-        var lineMinX = Math.min(line[0].x,line[1].x);
-        var lineMaxX = Math.max(line[0].x,line[1].x);
-        var lineMinY = Math.min(line[0].y,line[1].y);
-        var lineMaxY = Math.max(line[0].y,line[1].y);
-
-        // look at vertical sides first
-        var side = this.x;
-        var y = a*side+b;
-        if(lineMinX <= side
-           && lineMaxX >= side
-           && y >= this.y && y <= (this.y + this.h)){
-            // line intersects left side
-            var intersect = {x: side, y: y};
-            return intersect;
-        }
-
-        side = this.x+this.w;
-        y = a*(side)+b;
-        if(lineMinX <= side
-           && lineMaxX >= side
-           && y >= this.y && y <= (this.y + this.h)){
-            // line intersects right side
-            var intersect = {x: side, y: y};
-            return intersect;
-        }
-
-        // look at the horizontal sides
-        side=this.y;
-        var x=(side-b)/a;
-        if(lineMinY <= side
-           && lineMaxY >= side
-           && x >= this.x && x <= (this.x + this.w)){
-            // line intersects top
-            var intersect = {x: x, y: this.y};
-            return intersect;
-        }
-        side=this.y+this.h;
-        var x=(side-b)/a;
-        if(lineMinY <= side
-           && lineMaxY >= side
-           && x >= this.x && x <= (this.x + this.w)){
-            // line intersects bottom
-            var intersect = {x: x, y: side};
-            return intersect;
-        }
-        return undefined;
-    }
-};
-
 var Relationship = Class.create();
 Relationship.extend(JSDBI);
 Relationship.prototype = {};
@@ -127,6 +40,8 @@ Relationship.prototype.extend( {
         this.createButtons();
         this.createArrows();
         this.registerListeners();
+
+        this.layoutLabel();
 
         this.over1 = false;
         this.over2 = false;
@@ -185,6 +100,18 @@ Relationship.prototype.extend( {
             this.arrowDivs[i].appendChild(this.arrowClickBoxen[i]);
         }
         this.updateArrows();
+    },
+
+    layoutLabel: function() {
+        var width = Math.max(Utils.getInputTextWidth(this.label),20);
+        this.label.style.width = width+'px';
+        this.label.style.left = (-1*width/2)+'px';
+        this.removeButton.style.left = (width/2+5)+'px';
+
+        // scroll the text field all the way to the left again - apparently
+        // setting the value of a text input field again causes it to properly
+        // scroll all the way to the left
+        this.label.value = this.label.value;
     },
 
     layoutResize: function() {
@@ -365,6 +292,9 @@ Relationship.prototype.extend( {
         Event.observe(this.label,
                                     'mousedown',
                                     Utils.terminateEvent.bindAsEventListener(this));
+        Event.observe(this.label,
+                                    'dblclick',
+                                    Utils.terminateEvent.bindAsEventListener(this));
 
         Event.observe(this.label,
                                     'click',
@@ -422,6 +352,8 @@ Relationship.prototype.extend( {
         Event.observe(this.arrowClickBoxen[1],
                                     'mouseout',
                                     this.arrowOut2.bindAsEventListener(this));
+
+        Event.observe(this.label,'keyup', this.layoutLabel.bind(this));
 
         this.pos1listener = this.updatePosition1.bind(this);
         this.pos2listener = this.updatePosition2.bind(this);
@@ -562,3 +494,91 @@ Relationship.prototype.extend( {
         this.part2ContainedObject.uncacheRelationship(this);
     }
 });
+
+var Rectangle = Class.create();
+Rectangle.prototype = {
+    initialize: function(x,y,w,h){
+        this.x=Number(x);
+        this.y=Number(y);
+        this.w=Number(w);
+        this.h=Number(h);
+    },
+
+    getCenter: function (){
+        return {x: this.x+this.w/2,
+                y: this.y+this.h/2};
+    },
+
+    // line should be of the form [{x:0,y:0},{x:10,y:10}]
+    // returns intersect point of the form {x: 2, y:4}
+    getLineIntersect: function(line) {
+        // deal with perfectly vertical lines
+        if(line[0].x == line[1].x){
+            var side = this.y;
+            var lineMinY = Math.min(line[0].y,line[1].y);
+            var lineMaxY = Math.max(line[0].y,line[1].y);
+            if(lineMinY < side
+               && lineMaxY >= side){
+                return {x: line[0].x, y: side};
+            }
+            side = this.y+this.h;
+            if(lineMinY <= side
+               && lineMaxY >= side){
+                return {x: line[0].x, y: side};
+            }
+            return undefined; // no intersection
+        }
+
+        // figure out equation for line y=ax+b
+        var a = (line[1].y - line[0].y)/(line[1].x - line[0].x);
+        var b = line[0].y - a*line[0].x;
+
+        var lineMinX = Math.min(line[0].x,line[1].x);
+        var lineMaxX = Math.max(line[0].x,line[1].x);
+        var lineMinY = Math.min(line[0].y,line[1].y);
+        var lineMaxY = Math.max(line[0].y,line[1].y);
+
+        // look at vertical sides first
+        var side = this.x;
+        var y = a*side+b;
+        if(lineMinX <= side
+           && lineMaxX >= side
+           && y >= this.y && y <= (this.y + this.h)){
+            // line intersects left side
+            var intersect = {x: side, y: y};
+            return intersect;
+        }
+
+        side = this.x+this.w;
+        y = a*(side)+b;
+        if(lineMinX <= side
+           && lineMaxX >= side
+           && y >= this.y && y <= (this.y + this.h)){
+            // line intersects right side
+            var intersect = {x: side, y: y};
+            return intersect;
+        }
+
+        // look at the horizontal sides
+        side=this.y;
+        var x=(side-b)/a;
+        if(lineMinY <= side
+           && lineMaxY >= side
+           && x >= this.x && x <= (this.x + this.w)){
+            // line intersects top
+            var intersect = {x: x, y: this.y};
+            return intersect;
+        }
+        side=this.y+this.h;
+        var x=(side-b)/a;
+        if(lineMinY <= side
+           && lineMaxY >= side
+           && x >= this.x && x <= (this.x + this.w)){
+            // line intersects bottom
+            var intersect = {x: x, y: side};
+            return intersect;
+        }
+        return undefined;
+    }
+};
+
