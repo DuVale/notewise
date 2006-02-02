@@ -1,5 +1,7 @@
 <h1>Notewise for [%user.name%]</h1>
 
+<a href="[%base%]kernel/add?name=">create new view</a><br/><br/>
+
 Last [%lastviewed.size%] viewed kernels:
 
 <ul>
