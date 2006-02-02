@@ -45,7 +45,7 @@ sub begin : Private {
 
 sub end : Private {
     my ( $self, $c ) = @_;
-    $c->forward('Notewise::V::TT') unless $c->res->output;
+    $c->forward('Notewise::V::TT') unless $c->res->output || $c->res->location;
 }
 
 #Handles user authentication.  If the user is not logged in, checks for the

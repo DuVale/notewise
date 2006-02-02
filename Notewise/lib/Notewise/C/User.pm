@@ -35,19 +35,12 @@ sub home : Local {
     }
     $c->stash->{user}=$user;
 
-    my @lastviewed=map $_->object, Notewise::M::CDBI::ObjectId->search(user=>$user->id,type=>'kernel');
-    # XXX this sort is going to be dog slow - need to swap this out for some actual sql
-    @lastviewed=sort {$b->lastviewed <=> $a->lastviewed} @lastviewed;
-    my $max = 15;
-    if(@lastviewed < $max){
-        $max = @lastviewed;
-    }
-    $c->stash->{lastviewed}=[@lastviewed[0..($max-1)]];
+    $c->stash->{lastviewed}=[Notewise::M::CDBI::Kernel->most_recently_viewed_kernel($user->id,15)];
 
     my @lastcreated=map $_->object, Notewise::M::CDBI::ObjectId->search(user=>$user->id,type=>'kernel');
     # XXX this sort is going to be dog slow - need to swap this out for some actual sql
     @lastcreated=sort {$b->created <=> $a->created} @lastcreated;
-    $max = 15;
+    my $max = 15;
     if(@lastcreated < $max){
         $max = @lastcreated;
     }

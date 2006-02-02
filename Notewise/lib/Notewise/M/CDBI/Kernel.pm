@@ -18,8 +18,16 @@ __PACKAGE__->has_a(lastViewed => 'DateTime', inflate=> \&Notewise::M::CDBI::infl
 __PACKAGE__->add_trigger(before_create => \&create_id);
 __PACKAGE__->add_trigger(before_create => \&Notewise::M::CDBI::add_created_date);
 __PACKAGE__->add_trigger(after_delete => sub {
-                                                 my $self = shift;
-                                                 $self->object_id->delete;
+                             my $self = shift;
+
+                             # delete all the related stuff
+                             map $_->delete, Notewise::M::CDBI::Note->search(container_object => $self->object_id->id);
+                             map $_->delete, Notewise::M::CDBI::Relationship->search(part1 => $self->object_id->id);
+                             map $_->delete, Notewise::M::CDBI::Relationship->search(part2 => $self->object_id->id);
+                             map $_->delete, Notewise::M::CDBI::ContainedObject->search(contained_object => $self->object_id->id);
+                             map $_->delete, Notewise::M::CDBI::ContainedObject->search(container_object => $self->object_id->id);
+                             # TODO delete from contained objects table
+                             $self->object_id->delete;
                         });
 __PACKAGE__->columns(TEMP => qw/user/);
 
@@ -189,6 +197,20 @@ sub kernels_with_name {
 
     my @kernels = $class->search(name=>$name);
     return grep {$_->user->id == $user_id} @kernels;
+}
+
+sub most_recently_viewed_kernel {
+    my $class = shift;
+    my $user_id = shift;
+    my $max_returned = shift;
+
+    my @lastviewed=map $_->object, Notewise::M::CDBI::ObjectId->search(user=>$user_id,type=>'kernel');
+    # XXX this sort is going to be dog slow - need to swap this out for some actual sql
+    @lastviewed=sort {$b->lastviewed <=> $a->lastviewed} @lastviewed;
+    if($max_returned == 0 || @lastviewed < $max_returned){
+        $max_returned = @lastviewed;
+    }
+    return @lastviewed[0..($max_returned-1)];
 }
 =head1 NAME
 
