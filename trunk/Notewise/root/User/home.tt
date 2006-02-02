@@ -1,4 +1,14 @@
+<link rel="stylesheet" type="text/css" href="[%base%]style.css"/>
 <h1>Notewise for [%user.name%]</h1>
+
+Search: <input autocomplete="off" id="mysearchfield" onfocus="this.className = 'focus';" onblur="this.className='';" name="s"/><br/>
+<div id="mysearchresults" class="searchresults" style="display: none"></div>
+
+<script type="text/javascript" src="[%base%]js/prototype.js"></script>
+<script type="text/javascript" src="[%base%]js/utils.js"></script>
+<script type="text/javascript" src="[%base%]js/controls.js"></script>
+<script type="text/javascript" src="[%base%]js/effects.js"></script>
+<script type="text/javascript" src="[%base%]js/quicksearch.js"></script>
 
 <a href="[%base%]kernel/add?name=">create new view</a><br/><br/>
 

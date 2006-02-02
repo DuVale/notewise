@@ -1,4 +1,4 @@
-new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '[%base%]s',
+new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '/s',
                         {frequency: .1,
                          min_chars: 2,
                          on_select: function (selected_element){
@@ -36,16 +36,3 @@ new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '[%base%]s',
                          }
                         });
 $('mysearchfield').focus();
-
-function show_confirm_delete(e){
-    $('permanent_delete').innerHTML = "Permanently delete this kernel? <a href='"+JSDBI.base_url()+"kernel/delete/"+viewKernelId+"'>yes</a> <a id='permanent_delete_no' href='#'>no</a>";
-    Utils.preventDefault(e);
-    Event.observe($('permanent_delete_no'),'click', hide_confirm_delete);
-}
-
-function hide_confirm_delete(e){
-    $('permanent_delete').innerHTML = '<a href="#" id="permanent_delete_link">delete this kernel</a></div>';
-    Utils.preventDefault(e);
-    Event.observe($('permanent_delete_link'),'click', show_confirm_delete);
-}
-Event.observe($('permanent_delete_link'),'click', show_confirm_delete);
