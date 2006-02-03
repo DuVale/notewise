@@ -308,7 +308,7 @@ Relationship.prototype.extend( {
 
         Event.observe(this.label,
                                     'mouseover',
-                                    this.labelOver.bindAsEventListener(this));
+                                    this.showLabel.bindAsEventListener(this));
         Event.observe(this.label,
                                     'mouseout',
                                     this.labelOut.bindAsEventListener(this));
@@ -384,7 +384,7 @@ Relationship.prototype.extend( {
 
     },
 
-    labelOver: function(){
+    showLabel: function(){
         Element.show(this.label);
         this.label.style.border='1px solid black';
     },
@@ -421,7 +421,7 @@ Relationship.prototype.extend( {
             y < (midy + 20) ){
 
             // yay, we're in the middle
-            this.labelOver();
+            this.showLabel();
         } else {
             this.labelOut();
         }
@@ -510,7 +510,7 @@ Relationship.prototype.extend( {
 
     // Select this relationship
     select: function () {
-        this.labelOver();
+        this.showLabel();
         if( !this.isSelected() ){
           Element.removeClassName(this.htmlElement, 'notselected');
           Element.addClassName(this.htmlElement, 'selected');
