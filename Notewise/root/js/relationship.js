@@ -67,6 +67,9 @@ Relationship.prototype.extend( {
 
         this.label = document.createElement('input');
         this.label.value = this.type();
+        if(this.type() == null || this.type() == ''){
+            Element.hide(this.label);
+        }
         this.label.className = 'relationshipLabel';
         this.labelDiv.appendChild(this.label);
     },
@@ -309,6 +312,9 @@ Relationship.prototype.extend( {
         Event.observe(this.label,
                                     'mouseout',
                                     this.labelOut.bindAsEventListener(this));
+        Event.observe(this.line.img,
+                                    'mousemove',
+                                    this.mouseMove.bindAsEventListener(this));
 
         Event.observe(this.removeButton,
                                     'mousedown',
@@ -378,20 +384,47 @@ Relationship.prototype.extend( {
 
     },
 
-    labelOver: function(e){
+    labelOver: function(){
+        Element.show(this.label);
         this.label.style.border='1px solid black';
     },
 
-    labelOut: function(e){
+    labelOut: function(){
         if(!this.isSelected()){
             this.label.style.border='1px solid white';
+            if(!this.label.value){
+                Element.hide(this.label);
+            }
         }
     },
 
-    labelBlur: function(e){
+    labelBlur: function(){
         this.label.style.border='1px solid white';
+        if(!this.label.value){
+            Element.hide(this.label);
+        }
         this.deselect();
         this.recordLabel();
+    },
+
+    // checks to see if we're roughly in the middle of the relationship.  If we are, show the relationship label
+    mouseMove: function(e){
+        var midx = this.line.img.clientWidth/2;
+        var midy = this.line.img.clientHeight/2;
+        var offset = Position.cumulativeOffset(this.line.img);
+        var x = Event.pointerX(e) - offset[0];
+        var y = Event.pointerY(e) - offset[1];
+        window.status="x: "+x+" y: "+y+" midx: "+midx+" midy: "+midy;
+        if( x > (midx - 20) &&
+            x < (midx + 20) &&
+            y > (midy - 20) &&
+            y < (midy + 20) ){
+
+            // yay, we're in the middle
+            this.labelOver();
+        } else {
+            this.labelOut();
+        }
     },
 
     removeButtonClick: function(e){
