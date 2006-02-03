@@ -246,9 +246,6 @@ body, html {
     padding: 0px;
     background: blue;
     color: white;
-}
-
-.relationship .removebutton {
     left: 55px;
     top: -12px;
 }
