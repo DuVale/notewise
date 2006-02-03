@@ -403,7 +403,6 @@ Relationship.prototype.extend( {
         if(!this.label.value){
             Element.hide(this.label);
         }
-        this.deselect();
         this.recordLabel();
     },
 
@@ -428,8 +427,7 @@ Relationship.prototype.extend( {
     },
 
     removeButtonClick: function(e){
-        // TODO
-        alert("got click on remove button");
+        this.destroy();
     },
 
     arrow1click: function(e){
@@ -549,6 +547,12 @@ Relationship.prototype.extend( {
         // remove it from both object caches
         this.part1ContainedObject.uncacheRelationship(this);
         this.part2ContainedObject.uncacheRelationship(this);
+    },
+
+    destroy: function () {
+        this.removeFromView();
+        this.uncache();
+        return JSDBI.prototype.destroy.call(this);
     }
 });
 
