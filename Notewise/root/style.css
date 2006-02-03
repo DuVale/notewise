@@ -258,7 +258,7 @@ img {
     position: absolute;
     /* This is necessary to make the arrows clickable in IE.  Otherwise the click is stolen by the line image. */
     background: url('images/clear.gif');
-    z-index: 0;
+    z-index: 1;
 }
 
 .arrowcanvas {
