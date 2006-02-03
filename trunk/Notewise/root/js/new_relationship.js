@@ -93,6 +93,8 @@ NewRelationship.prototype = {
                         }
                         var relationship = Relationship.insert({part1: part1,part2: part2,type: '',nav: 'fromright'});
                         relationship.realize(this.startObject.container_object().id());
+                        relationship.select();
+                        relationship.label.focus();
                     }
                 }
             }
