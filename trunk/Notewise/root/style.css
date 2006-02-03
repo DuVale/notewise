@@ -254,7 +254,7 @@ body, html {
 }
 
 img {
-    z-index: -50;
+    z-index: 0;
 }
 
 .arrowdiv {
@@ -284,7 +284,7 @@ img {
 
 .labelDiv {
     position: absolute;
-    z-index: 0;
+    z-index: 1;
     border: 0px solid purple;
 }
 
@@ -297,7 +297,7 @@ img {
     text-align: center;
     top: -10px;
     left: -50px;
-    z-index: -2;
+    z-index: 1;
 }
 
 .vkernel .namelink {
