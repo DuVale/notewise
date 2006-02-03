@@ -510,6 +510,7 @@ Relationship.prototype.extend( {
 
     // Select this relationship
     select: function () {
+        this.labelOver();
         if( !this.isSelected() ){
           Element.removeClassName(this.htmlElement, 'notselected');
           Element.addClassName(this.htmlElement, 'selected');
