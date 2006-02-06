@@ -1,0 +1,37 @@
+<style>
+    table, td, th {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 5px;
+        margin: 5px;
+    }
+</style>
+[% USE table_class = Class('Notewise::M::CDBI::User') %]
+<a href="[% base _ 'admin/account/add' %]">Add New User</a>
+<table>
+    <tr>
+        <th>Username</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Kernels</th>
+        <th>Notes</th>
+        <th>Relationships</th>
+        <th/>
+    </tr>
+    [% FOR object = table_class.retrieve_all %]
+        <tr>
+            <td>[% object.username %]</td>
+            <td>[% object.name %]</td>
+            <td>[% object.email %]</td>
+            <td>[% object.kernel_count %]</td>
+            <td>[% object.note_count %]</td>
+            <td>[% object.relationship_count %]</td>
+            <td>
+                <a href="[% base _ 'admin/account/view/' _ object.id %]">View</a>
+                <a href="[% base _ 'admin/account/edit/' _ object.id %]">Edit</a>
+                <a href="[% base _ 'admin/account/delete/' _ object.id %]">Delete</a>
+                <a href="[% base _ 'admin/account/clear/' _ object.id %]">Clear</a>
+            </td>
+        </tr>
+    [% END %]
+</table>

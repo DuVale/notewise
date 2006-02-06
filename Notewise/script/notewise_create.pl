@@ -4,6 +4,8 @@ use strict;
 use Getopt::Long;
 use Pod::Usage;
 use Catalyst::Helper;
+use lib qw(lib);
+use Notewise;
 
 my $force = 0;
 my $help  = 0;
