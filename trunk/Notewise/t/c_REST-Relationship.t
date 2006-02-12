@@ -1,4 +1,4 @@
-use Test::More tests => 11;
+use Test::More tests => 12;
 use Test::WWW::Mechanize::Catalyst 'Notewise';
 use Test::XML;
 use Notewise::TestUtils;
@@ -47,6 +47,9 @@ is($mech->status,201,'Status of PUT is 201');
 
 my ($relationship_id) = $mech->content =~ /<relationship.*\sid="(\d+)"/;
 is_xml($mech->content, qq#<response><relationship nav="fromleft" part1="$kernel_id" part2="$kernel2_id" id="$relationship_id" type="asdf" /></response>#);
+
+my $relationship = Notewise::M::CDBI::Relationship->retrieve($relationship_id);
+is($relationship->user->id,$user_id, 'user id matches');
 
 # fetch it again
 

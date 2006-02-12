@@ -9,10 +9,12 @@ __PACKAGE__->has_a(part1 => 'Notewise::M::CDBI::ObjectId');
 __PACKAGE__->has_a(part2 => 'Notewise::M::CDBI::ObjectId');
 __PACKAGE__->has_a(type => 'Notewise::M::CDBI::RelationshipType');
 
+__PACKAGE__->columns(TEMP => qw/user/);
+
 sub create_id {
     my $self=shift;
-    my $object_id = Notewise::M::CDBI::ObjectId->create({type=>'relationship'});
-    $self->_attribute_store(relationship_id => $object_id->id);
+    my $object_id = Notewise::M::CDBI::ObjectId->create({user=>$self->user,type=>'relationship'});
+    $self->_attribute_store(relationship_id => $object_id);
 }
 
 sub to_xml_hash {
@@ -25,6 +27,18 @@ sub to_xml_hash {
         nav => $self->nav
     };
 }
+
+sub user {
+    my $self=shift;
+    if ($self->relationship_id){
+        # gets called after object is created and has an object_id
+        return $self->relationship_id->user(@_);
+    } else {
+        # only gets called by before_create triggers
+        return $self->{user};
+    }
+}
+
 
 =head1 NAME
 
