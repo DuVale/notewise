@@ -124,9 +124,9 @@ $mech->content_is("ERROR - contained object $container_id/$kernel_id was not fou
 
 # Cleanup
 
+map $_->delete, Notewise::M::CDBI::ContainedObject->search(contained_object=>$kernel_id);
+$container->delete;
 $user->delete;
 $user2->delete;
-$container->delete;
-map $_->delete, Notewise::M::CDBI::ContainedObject->search(contained_object=>kernel_id);
 
 # vim:ft=perl

@@ -177,10 +177,10 @@ $mech->content_is("FORBIDDEN - user $user2_id isn't the owner of object $note_id
 
 # Cleanup
 
-$user->delete;
-$user2->delete;
 Notewise::M::CDBI::Note->retrieve($note_id)->delete;
 Notewise::M::CDBI::Kernel->retrieve($kernel_id)->delete;
 Notewise::M::CDBI::Kernel->retrieve($kernel2_id)->delete;
+$user->delete;
+$user2->delete;
 
 # vim:filetype=perl

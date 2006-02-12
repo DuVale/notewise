@@ -52,10 +52,10 @@ $results=sort_inner_alpha($mech->content);
 $xml=sort_inner_alpha($xml);
 is_xml($results,$xml);
 
-$user->delete;
-foreach my $object (@kernels,@notes){
+foreach my $object (@notes,@kernels){
     $object->delete;
 }
+$user->delete;
 
 sub get_type {
     return Notewise::C::REST::Search::get_type(@_);

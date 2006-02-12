@@ -84,8 +84,8 @@ $req = new_request('DELETE', "http://localhost/rest/kernel/$kernel_id");
 $mech->request($req);
 $mech->content_contains('FORBIDDEN');
 
+Notewise::M::CDBI::Kernel->retrieve($kernel_id)->delete;
 $user->delete;
 $user2->delete;
-Notewise::M::CDBI::Kernel->retrieve($kernel_id)->delete;
 
 # vim:ft=perl
