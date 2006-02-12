@@ -25,7 +25,22 @@ sub relationship_count {
 # clears the kernels, notes, and relationships for this user
 sub clear {
     my $self = shift;
-    foreach my $object_id (Notewise::M::CDBI::ObjectId->search(user => $self->id)){
+    # delete kernels first, as they have cascaded deletes to other objects. If
+    # we don't do this, then we get errors trying to delete objects that have
+    # already been deleted, because we try to delete them twice (once as part
+    # of the cascade, and once because we found them in the search).
+    my @kernels = Notewise::M::CDBI::ObjectId->search(user => $self->id, type=>'kernel');
+    foreach my $object_id (@kernels){
+        if($object_id->object){
+            $object_id->object->delete;
+        } else {
+            $object_id->delete;
+        }
+    }
+
+    # delete everything else
+    my @object_ids = Notewise::M::CDBI::ObjectId->search(user => $self->id);
+    foreach my $object_id (@object_ids){
         if($object_id->object){
             $object_id->object->delete;
         } else {

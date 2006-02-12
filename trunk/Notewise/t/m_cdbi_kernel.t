@@ -14,7 +14,6 @@ map $_->delete, Notewise::M::CDBI::User->search({email=>'fred2@flintstone.com'})
 my $user = Notewise::M::CDBI::User->create({name=>'Fred Flintstone1',email=>'fred@flintstone.com',password=>'password',username=>'fred'});
 my $user2 = Notewise::M::CDBI::User->create({name=>'Fred Flintstone2',email=>'fred2@flintstone.com',password=>'password',username=>'fred2'});
 my $kernel = Notewise::M::CDBI::Kernel->create({name=>'foo',user=>$user->id});
-my @objects_to_delete = ($user,$user2,$kernel);
 
 #tests
 
@@ -98,26 +97,13 @@ my $rel4 = Notewise::M::CDBI::Relationship->create({part1=>$kernel2->object_id,
                                                     part2=>$note2->object_id,
                                                     nav=>'non'});
 
-push @objects_to_delete, ($kernel2,
-                          $kernel3,
-                          $kernel4,
-                          $note1,
-                          $note2,
-                          $contained_object,
-                          $contained_object2,
-                          $rel1,
-                          $rel2,
-                          $rel3,
-                          $rel4);
-
 
 my @visible_rels = $kernel->visible_relationships;
 
 is_deeply([sort (map $_->id, @visible_rels)],[sort($rel1->id,$rel2->id)]);
 
 # cleanup
-foreach my $object (@objects_to_delete){
-    $object->delete;
-}
+$user->delete;
+$user2->delete;
 
 # vim:ft=perl

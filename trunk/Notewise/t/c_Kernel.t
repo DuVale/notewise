@@ -31,8 +31,8 @@ is($mech->status,403,'Status of GET is 403');
 
 
 # cleanup
+$kernel->delete;
 $user->delete;
 $user2->delete;
-$kernel->delete;
 
 # vim:ft=perl

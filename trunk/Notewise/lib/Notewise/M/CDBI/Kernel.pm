@@ -17,21 +17,26 @@ __PACKAGE__->has_a(lastViewed => 'DateTime', inflate=> \&Notewise::M::CDBI::infl
 
 __PACKAGE__->add_trigger(before_create => \&create_id);
 __PACKAGE__->add_trigger(before_create => \&Notewise::M::CDBI::add_created_date);
-__PACKAGE__->add_trigger(after_delete => sub {
-                             my $self = shift;
+__PACKAGE__->add_trigger(before_delete => sub {
+     my $self = shift;
 
-                             # delete all the related stuff
-                             map $_->delete, Notewise::M::CDBI::Note->search(container_object => $self->object_id->id);
-                             map $_->delete, Notewise::M::CDBI::Relationship->search(part1 => $self->object_id->id);
-                             map $_->delete, Notewise::M::CDBI::Relationship->search(part2 => $self->object_id->id);
-                             map $_->delete, Notewise::M::CDBI::ContainedObject->search(contained_object => $self->object_id->id);
-                             map $_->delete, Notewise::M::CDBI::ContainedObject->search(container_object => $self->object_id->id);
-                             # TODO delete from contained objects table
-                             $self->object_id->delete;
-                        });
-__PACKAGE__->columns(TEMP => qw/user/);
+     # delete all the related stuff
+     map $_->delete, Notewise::M::CDBI::Note->search(container_object => $self->object_id->id);
+     map $_->delete, Notewise::M::CDBI::Relationship->search(part1 => $self->object_id->id);
+     map $_->delete, Notewise::M::CDBI::Relationship->search(part2 => $self->object_id->id);
+     map $_->delete, Notewise::M::CDBI::ContainedObject->search(contained_object => $self->object_id->id);
+     map $_->delete, Notewise::M::CDBI::ContainedObject->search(container_object => $self->object_id->id);
+});
+
+__PACKAGE__->add_trigger(after_delete => sub {
+     my $self = shift;
+
+     # delete from contained objects table
+     $self->object_id->delete;
+});
 
 __PACKAGE__->add_trigger(after_create => \&hydrate_object_id);
+__PACKAGE__->columns(TEMP => qw/user/);
 
 sub hydrate_object_id {
     my $self = shift;
@@ -62,7 +67,7 @@ sub to_xml_hash {
 
 sub to_xml_hash_shallow {
     my $self = shift;
-    my $base_url = shift;
+    my $base_url = shift || '';
     return {
             id => $self->object_id->id,
             user => $self->user->id,
