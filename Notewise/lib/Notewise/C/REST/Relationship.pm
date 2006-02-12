@@ -60,6 +60,9 @@ sub add : Private {
         $c->detach('/rest/error',['invalid fields']);
     } else {
         my $relationship = Notewise::M::CDBI::Relationship->create_from_form( $c->form );
+        $relationship = Notewise::M::CDBI::Relationship->retrieve($relationship->id);
+        $relationship->user($c->req->{user_id});
+        $relationship->update;
 
         # fetch the correct type object
         my $type = Notewise::M::CDBI::RelationshipType->find_or_create({relationship_type=>$c->req->params->{type}});
