@@ -50,13 +50,13 @@ sub quick_search : Private {
     my $max_results = 15;
 
     my $searchstring = $c->req->params->{s};
-    my @objects = grep {$_->has_permission($c->req->{user_id},'view')}
+    my @objects = grep {$_->has_permission($c->user->user->id,'view')}
                     Notewise::M::CDBI::Kernel->search_where(
                             name => { 'like', $searchstring."%" });
     if(@objects < $max_results){
         # if we didn't get enough, get some more
         push @objects,
-            grep {$_->has_permission($c->req->{user_id},'view')}
+            grep {$_->has_permission($c->user->user->id,'view')}
                 Notewise::M::CDBI::Kernel->search_where(
                     name => { 'like', "% ".$searchstring."%" });
     }
@@ -64,7 +64,7 @@ sub quick_search : Private {
     if(@objects < $max_results){
         # if we didn't get enough, get some more
         push @objects,
-            grep {$_->kernel->has_permission($c->req->{user_id},'view')}
+            grep {$_->kernel->has_permission($c->user->user->id,'view')}
                 Notewise::M::CDBI::Note->search_where(
                     content => { 'like', $searchstring."%" });
     }
@@ -72,7 +72,7 @@ sub quick_search : Private {
     if(@objects < $max_results){
         # if we didn't get enough, get some more
         push @objects,
-            grep {$_->kernel->has_permission($c->req->{user_id},'view')}
+            grep {$_->kernel->has_permission($c->user->user->id,'view')}
                 Notewise::M::CDBI::Note->search_where(
                     content => { 'like', "% ".$searchstring."%" });
     }

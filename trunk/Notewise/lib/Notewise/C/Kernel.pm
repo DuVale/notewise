@@ -41,7 +41,7 @@ sub add : Local {
 	join(', ',$c->form->invalid()).'</b>';
     } else {
 	my $kernel = Notewise::M::CDBI::Kernel->create_from_form( $c->form );
-        $kernel->user($c->req->{user_id});
+        $kernel->user($c->user->user->id);
         $kernel->update;
         # this is necessary so that V::TT doesn't kick in, which it does if there's no output
         $c->res->output(' ');
@@ -62,7 +62,7 @@ sub view : Private {
         $c->forward('view_kernel');
     } elsif ($name ne '') {
         $name = uri_unescape($name);
-        my @kernels = Notewise::M::CDBI::Kernel->kernels_with_name($name,$c->req->{user_id});
+        my @kernels = Notewise::M::CDBI::Kernel->kernels_with_name($name,$c->user->user->id);
         if(@kernels == 1){
             $c->stash->{kernel} = $kernels[0];
             return $c->forward('view_kernel');
@@ -85,12 +85,12 @@ sub view_kernel : Private {
         $c->res->status(404);
         return $c->res->output("Sorry, that kernel doesn't seem to exist.");
     }
-    unless ($kernel->has_permission($c->req->{user_id},'view')){
+    unless ($kernel->has_permission($c->user->user->id,'view')){
         $c->res->status(403); # Forbidden
         #TODO make this screen prettier
         return $c->res->output('You do not have access to this kernel');
     }
-    if($kernel->user->id == $c->req->{user_id}){
+    if($kernel->user->id == $c->user->user->id){
         $kernel->lastviewed(DateTime->now());
         $kernel->update();
     }
@@ -113,7 +113,7 @@ sub delete : Local {
         $c->res->status(404);
         return $c->res->output('Sorry, it looks like that kernel was already deleted');
     }
-    unless($kernel->has_permission($c->req->{user_id},'delete')){
+    unless($kernel->has_permission($c->user->user->id,'delete')){
         $c->res->status(403); # Forbidden
         #TODO make this screen prettier
         return $c->res->output('You do not have access to delete this kernel');
@@ -121,7 +121,7 @@ sub delete : Local {
     $kernel->delete;
 
     # get the most recently viewed kernel
-    my ($lastviewed)=Notewise::M::CDBI::Kernel->most_recently_viewed_kernel($c->req->{user_id},1);
+    my ($lastviewed)=Notewise::M::CDBI::Kernel->most_recently_viewed_kernel($c->user->user->id,1);
 
     $c->res->redirect($c->req->base . $lastviewed->relative_url);
 }

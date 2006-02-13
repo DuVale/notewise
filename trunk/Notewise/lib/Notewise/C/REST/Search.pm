@@ -51,7 +51,7 @@ sub search : Path {
     my %objects_to_return;
     foreach my $object (@objects){
         last if(keys %objects_to_return >= $max_results);
-        next unless $object->has_permission($c->req->{user_id},'view');
+        next unless $object->has_permission($c->user->user->id,'view');
         $objects_to_return{get_type($object).$object->id} = $object;
     }
 

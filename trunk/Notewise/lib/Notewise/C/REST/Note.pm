@@ -70,7 +70,7 @@ sub add : Private {
         my $container_object=Notewise::M::CDBI::Kernel->retrieve($c->form->valid('container_object'));
         if (check_user_is_owner($c, $container_object)){
             my $note = Notewise::M::CDBI::Note->create_from_form( $c->form );
-            $note->user($c->req->{user_id});
+            $note->user($c->user->user->id);
             $note->update;
             $c->res->status(201); # Created
             return $c->forward('view',[$note->object_id->id]);
@@ -104,8 +104,8 @@ sub check_user_is_owner {
     my ($c,$object) = @_;
 
     # check permissions
-    if ($object->user->id != $c->req->{user_id}){
-        $c->detach('/rest/forbidden',["user ".$c->req->{user_id}." isn't the owner of object ".$object->id]);
+    if ($object->user->id != $c->user->user->id){
+        $c->detach('/rest/forbidden',["user ".$c->user->user->id." isn't the owner of object ".$object->id]);
     }
     return 1;
 }
