@@ -48,7 +48,6 @@ sub begin : Private {
         $c->req->base( new URI($self->config->{'BaseUrl'} ) );
     }
     $c->session_expires(0);
-    warn "session expires: ".$c->session_expires;
 }
 
 sub end : Private {

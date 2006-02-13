@@ -30,7 +30,7 @@ Adds a kernel
 
 sub add : Local {
     my ( $self, $c ) = @_;
-    $c->form( optional => [ Notewise::M::CDBI::Kernel->columns ] );
+    $c->form( optional => [ $c->model('CDBI::Kernel')->columns ] );
     if ($c->form->has_missing) {
         $c->stash->{message}='You have to fill in all fields. '.
         'The following are missing: <b>'.
@@ -58,11 +58,11 @@ Fetches a row and sets a template.
 sub view : Private {
     my ( $self, $c, $username, $name, $id ) = @_;
     if ($id){
-        $c->stash->{kernel} = Notewise::M::CDBI::Kernel->retrieve($id);
+        $c->stash->{kernel} = $c->model('CDBI::Kernel')->retrieve($id);
         $c->forward('view_kernel');
     } elsif ($name ne '') {
         $name = uri_unescape($name);
-        my @kernels = Notewise::M::CDBI::Kernel->kernels_with_name($name,$c->user->user->id);
+        my @kernels = $c->model('CDBI::Kernel')->kernels_with_name($name,$c->user->user->id);
         if(@kernels == 1){
             $c->stash->{kernel} = $kernels[0];
             return $c->forward('view_kernel');
@@ -94,21 +94,21 @@ sub view_kernel : Private {
         $kernel->lastviewed(DateTime->now());
         $kernel->update();
     }
-    $c->stash->{visible_kernels} = [Notewise::M::CDBI::ContainedObject->search({container_object=>$kernel->id})];
-    $c->stash->{notes} = [Notewise::M::CDBI::Note->search({container_object=>$kernel->id})];
+    $c->stash->{visible_kernels} = [$c->model('CDBI::ContainedObject')->search({container_object=>$kernel->id})];
+    $c->stash->{notes} = [$c->model('CDBI::Note')->search({container_object=>$kernel->id})];
     $c->stash->{visible_relationships} = [$c->stash->{kernel}->visible_relationships];
     $c->stash->{template} = 'Kernel/view.tt';
 }
 
 sub innerhtml : Local {
     my ( $self, $c, $id ) = @_;
-    $c->stash->{kernel} = Notewise::M::CDBI::Kernel->retrieve($id);
+    $c->stash->{kernel} = $c->model('CDBI::Kernel')->retrieve($id);
     $c->stash->{template} = 'Kernel/kernel-innerhtml.tt';
 }
 
 sub delete : Local {
     my ( $self, $c, $id ) = @_;
-    my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
+    my $kernel = $c->model('CDBI::Kernel')->retrieve($id);
     unless($kernel){
         $c->res->status(404);
         return $c->res->output('Sorry, it looks like that kernel was already deleted');
@@ -121,7 +121,7 @@ sub delete : Local {
     $kernel->delete;
 
     # get the most recently viewed kernel
-    my ($lastviewed)=Notewise::M::CDBI::Kernel->most_recently_viewed_kernel($c->user->user->id,1);
+    my ($lastviewed)=$c->model('CDBI::Kernel')->most_recently_viewed_kernel($c->user->user->id,1);
 
     $c->res->redirect($c->req->base . $lastviewed->relative_url);
 }

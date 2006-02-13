@@ -27,23 +27,23 @@ sub search : Path {
 
     my $max_results = 1000;
 
-    my @objects = Notewise::M::CDBI::Kernel->search_where(
+    my @objects = $c->model('CDBI::Kernel')->search_where(
                             name => { 'like', $searchstring."%" });
     if(@objects < $max_results){
         # if we didn't get enough, get some more
-        push @objects, Notewise::M::CDBI::Kernel->search_where(
+        push @objects, $c->model('CDBI::Kernel')->search_where(
                             name => { 'like', "% ".$searchstring."%" });
     }
 
     if(@objects < $max_results){
         # if we didn't get enough, get some more
-        push @objects, Notewise::M::CDBI::Note->search_where(
+        push @objects, $c->model('CDBI::Note')->search_where(
                             content => { 'like', $searchstring."%" });
     }
 
     if(@objects < $max_results){
         # if we didn't get enough, get some more
-        push @objects, Notewise::M::CDBI::Note->search_where(
+        push @objects, $c->model('CDBI::Note')->search_where(
                             content => { 'like', "% ".$searchstring."%" });
     }
 

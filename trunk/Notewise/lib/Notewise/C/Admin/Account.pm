@@ -49,7 +49,7 @@ Confirms a delete.
 
 sub delete : Local {
     my ( $self, $c, $id ) = @_;
-    $c->stash->{user} = Notewise::M::CDBI::User->retrieve($id);
+    $c->stash->{user} = $c->model('CDBI::User')->retrieve($id);
     $c->stash->{template} = 'Admin-Account/delete.tt';
 }
 
@@ -61,7 +61,7 @@ Deletes a row and forwards to list.
 
 sub do_delete : Local {
     my ( $self, $c, $id ) = @_;
-    Notewise::M::CDBI::User->retrieve($id)->delete;
+    $c->model('CDBI::User')->retrieve($id)->delete;
     $c->res->redirect($c->req->base . 'admin/account/');
 }
 
@@ -73,7 +73,7 @@ Confirms a clear.
 
 sub clear : Local {
     my ( $self, $c, $id ) = @_;
-    $c->stash->{user} = Notewise::M::CDBI::User->retrieve($id);
+    $c->stash->{user} = $c->model('CDBI::User')->retrieve($id);
     $c->stash->{template} = 'Admin-Account/clear.tt';
 }
 
@@ -85,9 +85,9 @@ Clears the kernels, notes, and relationships for a user.
 
 sub do_clear : Local {
     my ( $self, $c, $id ) = @_;
-    my $user = Notewise::M::CDBI::User->retrieve($id);
+    my $user = $c->model('CDBI::User')->retrieve($id);
     $user->clear;
-    my $kernel = Notewise::M::CDBI::Kernel->insert({name=>'',
+    my $kernel = $c->model('CDBI::Kernel')->insert({name=>'',
                                                     user=>$user});
     $c->res->redirect($c->req->base . 'admin/account/');
 }
@@ -113,7 +113,7 @@ sub do_add : Local {
         $c->stash->{message}="Sorry, those passwords don't match";
     } else {
 	my $user = Notewise::M::CDBI::User->create_from_form( $c->form );
-        my $kernel = Notewise::M::CDBI::Kernel->insert({name=>'',
+        my $kernel = $c->model('CDBI::Kernel')->insert({name=>'',
                                                         user=>$user});
         return $c->res->redirect($c->req->base . 'admin/account/list');
     }
@@ -128,7 +128,7 @@ Edits a row and forwards to edit.
 
 sub do_edit : Local {
     my ( $self, $c, $id ) = @_;
-    $c->form( optional => [ Notewise::M::CDBI::User->columns ] );
+    $c->form( optional => [ $c->model('CDBI::User')->columns ] );
     if ($c->form->has_missing) {
         $c->stash->{message}='You have to fill in all fields.'.
         'the following are missing: <b>'.
@@ -138,7 +138,7 @@ sub do_edit : Local {
         'the following are invalid: <b>'.
 	join(', ',$c->form->invalid()).'</b>';
     } else {
-	Notewise::M::CDBI::User->retrieve($id)->update_from_form( $c->form );
+	$c->model('CDBI::User')->retrieve($id)->update_from_form( $c->form );
 	$c->stash->{message}='Updated OK';
     }
     $c->forward('edit');
@@ -152,7 +152,7 @@ Sets a template.
 
 sub edit : Local {
     my ( $self, $c, $id ) = @_;
-    $c->stash->{item} = Notewise::M::CDBI::User->retrieve($id);
+    $c->stash->{item} = $c->model('CDBI::User')->retrieve($id);
     $c->stash->{template} = 'Admin-Account/edit.tt';
 }
 
@@ -175,7 +175,7 @@ Fetches a row and sets a template.
 
 sub view : Local {
     my ( $self, $c, $id ) = @_;
-    $c->stash->{item} = Notewise::M::CDBI::User->retrieve($id);
+    $c->stash->{item} = $c->model('CDBI::User')->retrieve($id);
     $c->stash->{template} = 'Admin-Account/view.tt';
 }
 
