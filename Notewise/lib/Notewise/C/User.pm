@@ -29,7 +29,7 @@ sub login : Local {
 sub home : Local {
     my ( $self, $c, $username ) = @_;
     my $user = Notewise::M::CDBI::User->search(username=>lc($username))->first;
-    unless($user->id == $c->req->{user_id}){
+    unless($user->id == $c->user->user->id){
         # TODO - need to make a different version for the public
         die "Sorry, you don't have permission to look at that user's homepage";
     }

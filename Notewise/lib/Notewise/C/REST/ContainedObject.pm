@@ -46,7 +46,7 @@ sub view : Private {
     }
 
     # check permissions
-    unless ($contained_object->has_permission($c->req->{user_id},'view')){
+    unless ($contained_object->has_permission($c->user->user->id,'view')){
         $c->detach('/rest/forbidden',["You do not have access to view contained object $container_id/$contained_id"]);
     }
 
@@ -75,7 +75,7 @@ sub add : Private {
     my $container_object=Notewise::M::CDBI::Kernel->retrieve(
                            $c->form->valid('container_object')
                          );
-    unless ($container_object->has_permission($c->req->{user_id},'modify')){
+    unless ($container_object->has_permission($c->user->user->id,'modify')){
         $c->detach('/rest/forbidden',["You can't create that contained object because you do not have permission to modify ".$container_object->id]);
     }
 
@@ -85,14 +85,14 @@ sub add : Private {
         foreach my $column (Notewise::M::CDBI::Kernel->columns){
             $create_hash{$column} = $c->form->valid($column);
         }
-        $create_hash{user}=$c->req->{user_id};
+        $create_hash{user}=$c->user->user->id;
         my $kernel = Notewise::M::CDBI::Kernel->create( \%create_hash );
         $c->req->params->{contained_object}=$kernel->id;
     } else {
         my $contained_object=Notewise::M::CDBI::Kernel->retrieve(
                                $c->form->valid('contained_object')
                              );
-        unless ($contained_object->has_permission($c->req->{user_id},'view')){
+        unless ($contained_object->has_permission($c->user->user->id,'view')){
             $c->detach('/rest/forbidden',["You can't create that contained object because you do not have permission to view ".$contained_object->id]);
         }
     }
@@ -118,7 +118,7 @@ sub update : Private {
 
     # check permissions
     my $container=Notewise::M::CDBI::Kernel->retrieve($container_id);
-    unless ($container->has_permission($c->req->{user_id},'modify')){
+    unless ($container->has_permission($c->user->user->id,'modify')){
         $c->detach('/rest/forbidden',["You do not have permission to modify $container_id"]);
     }
 
@@ -139,7 +139,7 @@ sub delete : Private {
     my $containedobject = (Notewise::M::CDBI::ContainedObject->search(container_object=>$container_id, contained_object=>$contained_id))[0];
 
     # check permissions
-    unless ($containedobject->container_object->has_permission($c->req->{user_id},'modify')){
+    unless ($containedobject->container_object->has_permission($c->user->user->id,'modify')){
         $c->detach('/rest/forbidden',["You do not have permission to delete $container_id/$contained_id"]);
     }
 

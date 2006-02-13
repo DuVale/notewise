@@ -61,7 +61,7 @@ sub add : Private {
     } else {
         my $relationship = Notewise::M::CDBI::Relationship->create_from_form( $c->form );
         $relationship = Notewise::M::CDBI::Relationship->retrieve($relationship->id);
-        $relationship->user($c->req->{user_id});
+        $relationship->user($c->user->user->id);
         $relationship->update;
 
         # fetch the correct type object

@@ -103,7 +103,7 @@ my @visible_rels = $kernel->visible_relationships;
 is_deeply([sort (map $_->id, @visible_rels)],[sort($rel1->id,$rel2->id)]);
 
 # cleanup
-$user->delete;
 $user2->delete;
+$user->delete;
 
 # vim:ft=perl

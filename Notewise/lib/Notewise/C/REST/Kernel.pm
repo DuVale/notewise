@@ -48,7 +48,7 @@ sub children : Private {
         return;
     }
     # check permissions
-    unless ($kernel->has_permission($c->req->{user_id},'view')){
+    unless ($kernel->has_permission($c->user->user->id,'view')){
         $c->detach('/rest/forbidden',["You do not have access to view object $id"]);
     }
     $c->stash->{visiblekernel}=[map $_->to_xml_hash_deep, $kernel->contained_objects];
@@ -76,7 +76,7 @@ sub view : Private {
         return;
     }
     # check permissions
-    unless ($kernel->has_permission($c->req->{user_id},'view')){
+    unless ($kernel->has_permission($c->user->user->id,'view')){
         $c->detach('/rest/forbidden',["You do not have access to view object $id"]);
     }
     $c->stash->{kernel}=$kernel->to_xml_hash_deep($c->req->base);
@@ -93,7 +93,7 @@ sub add : Private {
         $c->detach('/rest/error',['invalid fields']);
     } else {
         my $kernel = Notewise::M::CDBI::Kernel->create_from_form( $c->form );
-        $kernel->user($c->req->{user_id});
+        $kernel->user($c->user->user->id);
         $kernel->update;
         $c->res->status(201); # Created
     	return $c->forward('view',[$kernel->object_id->id]);
@@ -115,7 +115,7 @@ sub update : Private {
         }
 
         # check permissions
-        unless ($kernel->has_permission($c->req->{user_id},'modify')){
+        unless ($kernel->has_permission($c->user->user->id,'modify')){
             $c->detach('/rest/forbidden',["You do not have access to modify object $id"]);
         }
 
@@ -131,7 +131,7 @@ sub delete : Private {
     my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
     if($kernel){
         # check permissions
-        unless ($kernel->has_permission($c->req->{user_id},'delete')){
+        unless ($kernel->has_permission($c->user->user->id,'delete')){
             $c->detach('/rest/forbidden',["You do not have access to delete object $id"]);
         }
 

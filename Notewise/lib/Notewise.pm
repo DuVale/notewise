@@ -2,12 +2,24 @@ package Notewise;
 
 use strict;
 use YAML ();
-use Catalyst qw/FormValidator Session::FastMmap Authentication::CDBI/;
-#use Catalyst qw/-Debug FormValidator Session::FastMmap Authentication::CDBI/;
+use Catalyst qw/FormValidator
+                Session
+                Session::State::Cookie
+                Session::Store::FastMmap
+                Authentication
+                Authentication::Credential::Password
+                Authentication::Store::DBIC/;
 
 our $VERSION = '0.01';
 
 __PACKAGE__->config( YAML::LoadFile( __PACKAGE__->path_to('config.yml') ) );
+
+__PACKAGE__->config->{authentication}->{dbic} = {
+               user_class           => 'Notewise::M::CDBI::User',
+               user_field           => 'email',
+               password_field       => 'password',
+               password_type        => 'clear', # XXX change this once we're stablish
+           };
 
 # Allow us to use catalyst to serve static content, or serve it via apache, with a Static config toggle
 if(__PACKAGE__->config->{Static}){
@@ -18,12 +30,6 @@ if(__PACKAGE__->config->{Static}){
     __PACKAGE__->setup();
 }
 
-__PACKAGE__->config->{authentication} = {
-               user_class           => 'Notewise::M::CDBI::User',
-               user_field           => 'email',
-               password_field       => 'password',
-               #password_hash        => 'md5',
-           };
 
 sub default : Private {
     my ( $self, $c, $username, $name, $id ) = @_;
@@ -41,6 +47,8 @@ sub begin : Private {
     if($self->config->{'BaseUrl'}){
         $c->req->base( new URI($self->config->{'BaseUrl'} ) );
     }
+    $c->session_expires(0);
+    warn "session expires: ".$c->session_expires;
 }
 
 sub end : Private {
@@ -56,25 +64,18 @@ sub auto : Local {
     my ($self, $c) = @_;
 
     # check to see if they're already logged in
-    if ($c->req->{user_id}){
+    if ($c->user_exists){
         return 1;
     }
     
     # try to log them in if we can
-    if ($c->req->params->{email}
-        && $c->req->params->{password}) {
-        $c->session_login($c->req->params->{email}, 
-                          $c->req->params->{password} );
-    }
-
-    #check again to see if they got logged in
-    if ($c->req->{user_id}){
-        unless($c->req->path){
-            my $user=Notewise::M::CDBI::User->retrieve($c->req->{user_id});
-            $c->res->redirect('/'.$user->username);
+    my $email = $c->req->params->{email};
+    my $password = $c->req->params->{password};
+    if ($email && $password
+        && $c->login($email,$password) ){
+            #they're logged in
+            $c->res->redirect('/'.$c->user->user->username);
             return 0;
-        }
-        return 1;
     }
 
     # otherwise forward to display the login page, and break the auto chain
