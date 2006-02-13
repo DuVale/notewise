@@ -40,7 +40,7 @@ sub relationship : Path {
 sub view : Private {
     my ( $self, $c, $id) = @_;
 
-    my $relationship = Notewise::M::CDBI::Relationship->retrieve($id);
+    my $relationship = $c->model('CDBI::Relationship')->retrieve($id);
     unless($relationship){
         $c->detach('/rest/notfound',["couldn't find relationship with id $id"]);
         return;
@@ -53,19 +53,19 @@ sub view : Private {
 sub add : Private {
     my ( $self, $c) = @_;
 
-    $c->form( optional => [ Notewise::M::CDBI::Relationship->columns ] );
+    $c->form( optional => [ $c->model('CDBI::Relationship')->columns ] );
     if ($c->form->has_missing) {
         $c->detach('/rest/error',['missing fields']);
     } elsif ($c->form->has_invalid) {
         $c->detach('/rest/error',['invalid fields']);
     } else {
         my $relationship = Notewise::M::CDBI::Relationship->create_from_form( $c->form );
-        $relationship = Notewise::M::CDBI::Relationship->retrieve($relationship->id);
+        $relationship = $c->model('CDBI::Relationship')->retrieve($relationship->id);
         $relationship->user($c->user->user->id);
         $relationship->update;
 
         # fetch the correct type object
-        my $type = Notewise::M::CDBI::RelationshipType->find_or_create({relationship_type=>$c->req->params->{type}});
+        my $type = $c->model('CDBI::RelationshipType')->find_or_create({relationship_type=>$c->req->params->{type}});
         $relationship->type($type->id);
         $relationship->update;
         $c->res->status(201); # Created
@@ -76,20 +76,20 @@ sub add : Private {
 sub update : Private {
     my ( $self, $c, $id) = @_;
 
-    $c->form( optional => [ Notewise::M::CDBI::Relationship->columns ] );
+    $c->form( optional => [ $c->model('CDBI::Relationship')->columns ] );
     if ($c->form->has_missing) {
         $c->detach('/rest/error',['missing fields']);
     } elsif ($c->form->has_invalid) {
         $c->detach('/rest/error',['invalid fields']);
     } else {
-        my $relationship = Notewise::M::CDBI::Relationship->retrieve($id);
+        my $relationship = $c->model('CDBI::Relationship')->retrieve($id);
         unless($relationship){
             $c->detach('/rest/notfound',["couldn't find relationship with id $id"]);
         }
         $relationship->update_from_form( $c->form );
 
         # fetch the correct type object
-        my $type = Notewise::M::CDBI::RelationshipType->find_or_create({relationship_type=>$c->req->params->{type}});
+        my $type = $c->model('CDBI::RelationshipType')->find_or_create({relationship_type=>$c->req->params->{type}});
         $relationship->type($type->id);
         $relationship->update;
 
@@ -101,7 +101,7 @@ sub update : Private {
 sub delete : Private {
     my ( $self, $c, $id) = @_;
 
-    my $relationship = Notewise::M::CDBI::Relationship->retrieve($id);
+    my $relationship = $c->model('CDBI::Relationship')->retrieve($id);
     if($relationship){
         $relationship->delete();
         $c->res->status(200);

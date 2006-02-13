@@ -28,16 +28,16 @@ sub login : Local {
 
 sub home : Local {
     my ( $self, $c, $username ) = @_;
-    my $user = Notewise::M::CDBI::User->search(username=>lc($username))->first;
+    my $user = $c->model('CDBI::User')->search(username=>lc($username))->first;
     unless($user->id == $c->user->user->id){
         # TODO - need to make a different version for the public
         die "Sorry, you don't have permission to look at that user's homepage";
     }
     $c->stash->{user}=$user;
 
-    $c->stash->{lastviewed}=[Notewise::M::CDBI::Kernel->most_recently_viewed_kernel($user->id,15)];
+    $c->stash->{lastviewed}=[$c->model('CDBI::Kernel')->most_recently_viewed_kernel($user->id,15)];
 
-    my @lastcreated=map $_->object, Notewise::M::CDBI::ObjectId->search(user=>$user->id,type=>'kernel');
+    my @lastcreated=map $_->object, $c->model('CDBI::ObjectId')->search(user=>$user->id,type=>'kernel');
     # XXX this sort is going to be dog slow - need to swap this out for some actual sql
     @lastcreated=sort {$b->created <=> $a->created} @lastcreated;
     my $max = 15;

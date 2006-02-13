@@ -42,7 +42,7 @@ sub kernel : Path {
 sub children : Private {
     my ( $self, $c, $id) = @_;
 
-    my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
+    my $kernel = $c->model('CDBI::Kernel')->retrieve($id);
     unless($kernel){
         $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
         return;
@@ -58,7 +58,7 @@ sub children : Private {
 sub visible_relationships : Private {
     my ( $self, $c, $id) = @_;
 
-    my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
+    my $kernel = $c->model('CDBI::Kernel')->retrieve($id);
     unless($kernel){
         $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
         return;
@@ -70,7 +70,7 @@ sub visible_relationships : Private {
 sub view : Private {
     my ( $self, $c, $id) = @_;
 
-    my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
+    my $kernel = $c->model('CDBI::Kernel')->retrieve($id);
     unless($kernel){
         $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
         return;
@@ -86,7 +86,7 @@ sub view : Private {
 sub add : Private {
     my ( $self, $c) = @_;
 
-    $c->form( optional => [ Notewise::M::CDBI::Kernel->columns ] );
+    $c->form( optional => [ $c->model('CDBI::Kernel')->columns ] );
     if ($c->form->has_missing) {
         $c->detach('/rest/error',['missing fields']);
     } elsif ($c->form->has_invalid) {
@@ -103,13 +103,13 @@ sub add : Private {
 sub update : Private {
     my ( $self, $c, $id) = @_;
 
-    $c->form( optional => [ Notewise::M::CDBI::Kernel->columns ] );
+    $c->form( optional => [ $c->model('CDBI::Kernel')->columns ] );
     if ($c->form->has_missing) {
         $c->detach('/rest/error',['missing fields']);
     } elsif ($c->form->has_invalid) {
         $c->detach('/rest/error',['invalid fields']);
     } else {
-        my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
+        my $kernel = $c->model('CDBI::Kernel')->retrieve($id);
         unless($kernel){
             $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
         }
@@ -128,7 +128,7 @@ sub update : Private {
 sub delete : Private {
     my ( $self, $c, $id) = @_;
 
-    my $kernel = Notewise::M::CDBI::Kernel->retrieve($id);
+    my $kernel = $c->model('CDBI::Kernel')->retrieve($id);
     if($kernel){
         # check permissions
         unless ($kernel->has_permission($c->user->user->id,'delete')){

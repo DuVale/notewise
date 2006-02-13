@@ -41,7 +41,7 @@ sub note : Path {
 sub view : Private {
     my ( $self, $c, $id) = @_;
 
-    my $note = Notewise::M::CDBI::Note->retrieve($id);
+    my $note = $c->model('CDBI::Note')->retrieve($id);
     unless($note){
         $c->detach('/rest/notfound',["Couldn't find note $id"]);
     }
@@ -52,7 +52,7 @@ sub view : Private {
 sub add : Private {
     my ( $self, $c) = @_;
 
-    $c->form( optional => [ Notewise::M::CDBI::Note->columns ],
+    $c->form( optional => [ $c->model('CDBI::Note')->columns ],
               field_filter_regexp_map => {
                   qr/^created|lastmodified|lastviewed$/i => sub { return DateTime::Format::DateParse->parse_datetime(shift); },
               },
@@ -67,7 +67,7 @@ sub add : Private {
         $c->detach('/rest/error',['invalid fields']);
     } else {
         # check permissions
-        my $container_object=Notewise::M::CDBI::Kernel->retrieve($c->form->valid('container_object'));
+        my $container_object=$c->model('CDBI::Kernel')->retrieve($c->form->valid('container_object'));
         if (check_user_is_owner($c, $container_object)){
             my $note = Notewise::M::CDBI::Note->create_from_form( $c->form );
             $note->user($c->user->user->id);
@@ -81,13 +81,13 @@ sub add : Private {
 sub update : Private {
     my ( $self, $c, $id) = @_;
 
-    $c->form( optional => [ Notewise::M::CDBI::Note->columns ] );
+    $c->form( optional => [ $c->model('CDBI::Note')->columns ] );
     if ($c->form->has_missing) {
         $c->detach('/rest/error',['missing fields']);
     } elsif ($c->form->has_invalid) {
         $c->detach('/rest/error',['invalid fields']);
     } else {
-        my $note = Notewise::M::CDBI::Note->retrieve($id);
+        my $note = $c->model('CDBI::Note')->retrieve($id);
         unless($note){
             $c->detach('/rest/notfound',["couldn't find note $id"]);
             return $c->res->output('ERROR');
@@ -113,7 +113,7 @@ sub check_user_is_owner {
 sub delete : Private {
     my ( $self, $c, $id) = @_;
 
-    my $note = Notewise::M::CDBI::Note->retrieve($id);
+    my $note = $c->model('CDBI::Note')->retrieve($id);
     if(check_user_is_owner($c, $note)){
         if($note){
             $note->delete();
