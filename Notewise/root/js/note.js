@@ -101,11 +101,11 @@ Note.prototype.extend({
     },
 
     getMinHeight: function() {
-        return 100;
+        return 40;
     },
 
     getMinWidth: function() {
-        return 100;
+        return 50;
     },
 
     collapsed: function(){
