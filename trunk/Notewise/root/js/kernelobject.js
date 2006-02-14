@@ -175,8 +175,8 @@ KernelObject.prototype = {
         dummyDiv.className = 'dummyDiv';
         dummyDiv.style.left = x + '%';
         dummyDiv.style.top = y + '%';
-        dummyDiv.style.width = '30%';
-        dummyDiv.style.height = '34px'; // XXX I still hate this :P
+        dummyDiv.style.width = '15%';
+        dummyDiv.style.height = '15%'; // XXX I still hate this :P
         this.body.appendChild(dummyDiv);
         
         // give the brower some time to paint the dummy div
@@ -240,8 +240,8 @@ KernelObject.prototype = {
         var note = Note.insert({container_object: this.kernel(),
                                 x: x,
                                 y: y,
-                                width: 30,
-                                height: 30,
+                                width: 15,
+                                height: 15,
                                 content: ""});
         this.body.removeChild(dummyDiv);
         note.realize(this.body);
