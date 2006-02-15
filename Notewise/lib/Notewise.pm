@@ -62,6 +62,11 @@ sub end : Private {
 sub auto : Local {
     my ($self, $c) = @_;
 
+    # skip authentication for the admin area - we do that with htpasswd
+    if($c->req->path =~ m#^admin#){
+        return 1;
+    }
+
     # check to see if they're already logged in
     if ($c->user_exists){
         return 1;
