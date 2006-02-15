@@ -105,10 +105,7 @@ NewRelationship.prototype = {
 
     _mouseMoveHandler: function (e) {
         if(!this.inDrag){
-            window.status = "not in drag";
             return;
-        } else {
-            window.status = "in drag";
         }
         // get the start point
         var posx = 0;
