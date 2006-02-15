@@ -25,6 +25,9 @@ requires( 'XML::Simple' => 0 );
 requires( 'Catalyst::View::REST::XML' => 0 );
 requires( 'Module::Install' => 0 );
 requires( 'URI' => 0 );
+requires( 'Catalyst::Plugin::Authentication::Store::DBIC' => 0 );
+requires( 'Catalyst::Plugin::Session::Store::FastMmap' => 0 );
+requires( 'Catalyst::Plugin::Session::State::Cookie' => 0 );
 
 catalyst_files();
 
