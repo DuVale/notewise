@@ -24,8 +24,10 @@ Relationship.prototype.extend( {
     realize: function(parent_id){
         this.part1ContainedObject=objectCache[parent_id+'/'+this.part1()];
         this.part2ContainedObject=objectCache[parent_id+'/'+this.part2()];
-        this.intersect1={x:0, y:0};
-        this.intersect2={x:0, y:0};
+        this.intersect1={x:0, y:0}; // in percentage
+        this.intersect2={x:0, y:0}; // in percentage
+        this.midx;  // center of line, in terms of pixels relative to image
+        this.midy;  // center of line, in terms of pixels relative to image
         this.htmlElement = document.createElement('div');
         this.htmlElement.className='relationship notselected';
         this.htmlElement.id=this.idString();
@@ -40,6 +42,7 @@ Relationship.prototype.extend( {
         this.createButtons();
         this.createArrows();
         this.registerListeners();
+        this.updateMiddle();
 
         this.layoutLabel();
 
@@ -135,6 +138,7 @@ Relationship.prototype.extend( {
         x = (x + this.part1ContainedObject.currentWidth(this.part1ContainedObject.oldParentNode)/2)+'%';
         y = (y + this.part1ContainedObject.currentHeight(this.part1ContainedObject.oldParentNode)/2)+'%';
         this.line.setP1(x,y);
+        this.updateMiddle();
     },
 
     updatePosition2: function(x,y){
@@ -148,6 +152,7 @@ Relationship.prototype.extend( {
         x = (x + this.part2ContainedObject.currentWidth(this.part2ContainedObject.oldParentNode)/2)+'%';
         y = (y + this.part2ContainedObject.currentHeight(this.part2ContainedObject.oldParentNode)/2)+'%';
         this.line.setP2(x,y);
+        this.updateMiddle();
     },
 
     updateArrows: function() {
@@ -406,18 +411,45 @@ Relationship.prototype.extend( {
         this.recordLabel();
     },
 
+    updateMiddle: function (){
+        var midx=Math.min(this.intersect1.x,this.intersect2.x)
+                    +Math.abs(this.intersect2.x-this.intersect1.x)/2;
+        var midy=Math.min(this.intersect1.y,this.intersect2.y)
+                    +Math.abs(this.intersect2.y-this.intersect1.y)/2;
+        var offsetLeft;
+        var offsetTop;
+        var offsetWidth;
+        var offsetHeight;
+        if(this.part1ContainedObject.x() < this.part2ContainedObject.x()){
+            offsetLeft = this.part1ContainedObject.x();
+            offsetWidth = this.part1ContainedObject.currentWidth();
+        } else {
+            offsetLeft = this.part2ContainedObject.x();
+            offsetWidth = this.part2ContainedObject.currentWidth();
+        }
+        if(this.part1ContainedObject.y() < this.part2ContainedObject.y()){
+            offsetTop = this.part1ContainedObject.y();
+            offsetHeight = this.part1ContainedObject.currentHeight();
+        } else {
+            offsetTop = this.part2ContainedObject.y();
+            offsetHeight = this.part2ContainedObject.currentHeight();
+        }
+        midx = midx - offsetLeft - offsetWidth/2;
+        midy = midy - offsetTop - offsetHeight/2;
+        this.midx = (midx * this.htmlElement.parentNode.clientWidth)/100;
+        this.midy = (midy * this.htmlElement.parentNode.clientHeight)/100;
+    },
+
     // checks to see if we're roughly in the middle of the relationship.  If we are, show the relationship label
     mouseMove: function(e){
-        var midx = this.line.img.clientWidth/2;
-        var midy = this.line.img.clientHeight/2;
+        this.updateMiddle(); //TODO - remove this in favor of only precached versions
         var offset = Position.cumulativeOffset(this.line.img);
         var x = Event.pointerX(e) - offset[0];
         var y = Event.pointerY(e) - offset[1];
-        window.status="x: "+x+" y: "+y+" midx: "+midx+" midy: "+midy;
-        if( x > (midx - 20) &&
-            x < (midx + 20) &&
-            y > (midy - 20) &&
-            y < (midy + 20) ){
+        if( x > (this.midx - 20) &&
+            x < (this.midx + 20) &&
+            y > (this.midy - 20) &&
+            y < (this.midy + 20) ){
 
             // yay, we're in the middle
             this.showLabel();
