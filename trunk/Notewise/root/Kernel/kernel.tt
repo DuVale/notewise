@@ -36,6 +36,5 @@
     <div class="body">
         [% INCLUDE 'Kernel/kernel-body.tt' kernel=vkernel.contained_kernel%]
     </div>
-    <div class="corner" style="right: 0px; bottom: 0px;">
-    </div>
+    <div class="corner"></div>
 </div>

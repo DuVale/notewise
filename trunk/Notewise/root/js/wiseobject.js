@@ -495,12 +495,20 @@ WiseObject.prototype.extend({
 
         // convert this element to pixels, so it doesn't change size as we reparent
         this.htmlElement.style.width=this.htmlElement.clientWidth+'px';
-        this.htmlElement.style.height=this.htmlElement.clientHeight+'px';
+        if(this.type == 'Kernel' && ! this.collapsed()){
+            // only do this if it's expanded - otherwise the kernel and halo
+            // don't size correctly between being in the view, and being in a
+            // thumbnail
+            this.htmlElement.style.height=this.htmlElement.clientHeight+'px';
+        }
 
         // pop the element up into the document body, so it can drag anywhere
         this.oldParentNode = this.htmlElement.parentNode;
         this.htmlElement.parentNode.removeChild(this.htmlElement);
         document.body.appendChild(this.htmlElement);
+
+        // relayout
+        this.layoutResize();
     },
  
     endDrag: function() {
