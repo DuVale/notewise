@@ -38,7 +38,6 @@ sub default : Private {
     } elsif ($username){
         $c->detach('/user/home',[$username]);
     }
-    $c->stash->{user}=Notewise::M::CDBI::User->retrieve($c->req->{user_id});
     $c->stash->{template}='home.tt';
 }
 
