@@ -463,12 +463,10 @@ img {
 }
 
 .vkernel .namefield {
-    background: blue;
+    background: white;
     color: black;
     display: none;
     position: absolute;
-    margin-left: auto;
-    margin-right: auto;
     text-align: center;
     font-family: sans-serif;
     font-size: 12px;
@@ -478,19 +476,18 @@ img {
 
 .vkernel.edit .namefield {
     display: block;
-    background: white;
 }
 
 .vkernel.noedit .namefield {
     display: none;
 }
 
-.vkernel.notedit .vkernel.edit .namefield {
+.vkernel.noedit .vkernel.edit .namefield {
     display: block;
     background: white;
 }
 
-.vkernel.edit .vkernel.notedit .namefield {
+.vkernel.edit .vkernel.noedit .namefield {
     display: none;
 }
 
@@ -498,15 +495,15 @@ img {
     display: none;
 }
 
-.vkernel.notedit .namelink {
+.vkernel.noedit .namelink {
     display: block;
 }
 
-.vkernel.notedit .vkernel.edit .namelink {
+.vkernel.noedit .vkernel.edit .namelink {
     display: none;
 }
 
-.vkernel.edit .vkernel.notedit .namelink {
+.vkernel.edit .vkernel.noedit .namelink {
     display: block;
 }
 

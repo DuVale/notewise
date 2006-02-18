@@ -59,7 +59,7 @@
                 </div>
                 <div class="panecontent" id="parents_content">
                     [% FOR parent = kernel.parents %]
-                            <div class="vkernel kernelthumbnail expanded notselected" id="parentthumbnail[%parent.id%]">
+                            <div class="vkernel kernelthumbnail expanded notselected noedit" id="parentthumbnail[%parent.id%]">
                                 <div class="leftbackground"></div>
                                 <div class="mid-leftbackground"></div>
                                 <div class="mid-rightbackground"></div>
