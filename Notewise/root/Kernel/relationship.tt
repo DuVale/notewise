@@ -9,6 +9,6 @@ if(object1 && object2){
                                         '[%relationship.nav%]');
     relationship.realize(object1.container_object().id());
 } else {
-            alert("couldn't find the right objects to create the relationship");
+    alert("couldn't find the right objects to create the relationship for [%kernel.id%]/[%relationship.part1.id%] to [%kernel.id%]/[%relationship.part2.id%]");
 }
 </script>

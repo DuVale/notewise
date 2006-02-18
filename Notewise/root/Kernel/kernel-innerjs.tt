@@ -6,8 +6,8 @@
     [% FOR note = kernel.notes %]
         [%INCLUDE 'Kernel/note-js.tt' %]
     [% END %]
-[% END %]
 
-[% FOR relationship = kernel.visible_relationships %]
-    [%INCLUDE 'Kernel/relationship.tt'%]
-[%END%]
+    [% FOR relationship = kernel.visible_relationships %]
+        [%INCLUDE 'Kernel/relationship.tt'%]
+    [%END%]
+[% END %]
