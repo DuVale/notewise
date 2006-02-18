@@ -473,37 +473,37 @@ img {
     left: 15px;
 }
 
-.vkernel.selected .namefield {
+.vkernel.edit .namefield {
     display: block;
     background: white;
 }
 
-.vkernel.notselected .namefield {
+.vkernel.noedit .namefield {
     display: none;
 }
 
-.vkernel.notselected .vkernel.selected .namefield {
+.vkernel.notedit .vkernel.edit .namefield {
     display: block;
     background: white;
 }
 
-.vkernel.selected .vkernel.notselected .namefield {
+.vkernel.edit .vkernel.notedit .namefield {
     display: none;
 }
 
-.vkernel.selected .namelink {
+.vkernel.edit .namelink {
     display: none;
 }
 
-.vkernel.notselected .namelink {
+.vkernel.notedit .namelink {
     display: block;
 }
 
-.vkernel.notselected .vkernel.selected .namelink {
+.vkernel.notedit .vkernel.edit .namelink {
     display: none;
 }
 
-.vkernel.selected .vkernel.notselected .namelink {
+.vkernel.edit .vkernel.notedit .namelink {
     display: block;
 }
 

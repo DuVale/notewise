@@ -231,6 +231,7 @@ KernelObject.prototype = {
         }
         vkernel.realize(this.body);
         dndMgr.updateSelection(vkernel,false);
+        vkernel.edit(true);
         vkernel.namefield.focus();
         vkernel.newlyCreated = true;
         objectCache[vkernel.idString()]=vkernel;
