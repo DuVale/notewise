@@ -212,6 +212,7 @@ VisibleKernel.prototype.extend({
             body.appendChild(this.searchresults);
         }
         this.expandbutton = Utils.getElementsByClassName(this.htmlElement, 'expandbutton')[0];
+        this.editbutton = Utils.getElementsByClassName(this.htmlElement, 'editbutton')[0];
     },
 
     onNamefieldBlur: function(selected_element) {
@@ -235,6 +236,11 @@ VisibleKernel.prototype.extend({
         Event.observe(this.expandbutton,
                                    'click',
                                    this.toggleCollapsed.bind(this));
+
+        // setup the edit button
+        Event.observe(this.editbutton,
+                                   'click',
+                                   this.edit.bindWithParams(this,true));
 
         // TODO DRY - consolidate these into a big list of element/event pairs
         // Setup action terminators
@@ -350,6 +356,21 @@ VisibleKernel.prototype.extend({
     getMinWidth: function() {
         var nameFieldWidth =  this.getNameFieldWidth()+50;
         return Math.max(nameFieldWidth,100);
+    },
+
+    edit: function(edit) {
+        if(edit){
+            Element.addClassName(this.htmlElement,'edit');
+            Element.removeClassName(this.htmlElement,'noedit');
+        } else {
+            Element.removeClassName(this.htmlElement,'edit');
+            Element.addClassName(this.htmlElement,'noedit');
+        }
+    },
+
+    deselect: function () {
+        WiseObject.prototype.deselect.call(this);
+        this.edit(false);
     }
 });
 
