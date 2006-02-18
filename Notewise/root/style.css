@@ -613,6 +613,110 @@ img {
     cursor: default;
 }
 
+.vkernel .vkernel.collapsed {
+    height: 15px;
+}
+
+.vkernel .vkernel .leftbackground {
+    position: absolute;
+    background: url('/images/kernel-mini-left.png') no-repeat;
+    height: 15px;
+    left: 0px;
+    width: 6px;
+    top: 0px;
+    z-index: 0;
+}
+
+.vkernel .vkernel .mid-rightbackground {
+    display: none;
+}
+
+.vkernel .vkernel .mid-leftbackground {
+    position: absolute;
+    background: url('/images/kernel-mini-mid.png');
+    height: 15px;
+    left: 6px;
+    right: 23px;
+    top: 0px;
+    z-index: 0;
+}
+
+.vkernel .vkernel .rightbackground {
+    position: absolute;
+    background: url('/images/kernel-mini-right.png') right no-repeat;
+    height: 15px;
+    width: 23px;
+    right: 0px;
+    top: 0px;
+    z-index: 0;
+    cursor: move;
+}
+
+.vkernel .vkernel .namelink {
+    font-size: 9px;
+    top: 1px;
+    left: 10px;
+}
+
+.vkernel .vkernel .namefield {
+    font-size: 9px;
+    top: 0px;
+    left: 14px;
+    height: 10px;
+    padding: 0px;
+}
+
+.vkernel .vkernel .expandbutton {
+   top: 3px;
+}
+
+.vkernel .vkernel .body {
+    top: 14px;
+}
+
+.vkernel .vkernel.expanded .leftbackground {
+    position: absolute;
+    background: url('/images/kernel-mini-gray-expanded-left.png') no-repeat;
+    height: 15px;
+    left: 0px;
+    width: 6px;
+    top: 0px;
+    z-index: 0;
+}
+
+.vkernel .vkernel.expanded .mid-leftbackground {
+    position: absolute;
+    background: url('/images/kernel-mini-gray-expanded-midleft.png');
+    height: 15px;
+    left: 6px;
+    right: 33px;
+    top: 0px;
+    z-index: 0;
+}
+
+.vkernel .vkernel.expanded .mid-rightbackground {
+    display: block;
+    position: absolute;
+    background: url('/images/kernel-mini-gray-expanded-midright.png');
+    height: 15px;
+    right: 6px;
+    width: 33px;
+    top: 0px;
+    z-index: 0;
+    cursor: move;
+}
+
+.vkernel .vkernel.expanded .rightbackground {
+    position: absolute;
+    background: url('/images/kernel-mini-gray-expanded-right.png') right no-repeat;
+    height: 15px;
+    width: 6px;
+    right: 0px;
+    top: 0px;
+    z-index: 0;
+    cursor: default;
+}
+
 .vkernel.collapsed .corner {
     display: none;
 }

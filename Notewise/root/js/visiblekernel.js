@@ -144,6 +144,7 @@ VisibleKernel.prototype.extend({
         var innerHTML =
            "<div class=\"expandbutton\"></div>"
            +"<div class=\"removebutton\"></div>"
+           +"<div class=\"editbutton\"></div>"
            +"<div class='relationshiphalo'>"
                +"<div class='newrelationshiparrow'></div>"
                +"<div class='halo-top-left'></div>"
