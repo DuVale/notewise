@@ -362,6 +362,7 @@ VisibleKernel.prototype.extend({
         if(edit){
             Element.addClassName(this.htmlElement,'edit');
             Element.removeClassName(this.htmlElement,'noedit');
+            this.namefield.focus();
         } else {
             Element.removeClassName(this.htmlElement,'edit');
             Element.addClassName(this.htmlElement,'noedit');
