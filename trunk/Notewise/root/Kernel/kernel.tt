@@ -1,16 +1,28 @@
 [% id = vkernel.container_kernel.id _ '/' _ vkernel.contained_kernel.id %]
-<div id="vkernel[%id%]" class="vkernel [%IF vkernel.collapsed%]collapsed[%END%] [%IF highlight.id == vkernel.contained_kernel.id%]highlighted[%END%] notselected"
+<div id="vkernel[%id%]" class="vkernel [%IF vkernel.collapsed%]collapsed[%ELSE%]expanded[%END%] [%IF highlight.id == vkernel.contained_kernel.id%]highlighted[%END%] notselected"
          style="left: [% vkernel.x %]%; top: [% vkernel.y %]%;
                 width: [% vkernel.width %]%;
                 [% IF ! vkernel.collapsed %]
                     height: [% vkernel.height %]%;
                 [% END %]">
-    <input type=button value="[%IF vkernel.collapsed%]+[%ELSE%]-[%END%]" class="expandbutton"/>
-    <input type=button value='X' class="removebutton"/>
+    <div class="expandbutton"></div>
+    <div class="removebutton"></div>
+    <div class="editbutton"></div>
     <div class="relationshiphalo">
         <div class="newrelationshiparrow"></div>
+        <div class="halo-top-left"></div>
+        <div class="halo-top"></div>
+        <div class="halo-top-right"></div>
+        <div class="halo-left"></div>
+        <div class="halo-right"></div>
+        <div class="halo-bottom-left"></div>
+        <div class="halo-bottom"></div>
+        <div class="halo-bottom-right"></div>
     </div>
-    <div class="leftgrippie"></div>
+    <div class="leftbackground"></div>
+    <div class="mid-leftbackground"></div>
+    <div class="mid-rightbackground"></div>
+    <div class="rightbackground"></div>
     [% IF vkernel.contained_kernel.name %]
         [% name_length = vkernel.contained_kernel.name.length * 0.55 + 1%]
     [% ELSE %]

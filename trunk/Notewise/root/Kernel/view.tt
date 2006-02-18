@@ -59,8 +59,11 @@
                 </div>
                 <div class="panecontent" id="parents_content">
                     [% FOR parent = kernel.parents %]
-                            <div class="vkernel kernelthumbnail notselected" id="parentthumbnail[%parent.id%]">
-                                <div class="leftgrippie"></div>
+                            <div class="vkernel kernelthumbnail expanded notselected" id="parentthumbnail[%parent.id%]">
+                                <div class="leftbackground"></div>
+                                <div class="mid-leftbackground"></div>
+                                <div class="mid-rightbackground"></div>
+                                <div class="rightbackground"></div>
                                 [% IF parent.name %]
                                     [% name_length = parent.name.length * 0.55 + 1%]
                                 [% ELSE %]

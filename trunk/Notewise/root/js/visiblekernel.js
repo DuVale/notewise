@@ -142,19 +142,29 @@ VisibleKernel.prototype.extend({
             name = this.kernel().name();
         }
         var innerHTML =
-           "<div class=\"leftgrippie\"></div>"
-           +"<input type=button value='"+expandButtonLabel+"' class='expandbutton'/>"
-           +"<input type=button value='X' class='removebutton'/>"
-           +"<div class=\"relationshiphalo\">"
-           +"<div class=\"newrelationshiparrow\"></div></div>"
+           "<div class=\"expandbutton\"></div>"
+           +"<div class=\"removebutton\"></div>"
+           +"<div class='relationshiphalo'>"
+               +"<div class='newrelationshiparrow'></div>"
+               +"<div class='halo-top-left'></div>"
+               +"<div class='halo-top'></div>"
+               +"<div class='halo-top-right'></div>"
+               +"<div class='halo-left'></div>"
+               +"<div class='halo-right'></div>"
+               +"<div class='halo-bottom-left'></div>"
+               +"<div class='halo-bottom'></div>"
+               +"<div class='halo-bottom-right'></div>"
+           +"</div>"
+           +"<div class='leftbackground'></div>"
+           +"<div class='mid-leftbackground'></div>"
+           +"<div class='mid-rightbackground'></div>"
+           +"<div class='rightbackground'></div>"
            +"<input value=\"\" type=\"text\" class=\"namefield\" autocomplete=\"off\" name=\"s\" value=\""+name+"\"/>"
            +"<a class=\"namelink\" href=\""+this.kernel().object_url()+"\">"
            +name+"</a>"
-           +"<div class=\"rightgrippie\"/></div>"
-           +"<div class=\"body\">"
-           +"</div>"
-           +"<div class=\"corner\">"
-           +"</div>";
+           +"<div class=\"body\"></div>"
+           +"<div class=\"corner\"></div>";
+        
         this.htmlElement.innerHTML = innerHTML;
         WiseObject.prototype.realize.call(this,parent);
     },
@@ -314,6 +324,7 @@ VisibleKernel.prototype.extend({
         } else if(collapsed){
             results = VisibleKernel.superclass.collapsed.call(this, 1);
             if(this.htmlElement){
+                Element.removeClassName(this.htmlElement,'expanded');
                 Element.addClassName(this.htmlElement,'collapsed');
                 this.setFixedSize(true);
             }
@@ -321,6 +332,7 @@ VisibleKernel.prototype.extend({
         } else {
             results = VisibleKernel.superclass.collapsed.call(this, 0);
             if(this.htmlElement){
+                Element.addClassName(this.htmlElement,'expanded');
                 Element.removeClassName(this.htmlElement,'collapsed');
                 this.setFixedSize(false);
             }

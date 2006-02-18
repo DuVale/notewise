@@ -194,20 +194,20 @@ WiseObject.prototype.extend({
     layoutCorner: function() {
         this.corner.style.left = '';
         this.corner.style.top = '';
-        this.corner.style.right = '0px';
-        this.corner.style.bottom = '0px';
+        this.corner.style.right = '3px';
+        this.corner.style.bottom = '3px';
     },
 
     // causes the internal elements to resize if necessary
     layoutResize: function() {
       if(this.body != undefined){
-          this.body.style.width = Math.max(0,this.htmlElement.clientWidth - 4) + 'px';
-          this.body.style.height = Math.max(0,this.htmlElement.clientHeight - 2 - this.body.offsetTop) + 'px';
+          this.body.style.width = Math.max(0,this.htmlElement.clientWidth - 2) + 'px';
+          this.body.style.height = Math.max(0,this.htmlElement.clientHeight - this.body.offsetTop - 2) + 'px';
       }
       // XXX could change this to only do this if the halo is visible, for speed.  We'd need to make sure this gets called when the object gets expanded though
       if(this.relationshiphalo != undefined){
-          this.relationshiphalo.style.width = Math.max(0,this.htmlElement.clientWidth + 40) + 'px';
-          this.relationshiphalo.style.height = Math.max(0,this.htmlElement.clientHeight + 40) + 'px';
+          this.relationshiphalo.style.width = Math.max(0,this.htmlElement.clientWidth + 30) + 'px';
+          this.relationshiphalo.style.height = Math.max(0,this.htmlElement.clientHeight + 30) + 'px';
       }
     },
 
