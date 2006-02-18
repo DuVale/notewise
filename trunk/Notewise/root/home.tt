@@ -1,2 +1,2 @@
 <h1>Notewise</h1>
-<a href="[%user.username%]">Your homepage</a>
+<a href="[%c.user.user.username%]">Your homepage</a>
