@@ -62,10 +62,21 @@ Note.prototype.extend({
         this.htmlElement.id="note"+this.id();
         this.htmlElement.className="note";
         var innerHTML =
-           "<div class=\"leftgrippie\"></div>"
-           +"<div class=\"relationshiphalo\">"
-           +"<div class=\"newrelationshiparrow\"></div></div>"
-           +"<input type=button value='X' class='removebutton'/>"
+           "<div class=\"removebutton\"></div>"
+           +"<div class='note-left'></div>"
+           +"<div class='note-mid'></div>"
+           +"<div class='note-right'></div>"
+           +"<div class='relationshiphalo'>"
+               +"<div class='newrelationshiparrow'></div>"
+               +"<div class='halo-top-left'></div>"
+               +"<div class='halo-top'></div>"
+               +"<div class='halo-top-right'></div>"
+               +"<div class='halo-left'></div>"
+               +"<div class='halo-right'></div>"
+               +"<div class='halo-bottom-left'></div>"
+               +"<div class='halo-bottom'></div>"
+               +"<div class='halo-bottom-right'></div>"
+           +"</div>"
            +"<textarea class='body'>"
            + this.content()
            +"</textarea>"

@@ -67,53 +67,88 @@ body, html {
     margin-left: auto;
     margin-right: auto;
     top: 10px;
-    height: 2em;
     text-align: center;
     font-size: 2em;
 }
 
 .vkernel {
     position: absolute;
-    background: blue;
-    z-index: 1;
+    z-index: 10;
 }
 
 .note {
     position: absolute;
-    background: green;
-    z-index: 1;
+    z-index: 10;
 }
 
 .note .body {
     background: white;
     position: absolute;
-    left: 2px;
-    right: 2px;
-    top: 1.5em;
-    bottom: 2px;
+    border: 1px solid #767676;
+    top: 9px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
     clear: both;
-    border: 0px;
     overflow: auto;
+}
+
+.note-left {
+    position: absolute;
+    background: url('/images/note-upper-left.png') no-repeat;
+    height: 11px;
+    left: 0px;
+    width: 7px;
+    top: 0px;
+    z-index: 10;
+}
+
+.note-mid {
+    position: absolute;
+    background: url('/images/note-upper-mid.png');
+    height: 11px;
+    left: 7px;
+    right: 6px;
+    top: 0px;
+    z-index: 10;
+    cursor: move;
+}
+
+.note-right {
+    position: absolute;
+    background: url('/images/note-upper-right.png') right no-repeat;
+    height: 11px;
+    width: 6px;
+    right: 0px;
+    top: 0px;
+    z-index: 10;
 }
 
 .vkernel .note .body {
     overflow: auto;
 }
 
-.highlighted {
-    border: 2px solid red;
+.vkernel.highlighted .leftbackground {
+    background: url('/images/kernel-highlighted-left.png') no-repeat;
+}
+
+.vkernel.highlighted .mid-leftbackground {
+    background: url('/images/kernel-highlighted-mid.png');
+}
+
+.vkernel.highlighted .rightbackground {
+    background: url('/images/kernel-highlighted-right.png') right no-repeat;
 }
 
 .relationshiphalo {
     display: none;
     position: absolute;
-    left: -20px;
-    top: -20px;
-    right: -20px;
-    bottom: -20px;
+    left: -15px;
+    top: -15px;
+    right: -15px;
+    bottom: -15px;
     width: 100%;
     height: 100%;
-    background: #21bbf4;
     z-index: -3;
 }
 
@@ -133,12 +168,91 @@ body, html {
     display: none;
 }
 
+.halo-top-left {
+    position: absolute;
+    background: url('/images/halo-top-left.png') no-repeat;
+    left: 0px;
+    top: 0px;
+    width: 19px;
+    height: 19px;
+    z-index: -2;
+}
+
+.halo-left {
+    position: absolute;
+    background: url('/images/halo-left.png');
+    left: 0px;
+    top: 19px;
+    bottom: 19px;
+    width: 19px;
+    z-index: -2;
+}
+
+.halo-bottom-left {
+    position: absolute;
+    background: url('/images/halo-bottom-left.png') no-repeat;
+    left: 0px;
+    bottom: 0px;
+    width: 19px;
+    height: 19px;
+    z-index: -2;
+}
+
+.halo-top {
+    position: absolute;
+    background: url('/images/halo-top.png');
+    left: 19px;
+    top: 0px;
+    right: 19px;
+    height: 19px;
+    z-index: -2;
+}
+
+.halo-bottom {
+    position: absolute;
+    background: url('/images/halo-bottom.png');
+    left: 19px;
+    bottom: 0px;
+    right: 19px;
+    height: 19px;
+    z-index: -2;
+}
+
+.halo-right {
+    position: absolute;
+    background: url('/images/halo-right.png');
+    right: 0px;
+    top: 19px;
+    bottom: 19px;
+    width: 19px;
+    z-index: -2;
+}
+
+.halo-top-right {
+    position: absolute;
+    background: url('/images/halo-top-right.png') no-repeat;
+    right: 0px;
+    top: 0px;
+    width: 19px;
+    height: 19px;
+    z-index: -2;
+}
+
+.halo-bottom-right {
+    position: absolute;
+    background: url('/images/halo-bottom-right.png') no-repeat;
+    right: 0px;
+    bottom: 0px;
+    width: 19px;
+    height: 19px;
+    z-index: -2;
+}
+
 .newrelationshiparrow {
     position: absolute;
-    border: red 0px solid;
     width: 20px;
     height: 20px;
-    background: url('images/arrow.png');
+    background: url('/images/arrow.png');
 }
 
 .relationship {
@@ -148,62 +262,86 @@ body, html {
 
 
 .expandbutton,
-.removebutton {
-    background: blue;
-    color: white;
+.removebutton,
+.editbutton {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    padding: 0px;
 }
 
-.expandbutton {
-    left: -30px;
-    top: 0px;
+.vkernel .expandbutton {
+    left: 4px;
+    top: 6px;
+    width: 7px;
+    height: 10px;
+    z-index: 5;
 }
 
-.removebutton{
-    right: -30px;
-    top: 0px;
+.vkernel.expanded .expandbutton {
+    left: 4px;
+    top: 8px;
+    width: 9px;
+    height: 8px;
+    background: url('/images/spinner-vert.png') no-repeat;
+    z-index: 5;
 }
 
-.note.selected .expandbutton,
+.vkernel.collapsed .expandbutton {
+    left: 4px;
+    top: 6px;
+    width: 7px;
+    height: 10px;
+    background: url('/images/spinner-horiz.png') no-repeat;
+    z-index: 5;
+}
+
+.removebutton {
+    left: 6px;
+    top: -12px;
+    background: url('/images/close-button.png') no-repeat;
+    width: 10px;
+    height: 10px;
+}
+
+.editbutton {
+    left: 18px;
+    top: -12px;
+    background: url('/images/edit-button.png') no-repeat;
+    width: 10px;
+    height: 10px;
+}
+
 .note.selected .removebutton {
     display: block;
 }
 
-.note.notselected .expandbutton,
 .note.notselected .removebutton {
     display: none;
 }
 
-.notselected .note.selected .expandbutton,
 .notselected .note.selected .removebutton {
     display: block;
 }
 
-.selected .note.notselected .expandbutton,
 .selected .note.notselected .removebutton {
     display: none;
 }
 
-.vkernel.selected .expandbutton,
-.vkernel.selected .removebutton {
+.vkernel.selected .removebutton,
+.vkernel.selected .editbutton {
     display: block;
 }
 
-.vkernel.notselected .expandbutton,
-.vkernel.notselected .removebutton {
+.vkernel.notselected .removebutton,
+.vkernel.notselected .editbutton {
     display: none;
 }
 
-.vkernel.notselected .vkernel.selected .expandbutton,
-.vkernel.notselected .vkernel.selected .removebutton {
+.vkernel.notselected .vkernel.selected .removebutton,
+.vkernel.notselected .vkernel.selected .editbutton {
     display: block;
 }
 
-.vkernel.selected .vkernel.notselected .expandbutton,
-.vkernel.selected .vkernel.notselected .removebutton {
+.vkernel.selected .vkernel.notselected .removebutton,
+.vkernel.selected .vkernel.notselected .editbutton {
     display: none;
 }
 
@@ -257,32 +395,29 @@ img {
 .arrowdiv {
     position: absolute;
     /* This is necessary to make the arrows clickable in IE.  Otherwise the click is stolen by the line image. */
-    background: url('images/clear.gif');
+    background: url('/images/clear.gif');
     z-index: 1;
 }
 
 .arrowcanvas {
-    border: 0px solid green;
     left: -17px;
     top: -17px;
     width: 34px;
     height: 34px;
     position: absolute;
-    z-index: -15;
+    z-index: 0;
     /* This is necessary to make the arrows clickable in IE.  Otherwise the click is stolen by the line image. */
-    background: url('images/clear.gif');
+    background: url('/images/clear.gif');
 }
 
 .arrowclickbox {
     position: absolute;
-    border: 0px solid blue;
     z-index: 50;
 }
 
 .labelDiv {
     position: absolute;
     z-index: 1;
-    border: 0px solid purple;
 }
 
 .relationshipLabel {
@@ -299,15 +434,17 @@ img {
 
 .vkernel .namelink {
     border: 0px solid white;
-    background: blue;
     color: white;
-    position: relative;
+    position: absolute;
     margin-left: auto;
     margin-right: auto;
-    top: 0px;
-    height: 1.5em;
     text-align: center;
-    font-size: 1em;
+
+    font-style: italic;
+    font-family: sans-serif;
+    font-size: 12px;
+    top: 4px;
+    left: 15px;
 }
 
 .vkernel a.namelink {
@@ -326,13 +463,14 @@ img {
     background: blue;
     color: black;
     display: none;
-    position: relative;
+    position: absolute;
     margin-left: auto;
     margin-right: auto;
-    top: 1px;
-    height: 1.0em;
     text-align: center;
-    font-size: 1em;
+    font-family: sans-serif;
+    font-size: 12px;
+    top: 2px;
+    left: 15px;
 }
 
 .vkernel.selected .namefield {
@@ -372,8 +510,9 @@ img {
 .vkernel .body {
     background: white;
     position: absolute;
-    left: 2px; right: 2px;
-    top: 1.5em; bottom: 2px;
+    left: 0px; right: 0px;
+    top: 23px; bottom: 0px;
+    border: 1px solid #767676;
     clear: both;
     overflow: hidden;
 }
@@ -388,7 +527,7 @@ img {
 }
 
 .vkernel.collapsed {
-    height: 1.5em;
+    height: 24px;
 }
 
 .vkernel.collapsed .body {
@@ -396,39 +535,97 @@ img {
     display: none;
 }
 
-.note .leftgrippie {
-    background: url('images/note-gripper.png');
+.vkernel .leftbackground {
+    position: absolute;
+    background: url('/images/body-left.png') no-repeat;
+    height: 24px;
+    left: 0px;
+    width: 8px;
+    top: 0px;
+    z-index: 0;
 }
 
-.leftgrippie {
-    background: url('images/gripper.png');
-    z-index:0;
-    width: 10px;
-    height: 1.2em;
+.vkernel .mid-leftbackground {
     position: absolute;
-    cursor: move;
+    background: url('/images/body-mid.png');
+    height: 24px;
+    left: 8px;
+    right: 33px;
     top: 0px;
+    z-index: 0;
+}
+
+.vkernel .mid-rightbackground {
+    display: none;
+}
+
+.vkernel .rightbackground {
+    position: absolute;
+    background: url('/images/body-right.png') right no-repeat;
+    height: 24px;
+    width: 33px;
+    right: 0px;
+    top: 0px;
+    z-index: 0;
+    cursor: move;
+}
+
+.vkernel.expanded .leftbackground {
+    position: absolute;
+    background: url('/images/kernel-expanded-gray-left.png') no-repeat;
+    height: 24px;
     left: 0px;
-    width: 100%;
+    width: 6px;
+    top: 0px;
+    z-index: 0;
+}
+
+.vkernel.expanded .mid-leftbackground {
+    position: absolute;
+    background: url('/images/kernel-expanded-gray-mid-left.png');
+    height: 24px;
+    left: 6px;
+    right: 33px;
+    top: 0px;
+    z-index: 0;
+}
+
+.vkernel.expanded .mid-rightbackground {
+    display: block;
+    position: absolute;
+    background: url('/images/kernel-expanded-gray-mid-right.png');
+    height: 24px;
+    right: 6px;
+    width: 33px;
+    top: 0px;
+    z-index: 0;
+    cursor: move;
+}
+
+.vkernel.expanded .rightbackground {
+    position: absolute;
+    background: url('/images/kernel-expanded-gray-right.png') right no-repeat;
+    height: 24px;
+    width: 6px;
+    right: 0px;
+    top: 0px;
+    z-index: 0;
+    cursor: default;
 }
 
 .vkernel.collapsed .corner {
     display: none;
 }
-.note .corner {
-    right: 0; bottom: 0;
-    background: url('images/note-corner.gif');
-}
 
 .corner {
     position: absolute;
-    background: url('images/corner.gif');
-    right: 0px;
-    bottom: 0px;
-    width: 15px;
-    height: 15px;
+    background: url('/images/note-corner.png') right no-repeat;
+    right: 3px;
+    bottom: 3px;
+    width: 10px;
+    height: 10px;
     cursor: se-resize;
-    z-index:0;
+    z-index:200;
 
     /* this is a hack to make the div the right height in IE - no idea why it
      * works. */
@@ -541,17 +738,17 @@ div.dummyDiv {
 
     color: #999;
     font-family: Verdana; font-size: 12px; font-weight: bold;
-    background: url(images/menupane_back.gif) repeat-x;
+    background: url(/images/menupane_back.gif) repeat-x;
 }
 
 .twistbutton {
     width: 20px; height: 20px;
     float: left; cursor: pointer;
-    background: url(images/expand_open.gif);
+    background: url(/images/expand_open.gif);
 }
 
 .closed {
-    background: url(images/expand_closed.gif);
+    background: url(/images/expand_closed.gif);
 }
 
 .nobutton {
@@ -578,21 +775,11 @@ div.dummyDiv {
 }
 
 .kernelthumbnail {
-    border: 1px solid black;
     position: relative;
     width: 200px;
     height: 180px;
     margin: 10px;
 }
-
-.kernelthumbnail .leftgrippie {
-    cursor: default;
-}
-
-.kernelthumbnail * .leftgrippie {
-    cursor: move;
-}
-
 
 /* main content */
 

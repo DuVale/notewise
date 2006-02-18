@@ -175,7 +175,7 @@ Relationship.prototype.extend( {
                || this.nav() == 'bi'){
                 this.arrowCanvases[0].setColor('#000000');
             } else {
-                this.arrowCanvases[0].setColor('#FF0000');
+                this.arrowCanvases[0].setColor('#2CA6E9');
             }
             this.drawArrow(this.arrowCanvases[0],17,17,angle);
             this.arrowCanvases[0].paint();
@@ -187,7 +187,7 @@ Relationship.prototype.extend( {
                || this.nav() == 'bi'){
                 this.arrowCanvases[1].setColor('#000000');
             } else {
-                this.arrowCanvases[1].setColor('#FF0000');
+                this.arrowCanvases[1].setColor('#2CA6E9');
             }
             this.drawArrow(this.arrowCanvases[1],17,17,angle+Math.PI);
             this.arrowCanvases[1].paint();
