@@ -234,5 +234,3 @@ function do_image_precache() {
     precache('l1x5.png');
     precache('l5x1.png');
 }
-
-//window.setTimeout(do_image_precache, 5); //get image caching to happen in separate thread
