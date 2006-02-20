@@ -114,6 +114,7 @@ WiseObject.prototype.extend({
         var v;
         var dx=x;
         var dy=y;
+        var direction;
         if(y > this.relationshiphalo.clientHeight/2){
             dy = this.relationshiphalo.clientHeight - y;
         }
@@ -125,24 +126,41 @@ WiseObject.prototype.extend({
             if(y < this.relationshiphalo.clientHeight/2){
                 this.newrelationshiparrow.style.top='0px';
                 this.newrelationshiparrow.style.bottom='';
+                direction = 'up';
             } else {
                 this.newrelationshiparrow.style.bottom='0px';
                 this.newrelationshiparrow.style.top='';
+                direction = 'down';
             }
-            this.newrelationshiparrow.style.left=Math.min(this.relationshiphalo.clientWidth-20,Math.max(0,x-10))+'px';
+            this.newrelationshiparrow.style.left=Math.min(this.relationshiphalo.clientWidth-13,Math.max(0,x-6))+'px';
             this.newrelationshiparrow.style.right='';
         } else {
             if(x < this.relationshiphalo.clientWidth/2){
                 this.newrelationshiparrow.style.left='0px';
                 this.newrelationshiparrow.style.right='';
+                direction = 'left';
             } else {
                 this.newrelationshiparrow.style.right='0px';
                 this.newrelationshiparrow.style.left='';
+                direction = 'right';
             }
-            this.newrelationshiparrow.style.top=Math.min(this.relationshiphalo.clientHeight-20,Math.max(0,y-10))+'px';
+            this.newrelationshiparrow.style.top=Math.min(this.relationshiphalo.clientHeight-14,Math.max(0,y-7))+'px';
             this.newrelationshiparrow.style.bottom='';
         }
-        var style = this.newrelationshiparrow.style;
+        if(x < 15){
+            if(y < 15){
+                direction = 'upleft';
+            } else if (y > this.relationshiphalo.clientHeight - 15){
+                direction = 'downleft';
+            }
+        } else if (x > this.relationshiphalo.clientWidth - 15){
+            if(y < 15){
+                direction = 'upright';
+            } else if (y > this.relationshiphalo.clientHeight - 15){
+                direction = 'downright';
+            }
+        }
+        this.newrelationshiparrow.className = 'newrelationshiparrow '+direction;
     },
 
     enterRelationshipHalo: function(e) {

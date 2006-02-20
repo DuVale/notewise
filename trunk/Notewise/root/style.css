@@ -262,10 +262,19 @@ body, html {
 
 .newrelationshiparrow {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    background: url('/images/arrow.png');
+    width: 13px;
+    height: 14px;
 }
+
+.newrelationshiparrow.up { background: url('/images/rel-arrow-up.png') no-repeat; }
+.newrelationshiparrow.down { background: url('/images/rel-arrow-down.png') no-repeat; }
+.newrelationshiparrow.left { background: url('/images/rel-arrow-left.png') no-repeat; }
+.newrelationshiparrow.right { background: url('/images/rel-arrow-right.png') no-repeat; }
+
+.newrelationshiparrow.upleft { background: url('/images/rel-arrow-up-left.png') no-repeat; }
+.newrelationshiparrow.upright { background: url('/images/rel-arrow-up-right.png') no-repeat; }
+.newrelationshiparrow.downleft { background: url('/images/rel-arrow-down-left.png') no-repeat; }
+.newrelationshiparrow.downright { background: url('/images/rel-arrow-down-right.png') no-repeat; }
 
 .relationship {
     border: 0px;
