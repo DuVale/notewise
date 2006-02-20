@@ -187,10 +187,7 @@
         Event.observe($('permanent_delete_link'),'click', show_confirm_delete);
 
         [% UNLESS c.config.noprecache %]
-            alert('precaching images');
             window.setTimeout(do_image_precache, 5); //get image caching to happen in separate thread
-        [% ELSE %]
-            alert('not precaching images');
         [% END %]
     </script>
     <script type="text/javascript" src="[%base%]js/quicksearch.js"></script>
