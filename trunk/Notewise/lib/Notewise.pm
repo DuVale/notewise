@@ -94,8 +94,6 @@ sub debug {
     return $self->config->{Debug};
 }
 
-=back
-
 =head1 AUTHOR
 
 Scotty Allen
