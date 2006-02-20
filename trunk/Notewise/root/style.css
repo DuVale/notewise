@@ -128,19 +128,28 @@ body, html {
     overflow: auto;
 }
 
-.vkernel.highlighted .leftbackground,
-.vkernel .vkernel.highlighted .leftbackground {
+.vkernel.highlighted .leftbackground {
     background: url('/images/kernel-highlighted-left.png') no-repeat;
 }
 
-.vkernel.highlighted .mid-leftbackground,
-.vkernel .vkernel.highlighted .mid-leftbackground {
+.vkernel.highlighted .mid-leftbackground {
     background: url('/images/kernel-highlighted-mid.png');
 }
 
-.vkernel.highlighted .rightbackground,
-.vkernel .vkernel.highlighted .rightbackground {
+.vkernel.highlighted .rightbackground {
     background: url('/images/kernel-highlighted-right.png') right no-repeat;
+}
+
+.vkernel .vkernel.highlighted .leftbackground {
+    background: url('/images/kernel-mini-highlighted-left.png') no-repeat;
+}
+
+.vkernel .vkernel.highlighted .mid-leftbackground {
+    background: url('/images/kernel-mini-highlighted-mid.png');
+}
+
+.vkernel .vkernel.highlighted .rightbackground {
+    background: url('/images/kernel-mini-highlighted-right.png') right no-repeat;
 }
 
 .relationshiphalo {
@@ -676,7 +685,7 @@ img {
 
 .vkernel .vkernel.expanded .leftbackground {
     position: absolute;
-    background: url('/images/kernel-mini-gray-expanded-left.png') no-repeat;
+    background: url('/images/kernel-mini-orange-expanded-left.png') no-repeat;
     height: 15px;
     left: 0px;
     width: 6px;
@@ -686,7 +695,7 @@ img {
 
 .vkernel .vkernel.expanded .mid-leftbackground {
     position: absolute;
-    background: url('/images/kernel-mini-gray-expanded-midleft.png');
+    background: url('/images/kernel-mini-orange-expanded-midleft.png');
     height: 15px;
     left: 6px;
     right: 33px;
@@ -697,7 +706,7 @@ img {
 .vkernel .vkernel.expanded .mid-rightbackground {
     display: block;
     position: absolute;
-    background: url('/images/kernel-mini-gray-expanded-midright.png');
+    background: url('/images/kernel-mini-orange-expanded-midright.png');
     height: 15px;
     right: 6px;
     width: 33px;
@@ -708,7 +717,7 @@ img {
 
 .vkernel .vkernel.expanded .rightbackground {
     position: absolute;
-    background: url('/images/kernel-mini-gray-expanded-right.png') right no-repeat;
+    background: url('/images/kernel-mini-orange-expanded-right.png') right no-repeat;
     height: 15px;
     width: 6px;
     right: 0px;
