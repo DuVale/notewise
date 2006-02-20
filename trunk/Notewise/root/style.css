@@ -81,7 +81,8 @@ body, html {
     z-index: 10;
 }
 
-.note .body {
+.note .body,
+.vkernel .note .body {
     background: white;
     position: absolute;
     border: 1px solid #767676;
@@ -122,10 +123,6 @@ body, html {
     right: 0px;
     top: 0px;
     z-index: 10;
-}
-
-.vkernel .note .body {
-    overflow: auto;
 }
 
 .vkernel.highlighted .leftbackground {
