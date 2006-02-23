@@ -515,7 +515,8 @@ WiseObject.prototype.extend({
 
         // convert this element to pixels, so it doesn't change size as we reparent
         this.htmlElement.style.width=this.htmlElement.clientWidth+'px';
-        if(this.type == 'Kernel' && ! this.collapsed()){
+        if( (this.type == 'Kernel' && ! this.collapsed()) ||
+             this.type == 'Note' ){
             // only do this if it's expanded - otherwise the kernel and halo
             // don't size correctly between being in the view, and being in a
             // thumbnail
