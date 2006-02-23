@@ -23,6 +23,8 @@ __PACKAGE__->config->{authentication}->{dbic} = {
 
 __PACKAGE__->config->{session}->{cookie_expires} = 0; # make all cookies sessiohn cookies (expire when the browser closes).  TODO Ideally we can allow the user to specify whether they want to remain logged in or not.
 
+__PACKAGE__->config->{session}->{expires} = 60*60*24*7; # set session to expire after a week
+
 # Allow us to use catalyst to serve static content, or serve it via apache, with a Static config toggle
 if(__PACKAGE__->config->{Static}){
     __PACKAGE__->setup( qw/Static::Simple/ );
