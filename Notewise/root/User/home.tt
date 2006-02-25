@@ -14,6 +14,7 @@ Search: <input autocomplete="off" id="mysearchfield" onfocus="this.className = '
 <script type="text/javascript" src="[%base%]js/quicksearch.js"></script>
 
 <a href="[%base%]kernel/add?name=">create new view</a><br/><br/>
+<a href="[%c.uri_for('/logout')%]">logout</a><br/><br/>
 
 Last [%lastviewed.size%] viewed kernels:
 
