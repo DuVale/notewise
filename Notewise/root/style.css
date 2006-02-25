@@ -93,6 +93,7 @@ body, html {
     bottom: 0px;
     clear: both;
     overflow: auto;
+    z-index: 0;
 }
 
 .note-left {
@@ -761,7 +762,7 @@ img {
     width: 10px;
     height: 10px;
     cursor: se-resize;
-    z-index:200;
+    z-index: 2;
 
     /* this is a hack to make the div the right height in IE - no idea why it
      * works. */
