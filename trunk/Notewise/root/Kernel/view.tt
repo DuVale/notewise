@@ -34,6 +34,7 @@
     <script>
         // configure the base url for jsdbi
         JSDBI.base_url('[% base %]');
+        base_url = '[% base %]';
         // XXX this is pretty nasty - put this inside the view's vkernel instead
         var objectCache = {};
     </script>
