@@ -13,13 +13,10 @@ KernelThumbnail.prototype.extend({
         KernelObject.prototype.fetchElements.call(this);
         WiseObject.prototype.fetchElements.call(this);
         this.namelink = Utils.getElementsByClassName(this.htmlElement, 'namelink')[0];
-        this.leftgrippie = Utils.getElementsByClassName(this.htmlElement, 'leftgrippie')[0];
     },
 
     registerHandlers: function() {
         NonMovingKernel.prototype.registerHandlers.call(this);
-
-        Event.observe(this.leftgrippie,'click', this.selectAndTerminate.bind(this));
     },
 
     // Select this object and terminate the event
