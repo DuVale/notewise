@@ -24,7 +24,7 @@ Scaffolding Controller Component.
 
 =item add
 
-Adds a kernel
+Creates a kernel
 
 =cut
 
@@ -51,7 +51,7 @@ sub add : Local {
 
 =item view
 
-Fetches a row and sets a template.
+Displays the given kernel
 
 =cut
 
@@ -62,7 +62,8 @@ sub view : Private {
         $c->forward('view_kernel');
     } elsif ($name ne '') {
         $name = uri_unescape($name);
-        my @kernels = $c->model('CDBI::Kernel')->kernels_with_name($name,$c->user->user->id);
+        my @kernels = $c->model('CDBI::Kernel')->kernels_with_name($name,$username);
+        @kernels = grep $_->has_permission($c->user->user->id,'view'), @kernels;
         if(@kernels == 1){
             $c->stash->{kernel} = $kernels[0];
             return $c->forward('view_kernel');
@@ -71,7 +72,7 @@ sub view : Private {
             $c->stash->{template} = 'Kernel/disambiguation.tt';
         } else {
             # TODO make this look prettier
-            die "Couldn't find a kernel by that name";
+            return $c->res->output("Couldn't find a kernel by that name");
         }
     } else {
         die "We shouldn't have gotten here - no kernel name or id";
