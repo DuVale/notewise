@@ -147,8 +147,72 @@ body, html {
     background: url('/images/kernel-mini-highlighted-mid.png');
 }
 
+.vkernel .vkernel.highlighted .mid-rightbackground {
+    display: none;
+}
+
 .vkernel .vkernel.highlighted .rightbackground {
     background: url('/images/kernel-mini-highlighted-right.png') right no-repeat;
+}
+
+.vkernel.contains .leftbackground {
+    background: url('/images/kernel-blue-left.png') no-repeat;
+}
+
+.vkernel.contains .mid-leftbackground {
+    background: url('/images/kernel-blue-mid.png');
+}
+
+.vkernel.contains .rightbackground {
+    background: url('/images/kernel-blue-right.png') right no-repeat;
+}
+
+.vkernel.expanded.contains .vkernel.collapsed.contains .leftbackground {
+    background: url('/images/kernel-mini-blue-left.png') no-repeat;
+}
+
+.vkernel.expanded.contains .vkernel.collapsed.contains .mid-leftbackground {
+    background: url('/images/kernel-mini-blue-mid.png');
+}
+
+.vkernel.expanded.contains .vkernel.collapsed.contains .mid-rightbackground {
+    display: none;
+}
+
+.vkernel.expanded.contains .vkernel.collapsed.contains .rightbackground {
+    background: url('/images/kernel-mini-blue-right.png') right no-repeat;
+}
+
+.vkernel.contains.expanded .leftbackground {
+    background: url('/images/kernel-expanded-left.png') no-repeat;
+}
+
+.vkernel.contains.expanded .mid-leftbackground {
+    background: url('/images/kernel-expanded-mid-left.png');
+}
+
+.vkernel.contains.expanded .mid-rightbackground {
+    background: url('/images/kernel-expanded-mid-right.png');
+}
+
+.vkernel.contains.expanded .rightbackground {
+    background: url('/images/kernel-expanded-right.png') right no-repeat;
+}
+
+.vkernel.contains.expanded .vkernel.contains.expanded .leftbackground {
+    background: url('/images/kernel-mini-blue-expanded-left.png') no-repeat;
+}
+
+.vkernel.contains.expanded .vkernel.contains.expanded .mid-leftbackground {
+    background: url('/images/kernel-mini-blue-expanded-midleft.png');
+}
+
+.vkernel.contains.expanded .vkernel.contains.expanded .mid-rightbackground {
+    background: url('/images/kernel-mini-blue-expanded-midright.png');
+}
+
+.vkernel.contains.expanded .vkernel.contains.expanded .rightbackground {
+    background: url('/images/kernel-mini-blue-expanded-right.png') right no-repeat;
 }
 
 .relationshiphalo {
@@ -636,7 +700,6 @@ img {
 
 .vkernel .vkernel .leftbackground {
     position: absolute;
-    background: url('/images/kernel-mini-left.png') no-repeat;
     height: 15px;
     left: 0px;
     width: 6px;
@@ -644,13 +707,8 @@ img {
     z-index: 0;
 }
 
-.vkernel .vkernel .mid-rightbackground {
-    display: none;
-}
-
 .vkernel .vkernel .mid-leftbackground {
     position: absolute;
-    background: url('/images/kernel-mini-mid.png');
     height: 15px;
     left: 6px;
     right: 23px;
@@ -660,13 +718,28 @@ img {
 
 .vkernel .vkernel .rightbackground {
     position: absolute;
-    background: url('/images/kernel-mini-right.png') right no-repeat;
     height: 15px;
     width: 23px;
     right: 0px;
     top: 0px;
     z-index: 0;
     cursor: move;
+}
+
+.vkernel.expanded.contains .vkernel.collapsed.nocontains .leftbackground {
+    background: url('/images/kernel-mini-left.png') no-repeat;
+}
+
+.vkernel.expanded.contains .vkernel.collapsed.nocontains .mid-leftbackground {
+    background: url('/images/kernel-mini-mid.png');
+}
+
+.vkernel.expanded.contains .vkernel.collapsed.nocontains .mid-rightbackground {
+    display: none;
+}
+
+.vkernel.expanded.contains .vkernel.collapsed.nocontains .rightbackground {
+    background: url('/images/kernel-mini-right.png') right no-repeat;
 }
 
 .vkernel .vkernel .namelink {
@@ -691,7 +764,7 @@ img {
     top: 14px;
 }
 
-.vkernel .vkernel.expanded .leftbackground {
+.vkernel.expanded.contains .vkernel.expanded.nocontains .leftbackground {
     position: absolute;
     background: url('/images/kernel-mini-gray-expanded-left.png') no-repeat;
     height: 15px;
@@ -701,7 +774,7 @@ img {
     z-index: 0;
 }
 
-.vkernel .vkernel.expanded .mid-leftbackground {
+.vkernel.expanded.contains .vkernel.expanded.nocontains .mid-leftbackground {
     position: absolute;
     background: url('/images/kernel-mini-gray-expanded-midleft.png');
     height: 15px;
@@ -711,19 +784,18 @@ img {
     z-index: 0;
 }
 
-.vkernel .vkernel.expanded .mid-rightbackground {
+.vkernel.expanded.contains .vkernel.expanded.nocontains .mid-rightbackground {
     display: block;
     position: absolute;
     background: url('/images/kernel-mini-gray-expanded-midright.png');
     height: 15px;
     right: 6px;
     width: 33px;
-    top: 0px;
     z-index: 0;
     cursor: move;
 }
 
-.vkernel .vkernel.expanded .rightbackground {
+.vkernel.expanded.contains .vkernel.expanded.nocontains .rightbackground {
     position: absolute;
     background: url('/images/kernel-mini-gray-expanded-right.png') right no-repeat;
     height: 15px;

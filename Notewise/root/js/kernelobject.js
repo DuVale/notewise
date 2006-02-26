@@ -131,6 +131,10 @@ KernelObject.prototype = {
     },
 
     setup: function () {
+        // add this object as a property of the htmlElement, so we can get back
+        // to it if all we have is the element
+        this.htmlElement.kernel = this;
+
         this.fetchElements();
         this.registerHandlers();
     },
@@ -235,6 +239,7 @@ KernelObject.prototype = {
         vkernel.namefield.focus();
         vkernel.newlyCreated = true;
         objectCache[vkernel.idString()]=vkernel;
+        this.updateContains();
     },
     
     createNote: function (x, y, dummyDiv) {
@@ -249,5 +254,6 @@ KernelObject.prototype = {
         dndMgr.updateSelection(note, false);
         note.body.focus();
         objectCache[note.idString()]=note;
+        this.updateContains();
     }
 };
