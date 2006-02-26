@@ -201,7 +201,7 @@ sub kernels_with_name {
     $name =~ s/_/ /g;
 
     my @kernels = $class->search(name=>$name);
-    return grep {return 0 unless $_->user; return $_->user->id == $user_id; } @kernels;
+    return grep {$_->user && $_->user->id == $user_id} @kernels;
 }
 
 sub most_recently_viewed_kernel {
