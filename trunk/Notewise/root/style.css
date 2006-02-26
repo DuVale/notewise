@@ -94,6 +94,8 @@ body, html {
     clear: both;
     overflow: auto;
     z-index: 0;
+    font-family: sans-serif;
+    font-size: 0.8em;
 }
 
 .note-left {
