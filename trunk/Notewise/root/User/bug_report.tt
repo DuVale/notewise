@@ -1,0 +1,37 @@
+<style>
+    #summary {
+        width: 300px;
+        font-size: 12pt;
+        font-family: sans-serif;
+    }
+    textarea {
+        width: 300px;
+        height: 150px;
+        font-size: 12pt;
+        font-family: sans-serif;
+    }
+    td {
+        vertical-align: top;
+    }
+    h1 {
+        font-size: 16pt;
+    }
+    .error {
+        color: red;
+    }
+</style>
+<h1>Report an issue</h1>
+<p class="error">[%message%]</p>
+<form action="[%c.uri_for('do_bug_report')%]">
+    <table>
+        <tr>
+            <td>Summary:</td>
+            <td><input name="summary" id="summary"/></td>
+        </tr>
+        <tr>
+            <td>Description:</td>
+            <td><textarea name="description"></textarea></td>
+        </tr>
+    </table>
+    <input type="submit" value="Send"/>
+</form>

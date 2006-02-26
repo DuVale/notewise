@@ -2,6 +2,8 @@ package Notewise::C::User;
 
 use strict;
 use base 'Catalyst::Base';
+use LWP::UserAgent;
+use HTTP::Request::Common;
 
 =head1 NAME
 
@@ -47,6 +49,41 @@ sub home : Local {
     $c->stash->{lastcreated}=[@lastcreated[0..($max-1)]];
 
     $c->stash->{template} = 'User/home.tt';
+}
+
+sub bug_report : Local {
+    my ( $self, $c ) = @_;
+    $c->stash->{template} = 'User/bug_report.tt';
+}
+
+sub do_bug_report : Local {
+    my ( $self, $c ) = @_;
+    $c->form( required => [ 'summary', 'description' ] );
+    if ($c->form->has_missing) {
+        $c->stash->{message}="Please fill in both fields";
+        return $c->forward('bug_report');
+    }
+
+    # submit the bug
+    my $ua = LWP::UserAgent->new;
+    my $req = (POST 'http://admin.notewise.com/trac/newticket',{
+        reporter => $c->user->user->username,
+        summary => $c->req->params->{summary},
+        description => $c->req->params->{description},
+        type => 'defect',
+        action => 'create',
+        status => 'new',
+        priority => 'major',
+        component => 'general',
+    });
+
+    $req->authorization_basic($c->config->{bug_username},$c->config->{bug_password});
+    my $res = $ua->request($req);
+
+    # debuug
+    #$c->res->output($res->as_string);
+
+    $c->stash->{template} = 'User/bug_thanks.tt';
 }
 
 =back
