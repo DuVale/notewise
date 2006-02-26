@@ -201,21 +201,35 @@ sub kernels_with_name {
     $name =~ s/_/ /g;
 
     my @kernels = $class->search(name=>$name);
-    return grep {$_->user->id == $user_id} @kernels;
+    return grep {return 0 unless $_->user; return $_->user->id == $user_id; } @kernels;
 }
 
 sub most_recently_viewed_kernel {
-    my $class = shift;
-    my $user_id = shift;
-    my $max_returned = shift;
+    my ($class,$user_id,$max_returned) = @_;
+    return $class->_most_recently_kernel($user_id,$max_returned,'lastViewed');
+}
 
-    my @lastviewed=map $_->object, Notewise::M::CDBI::ObjectId->search(user=>$user_id,type=>'kernel');
-    # XXX this sort is going to be dog slow - need to swap this out for some actual sql
-    @lastviewed=sort {$b->lastviewed <=> $a->lastviewed} @lastviewed;
-    if($max_returned == 0 || @lastviewed < $max_returned){
-        $max_returned = @lastviewed;
-    }
-    return @lastviewed[0..($max_returned-1)];
+sub most_recently_created_kernel {
+    my ($class,$user_id,$max_returned) = @_;
+    return $class->_most_recently_kernel($user_id,$max_returned,'created');
+}
+
+sub _most_recently_kernel {
+    my ($class,$user_id,$max_returned,$sort_column) = @_;
+
+    my $query = "SELECT kernel.object_id
+                 FROM object_id, kernel
+                 WHERE object_id.user = ? AND
+                       object_id.type = 'kernel' AND
+                       object_id.id = kernel.object_id
+                 ORDER BY kernel.$sort_column DESC
+                 limit ?";
+
+    my $dbh = $class->db_Main();
+    my $sth = $dbh->prepare_cached($query);
+    $sth->execute($user_id,$max_returned);
+    my @kernels = $class->sth_to_objects($sth);
+    return @kernels;
 }
 =head1 NAME
 
