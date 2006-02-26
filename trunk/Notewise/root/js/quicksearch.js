@@ -6,10 +6,8 @@ new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '/s',
                             var link=selected_element.getElementsByTagName('a')[0];
                             if(link.href.search(/^http:\/\/[^\/]+\/0$/) != -1){
                                 name = $('mysearchfield').value;
-                                printfire("Creating new "+name);
                                 window.location=base_url+'kernel/add?name='+encodeURIComponent(name);
                             } else {
-                                printfire("going to old "+link.href);
                                 window.location=link.href;
                             }
                             $('mysearchfield').value = value;
