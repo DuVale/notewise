@@ -498,7 +498,7 @@ WiseObject.prototype.extend({
         this.update();
 
         // update the contains flags on the html
-        if(oldParent.updateContains){
+        if(oldParent && oldParent.updateContains){
             oldParent.updateContains();
         }
         if(vkernel.updateContains){
