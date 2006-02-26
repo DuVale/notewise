@@ -171,10 +171,23 @@ WiseObject.prototype.extend({
         Element.hide(this.newrelationshiparrow);
     },
 
+    parentVKernel: function () {
+        var oldParent = this.htmlElement.parentNode.parentNode.kernel;
+        if (oldParent == null){
+            // view kernel doesn't have a body and therefor htmlelement=body
+            oldParent = this.htmlElement.parentNode.kernel;
+        }
+        return oldParent;
+    },
+
     // removes the html element from the view, and then notifies the server
     destroy: function () {
+        var oldParent = this.parentVKernel();
         if(this.htmlElement.parentNode != null){
             this.htmlElement.parentNode.removeChild(this.htmlElement);
+        }
+        if(oldParent.updateContains){
+            oldParent.updateContains();
         }
         this.deleteRelationships();
         dndMgr.clearSelection();
@@ -433,6 +446,12 @@ WiseObject.prototype.extend({
     reparent: function(vkernel, do_update) {
         var parentElement = vkernel.body;
 
+        var oldParent = this.oldParentNode.parentNode.kernel;
+        if (oldParent == null){
+            // view kernel doesn't have a body and therefor htmlelement=body
+            oldParent = this.oldParentNode.kernel;
+        }
+
         // Can't make element child of it's own child and don't reparent it if
         // it's already in the right element
         if(Utils.hasAncestor(parentElement,this.htmlElement)
@@ -472,6 +491,14 @@ WiseObject.prototype.extend({
         // itself, since we don't really need it right now
         this.container_object(vkernel.kernel_id());
         this.update();
+
+        // update the contains flags on the html
+        if(oldParent.updateContains){
+            oldParent.updateContains();
+        }
+        if(vkernel.updateContains){
+            vkernel.updateContains();
+        }
     },
 
     // Returns whether or not this object is currently selected

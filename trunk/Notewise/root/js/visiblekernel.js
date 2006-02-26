@@ -25,8 +25,6 @@ VisibleKernel.has_a('container_object','Kernel');
 
 VisibleKernel.prototype.extend({
     initialize: function(container_object,contained_object,htmlElement,x,y,width,height,collapsed) {
-        KernelObject.prototype.initialize.call(this, htmlElement);
-    
         this.type        = 'Kernel';
         this.container_object(container_object);
         this.contained_object(contained_object);
@@ -39,14 +37,11 @@ VisibleKernel.prototype.extend({
 
         JSDBI.prototype.initialize.call(this);
         WiseObject.prototype.initialize.call(this);
+        KernelObject.prototype.initialize.call(this, htmlElement);
     },
 
     setup: function () {
         KernelObject.prototype.setup.call(this);
-
-        // add this object as a property of the htmlElement, so we can get back
-        // to it if all we have is the element
-        this.htmlElement.kernel = this;
 
         // Setup autocomplete on the namefield.  TODO figure out how to factor this up to kernelobject
         this.autocompleter = new Ajax.Autocompleter(this.namefield, this.searchresults, JSDBI.base_url()+'ac',
@@ -56,6 +51,7 @@ VisibleKernel.prototype.extend({
                                                      on_blur: this.onNamefieldBlur.bind(this),
                                                      before_complete: this.on_autocomplete_load.bind(this),
                                                      on_complete: this.on_autocomplete_complete.bind(this)});
+        this.updateContains();
     },
 
     on_autocomplete_load: function (autocompleter,request) {
@@ -185,6 +181,20 @@ VisibleKernel.prototype.extend({
                rel.part2() == this.kernel_id()){
                 rel.realize(this.container_object().id());
             }
+        }
+    },
+
+    // marks the html with a css class based on whether it contains any child objects
+    updateContains: function() {
+        var vkernels = Utils.getElementsByClassName(this.body,'vkernel');
+        var notes = Utils.getElementsByClassName(this.body,'note');
+        if(vkernels.length > 0 ||
+           notes.length > 0){
+            Element.addClassName(this.htmlElement,'contains');
+            Element.removeClassName(this.htmlElement,'nocontains');
+        } else {
+            Element.addClassName(this.htmlElement,'nocontains');
+            Element.removeClassName(this.htmlElement,'contains');
         }
     },
 
