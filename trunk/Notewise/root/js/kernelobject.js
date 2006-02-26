@@ -176,11 +176,30 @@ KernelObject.prototype = {
         var x = (posx - parentPos.x) * 100 / this.body.clientWidth;
         var y = (posy - parentPos.y) * 100 / this.body.clientHeight;
         var dummyDiv = document.createElement('div');
-        dummyDiv.className = 'dummyDiv';
+        dummyDiv.className = 'dummyNoteDiv';
         dummyDiv.style.left = x + '%';
         dummyDiv.style.top = y + '%';
-        dummyDiv.style.width = '15%';
-        dummyDiv.style.height = '15%'; // XXX I still hate this :P
+
+        var left = document.createElement('div');
+        left.className='left';
+        dummyDiv.appendChild(left);
+
+        var mid = document.createElement('div');
+        mid.className='mid';
+        dummyDiv.appendChild(mid);
+
+        var right = document.createElement('div');
+        right.className='right';
+        dummyDiv.appendChild(right);
+
+        var body = document.createElement('div');
+        body.className='body';
+        dummyDiv.appendChild(body);
+
+        var corner = document.createElement('div');
+        corner.className='corner';
+        dummyDiv.appendChild(corner);
+
         this.body.appendChild(dummyDiv);
         
         // give the brower some time to paint the dummy div
@@ -211,8 +230,19 @@ KernelObject.prototype = {
         dummyDiv.className='dummyDiv';
         dummyDiv.style.left=x+'%';
         dummyDiv.style.top=y+'%';
-        dummyDiv.style.width='30%';
-        dummyDiv.style.height='34px'; //XXX jon hates me - magic numbers are bad
+
+        var left = document.createElement('div');
+        left.className='left';
+        dummyDiv.appendChild(left);
+
+        var mid = document.createElement('div');
+        mid.className='mid';
+        dummyDiv.appendChild(mid);
+
+        var right = document.createElement('div');
+        right.className='right';
+        dummyDiv.appendChild(right);
+
         this.body.appendChild(dummyDiv);
 
         // Give the browser a little bit of time to refresh, so the dummyDiv paints
