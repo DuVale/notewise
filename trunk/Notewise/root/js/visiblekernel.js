@@ -266,6 +266,11 @@ VisibleKernel.prototype.extend({
         Event.observe(this.expandbutton,
                                    'dblclick',
                                    Utils.terminateEvent.bindAsEventListener(this));
+
+        Event.observe(this.editbutton,
+                      'mouseover',function(){Element.addClassName(this.editbutton,'hover')}.bind(this));
+        Event.observe(this.editbutton,
+                      'mouseout',function(){Element.removeClassName(this.editbutton,'hover')}.bind(this));
     },
 
     // Select this object and terminate the event
