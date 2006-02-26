@@ -255,5 +255,20 @@ KernelObject.prototype = {
         note.body.focus();
         objectCache[note.idString()]=note;
         this.updateContains();
+    },
+
+    // marks the html with a css class based on whether it contains any child objects
+    updateContains: function() {
+        var vkernels = Utils.getElementsByClassName(this.body,'vkernel');
+        var notes = Utils.getElementsByClassName(this.body,'note');
+        printfire("vkernels: "+vkernels.length+" notes: "+notes.length);
+        if(vkernels.length > 0 ||
+           notes.length > 0){
+            Element.addClassName(this.htmlElement,'contains');
+            Element.removeClassName(this.htmlElement,'nocontains');
+        } else {
+            Element.addClassName(this.htmlElement,'nocontains');
+            Element.removeClassName(this.htmlElement,'contains');
+        }
     }
 };
