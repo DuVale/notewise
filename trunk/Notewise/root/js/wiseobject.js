@@ -90,6 +90,16 @@ WiseObject.prototype.extend({
         Event.observe(this.newrelationshiparrow,
                                     'mousedown',
                                     this.startCreateRelationship.bindAsEventListener(this));
+
+        Event.observe(this.removebutton,
+                                    'mouseover',function(){Element.addClassName(this.removebutton,'hover')}.bind(this));
+        Event.observe(this.removebutton,
+                                    'mouseout',function(){Element.removeClassName(this.removebutton,'hover')}.bind(this));
+        Event.observe(this.editbutton,
+                                    'mouseover',function(){Element.addClassName(this.editbutton,'hover')}.bind(this));
+        Event.observe(this.editbutton,
+                                    'mouseout',function(){Element.removeClassName(this.editbutton,'hover')}.bind(this));
+
       },
 
     // Select this object and terminate the event
@@ -186,7 +196,7 @@ WiseObject.prototype.extend({
         if(this.htmlElement.parentNode != null){
             this.htmlElement.parentNode.removeChild(this.htmlElement);
         }
-        if(oldParent.updateContains){
+        if(oldParent && oldParent.updateContains){
             oldParent.updateContains();
         }
         this.deleteRelationships();
