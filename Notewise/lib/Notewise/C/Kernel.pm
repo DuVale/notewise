@@ -62,7 +62,6 @@ sub view : Private {
         $c->forward('view_kernel');
     } elsif ($name ne '') {
         $name = uri_unescape($name);
-        warn "username: $username";
         my $user = $c->model('CDBI::User')->search({username=>$username})->first;
         my @kernels = $c->model('CDBI::Kernel')->kernels_with_name($name,$user->id);
         @kernels = grep $_->has_permission($c->user->user->id,'view'), @kernels;
