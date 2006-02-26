@@ -1,3 +1,4 @@
+<script type="text/javascript" src="[%base%]js/bugs.js"></script>
 <style>
     #summary {
         width: 300px;
@@ -20,6 +21,7 @@
         color: red;
     }
 </style>
+<a href="#" onclick="Bugs.close_window()" style="float: right">Close</a>
 <h1>Report an issue</h1>
 <p class="error">[%message%]</p>
 <form action="[%c.uri_for('do_bug_report')%]">
