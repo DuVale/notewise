@@ -129,34 +129,6 @@ body, html {
     z-index: 10;
 }
 
-.vkernel.highlighted .leftbackground {
-    background: url('/images/kernel-highlighted-left.png') no-repeat;
-}
-
-.vkernel.highlighted .mid-leftbackground {
-    background: url('/images/kernel-highlighted-mid.png');
-}
-
-.vkernel.highlighted .rightbackground {
-    background: url('/images/kernel-highlighted-right.png') right no-repeat;
-}
-
-.vkernel .vkernel.highlighted .leftbackground {
-    background: url('/images/kernel-mini-highlighted-left.png') no-repeat;
-}
-
-.vkernel .vkernel.highlighted .mid-leftbackground {
-    background: url('/images/kernel-mini-highlighted-mid.png');
-}
-
-.vkernel .vkernel.highlighted .mid-rightbackground {
-    display: none;
-}
-
-.vkernel .vkernel.highlighted .rightbackground {
-    background: url('/images/kernel-mini-highlighted-right.png') right no-repeat;
-}
-
 .vkernel.contains .leftbackground {
     background: url('/images/kernel-blue-left.png') no-repeat;
 }
@@ -744,6 +716,34 @@ img {
     background: url('/images/kernel-mini-right.png') right no-repeat;
 }
 
+.vkernel.highlighted .leftbackground {
+    background: url('/images/kernel-highlighted-left.png') no-repeat;
+}
+
+.vkernel.highlighted .mid-leftbackground {
+    background: url('/images/kernel-highlighted-mid.png');
+}
+
+.vkernel.highlighted .rightbackground {
+    background: url('/images/kernel-highlighted-right.png') right no-repeat;
+}
+
+.vkernel.contains.expanded .vkernel.collapsed.highlighted .leftbackground {
+    background: url('/images/kernel-mini-highlighted-left.png') no-repeat;
+}
+
+.vkernel.contains.expanded .vkernel.collapsed.highlighted .mid-leftbackground {
+    background: url('/images/kernel-mini-highlighted-mid.png');
+}
+
+.vkernel.contains.expanded .vkernel.collapsed.highlighted .mid-rightbackground {
+    display: none;
+}
+
+.vkernel.contains.expanded .vkernel.collapsed.highlighted .rightbackground {
+    background: url('/images/kernel-mini-highlighted-right.png') right no-repeat;
+}
+
 .vkernel .vkernel .namelink {
     font-style: normal;
     font-size: 9px;
@@ -809,19 +809,19 @@ img {
     cursor: default;
 }
 
-.vkernel .vkernel.expanded.highlighted .leftbackground {
+.vkernel.contains.expanded .vkernel.expanded.highlighted .leftbackground {
     background: url('/images/kernel-mini-orange-expanded-left.png') no-repeat;
 }
 
-.vkernel .vkernel.expanded.highlighted .mid-leftbackground {
+.vkernel.contains.expanded .vkernel.expanded.highlighted .mid-leftbackground {
     background: url('/images/kernel-mini-orange-expanded-midleft.png');
 }
 
-.vkernel .vkernel.expanded.highlighted .mid-rightbackground {
+.vkernel.contains.expanded .vkernel.expanded.highlighted .mid-rightbackground {
     background: url('/images/kernel-mini-orange-expanded-midright.png');
 }
 
-.vkernel .vkernel.expanded.highlighted .rightbackground {
+.vkernel.contains.expanded .vkernel.expanded.highlighted .rightbackground {
     background: url('/images/kernel-mini-orange-expanded-right.png') right no-repeat;
 }
 
