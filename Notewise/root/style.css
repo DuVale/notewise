@@ -1089,9 +1089,10 @@ div.auto_complete ul strong.highlight {
 
 
 #permanent_delete {
+    margin: 5px;
     padding: 10px;
     float:right;
-    border: 1px solid black;
+    border: 1px solid rgb(153,153,153);
 }
 
 #bugreport {
