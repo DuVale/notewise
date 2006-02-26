@@ -95,11 +95,6 @@ WiseObject.prototype.extend({
                                     'mouseover',function(){Element.addClassName(this.removebutton,'hover')}.bind(this));
         Event.observe(this.removebutton,
                                     'mouseout',function(){Element.removeClassName(this.removebutton,'hover')}.bind(this));
-        Event.observe(this.editbutton,
-                                    'mouseover',function(){Element.addClassName(this.editbutton,'hover')}.bind(this));
-        Event.observe(this.editbutton,
-                                    'mouseout',function(){Element.removeClassName(this.editbutton,'hover')}.bind(this));
-
       },
 
     // Select this object and terminate the event
