@@ -62,8 +62,13 @@ sub view : Private {
         $c->forward('view_kernel');
     } elsif ($name ne '') {
         $name = uri_unescape($name);
-        my @kernels = $c->model('CDBI::Kernel')->kernels_with_name($name,$username);
+        warn "username: $username";
+        my $user = $c->model('CDBI::User')->search({username=>$username})->first;
+        my @kernels = $c->model('CDBI::Kernel')->kernels_with_name($name,$user->id);
+        use Data::Dumper;
+        warn "before permissions filter: ".Dumper(\@kernels);
         @kernels = grep $_->has_permission($c->user->user->id,'view'), @kernels;
+        warn "after permissions filter: ".Dumper(\@kernels);
         if(@kernels == 1){
             $c->stash->{kernel} = $kernels[0];
             return $c->forward('view_kernel');

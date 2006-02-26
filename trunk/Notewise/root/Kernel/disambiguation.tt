@@ -10,5 +10,4 @@ Did you want:
         [% END %])
     </li>
     [%END%]
-    [% IF kernels.size == 0 %]
 </ul>
