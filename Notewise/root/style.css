@@ -1007,3 +1007,13 @@ div.dummyDiv {
     float:right;
     border: 1px solid black;
 }
+
+#bugreport {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 400px;
+    height: 400px;
+    border: 1px solid black;
+    background: white;
+}

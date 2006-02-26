@@ -27,6 +27,7 @@
     <script type="text/javascript" src="[%base%]js/note.js"></script>
     <script type="text/javascript" src="[%base%]js/controls.js"></script>
     <script type="text/javascript" src="[%base%]js/effects.js"></script>
+    <script type="text/javascript" src="[%base%]js/bugs.js"></script>
     [%#
     use this instead of the above garbage to get faster loading of javascript
     <script type="text/javascript" src="/javascript"></script>
@@ -49,7 +50,7 @@
         <table id="menutable" cellpadding="0" cellspacing="0" border="0">
             <tr><td style="padding: 5px">
             <a href="[%base%][%c.user.user.username%]">home</a> - 
-            <a href="http://admin.notewise.com/trac/newticket">report bug</a> - 
+            <a href="#" onclick="Bugs.show_window(); false;">report bug</a> - 
             <a href="[% c.uri_for('/logout') %]">logout</a><br/>
             <a href="[%base%]kernel/add?name=">new view</a><br/>
             Search: <input autocomplete="off" id="mysearchfield" onfocus="this.className = 'focus';" onblur="this.className='';" name="s"/>

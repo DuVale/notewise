@@ -1,0 +1,4 @@
+Thanks for letting us know about that bug.  We'll take a look at it as soon as we can!<br/>
+
+<script type="text/javascript" src="[%base%]js/bugs.js"></script>
+<a href="#" onclick="Bugs.close_window()">Close</a>
