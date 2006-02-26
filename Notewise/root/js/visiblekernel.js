@@ -109,8 +109,8 @@ VisibleKernel.prototype.extend({
     // This contains all the things that can happen asynchronously after we
     // swap out the kernel, in an attempt to make the swap feel more snappy
     after_swap_kernels: function(old_contained_object,old_id_string){
-        this.hydrateRelationships();
         this.hydrateChildren();
+        this.hydrateRelationships();
         delete objectCache[old_id_string];
         if(this.newlyCreated){
             this.contained_object().destroy();
@@ -169,7 +169,24 @@ VisibleKernel.prototype.extend({
     // create html elements for the child objects
     hydrateChildren: function() {
         var url = JSDBI.base_url()+'kernel/innerhtml/'+this.kernel_id();
-        new Ajax.Updater(this.body, url, {method: 'get'});
+        new Ajax.Request(url, {onSuccess: this.insertChildren.bind(this), evalScripts: true});
+    },
+
+    insertChildren: function(t) {
+
+        this.body.innerHTML = t.responseText;
+        this.updateContains();
+
+        var match    = new RegExp(Ajax.Updater.ScriptFragment, 'img');
+        var scripts  = t.responseText.match(match);
+        if(scripts){
+            match = new RegExp(Ajax.Updater.ScriptFragment, 'im');
+
+            setTimeout((function() {
+                for (var i = 0; i < scripts.length; i++)
+                    eval(scripts[i].match(match)[1]);
+            }).bind(this), 10);
+        }
     },
 
     // create html elements for the relationships that are visible for this object
@@ -181,20 +198,6 @@ VisibleKernel.prototype.extend({
                rel.part2() == this.kernel_id()){
                 rel.realize(this.container_object().id());
             }
-        }
-    },
-
-    // marks the html with a css class based on whether it contains any child objects
-    updateContains: function() {
-        var vkernels = Utils.getElementsByClassName(this.body,'vkernel');
-        var notes = Utils.getElementsByClassName(this.body,'note');
-        if(vkernels.length > 0 ||
-           notes.length > 0){
-            Element.addClassName(this.htmlElement,'contains');
-            Element.removeClassName(this.htmlElement,'nocontains');
-        } else {
-            Element.addClassName(this.htmlElement,'nocontains');
-            Element.removeClassName(this.htmlElement,'contains');
         }
     },
 
