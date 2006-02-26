@@ -1036,13 +1036,17 @@ div.auto_complete ul strong.highlight {
     background: url(/images/menupane_back.gif) repeat-x;
 }
 
+.panecontent.closed {
+    height: 0px;
+}
+
 .twistbutton {
     width: 20px; height: 20px;
     float: left; cursor: pointer;
     background: url(/images/expand_open.gif);
 }
 
-.closed {
+.twistbutton.closed {
     background: url(/images/expand_closed.gif);
 }
 
@@ -1057,11 +1061,11 @@ div.auto_complete ul strong.highlight {
     border-bottom: 1px solid #bebebe;
 }
 
-#parents_content {
+#parents_content.open {
     height: 300px; 
 }
 
-#rel_content {
+#rel_content.open {
     padding: 10px;
 }
 
