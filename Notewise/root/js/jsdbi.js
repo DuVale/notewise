@@ -56,7 +56,7 @@
 // Thanks to Scott Williams, Chris Whipple, and Jon Raphelson for letting me bounce ideas off them
 
 // TODO current list
-//  Add dosc for multiple primary keys
+//  Add docs for multiple primary keys
 //  Handle errors from the server
 
 // TODO future list
