@@ -32,5 +32,7 @@
         </a></li>
     [%- END -%]
 [%- END -%]
-<li><a href="[%base%]search?s=[%c.req.params.s%]">more results...</a></li>
+[% IF more_results %]
+    <li><a href="[%base%]search?s=[%c.req.params.s%]">more results...</a></li>
+[% END %]
 </ul>
