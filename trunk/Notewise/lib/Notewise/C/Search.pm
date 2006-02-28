@@ -3,6 +3,7 @@ package Notewise::C::Search;
 use strict;
 use base 'Catalyst::Base';
 use CGI;
+use POSIX;
 
 =head1 NAME
 
@@ -26,7 +27,24 @@ Catalyst component.
 
 sub search : Path {
     my ( $self, $c ) = @_;
-    $c->res->output('Extended search goes here');
+
+    my $start_index = ($c->req->params->{start}||1) - 1; # start is one based
+    my $amount = $c->req->params->{count};
+    if($amount < 10 || $amount > 100){
+        $amount = 10;
+    }
+
+    my $searchstring = $c->req->params->{s};
+
+    my @objects = $self->do_search($c, $searchstring,500);
+
+    $c->stash->{start_index} = $start_index;
+    $c->stash->{amount} = $amount;
+    $c->stash->{results} = [ @objects[$start_index..$start_index+$amount] ];
+    $c->stash->{count} = scalar @objects;
+    $c->stash->{current_page} = POSIX::ceil(($start_index+1)/$amount);
+    $c->stash->{pages} = [1..POSIX::ceil(@objects/$amount)];
+    $c->stash->{template} = 'Search/search.tt';
 }
 
 # quick search
@@ -43,13 +61,26 @@ sub ac : Global {
     $c->forward('quick_search');
 }
 
-# actual search code for s and ac
 sub quick_search : Private {
     # TODO refactor this
     my ( $self, $c ) = @_;
     my $max_results = 15;
 
     my $searchstring = $c->req->params->{s};
+
+    my @objects = $self->do_search($c, $searchstring,$max_results+1);
+    $c->stash->{more_results} = $objects[$max_results];
+    $c->stash->{objects} = \@objects;
+}
+
+# actual search code for s and ac
+sub do_search {
+    # TODO refactor this
+    my $self = shift;
+    my $c = shift;
+    my $searchstring = shift;
+    my $max_results = shift;
+
     my @objects = grep {$_->has_permission($c->user->user->id,'view')}
                     $c->model('CDBI::Kernel')->search_where(
                             name => { 'like', $searchstring."%" });
@@ -88,7 +119,7 @@ sub quick_search : Private {
         }
     }
 
-    $c->stash->{objects} = [@objects_to_return];
+    return @objects_to_return;
 }
 
 =back
