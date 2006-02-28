@@ -81,8 +81,12 @@ sub auto : Local {
     if ($email && $password
         && $c->login($email,$password) ){
             #they're logged in
-            $c->res->redirect('/'.$c->user->user->username);
-            return 0;
+            unless($c->req->path){
+                $c->res->redirect('/'.$c->user->user->username);
+                return 0;
+            } else {
+                return 1;
+            }
     }
 
     # otherwise forward to display the login page, and break the auto chain
