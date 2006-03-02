@@ -14,7 +14,7 @@
    id="svg1307"
    sodipodi:version="0.32"
    inkscape:version="0.43"
-   sodipodi:docbase="/home/scotty"
+   sodipodi:docbase="/home/scotty/projects/notewise/images"
    sodipodi:docname="mockup.svg"
    inkscape:export-filename="/home/scotty/mockup.png"
    inkscape:export-xdpi="91.230003"
@@ -141,16 +141,16 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="481.15756"
-     inkscape:cy="386.95497"
-     inkscape:current-layer="layer1"
+     inkscape:cx="513.18296"
+     inkscape:cy="383.62118"
+     inkscape:current-layer="layer2"
      inkscape:document-units="px"
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:window-width="1600"
-     inkscape:window-height="1108"
-     inkscape:window-x="1606"
-     inkscape:window-y="0" />
+     inkscape:window-height="1107"
+     inkscape:window-x="-2"
+     inkscape:window-y="1" />
   <metadata
      id="metadata1312">
     <rdf:RDF>
@@ -173,6 +173,18 @@
        height="768.17737"
        x="1.0698613"
        y="0.2901352" />
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="290.22369"
+       y="60.543892"
+       id="text5874"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan5876"
+         x="290.22369"
+         y="60.543892"
+         style="font-family:Bitstream Vera Sans;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:12;text-anchor:start;text-align:start;writing-mode:lr;line-height:100%">Saving...</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -210,7 +222,7 @@
        height="63.922901"
        width="71.176559"
        sodipodi:absref="/home/scotty/notewise_n.png"
-       xlink:href="notewise_n.png"
+       xlink:href="/home/scotty/notewise_n.png"
        x="6.8358798"
        y="7.7014723" />
     <g
@@ -327,7 +339,7 @@
        height="662"
        width="771"
        sodipodi:absref="/home/scotty/ss.png"
-       xlink:href="ss.png"
+       xlink:href="/home/scotty/ss.png"
        x="235.5"
        y="88" />
     <g
@@ -437,7 +449,7 @@
        height="10"
        width="10"
        sodipodi:absref="/home/scotty/projects/notewise/Notewise/root/images/edit-button.png"
-       xlink:href="projects/notewise/Notewise/root/images/edit-button.png"
+       xlink:href="/home/scotty/projects/notewise/Notewise/root/images/edit-button.png"
        x="808.97125"
        y="47.589409" />
     <image
@@ -445,7 +457,7 @@
        height="10"
        width="10"
        sodipodi:absref="/home/scotty/projects/notewise/Notewise/root/images/close-button.png"
-       xlink:href="projects/notewise/Notewise/root/images/close-button.png"
+       xlink:href="/home/scotty/projects/notewise/Notewise/root/images/close-button.png"
        x="808.44336"
        y="34.563835" />
     <image
@@ -453,7 +465,7 @@
        height="10"
        width="10"
        sodipodi:absref="/home/scotty/projects/notewise/Notewise/root/images/url-button.png"
-       xlink:href="projects/notewise/Notewise/root/images/url-button.png"
+       xlink:href="/home/scotty/projects/notewise/Notewise/root/images/url-button.png"
        x="808.57477"
        y="60.846935" />
     <g
