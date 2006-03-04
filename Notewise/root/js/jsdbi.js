@@ -110,6 +110,10 @@ JSDBI.prototype = {
             return;
         }
         var params = this.__getParams();
+        var on_start_update = JSDBI.on_start_update();
+        if(on_start_update){
+            on_start_update();
+        }
         this.request = new Ajax.Request(this.internalUrl(), { method: 'post',
                                                      parameters: params,
                                                      asynchronous: true,
@@ -120,6 +124,10 @@ JSDBI.prototype = {
     },
 
     afterUpdate: function (callback,transport) {
+        var on_end_update = JSDBI.on_end_update();
+        if(on_end_update){
+            on_end_update();
+        }
         // XXX this is total crap.  Really need a way to detect if xml was received
         if(transport.responseText != 'OK' &&
            transport.responseText != 'ERROR' &&
@@ -212,6 +220,22 @@ JSDBI.base_url = function (url) {
         return this.prototype.__base_url = url;
     } else {
         return this.prototype.__base_url;
+    }
+};
+
+JSDBI.on_start_update = function (callback) {
+    if(callback){
+        return this.prototype.__on_start_update = callback;
+    } else {
+        return this.prototype.__on_start_update;
+    }
+};
+
+JSDBI.on_end_update = function (callback) {
+    if(callback){
+        return this.prototype.__on_end_update = callback;
+    } else {
+        return this.prototype.__on_end_update;
     }
 };
 

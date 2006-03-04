@@ -7,11 +7,11 @@ ViewKernel.prototype = new NonMovingKernel();
 ViewKernel.prototype.extend( {
     initialize: function(id, htmlElement) {
         NonMovingKernel.prototype.initialize.call(this,id,htmlElement);
-        window.onresize = this.layoutResize.bindAsEventListener(this);
+//        window.onresize = this.layoutResize.bindAsEventListener(this);
     },
 
     fetchElements: function () {
-        NonMovingKernel.prototype.fetchElements.call(this);
         this.body = this.htmlElement;
+        this.namefield = $('viewname');
     }
 });

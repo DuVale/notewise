@@ -36,4 +36,7 @@
         </tr>
     </table>
     <input type="submit" value="Send"/>
+    <script>
+        document.getElementById('summary').focus();
+    </script>
 </form>
