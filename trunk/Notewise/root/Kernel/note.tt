@@ -18,7 +18,7 @@
         <div class="halo-bottom"></div>
         <div class="halo-bottom-right"></div>
     </div>
-    <div class='removebutton'></div>
+    <a title="Delete note" class='removebutton'></a>
     <textarea class='body'>[% note.content %]</textarea>
     
     <div class="corner"></div>

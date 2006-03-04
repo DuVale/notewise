@@ -1,7 +1,7 @@
 function expandMenu(button, paneId) {
-    var pane = document.getElementById(paneId);
-    var sandbox_container = document.getElementById('sandbox_container');
-    var sandbox = document.getElementById('sandbox');
+    var pane = $(paneId);
+    var sandbox_container = $('sandbox_container');
+    var sandbox = $('sandbox');
     
     var opts = {
         duration: 50,
@@ -21,14 +21,12 @@ function expandMenu(button, paneId) {
         Element.addClassName(pane, 'closed');
         Element.removeClassName(button, 'open');
         Element.addClassName(button, 'closed');
-        pane.style.borderBottom = "0";
     } else {
         Element.removeClassName(pane, 'closed');
         Element.addClassName(pane, 'open');
         Element.removeClassName(button, 'closed');
         Element.addClassName(button, 'open');
-        pane.style.borderBottom = "1px solid #bebebe";
     }
     
-    sandbox.style.height = "100%";
+    window.setTimeout(function() {$('sidebar-bottom').style.height = "100%"; $('sandbox').style.height = "100%"; },100);
 }

@@ -62,7 +62,7 @@ Note.prototype.extend({
         this.htmlElement.id="note"+this.id();
         this.htmlElement.className="note";
         var innerHTML =
-           "<div class=\"removebutton\"></div>"
+           "<a title='Delete note' class=\"removebutton\"></a>"
            +"<div class='note-left'></div>"
            +"<div class='note-mid'></div>"
            +"<div class='note-right'></div>"

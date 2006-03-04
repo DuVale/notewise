@@ -1,8 +1,6 @@
 [% max_depth=2 %]
 [% thumbnail_start_depth=1 %]
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <title>[%kernel.name%] - Notewise.com</title>
     <script type="text/javascript" src="[%base%]js/ui.js"></script>
@@ -41,123 +39,155 @@
     <link rel="shortcut icon" href="[%base%]images/favicon.ico" />
 </head>
 <body>
-    <div id="mysearchresults" class="searchresults" style="display: none"></div>
-    <div id="sidebar">
-        <!-- sidebar accordion-style menus go in here; parents, rels, etc -->
-        <table id="menutable" cellpadding="0" cellspacing="0" border="0">
-            <tr><td style="padding: 5px">
-            <a href="[%base%][%c.user.user.username%]">home</a> - 
-            <a href="#" onclick="Bugs.show_window(); false;">report bug</a> - 
-            <a href="[% c.uri_for('/logout') %]">logout</a><br/>
-            <a href="[%base%]kernel/add?name=">new view</a><br/>
-            Search: <input autocomplete="off" id="mysearchfield" onfocus="this.className = 'focus';" onblur="this.className='';" name="s"/>
-            </td></tr>
-            <tr><td style="vertical-align: top; background: white;">
-                
-                <div class="panetitle">
-                    <div class="twistbutton" onmousedown="expandMenu(this, 'parents_content');">&nbsp;</div>
-                    parents ([%kernel.parents.size or '0'%])
+<div id="mysearchresults" class="searchresults" style="display: none"></div>
+    <table class="interface" cellspacing=0 cellpadding=0 border=0>
+        <tr>
+            <td class="header" colspan=3>
+                <div class="header">
+                    <div class="tab">
+                        <input type="text" id="viewname" class="namefield" autocomplete="off"
+                               value="[% kernel.name %]"
+                               style="width: [% kernel.name.length * 0.55 + 1 %]em;"/>
+                        <div class="links">
+                            <a href="[%base%]kernel/add?name=">new view</a><br/>
+                            <a href="#" onclick="$('viewname').focus(); return false;">rename</a><br/>
+                            <a href="#" onclick="show_confirm_delete(); return false;">delete</a>
+                        </div>
+                        <div class="right"></div>
+                        <div class="mid"></div>
+                        <div class="left"></div>
+                    </div>
+                    <a href="/"><div class="logo"></div></a>
+                    <div class="links">
+                        <a href="/[% c.user.user.username %]">home</a>
+                        <span class="dot">&nbsp;</span>
+                        <a href="[%c.uri_for('/settings')%]">settings</a>
+                        <span class="dot">&nbsp;</span>
+                        <a href="[%c.uri_for('/help')%]">help</a>
+                        <span class="dot">&nbsp;</span>
+                        <a href="#" onclick="Bugs.show_window(); false;">report bug</a>
+                        <span class="dot">&nbsp;</span>
+                        <a href="[%c.uri_for('/logout')%]">logout</a>
+                        </div>
+                    <div class="search">
+                        Search: <input id="mysearchfield" name="s"/>
+                    </div>
                 </div>
-                <div class="panecontent open" id="parents_content">
-                    [% FOR parent = kernel.parents %]
-                            <div class="vkernel kernelthumbnail expanded notselected noedit contains" id="parentthumbnail[%parent.id%]">
-                                <div class="leftbackground"></div>
-                                <div class="mid-leftbackground"></div>
-                                <div class="mid-rightbackground"></div>
-                                <div class="rightbackground"></div>
-                                [% IF parent.name %]
-                                    [% name_length = parent.name.length * 0.55 + 1%]
-                                [% ELSE %]
-                                    [% name_length = 1.05%]
-                                [% END %]
-                                <input class="namefield"
-                                       style="width: [% name_length %]em;"
-                                       name="s"
-                                       value="[% parent.name %]"
-                                       autocomplete="off"/>
-                                <a class="namelink"
-                                   style="width: [% name_length %]em;"
-                                   href="[% base _ parent.relative_url %]">
-                                      [% parent.name %]
-                                </a>
-                                <div class="body">
-                                    [%# set i higher so we don't go so deep %]
-                                    [% INCLUDE 'Kernel/kernel-innerhtml.tt' i=thumbnail_start_depth kernel=parent highlight=kernel%]
-                                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="sidebar" valign="top">
+                <table class="sidebar" cellpadding="0" cellspacing="0" border="0">
+                    <tr><td>
+                        <div class="sidebar">
+                            <div class="top-sidebar-header">
+                                <div class="left"></div>
+                                <div class="mid"></div>
+                                <div class="right"></div>
+                                <div class="spinner" onmousedown="expandMenu(this, 'parents_content');"></div>
+                                <div class="label">parents ([%kernel.parents.size or '0'%])</div>
                             </div>
-                            <script>
-                                new KernelThumbnail([%parent.id%],$('parentthumbnail[%parent.id%]'));
-                            </script>
-                    [% END %]
-                </div>
-                
-                <div class="panetitle">
-                    <div class="twistbutton" onclick="expandMenu(this, 'rel_content');">&nbsp;</div>
-                    relationships ([%kernel.related_kernels.size or '0'%])
+                        <div class="sidebar-content open" id="parents_content">
+                            [% FOR parent = kernel.parents %]
+                                    <div class="vkernel kernelthumbnail expanded notselected noedit contains" id="parentthumbnail[%parent.id%]">
+                                        <div class="leftbackground"></div>
+                                        <div class="mid-leftbackground"></div>
+                                        <div class="mid-rightbackground"></div>
+                                        <div class="rightbackground"></div>
+                                        [% IF parent.name %]
+                                            [% name_length = parent.name.length * 0.55 + 1%]
+                                        [% ELSE %]
+                                            [% name_length = 1.05%]
+                                        [% END %]
+                                        <input class="namefield"
+                                               style="width: [% name_length %]em;"
+                                               name="s"
+                                               value="[% parent.name %]"
+                                               autocomplete="off"/>
+                                        <a class="namelink"
+                                           style="width: [% name_length %]em;"
+                                           href="[% base _ parent.relative_url %]">
+                                              [% parent.name %]
+                                        </a>
+                                        <div class="body">
+                                            [%# set i higher so we don't go so deep %]
+                                            [% INCLUDE 'Kernel/kernel-innerhtml.tt' i=thumbnail_start_depth kernel=parent highlight=kernel%]
+                                        </div>
+                                    </div>
+                                    <script>
+                                        new KernelThumbnail([%parent.id%],$('parentthumbnail[%parent.id%]'));
+                                    </script>
+                            [% END %]
+                        </div>
+                            <div class="sidebar-header">
+                                <div class="spinner" onmousedown="expandMenu(this, 'rel_content');"></div>
+                                <div class="label">relationships ([%kernel.related_kernels.size or '0'%])</div>
+                            </div>
+                        <div class="sidebar-content open" id="rel_content">
+                                [% FOR relationship = kernel.relationships %]
 
-                </div>
-                <div class="panecontent open" id="rel_content">
-                        [% FOR relationship = kernel.relationships %]
+                                    [% IF relationship.part1.object == kernel %]
+                                        [% IF relationship.nav == 'fromleft' %]
+                                            &lt;-[%relationship.type.relationship_type%]-
+                                        [% ELSIF relationship.nav == 'fromright' %]
+                                            -[%relationship.type.relationship_type%]-&gt;
+                                        [% END %]
+                                    [% ELSE %]
+                                        [% IF relationship.nav == 'fromleft' %]
+                                            -[%relationship.type.relationship_type%]-&gt;
+                                        [% ELSIF relationship.nav == 'fromright' %]
+                                            &lt;-[%relationship.type.relationship_type%]-
+                                        [% END %]
+                                    [% END %]
 
-                            [% IF relationship.part1.object == kernel %]
-                                [% IF relationship.nav == 'fromleft' %]
-                                    &lt;-[%relationship.type.relationship_type%]-
-                                [% ELSIF relationship.nav == 'fromright' %]
-                                    -[%relationship.type.relationship_type%]-&gt;
+                                    [% IF relationship.nav == 'bi' %]
+                                        &lt;-[%relationship.type.relationship_type%]-&gt;
+                                    [% ELSIF relationship.nav == 'non' %]
+                                        -[%relationship.type.relationship_type%]-
+                                    [% END %]
+
+                                    [% IF relationship.part1.object == kernel %]
+                                        [% sibling = relationship.part2.object %]
+                                    [% ELSE %]
+                                        [% sibling = relationship.part1.object %]
+                                    [% END %]
+                                    <a href="[% base _ sibling.relative_url %]">
+                                        [%sibling.name.defined ? sibling.name : 'unnamed' %]
+                                    </a><br/>
                                 [% END %]
-                            [% ELSE %]
-                                [% IF relationship.nav == 'fromleft' %]
-                                    -[%relationship.type.relationship_type%]-&gt;
-                                [% ELSIF relationship.nav == 'fromright' %]
-                                    &lt;-[%relationship.type.relationship_type%]-
-                                [% END %]
-                            [% END %]
-
-                            [% IF relationship.nav == 'bi' %]
-                                &lt;-[%relationship.type.relationship_type%]-&gt;
-                            [% ELSIF relationship.nav == 'non' %]
-                                -[%relationship.type.relationship_type%]-
-                            [% END %]
-
-                            [% IF relationship.part1.object == kernel %]
-                                [% sibling = relationship.part2.object %]
-                            [% ELSE %]
-                                [% sibling = relationship.part1.object %]
-                            [% END %]
-                            <a href="[% base _ sibling.relative_url %]">
-                                [%sibling.name.defined ? sibling.name : 'unnamed' %]
-                            </a><br/>
-                        [% END %]
+                        </div>
+                        <div class="sidebar-header">
+                            <div class="label">sandbox</div>
+                        </div>
+                    </td></tr>
+                    <tr id="sidebar-bottom" class="sidebar-bottom" style="height: 100%"><td style="height: 100%" valign="top">
+                        <div id="sandbox"></div>
+                    </td></tr>
+                </table>
+                <div class="bottomcorners">
+                    <div class="bottomleft"></div>
+                    <div class="bottomright"></div>
                 </div>
-                
-            </td></tr>
-            
-            <tr><td>
-                <div class="panetitle">
-                    <div class="twistbutton nobutton">&nbsp;</div>
-                    sandbox
+            </td>
+            <td class="divider" valign="top">
+            </td>
+            <td class="content" valign="top">
+                <div class="content" id="viewkernel">
+                    [% FOR vkernel = visible_kernels %]
+                        [%INCLUDE 'Kernel/kernel.tt' i=0 %]
+                    [%END%]
+                    [% FOR note = notes %]
+                        [%INCLUDE 'Kernel/note.tt' i=0 %]
+                    [%END%]
+                    <div class="canvas">
+                    </div>
+                    <div class="topleft"></div>
+                    <div class="bottomleft"></div>
+                    <div class="bottomright"></div>
                 </div>
-            </td></tr>
-            <tr><td id="sandbox_container" style="height: 100%;">
-                <div id="sandbox" style="position: relative;">
-                </div>
-            </td></tr>
-        </table>
-    </div>
-    <div id="viewkernel">
-        <!-- main content for the visiblekernel -->
-        <div id="permanent_delete"><a id="permanent_delete_link" href="#">delete this kernel</a></div>
-        <input type="text" id="namefield0" class="namefield" autocomplete="off"
-               value="[% kernel.name %]"
-               style="width: [% kernel.name.length * 0.55 + 1 %]em;"/>
-        [% FOR vkernel = visible_kernels %]
-            [%INCLUDE 'Kernel/kernel.tt' i=0 %]
-        [%END%]
-        [% FOR note = notes %]
-            [%INCLUDE 'Kernel/note.tt' i=0 %]
-        [%END%]
-    </div>
-
+            </td>
+        </tr>
+    </table>
     [% FOR vkernel = visible_kernels %]
         [% i = 0 %]
         [%INCLUDE 'Kernel/kernel-js.tt'%]
@@ -173,18 +203,18 @@
         var viewKernelId=[%kernel.id%];
         var view = new ViewKernel([%kernel.id%],$('viewkernel'));
 
-        function show_confirm_delete(e){
-            $('permanent_delete').innerHTML = "Permanently delete this kernel? <a href='"+JSDBI.base_url()+"kernel/delete/"+viewKernelId+"'>yes</a> <a id='permanent_delete_no' href='#'>no</a>";
-            Utils.preventDefault(e);
-            Event.observe($('permanent_delete_no'),'click', hide_confirm_delete);
-        }
+        function show_confirm_delete(){
+            var div = document.createElement('div');
+            div.id = 'permanent_delete';
+            div.innerHTML = "Permanently delete this kernel? <a href='"+JSDBI.base_url()+"kernel/delete/"+viewKernelId+"'>yes</a> <a onclick='hide_confirm_delete()' href='#'>no</a>";
+            var body=document.getElementsByTagName('body')[0];
+            body.appendChild(div);
+        };
 
-        function hide_confirm_delete(e){
-            $('permanent_delete').innerHTML = '<a href="#" id="permanent_delete_link">delete this kernel</a></div>';
-            Utils.preventDefault(e);
-            Event.observe($('permanent_delete_link'),'click', show_confirm_delete);
-        }
-        Event.observe($('permanent_delete_link'),'click', show_confirm_delete);
+        function hide_confirm_delete() {
+            div.parentNode.removeChild($('permanent_delete'));
+        };
+        /*Event.observe($('permanent_delete_link'),'click', show_confirm_delete);*/
 
         [% UNLESS c.config.noprecache %]
             window.setTimeout(do_image_precache, 5); //get image caching to happen in separate thread
