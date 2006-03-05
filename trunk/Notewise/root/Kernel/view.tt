@@ -61,7 +61,7 @@
                     <div class="links">
                         <a href="/[% c.user.user.username %]">home</a>
                         <span class="dot">&nbsp;</span>
-                        <a href="[%c.uri_for('/settings')%]">settings</a>
+                        <a href="[%c.uri_for('/user/settings')%]">settings</a>
                         <span class="dot">&nbsp;</span>
                         <a href="[%c.uri_for('/help')%]">help</a>
                         <span class="dot">&nbsp;</span>

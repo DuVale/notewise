@@ -25,11 +25,9 @@
         <div class="links">
             <a href="/[% c.user.user.username %]">home</a>
             <span class="dot">&nbsp;</span>
-            <a href="[%c.uri_for('/settings')%]">settings</a>
+            <a href="[%c.uri_for('/user/settings')%]">settings</a>
             <span class="dot">&nbsp;</span>
             <a href="[%c.uri_for('/help')%]">help</a>
-            <span class="dot">&nbsp;</span>
-            <a href="#" onclick="Bugs.show_window(); false;">report bug</a>
             <span class="dot">&nbsp;</span>
             <a href="[%c.uri_for('/logout')%]">logout</a>
         </div>

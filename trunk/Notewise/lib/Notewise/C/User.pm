@@ -76,6 +76,11 @@ sub do_bug_report : Local {
     $c->stash->{template} = 'User/bug_thanks.tt';
 }
 
+sub settings : Local {
+    my ( $self, $c) = @_;
+    $c->stash->{template} = 'User/settings.tt';
+}
+
 =back
 
 =head1 AUTHOR
