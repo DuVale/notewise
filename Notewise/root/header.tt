@@ -1,6 +1,7 @@
 [% INCLUDE '_header.tt' %]
         <div class="search">
-            Search: <input id="mysearchfield" name="s"/>
+            Search: <input autocomplete="off" id="mysearchfield" onfocus="this.className = 'focus';" onblur="this.className='';" name="s" />
             <a href="[%base%]kernel/add?name=">new view</a>
+            <script type="text/javascript" src="[%base%]js/quicksearch.js"></script>
         </div>
     </div>
