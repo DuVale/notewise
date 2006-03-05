@@ -15,3 +15,11 @@ ViewKernel.prototype.extend( {
         this.namefield = $('viewname');
     }
 });
+
+JSDBI.on_start_update = function () {
+    Element.show($('saving_indicator'));
+}
+
+JSDBI.on_end_update = function () {
+    new Effect.Fade($('saving_indicator'),{duration: 0.5});
+}
