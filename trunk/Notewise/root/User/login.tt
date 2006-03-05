@@ -1,4 +1,7 @@
 <form action='[% base _ c.req.path.replace('beta-perl/?','') %]' method='POST'>
+    [% FOREACH var IN c.req.params %]
+        <input type=hidden name="[%var.key%]" value="[%var.value%]">
+    [% END %]
     <table>
         <tr>
             <td>Email:</td>
