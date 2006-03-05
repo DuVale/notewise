@@ -1,11 +1,6 @@
 <html>
 <head>
     <title>Notewise.com - Help</title>
-    <script type="text/javascript" src="[%base%]js/prototype.js"></script>
-    <script type="text/javascript" src="[%base%]js/utils.js"></script>
-    <script type="text/javascript" src="[%base%]js/controls.js"></script>
-    <script type="text/javascript" src="[%base%]js/effects.js"></script>
-    <script type="text/javascript" src="[%base%]js/quicksearch.js"></script>
     <link rel="stylesheet" type="text/css" href="[%base%]style.css"/>
     <link rel="icon" href="[%base%]images/favicon.ico" />
     <link rel="shortcut icon" href="[%base%]images/favicon.ico" />
@@ -20,6 +15,10 @@
 </head>
 <body>
     <div id="mysearchresults" class="searchresults" style="display: none"></div>
+    <script type="text/javascript" src="[%base%]js/prototype.js"></script>
+    <script type="text/javascript" src="[%base%]js/utils.js"></script>
+    <script type="text/javascript" src="[%base%]js/controls.js"></script>
+    <script type="text/javascript" src="[%base%]js/effects.js"></script>
     <div class="header">
         <a href="/"><div class="logo"></div></a>
         <div class="links">
