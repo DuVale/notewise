@@ -64,16 +64,21 @@ sub view : Private {
         $name = uri_unescape($name);
         my $user = $c->model('CDBI::User')->search({username=>$username})->first;
         my @kernels = $c->model('CDBI::Kernel')->kernels_with_name($name,$user->id);
-        @kernels = grep $_->has_permission($c->user->user->id,'view'), @kernels;
-        if(@kernels == 1){
+        my @allowed_kernels = grep $_->has_permission($c->user->user->id,'view'), @kernels;
+        warn "found kernels: ".scalar @kernels;
+        warn "found allowed kernels: ".scalar @allowed_kernels;
+        if(@allowed_kernels == 1){
             $c->stash->{kernel} = $kernels[0];
             return $c->forward('view_kernel');
-        } elsif (@kernels > 1) {
+        } elsif (@allowed_kernels > 1) {
             $c->stash->{kernels} = \@kernels;
             $c->stash->{template} = 'Kernel/disambiguation.tt';
+        } elsif (@kernels > 0) {
+            # TODO make this look prettier
+            return $c->res->output("Sorry, you don't have permission to view that kernel.");
         } else {
             # TODO make this look prettier
-            return $c->res->output("Couldn't find a kernel by that name");
+            return $c->res->output("Couldn't find a kernel by that name.");
         }
     } else {
         die "We shouldn't have gotten here - no kernel name or id";
