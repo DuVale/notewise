@@ -915,29 +915,35 @@ div.auto_complete ul strong.highlight {
 }
 
 #mysearchresults {
+    width: 150px;
+}
+
+.searchresults {
     position:absolute;
     width: 400px;
-    width: 150px;
     border: 1px solid black;
     background: white;
     z-index:100;
 }
 
-#mysearchresults ul {
+.searchresults ul {
   border:1px solid #888;
   margin:0;
   padding:0;
   width:100%;
   list-style-type:none;
 }
-#mysearchresults ul li {
+
+.searchresults ul li {
   margin:0;
   padding:3px;
 }
-#mysearchresults ul li.selected { 
+
+.searchresults ul li.selected { 
   background-color: #ffb; 
 }
-#mysearchresults ul strong.highlight { 
+
+.searchresults ul strong.highlight { 
   color: #800; 
   margin:0;
   padding:0;
@@ -1335,7 +1341,7 @@ span.parents {
     padding-left: 2em;
 }
 
-body.search .searchresults a,
-body.search .searchresults a:visited {
+body.search .searchresultslist a,
+body.search .searchresultslist a:visited {
     color: black;
 }
