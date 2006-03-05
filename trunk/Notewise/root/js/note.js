@@ -125,6 +125,7 @@ Note.prototype.extend({
 
     bodyFocus: function (e) {
       this.body.__hasFocus = true;
+      dndMgr.updateSelection(this,false);
     },
     
     contentChanged: function (e) {
