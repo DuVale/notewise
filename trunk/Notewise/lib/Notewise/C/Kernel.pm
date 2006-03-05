@@ -58,7 +58,11 @@ Displays the given kernel
 sub view : Private {
     my ( $self, $c, $username, $name, $id ) = @_;
     if ($id){
-        $c->stash->{kernel} = $c->model('CDBI::Kernel')->retrieve($id);
+        my $kernel = $c->model('CDBI::Kernel')->retrieve($id);
+        if($kernel->user->username ne $username){
+            return $c->res->output("Couldn't find a kernel by that name.");
+        }
+        $c->stash->{kernel} = $kernel;
         $c->forward('view_kernel');
     } elsif ($name ne '') {
         $name = uri_unescape($name);
