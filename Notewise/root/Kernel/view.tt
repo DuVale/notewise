@@ -70,7 +70,7 @@
                         <a href="[%c.uri_for('/logout')%]">logout</a>
                         </div>
                     <div class="search">
-                        Search: <input id="mysearchfield" name="s"/>
+                        Search: <input autocomplete="off" id="mysearchfield" onfocus="this.className = 'focus';" onblur="this.className='';" name="s" />
                     </div>
                 </div>
             </td>
