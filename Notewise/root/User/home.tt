@@ -1,4 +1,4 @@
-[% INCLUDE 'header.tt' %]
+[% INCLUDE 'header.tt' title=(c.user.user.username _ ' - Notewise.com') %]
 
 Last [%lastviewed.size%] viewed kernels:
 

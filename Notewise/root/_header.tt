@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Notewise.com - Help</title>
+    <title>[% title || 'Notewise.com' %]</title>
     <link rel="stylesheet" type="text/css" href="[%base%]style.css"/>
     <link rel="icon" href="[%base%]images/favicon.ico" />
     <link rel="shortcut icon" href="[%base%]images/favicon.ico" />
