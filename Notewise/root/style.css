@@ -1315,3 +1315,7 @@ table.sidebar {
     top: 5px;
     width: 320px;
 }
+
+#saving_indicator {
+    font-weight: bold;
+}
