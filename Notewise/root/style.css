@@ -1186,41 +1186,40 @@ td.divider {
 
 .sidebar-header .spinner {
     float: left;
+    background: url('/images/sidebar-spinner-vert.png');
+    height: 6px;
+    width: 11px;
     margin: 5px;
-    margin-left: 9px;
-    margin-right: 1px;
-    background: url('/images/sidebar-spinner-horiz.png');
-    width: 6px;
-    height: 11px;
+    margin-top: 7px;
     z-index: 50;
     cursor: default;
 }
 
 .top-sidebar-header .spinner {
     position: absolute;
-    background: url('/images/sidebar-spinner-horiz.png');
-    width: 6px;
-    height: 11px;
+    background: url('/images/sidebar-spinner-vert.png');
+    height: 6px;
+    width: 11px;
     z-index: 5;
-    top: 8px;
-    left: 10px;
+    top: 10px;
+    left: 7px;
     cursor: default;
 }
 
 .sidebar-header .spinner.closed,
 .top-sidebar-header .spinner.closed {
-    background: url('/images/sidebar-spinner-vert.png');
-    height: 6px;
-    width: 11px;
+    background: url('/images/sidebar-spinner-horiz.png');
+    width: 6px;
+    height: 11px;
 }
 
 .sidebar-header .spinner.closed {
-    margin-top: 8px;
-    margin-left: 5px;
+    margin-left: 9px;
+    margin-right: 1px;
 }
 .top-sidebar-header .spinner.closed {
-    top: 10px;
-    left: 7px;
+    top: 8px;
+    left: 10px;
 }
 
 
