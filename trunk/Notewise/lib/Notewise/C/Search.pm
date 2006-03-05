@@ -29,7 +29,7 @@ sub search : Path {
     my ( $self, $c ) = @_;
 
     my $start_index = ($c->req->params->{start}||1) - 1; # start is one based
-    my $amount = $c->req->params->{count};
+    my $amount = $c->req->params->{count} || 10;
     if($amount < 10 || $amount > 100){
         $amount = 10;
     }
@@ -37,8 +37,16 @@ sub search : Path {
     my $searchstring = $c->req->params->{s};
 
     my @objects = $self->do_search($c, $searchstring,500);
+    warn "found count: ".scalar @objects;
 
-    $c->stash->{start_index} = $start_index;
+    $c->stash->{start_index} = $start_index + 1;
+    if($c->stash->{start_index} > @objects){
+        $c->stash->{start_index} = @objects;
+    }
+    $c->stash->{end_index} = $start_index + $amount;
+    if($c->stash->{end_index} > @objects){
+        $c->stash->{end_index} = @objects;
+    }
     $c->stash->{amount} = $amount;
     $c->stash->{results} = [ @objects[$start_index..$start_index+$amount] ];
     $c->stash->{count} = scalar @objects;
