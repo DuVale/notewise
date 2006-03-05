@@ -2,7 +2,7 @@
     <div class="resultsbar">
         Results <b>[%start_index%]-[%end_index%]</b> of <b>[%count%]</b> results for <b>[%c.req.params.s%]</b>
     </div>
-    <div class="searchresults">
+    <div class="searchresultslist">
         <p><a href="http://beta.notewise.com/kernel/add?name=[%c.req.params.s%]">new '[%c.req.params.s%]'</a></p>
         [%- search = c.req.params.s -%]
         [%- FOR object = results -%]
