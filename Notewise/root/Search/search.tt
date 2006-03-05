@@ -1,21 +1,4 @@
-<html>
-    <head>
-        <title></title>
-    </head>
-    <body>
-    page: [%current_page%]<br/>
-    pages: [%pages.size%]<br/>
-    <a href="/" style="font-size: 100px;">N</a>
-    <a href="/scotty">home</a>
-    <a href="#">settings</a>
-    <a href="#">help</a>
-    <a href="/logout">logout</a>
-    <br/>
-    <br/>
-    <form>
-        <input name="s" value="[%c.req.params.s%]"/>
-        <input type="submit" value="Search"/>
-    </form>
+[% INCLUDE 'search-header.tt'%]
     Results <b>[%start_index + 1%]-[%start_index + amount%]</b> of <b>[%count%]</b> results for <b>[%c.req.params.s%]</b>
     <p><a href="/0">new '[%c.req.params.s%]'</a></p>
     [%- search = c.req.params.s -%]
