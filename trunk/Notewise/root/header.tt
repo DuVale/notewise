@@ -1,5 +1,6 @@
 [% INCLUDE '_header.tt' %]
         <div class="search">
             Search: <input id="mysearchfield" name="s"/>
+            <a href="[%base%]kernel/add?name=">new view</a>
         </div>
     </div>
