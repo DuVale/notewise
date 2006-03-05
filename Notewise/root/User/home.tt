@@ -1,5 +1,4 @@
 [% INCLUDE 'header.tt' %]
-<a href="[%base%]kernel/add?name=">create new view</a><br/><br/>
 
 Last [%lastviewed.size%] viewed kernels:
 
