@@ -1,5 +1,7 @@
-[% INCLUDE 'search-header.tt'%]
-    Results <b>[%start_index + 1%]-[%start_index + amount%]</b> of <b>[%count%]</b> results for <b>[%c.req.params.s%]</b>
+[% INCLUDE 'search-header.tt' bodyclass='search'%]
+    <div class="resultsbar">
+        Results <b>[%start_index + 1%]-[%start_index + amount%]</b> of <b>[%count%]</b> results for <b>[%c.req.params.s%]</b>
+    </div>
     <p><a href="http://beta.notewise.com/kernel/add?name=[%c.req.params.s%]">new '[%c.req.params.s%]'</a></p>
     [%- search = c.req.params.s -%]
     [%- FOR object = results -%]
