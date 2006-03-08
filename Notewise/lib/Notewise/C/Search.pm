@@ -51,7 +51,8 @@ sub search : Path {
     $c->stash->{results} = [ @objects[$start_index..$start_index+$amount] ];
     $c->stash->{count} = scalar @objects;
     $c->stash->{current_page} = POSIX::ceil(($start_index+1)/$amount);
-    $c->stash->{pages} = [1..POSIX::ceil(@objects/$amount)];
+    my $last_page = POSIX::ceil(@objects/$amount) || 1;
+    $c->stash->{pages} = [1..$last_page];
     $c->stash->{template} = 'Search/search.tt';
 }
 
