@@ -107,8 +107,11 @@ sub to_xml_hash_deep {
 sub contained_objects {
     my $self = shift;
     my @contained_ids = Notewise::M::CDBI::ContainedObject->search(container_object => $self->id);
-#    return map $_, @contained_ids;
     return @contained_ids;
+}
+
+sub children {
+    return shift->contained_objects;
 }
 
 sub parents {
