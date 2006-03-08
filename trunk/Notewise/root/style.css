@@ -1345,3 +1345,8 @@ body.search .searchresultslist a,
 body.search .searchresultslist a:visited {
     color: black;
 }
+
+.message {
+    color: red;
+    font-weight: bold;
+}
