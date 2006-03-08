@@ -81,17 +81,35 @@ sub settings : Local {
     $c->stash->{template} = 'User/settings.tt';
 }
 
-=back
+sub change_password : Local {
+    my ( $self, $c) = @_;
+    $c->form( required => [ qw(oldpassword newpassword newpasswordagain) ],
+              constraint_methods => {
+                  newpassword => {
+                      constraint => sub { return $_[1] eq $_[2]; },
+                      params => [ qw(newpassword newpasswordagain) ]
+                  }
+              }
+            );
 
-=head1 AUTHOR
+    if ($c->form->has_missing) {
+        $c->stash->{message}="Please fill in all required fields";
+        return $c->forward('settings');
+    }
+    if ($c->form->has_invalid) {
+        $c->stash->{message}="Sorry, the new passwords didn't match";
+        return $c->forward('settings');
+    }
+    if (!$c->user->user->check_password($c->form->valid('oldpassword'))) {
+        $c->stash->{message}="Sorry, your old password didn't match";
+        return $c->forward('settings');
+    }
 
-Scotty Allen
+    $c->user->user->password($c->form->valid('newpassword'));
+    $c->user->user->update;
 
-=head1 LICENSE
-
-This library is free software . You can redistribute it and/or modify
-it under the same terms as perl itself.
-
-=cut
+    $c->stash->{'message'} = "Your password has successfully been changed.";
+    $c->forward('settings');
+}
 
 1;

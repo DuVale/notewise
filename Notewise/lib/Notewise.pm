@@ -1,5 +1,8 @@
 package Notewise;
 
+use Carp;
+#$SIG{__DIE__} = sub { Carp::confess(shift) };
+
 use strict;
 use YAML ();
 use Catalyst qw/FormValidator
