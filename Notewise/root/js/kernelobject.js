@@ -18,7 +18,8 @@ KernelObject.prototype = {
         dndMgr.registerDropZone( new CustomDropzone(this.body,this) );
 
         // setup the click handlers
-        Event.observe(this.body,'dblclick', this.addNewElement.bindAsEventListener(this));
+        Event.observe(this.body,'dblclick', this.gotDoubleClick.bindAsEventListener(this));
+        Event.observe(this.body,'click', this.gotClick.bindAsEventListener(this));
         Event.observe(this.body,
                                    'mousedown',
                                    Utils.clearSelectionAndTerminate.bindAsEventListener(this));
@@ -148,10 +149,29 @@ KernelObject.prototype = {
         };
     },
 
-    addNewElement: function (e) {
+    gotClick: function (e) {
         if (!e) var e = window.event
+        if(this.blockNoteCreation){
+            Utils.terminateEvent(e);
+            return;
+        }
         if(e.shiftKey || e.ctrlKey || e.altKey) {
             this.addNewNote(e);
+            // block note creation, so we don't create two notes on a double click
+            this.blockNoteCreation = true;
+            window.setTimeout(this.clearNoteCreationBlock.bind(this), 800);
+        }
+    },
+
+    clearNoteCreationBlock: function() {
+        this.blockNoteCreation = false;
+    },
+
+    gotDoubleClick: function (e) {
+        if (!e) var e = window.event
+        if(e.shiftKey || e.ctrlKey || e.altKey) {
+            // don't do anything, since this was a double click
+            Utils.terminateEvent(e);
         } else {
             this.addNewKernel(e);
         }
