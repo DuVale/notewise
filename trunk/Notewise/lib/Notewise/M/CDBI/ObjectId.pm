@@ -1,6 +1,7 @@
 package Notewise::M::CDBI::ObjectId;
 
 use strict;
+use Carp;
 
 __PACKAGE__->has_a(user=>'Notewise::M::CDBI::User');
 
@@ -13,7 +14,7 @@ sub object {
     } elsif($self->type eq 'relationship'){
         return Notewise::M::CDBI::Relationship->retrieve($self->id);
     } else {
-        die "Unknown object type ".$self->type;
+        Carp::confess "Unknown object type ".$self->type;
     }
 }
 
