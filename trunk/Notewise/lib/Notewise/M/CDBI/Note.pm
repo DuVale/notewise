@@ -15,10 +15,16 @@ __PACKAGE__->has_a(lastmodified => 'DateTime', inflate=> \&Notewise::M::CDBI::in
 __PACKAGE__->add_trigger(before_create => \&create_id);
 __PACKAGE__->add_trigger(before_create => \&Notewise::M::CDBI::add_created_date);
 __PACKAGE__->add_trigger(after_create => \&hydrate_object_id);
+__PACKAGE__->add_trigger(before_delete => sub {
+     my $self = shift;
+     map $_->delete, Notewise::M::CDBI::Relationship->search(part1 => $self->object_id->id);
+     map $_->delete, Notewise::M::CDBI::Relationship->search(part2 => $self->object_id->id);
+});
+
 __PACKAGE__->add_trigger(after_delete => sub {
-                                                 my $self = shift;
-                                                 $self->object_id->delete;
-                        });
+     my $self = shift;
+     $self->object_id->delete;
+});
 
 sub hydrate_object_id {
     my $self = shift;
