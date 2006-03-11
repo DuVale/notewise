@@ -56,6 +56,11 @@ sub check_password {
     return $self->password eq $password; #XXX this will change when passwords get encrypted
 }
 
+sub authentication_hash {
+    my $self = shift;
+    return $self->username . ':' . Digest::MD5::md5_hex("s3kr3tw0rd".$self->username);
+}
+
 =head1 NAME
 
 Notewise::M::CDBI::User - CDBI Model Component Table Class

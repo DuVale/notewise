@@ -19,12 +19,13 @@ __PACKAGE__->config( YAML::LoadFile( __PACKAGE__->path_to('config.yml') ) );
 
 __PACKAGE__->config->{authentication}->{dbic} = {
                user_class           => 'Notewise::M::CDBI::User',
-               user_field           => 'email',
+               user_field           => 'username',
                password_field       => 'password',
-               password_type        => 'clear', # XXX change this once we're stablish
+               password_type        => 'hashed',
+               password_hash_type   => 'MD5',
            };
-
-__PACKAGE__->config->{session}->{cookie_expires} = 0; # make all cookies sessiohn cookies (expire when the browser closes).  TODO Ideally we can allow the user to specify whether they want to remain logged in or not.
+# make all cookies session cookies (expire when the browser closes).
+__PACKAGE__->config->{session}->{cookie_expires} = 0;
 
 __PACKAGE__->config->{session}->{expires} = 60*60*24*7; # set session to expire after a week
 
@@ -77,24 +78,42 @@ sub auto : Local {
     if ($c->user_exists){
         return 1;
     }
+
+    # check to see if they have a persistent authentication cookie
+    if (my $auth_cookie = $c->req->cookie('persistent_auth')){
+        my ($username, $hash) = split /:/, $auth_cookie->value;
+        my $user = $c->get_user($username);
+        if($auth_cookie->value eq $user->user->authentication_hash){
+            $c->set_authenticated($user);
+            return 1;
+        }
+    }
     
     # try to log them in if we can
-    my $email = $c->req->params->{email};
+    my $username = $c->req->params->{username};
     my $password = $c->req->params->{password};
-    if ($email && $password
-        && $c->login($email,$password) ){
-            #they're logged in
-            unless($c->req->path){
-                $c->res->redirect('/'.$c->user->user->username);
-                return 0;
-            } else {
-                return 1;
-            }
+    unless ($username && $password
+        && $c->login($username, $password) ){
+        # if they don't login successfully, forward to display the login page,
+        # and break the auto chain
+        $c->forward('/user/login');
+        return 0;
     }
 
-    # otherwise forward to display the login page, and break the auto chain
-    $c->forward('/user/login');
-    return 0;
+    #they're logged in
+
+    # see if we need to give them a persistent cookie
+    if($c->req->params->{remember_me}){
+        $c->res->cookies->{persistent_auth} = { value => $c->user->user->authentication_hash,
+                                                expires => '+36M' };
+    }
+    unless($c->req->path){
+        $c->res->redirect('/'.$c->user->user->username);
+        return 0;
+    } else {
+        return 1;
+    }
+
 }
 
 sub logout : Local {
