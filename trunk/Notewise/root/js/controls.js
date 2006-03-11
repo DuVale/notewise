@@ -162,6 +162,7 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
          Event.stop(event);
        case Event.KEY_ESC:
          this.hide();
+         this.element.value = '';
          this.active = false;
          return;
        case Event.KEY_LEFT:
