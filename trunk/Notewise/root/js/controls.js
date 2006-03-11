@@ -124,7 +124,10 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
     if(!this.changed && this.has_focus) {
       if(this.options.before_complete){
           if(this.options.before_complete(this, request) == 0){
+              printfire("skipping out of date results");
               return;
+          } else {
+              printfire("showing up to date results");
           }
       }
       this.update.innerHTML = request.responseText;
