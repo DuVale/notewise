@@ -182,16 +182,25 @@ sub visible_relationships {
 sub relative_url {
     my $self = shift;
     my $name = defined $self->name ? $self->name : '';
+    my $name_has_underscores = 0;
+    if($name =~ /_/){
+        # we do this because underscores are undistinguishable from spaces
+        # after uri unencoding.  Thus, we just assume that all underscores in
+        # the url are really spaces, unless we have a specific kernel id.
+        $name_has_underscores = 1;
+    }
     if($name){
         $name =~ s/\s+$//;
         $name =~ s/\s/_/g;
     }
-    my $unsafe = '^A-Za-z0-9_\-.!~*\'()';
+    my $safe = 'A-Za-z0-9_\-\.!~*\'\"()';
+    my $unsafe = "^$safe";
     if($name eq ''){
-        return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe)."/".$self->id;
-    } elsif(__PACKAGE__->kernels_with_name($name,$self->user->id) > 1){
+        return uri_escape($self->user->username,$unsafe)."//".$self->id;
+    } elsif($name_has_underscores || __PACKAGE__->kernels_with_name($name,$self->user->id) > 1){
         return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe)."/".$self->id;
     } else {
+        # only kernel with this name, so we skip the id
         return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe);
     }
 }
@@ -200,8 +209,6 @@ sub kernels_with_name {
     my $class = shift;
     my $name = shift;
     my $user_id = shift;
-
-    $name =~ s/_/ /g;
 
     my @kernels = $class->search(name=>$name);
     return grep {$_->user && $_->user->id == $user_id} @kernels;

@@ -65,12 +65,10 @@ sub view : Private {
         $c->stash->{kernel} = $kernel;
         $c->forward('view_kernel');
     } elsif ($name ne '') {
-        $name = uri_unescape($name);
+        $name =~ s/_/ /g;
         my $user = $c->model('CDBI::User')->search({username=>$username})->first;
         my @kernels = $c->model('CDBI::Kernel')->kernels_with_name($name,$user->id);
         my @allowed_kernels = grep $_->has_permission($c->user->user->id,'view'), @kernels;
-        warn "found kernels: ".scalar @kernels;
-        warn "found allowed kernels: ".scalar @allowed_kernels;
         if(@allowed_kernels == 1){
             $c->stash->{kernel} = $kernels[0];
             return $c->forward('view_kernel');
