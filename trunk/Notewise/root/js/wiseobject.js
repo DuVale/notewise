@@ -73,6 +73,11 @@ WiseObject.prototype.extend({
                                    'dblclick',
                                    Utils.terminateEvent.bindAsEventListener(this));
 
+        // Don't let clicks fall through to the background
+        Event.observe(this.htmlElement,
+                                   'click',
+                                   Utils.terminateEvent.bindAsEventListener(this));
+
 
         // setup relationship halo
         Event.observe(this.relationshiphalo,
