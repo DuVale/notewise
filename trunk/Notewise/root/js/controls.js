@@ -160,6 +160,9 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
        case Event.KEY_RETURN:
          this.select_entry();
          Event.stop(event);
+         this.hide();
+         this.active = false;
+         return;
        case Event.KEY_ESC:
          this.hide();
          this.element.value = '';
