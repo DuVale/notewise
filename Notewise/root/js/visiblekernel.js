@@ -71,9 +71,11 @@ VisibleKernel.prototype.extend({
         match = request.responseText.match(/>new '(.*?)'</);
         if(match && match[1] == this.namefield.value){
             // show the results
+            printfire("showing results for "+match[1]);
             return 1;
         } else {
             // don't show the results - they're too old
+            printfire("skipping out of date results for "+match[1]);
             return 0;
         }
     },
