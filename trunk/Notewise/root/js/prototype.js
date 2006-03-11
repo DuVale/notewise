@@ -49,7 +49,7 @@ Prototype.argumentsToArray = function(args){
 Function.prototype.bind = function(object) {
   var __method = this;
   return function() {
-    __method.apply(object, arguments);
+    return __method.apply(object, arguments);
   }
 }
 
@@ -62,14 +62,14 @@ Function.prototype.bindWithParams = function() {
   }
   return function() {
       var args = Prototype.argumentsToArray(arguments);
-      __method.apply(__this, __args.concat(args));
+      return __method.apply(__this, __args.concat(args));
   }
 }
 
 Function.prototype.bindAsEventListener = function(object) {
   var __method = this;
   return function(event) {
-    __method.call(object, event || window.event);
+    return __method.call(object, event || window.event);
   }
 }
 
