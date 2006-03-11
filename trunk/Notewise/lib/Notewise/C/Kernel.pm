@@ -78,6 +78,7 @@ sub view : Private {
             $c->stash->{template} = 'Kernel/disambiguation.tt';
         } elsif (@kernels > 0) {
             # TODO make this look prettier
+            $c->res->status(403);
             return $c->res->output("Sorry, you don't have permission to view that kernel.");
         } else {
             # TODO make this look prettier
