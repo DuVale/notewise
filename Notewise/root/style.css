@@ -914,10 +914,6 @@ div.auto_complete ul strong.highlight {
     background-color: #c4ebff; color: #333;
 }
 
-#mysearchresults {
-    width: 150px;
-}
-
 .searchresults {
     position:absolute;
     width: 400px;
