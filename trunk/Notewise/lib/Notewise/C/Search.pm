@@ -4,6 +4,7 @@ use strict;
 use base 'Catalyst::Base';
 use CGI;
 use POSIX;
+use URI::Escape;
 
 =head1 NAME
 
@@ -129,6 +130,25 @@ sub do_search {
     }
 
     return @objects_to_return;
+}
+
+sub find_or_create : Local {
+    my ( $self, $c, $searchstring ) = @_;
+
+    $searchstring = uri_unescape($searchstring);
+
+    my @objects = ($self->do_search($c, $searchstring,1));
+
+    if(@objects){
+        my $object = $objects[0];
+        if(ref $object =~ 'Note$'){
+            $object = $object->container_object;
+        }
+        $c->res->redirect($c->req->base.$object->relative_url);
+    } else {
+        $c->req->params->{name}=$searchstring;
+        $c->forward('/kernel/add');
+    }
 }
 
 =back

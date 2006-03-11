@@ -13,6 +13,16 @@ ViewKernel.prototype.extend( {
     fetchElements: function () {
         this.body = this.htmlElement;
         this.namefield = $('viewname');
+    },
+
+    registerHandlers: function() {
+        NonMovingKernel.prototype.registerHandlers.call(this);
+        Event.observe(this.namefield,'blur', this.updateName.bind(this));
+    },
+
+    updateName: function() {
+            this.kernel().name(this.namefield.value);
+            this.kernel().update();
     }
 });
 

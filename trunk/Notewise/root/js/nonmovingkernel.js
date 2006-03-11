@@ -14,14 +14,6 @@ NonMovingKernel.prototype.extend( {
         this.resizeChildren();
     },
 
-    // setup all the event listeners
-    registerHandlers: function() {
-        KernelObject.prototype.registerHandlers.call(this);
-
-        // setup the namefield actions
-        Event.observe(this.namefield,'blur', this.updateName.bind(this));
-    },
-
     // dummy method - this is used by resizeChildren.
     collapsed: function() {
         return false;

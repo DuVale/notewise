@@ -25,7 +25,6 @@ KernelObject.prototype = {
                                    Utils.clearSelectionAndTerminate.bindAsEventListener(this));
         
         // setup the namefield actions
-        Event.observe(this.namefield,'blur', this.updateName.bind(this));
         Event.observe(this.namefield,'keyup', this.layoutNamefield.bind(this));
 //        Event.observe(this.namefield,'keypress', this.loseFocusOnEnter.bindAsEventListener(this));
 
@@ -40,21 +39,6 @@ KernelObject.prototype = {
         Event.observe(this.namefield,
                                    'dblclick',
                                    Utils.terminateEvent.bindAsEventListener(this));
-    },
-
-    // Updates the kernel name on the server.  Called from an event handler when the name is changed.
-    updateName: function () {
-        // This is a hack to avoid persisting a newly created kernel, since
-        // we're probably just going to be deleting it anyway
-        if(this.newlyCreated){
-            return;
-        }
-
-        this.kernel().name(this.namefield.value);
-
-        this.updateNamelinkText();
-
-        this.kernel().update(this.updateNamelinkUrl.bind(this));
     },
 
     updateNamelink: function () {
