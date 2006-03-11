@@ -71,11 +71,9 @@ VisibleKernel.prototype.extend({
         match = request.responseText.match(/>new '(.*?)'</);
         if(match && match[1] == this.namefield.value){
             // show the results
-            printfire("showing results for "+match[1]);
             return 1;
         } else {
             // don't show the results - they're too old
-            printfire("skipping out of date results for "+match[1]);
             return 0;
         }
     },
@@ -112,7 +110,6 @@ VisibleKernel.prototype.extend({
     },
 
     swap_kernels: function (kernel) {
-        printfire("Swapping kernel for kernel "+kernel.id()+" "+kernel.name());
         var old_contained_object = this.contained_object();
         var old_id_string = this.idString();
         this.contained_object(kernel);
@@ -247,7 +244,6 @@ VisibleKernel.prototype.extend({
     },
 
     onNamefieldBlur: function(selected_element) {
-        printfire("calling select from blur");
         this.on_autocomplete_select(selected_element);
     },
 
