@@ -123,11 +123,12 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
   onComplete: function(request) {
     if(!this.changed && this.has_focus) {
       if(this.options.before_complete){
-          if(this.options.before_complete(this, request) == 0){
-              printfire("skipping out of date results");
+          var results = this.options.before_complete(this, request);
+          if(results == 0){
+              printfire("skipping out of date results (results was "+results+")");
               return;
           } else {
-              printfire("showing up to date results");
+              printfire("showing up to date results (results was "+results+")");
           }
       }
       this.update.innerHTML = request.responseText;
