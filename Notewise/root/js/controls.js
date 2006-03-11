@@ -154,7 +154,7 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
   },
   
   onKeyPress: function(event) {
-    if(this.active)
+    if(this.active) {
       switch(event.keyCode) {
        case Event.KEY_TAB:
        case Event.KEY_RETURN:
@@ -179,9 +179,14 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
          if(navigator.appVersion.indexOf('AppleWebKit')>0) Event.stop(event);
          return;
       }
-     else 
-      if(event.keyCode==Event.KEY_TAB || event.keyCode==Event.KEY_RETURN) 
+     } else {
+      if(event.keyCode==Event.KEY_TAB || event.keyCode==Event.KEY_RETURN) {
+        if(this.options.on_inactive_select && this.element.value.length > 0){
+            this.options.on_inactive_select(this);
+        }
         return;
+      }
+     }
     
     this.changed = true;
     this.has_focus = true;

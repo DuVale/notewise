@@ -26,11 +26,17 @@ new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '/s',
                              match = request.responseText.match(/>new '(.*?)'</);
                              if(match[1] == $('mysearchfield').value){
                                  // show the results
+                                 printfire("showing results for "+match[1]);
                                  return 1;
                              } else {
                                  // don't show the results - they're too old
+                                 printfire("skipping out of date results for "+match[1]);
                                  return 0;
                              }
+                         },
+
+                         on_inactive_select: function (autocompleter) {
+                            window.location=base_url+'search/find_or_create/'+$('mysearchfield').value;
                          }
-                        });
+});
 $('mysearchfield').focus();

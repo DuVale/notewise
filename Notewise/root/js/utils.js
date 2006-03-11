@@ -296,3 +296,26 @@ function printfire()
     }
 }
 
+function stack_trace(skip) {
+    var a = stack_trace.caller;
+    for(var i = 0; i < skip; i = i + 1) {
+        a = a.caller;
+    }
+    var s = "";  // This is the string we'll return.
+    var i = 0;
+    for(; a != null; a = a.caller) {
+        args = Prototype.argumentsToArray(a.arguments);
+        args = args.join(', ');
+        func = a.toString();
+        func = func.substr(0,func.indexOf('\n',func.indexOf('\n')+1));
+        s += ' - '+func+ '(' + args + ")\n";
+        if (a.caller == a) break;
+        i += 1;
+        if (i > 4) break;
+    }
+    return s;
+}
+
+function cluck(message) {
+    printfire("Error - "+message+"\n"+stack_trace(1));
+}

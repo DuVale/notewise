@@ -50,8 +50,21 @@ VisibleKernel.prototype.extend({
                                                      on_select: this.on_autocomplete_select.bind(this),
                                                      on_blur: this.onNamefieldBlur.bind(this),
                                                      before_complete: this.on_autocomplete_load.bind(this),
-                                                     on_complete: this.on_autocomplete_complete.bind(this)});
+                                                     on_complete: this.on_autocomplete_complete.bind(this),
+                                                     on_inactive_select: this.on_inactive_select.bind(this)});
         this.updateContains();
+    },
+
+    on_inactive_select: function (autocompleter) {
+        var url = base_url+"rest/kernel/find_or_create/"+encodeURIComponent(this.namefield.value);
+        var new_kernel = new Kernel();
+        var request = new Ajax.Request(url,
+                                       { method: 'get',
+                                         asynchronous: false } );
+        new_kernel.__populate(request.transport.responseXML);
+        this.swap_kernels(new_kernel);
+        dndMgr.clearSelection();
+        dndMgr.giveSearchBoxFocus();
     },
 
     on_autocomplete_load: function (autocompleter,request) {
@@ -73,7 +86,9 @@ VisibleKernel.prototype.extend({
         }
         if(Number(id) == 0){
             this.newlyCreated = false;
-            this.updateName();
+            this.kernel().name(this.namefield.value);
+            this.updateNamelinkText();
+            this.kernel().update(this.updateNamelinkUrl.bind(this));
         } else {
             this.swap_kernels(Kernel.retrieve(id));
             this.newlyCreated = false;
@@ -95,6 +110,7 @@ VisibleKernel.prototype.extend({
     },
 
     swap_kernels: function (kernel) {
+        printfire("Swapping kernel for kernel "+kernel.id()+" "+kernel.name());
         var old_contained_object = this.contained_object();
         var old_id_string = this.idString();
         this.contained_object(kernel);
@@ -229,6 +245,7 @@ VisibleKernel.prototype.extend({
     },
 
     onNamefieldBlur: function(selected_element) {
+        printfire("calling select from blur");
         this.on_autocomplete_select(selected_element);
     },
 

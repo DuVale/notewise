@@ -143,6 +143,22 @@ sub delete : Private {
     $c->res->output('OK');
 }
 
+sub find_or_create : Local {
+    my ( $self, $c, $searchstring ) = @_;
+    my @objects = ($c->controller('Search')->do_search($c, $searchstring,1));
+
+    if(@objects){
+        my $object = $objects[0];
+        if(ref $object =~ 'Note$'){
+            $object = $object->container_object;
+        }
+        $c->forward('view',[$object->object_id->id]);
+    } else {
+        $c->req->params->{name}=$searchstring;
+        $c->forward('add');
+    }
+}
+
 =head1 AUTHOR
 
 Scotty Allen
