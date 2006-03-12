@@ -138,7 +138,6 @@ Relationship.prototype.extend( {
         x = (x + this.part1ContainedObject.currentWidth(this.part1ContainedObject.oldParentNode)/2)+'%';
         y = (y + this.part1ContainedObject.currentHeight(this.part1ContainedObject.oldParentNode)/2)+'%';
         this.line.setP1(x,y);
-        this.updateMiddle();
     },
 
     updatePosition2: function(object,x,y){
@@ -152,7 +151,6 @@ Relationship.prototype.extend( {
         x = (x + this.part2ContainedObject.currentWidth(this.part2ContainedObject.oldParentNode)/2)+'%';
         y = (y + this.part2ContainedObject.currentHeight(this.part2ContainedObject.oldParentNode)/2)+'%';
         this.line.setP2(x,y);
-        this.updateMiddle();
     },
 
     updateArrows: function() {
@@ -443,11 +441,11 @@ Relationship.prototype.extend( {
         midy = midy - offsetTop - offsetHeight/2;
         this.midx = (midx * this.htmlElement.parentNode.clientWidth)/100;
         this.midy = (midy * this.htmlElement.parentNode.clientHeight)/100;
+        printfire("updated middle to "+this.midx+"x"+this.midy);
     },
 
     // checks to see if we're roughly in the middle of the relationship.  If we are, show the relationship label
     mouseMove: function(e){
-        this.updateMiddle(); //TODO - remove this in favor of only precached versions
         var offset = Position.cumulativeOffset(this.line.img);
         var x = Event.pointerX(e) - offset[0];
         var y = Event.pointerY(e) - offset[1];
@@ -533,6 +531,7 @@ Relationship.prototype.extend( {
 
         this.labelDiv.style.display='inline';
         this.updateArrows();
+        this.updateMiddle();
         this.arrowCanvasElements[0].style.display='block';
         this.arrowCanvasElements[1].style.display='block';
     },
