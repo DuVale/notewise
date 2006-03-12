@@ -414,6 +414,9 @@ Relationship.prototype.extend( {
     },
 
     updateMiddle: function (){
+        if(this.intersect1 == null || this.intersect2 == null){
+            return; // XXX this is a hack - we need to figure out what's causing this
+        }
         var midx=Math.min(this.intersect1.x,this.intersect2.x)
                     +Math.abs(this.intersect2.x-this.intersect1.x)/2;
         var midy=Math.min(this.intersect1.y,this.intersect2.y)
