@@ -90,7 +90,8 @@ LayerManager.prototype = {
 
         // set the layer of this element to be one higher than the highest layer
         // XXX note that this could lead to large layer indexes, if used for a long time.
-        this.layer(element,Number(highestLayer)+1);
+        var newLayer = Number(highestLayer)+1;
+        this.layer(element,newLayer);
     },
 
     // moves the element to the next layer below the lowest layer
@@ -128,7 +129,11 @@ LayerManager.prototype = {
         if(layer !== undefined){
             return element.style.zIndex=layer;
         } else {
-            return element.style.zIndex || this.defaultIndex;
+            var layer = Utils.getStyle(element,'z-index');
+            if(layer == 'auto'){
+                layer = this.defaultIndex;
+            }
+            return layer || this.defaultIndex;
         }
     }
 };
