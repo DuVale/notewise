@@ -454,15 +454,12 @@ DragAndDrop.prototype.extend({
 
       var currentDropZone = this._getCurrentDropZone(e);
 
-      for ( var i = 0 ; i < n ; i++ ) {
-         if ( this.dropZones[i] == currentDropZone ) {
-            if ( this.dropZones[i].canAccept(this.currentDragObjects) ) {
-               this.dropZones[i].accept(this.currentDragObjects);
-               foundDropZone = true;
-               break;
-            }
-         }
-      }
+     if ( currentDropZone ) {
+        if ( currentDropZone.canAccept(this.currentDragObjects) ) {
+           currentDropZone.accept(this.currentDragObjects);
+           foundDropZone = true;
+        }
+     }
 
       for ( var i = 0 ; i < n ; i++ ) {
          this.dropZones[i].hideHover();
@@ -475,9 +472,18 @@ DragAndDrop.prototype.extend({
    _getCurrentDropZone: function(e){
       var currentDropZone = null;
       var n = this.dropZones.length;
+      outer:
       for ( var i = 0 ; i < n ; i++ ) {
          var dropZone = this.dropZones[i];
          if ( this._mousePointInDropZone( e, this.dropZones[i] ) ) {
+            var obj_count = this.currentDragObjects.length;
+            for (var j = 0; j < obj_count; j++){
+                if(Utils.hasAncestor(dropZone.htmlElement,
+                                     this.currentDragObjects[j].htmlElement)){
+                    // skip drop zones that are children of any of the objects we're dragging
+                    continue outer;
+                }
+            }
             if(currentDropZone == null){
                currentDropZone=dropZone;
                continue;
@@ -855,8 +861,8 @@ Effect.SizeAndPosition.prototype = {
    moveBy: function( difX, difY ) {
       var currentLeft = this.element.offsetLeft;
       var currentTop  = this.element.offsetTop;
-      var intDifX     = parseInt(difX);
-      var intDifY     = parseInt(difY);
+      var intDifX     = parseInt(difX,10);
+      var intDifY     = parseInt(difY,10);
 
       var style = this.element.style;
       if ( intDifX != 0 )
@@ -868,8 +874,8 @@ Effect.SizeAndPosition.prototype = {
    resizeBy: function( difW, difH ) {
       var currentWidth  = this.element.offsetWidth;
       var currentHeight = this.element.offsetHeight;
-      var intDifW       = parseInt(difW);
-      var intDifH       = parseInt(difH);
+      var intDifW       = parseInt(difW,10);
+      var intDifH       = parseInt(difH,10);
 
       var style = this.element.style;
       if ( intDifW != 0 )

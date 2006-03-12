@@ -104,8 +104,8 @@ Utils = {
           var borderXOffset = 0;
           var borderYOffset = 0;
           if ( parent != element ) {
-             var borderXOffset = parseInt(this.getElementsComputedStyle(parent, "borderLeftWidth" ));
-             var borderYOffset = parseInt(this.getElementsComputedStyle(parent, "borderTopWidth" ));
+             var borderXOffset = parseInt(this.getElementsComputedStyle(parent, "borderLeftWidth" ),10);
+             var borderYOffset = parseInt(this.getElementsComputedStyle(parent, "borderTopWidth" ),10);
              borderXOffset = isNaN(borderXOffset) ? 0 : borderXOffset;
              borderYOffset = isNaN(borderYOffset) ? 0 : borderYOffset;
           }
