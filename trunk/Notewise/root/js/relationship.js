@@ -127,13 +127,13 @@ Relationship.prototype.extend( {
 //        this.line.update();
     },
 
-    updatePosition1: function(x,y){
+    updatePosition1: function(object,x,y){
         if(x == null || y == null){
             x = Number(this.part1ContainedObject.x());
             y = Number(this.part1ContainedObject.y());
         } else {
-            x = Number(Utils.chopPx(arguments[1]));
-            y = Number(Utils.chopPx(arguments[2]));
+            x = Number(Utils.chopPx(x));
+            y = Number(Utils.chopPx(y));
         }
         x = (x + this.part1ContainedObject.currentWidth(this.part1ContainedObject.oldParentNode)/2)+'%';
         y = (y + this.part1ContainedObject.currentHeight(this.part1ContainedObject.oldParentNode)/2)+'%';
@@ -141,13 +141,13 @@ Relationship.prototype.extend( {
         this.updateMiddle();
     },
 
-    updatePosition2: function(x,y){
+    updatePosition2: function(object,x,y){
         if(x == null || y == null){
             x = Number(this.part2ContainedObject.x());
             y = Number(this.part2ContainedObject.y());
         } else {
-            x = Number(Utils.chopPx(arguments[1]));
-            y = Number(Utils.chopPx(arguments[2]));
+            x = Number(Utils.chopPx(x));
+            y = Number(Utils.chopPx(y));
         }
         x = (x + this.part2ContainedObject.currentWidth(this.part2ContainedObject.oldParentNode)/2)+'%';
         y = (y + this.part2ContainedObject.currentHeight(this.part2ContainedObject.oldParentNode)/2)+'%';
@@ -218,6 +218,8 @@ Relationship.prototype.extend( {
                 {x: Number(this.part2ContainedObject.x())+Number(this.part2ContainedObject.currentWidth())/2,
                  y: Number(this.part2ContainedObject.y())+Number(this.part2ContainedObject.currentHeight())/2}];
 
+        // intersects denote where the line intersects the edge of each object
+        // - used to place the label and arrows
         this.intersect1 = rect1.getLineIntersect(line);
         this.intersect2 = rect2.getLineIntersect(line);
 
