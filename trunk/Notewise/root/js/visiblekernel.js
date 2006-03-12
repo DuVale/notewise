@@ -204,18 +204,6 @@ VisibleKernel.prototype.extend({
         }
     },
 
-    // create html elements for the relationships that are visible for this object
-    hydrateRelationships: function() {
-        var rels = this.container_object().visible_relationships();
-        for(var i=0; i<rels.length; i++){
-            var rel = rels[i];
-            if(rel.part1() == this.kernel_id() ||
-               rel.part2() == this.kernel_id()){
-                rel.realize(this.container_object().id());
-            }
-        }
-    },
-
     kernel: function() {
         return this.contained_object();
     },

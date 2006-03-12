@@ -210,12 +210,23 @@ WiseObject.prototype.extend({
             for(var i=0; i<this.relationshipCache.length; i++){
                 var relationship = this.relationshipCache[i];
                 relationship.removeFromView();
-            }
-            for(var i=0; i<this.relationshipCache.length; i++){
                 relationship.uncache();
             }
         }
     },
+
+    // create html elements for the relationships that are visible for this object
+    hydrateRelationships: function() {
+        var rels = this.container_object().visible_relationships();
+        for(var i=0; i<rels.length; i++){
+            var rel = rels[i];
+            if(rel.part1() == this.kernel_id() ||
+               rel.part2() == this.kernel_id()){
+                rel.realize(this.container_object().id());
+            }
+        }
+    },
+
 
     cacheRelationship: function(relationship) {
         if(!this.relationshipCache){
@@ -474,6 +485,9 @@ WiseObject.prototype.extend({
             return;
         }
 
+        // remove the object from the object cache
+        delete objectCache[this.idString()];
+
         // Save all the old position and size info in pixels, so we can
         // recalculate it with the new parent
         var pos = Utils.toViewportPosition(this.htmlElement);
@@ -506,6 +520,15 @@ WiseObject.prototype.extend({
         // itself, since we don't really need it right now
         this.container_object(vkernel.kernel_id());
         this.update();
+
+        // add the object back into the object cache
+        objectCache[this.idString()] = this;
+
+        // delete all the old relationships and create new ones
+        if(parentElement != this.oldParentNode){
+            this.deleteRelationships();
+            this.hydrateRelationships();
+        }
 
         // update the contains flags on the html
         if(oldParent && oldParent.updateContains){

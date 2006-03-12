@@ -441,7 +441,6 @@ Relationship.prototype.extend( {
         midy = midy - offsetTop - offsetHeight/2;
         this.midx = (midx * this.htmlElement.parentNode.clientWidth)/100;
         this.midy = (midy * this.htmlElement.parentNode.clientHeight)/100;
-        printfire("updated middle to "+this.midx+"x"+this.midy);
     },
 
     // checks to see if we're roughly in the middle of the relationship.  If we are, show the relationship label
