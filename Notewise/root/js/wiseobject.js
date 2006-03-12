@@ -249,6 +249,7 @@ WiseObject.prototype.extend({
       }
       // XXX could change this to only do this if the halo is visible, for speed.  We'd need to make sure this gets called when the object gets expanded though
       if(this.relationshiphalo != undefined){
+          var width = Utils.getStyle(this.htmlElement,'width');
           this.relationshiphalo.style.width = Math.max(0,this.htmlElement.clientWidth + 30) + 'px';
           this.relationshiphalo.style.height = Math.max(0,this.htmlElement.clientHeight + 30) + 'px';
       }
@@ -595,12 +596,16 @@ WiseObject.prototype.extend({
 
         parentElement.appendChild(this.htmlElement);
 
-
         var elementStyle = this.htmlElement.style;
         elementStyle.left = ((pos.x-parentPos.x)*100/parentElement.clientWidth) + '%';
         elementStyle.top = ((pos.y-parentPos.y)*100/parentElement.clientHeight) + '%';
         elementStyle.width = (width*100/parentElement.clientWidth) + '%';
         elementStyle.height = (height*100/parentElement.clientHeight) + '%';
+        if(this.collapsed && this.collapsed()){
+            elementStyle.height = '';
+        }
+
+        this.layoutResize();
 
         this.notifyEndChangeListeners();
     }
