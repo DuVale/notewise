@@ -144,7 +144,7 @@ VisibleKernel.prototype.extend({
     realize: function(parent) {
         this.htmlElement = document.createElement('div');
         this.htmlElement.id="vkernel"+this.idString();
-        this.htmlElement.className="vkernel collapsed";
+        this.htmlElement.className="vkernel collapsed nothighlighted";
         var expandButtonLabel = this.collapsed() ? '+' : '-';
         var name;
         if(this.kernel().name() === undefined){
@@ -356,7 +356,9 @@ VisibleKernel.prototype.extend({
                 Element.addClassName(this.htmlElement,'collapsed');
                 this.setFixedSize(true);
             }
-            dndMgr.moveToFront(this.htmlElement);
+            if(this.htmlElement){
+                dndMgr.moveToFront(this.htmlElement);
+            }
             this.notifyEndChangeListeners();
         } else {
             results = VisibleKernel.superclass.collapsed.call(this, 0);
@@ -365,7 +367,9 @@ VisibleKernel.prototype.extend({
                 Element.removeClassName(this.htmlElement,'collapsed');
                 this.setFixedSize(false);
             }
-            dndMgr.moveToFront(this.htmlElement);
+            if(this.htmlElement){
+                dndMgr.moveToFront(this.htmlElement);
+            }
             this.notifyEndChangeListeners();
         }
         this.layoutResize();
