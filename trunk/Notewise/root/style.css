@@ -77,19 +77,19 @@ body.kernelview {
     background: url('/images/kernel-blue-right.png') right no-repeat;
 }
 
-.vkernel.expanded.contains .vkernel.collapsed.contains .leftbackground {
+.vkernel.expanded.contains .vkernel.collapsed.contains.nothighlighted .leftbackground {
     background: url('/images/kernel-mini-blue-left.png') no-repeat;
 }
 
-.vkernel.expanded.contains .vkernel.collapsed.contains .mid-leftbackground {
+.vkernel.expanded.contains .vkernel.collapsed.contains.nothighlighted .mid-leftbackground {
     background: url('/images/kernel-mini-blue-mid.png');
 }
 
-.vkernel.expanded.contains .vkernel.collapsed.contains .mid-rightbackground {
+.vkernel.expanded.contains .vkernel.collapsed.contains.nothighlighted .mid-rightbackground {
     display: none;
 }
 
-.vkernel.expanded.contains .vkernel.collapsed.contains .rightbackground {
+.vkernel.expanded.contains .vkernel.collapsed.contains.nothighlighted .rightbackground {
     background: url('/images/kernel-mini-blue-right.png') right no-repeat;
 }
 
@@ -109,19 +109,19 @@ body.kernelview {
     background: url('/images/kernel-expanded-right.png') right no-repeat;
 }
 
-.vkernel.contains.expanded .vkernel.contains.expanded .leftbackground {
+.vkernel.contains.expanded .vkernel.contains.expanded.nothighlighted .leftbackground {
     background: url('/images/kernel-mini-blue-expanded-left.png') no-repeat;
 }
 
-.vkernel.contains.expanded .vkernel.contains.expanded .mid-leftbackground {
+.vkernel.contains.expanded .vkernel.contains.expanded.nothighlighted .mid-leftbackground {
     background: url('/images/kernel-mini-blue-expanded-midleft.png');
 }
 
-.vkernel.contains.expanded .vkernel.contains.expanded .mid-rightbackground {
+.vkernel.contains.expanded .vkernel.contains.expanded.nothighlighted .mid-rightbackground {
     background: url('/images/kernel-mini-blue-expanded-midright.png');
 }
 
-.vkernel.contains.expanded .vkernel.contains.expanded .rightbackground {
+.vkernel.contains.expanded .vkernel.contains.expanded.nothighlighted .rightbackground {
     background: url('/images/kernel-mini-blue-expanded-right.png') right no-repeat;
 }
 
@@ -645,22 +645,6 @@ img {
     cursor: move;
 }
 
-.vkernel.expanded.contains .vkernel.collapsed.nocontains .leftbackground {
-    background: url('/images/kernel-mini-left.png') no-repeat;
-}
-
-.vkernel.expanded.contains .vkernel.collapsed.nocontains .mid-leftbackground {
-    background: url('/images/kernel-mini-mid.png');
-}
-
-.vkernel.expanded.contains .vkernel.collapsed.nocontains .mid-rightbackground {
-    display: none;
-}
-
-.vkernel.expanded.contains .vkernel.collapsed.nocontains .rightbackground {
-    background: url('/images/kernel-mini-right.png') right no-repeat;
-}
-
 .vkernel.highlighted .leftbackground {
     background: url('/images/kernel-highlighted-left.png') no-repeat;
 }
@@ -689,6 +673,22 @@ img {
     background: url('/images/kernel-mini-highlighted-right.png') right no-repeat;
 }
 
+.vkernel.expanded.contains .vkernel.collapsed.nocontains.nothighlighted .leftbackground {
+    background: url('/images/kernel-mini-left.png') no-repeat;
+}
+
+.vkernel.expanded.contains .vkernel.collapsed.nocontains.nothighlighted .mid-leftbackground {
+    background: url('/images/kernel-mini-mid.png');
+}
+
+.vkernel.expanded.contains .vkernel.collapsed.nocontains.nothighlighted .mid-rightbackground {
+    display: none;
+}
+
+.vkernel.expanded.contains .vkernel.collapsed.nocontains.nothighlighted .rightbackground {
+    background: url('/images/kernel-mini-right.png') right no-repeat;
+}
+
 .vkernel .vkernel .namelink {
     font-style: normal;
     font-size: 9px;
@@ -712,7 +712,7 @@ img {
     top: 14px;
 }
 
-.vkernel.expanded.contains .vkernel.expanded.nocontains .leftbackground {
+.vkernel.expanded.contains .vkernel.expanded.nocontains.nothighlighted .leftbackground {
     position: absolute;
     background: url('/images/kernel-mini-gray-expanded-left.png') no-repeat;
     height: 15px;
@@ -722,7 +722,7 @@ img {
     z-index: 0;
 }
 
-.vkernel.expanded.contains .vkernel.expanded.nocontains .mid-leftbackground {
+.vkernel.expanded.contains .vkernel.expanded.nocontains.nothighlighted .mid-leftbackground {
     position: absolute;
     background: url('/images/kernel-mini-gray-expanded-midleft.png');
     height: 15px;
@@ -732,7 +732,7 @@ img {
     z-index: 0;
 }
 
-.vkernel.expanded.contains .vkernel.expanded.nocontains .mid-rightbackground {
+.vkernel.expanded.contains .vkernel.expanded.nocontains.nothighlighted .mid-rightbackground {
     display: block;
     position: absolute;
     background: url('/images/kernel-mini-gray-expanded-midright.png');
@@ -743,7 +743,7 @@ img {
     cursor: move;
 }
 
-.vkernel.expanded.contains .vkernel.expanded.nocontains .rightbackground {
+.vkernel.expanded.contains .vkernel.expanded.nocontains.nothighlighted .rightbackground {
     position: absolute;
     background: url('/images/kernel-mini-gray-expanded-right.png') right no-repeat;
     height: 15px;
