@@ -13,7 +13,7 @@ new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '/s',
                             $('mysearchfield').value = value;
                          },
                          on_complete: function(autocompleter){
-                            if(autocompleter.entry_count <= 2){
+                            if(autocompleter.entry_count == 1){
                                 // if there were no actual search results, then "new..." should be
                                 // the default selection
                                 autocompleter.index = 0;
