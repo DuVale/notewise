@@ -124,6 +124,10 @@ sub logout : Local {
 
     # $c->logout is borked
     delete @{ $c->session }{qw/__user __user_store/};
+
+    $c->res->cookies->{persistent_auth} = { value => '',
+                                          expires => '-1d' };
+
     $c->res->redirect($c->uri_for('/'));
 }
 
