@@ -1,4 +1,4 @@
-use Test::More tests => 16;
+use Test::More tests => 19;
 use_ok( Catalyst::Test, 'Notewise' );
 use_ok('Notewise::M::CDBI::Kernel');
 use Data::Dumper;
@@ -42,6 +42,17 @@ is($kernel->relative_url, 'fred/This_is_a_name_with_%2Fslashes','test relative_u
 $kernel->name('This is a name with ?question marks ');
 $kernel->update;
 is($kernel->relative_url, 'fred/This_is_a_name_with_%3Fquestion_marks','test relative_url 4 - question marks');
+
+$kernel->name('this is a test');
+$kernel->update;
+is($kernel->relative_url, 'fred/this_is_a_test','test relative_url 5');
+my $kernel6 = Notewise::M::CDBI::Kernel->create({name=>'this is a test',user=>$user->id});
+
+$kernel_id=$kernel->id;
+is($kernel->relative_url, "fred/this_is_a_test/$kernel_id",'test relative_url 6');
+my $kernel_id6 = $kernel6->id;
+is($kernel6->relative_url, "fred/this_is_a_test/$kernel_id6",'test relative_url 7');
+
 # test permissions
 ok($kernel->has_permission($user,'view'), "users can view their own kernel");
 ok($kernel->has_permission($user,'modify'), "users can modify their own kernel");
@@ -49,7 +60,6 @@ ok($kernel->has_permission($user,'delete'), "users can delete their own kernel")
 ok(!$kernel->has_permission($user2,'view'), "other users can't view other users' kernels");
 ok(!$kernel->has_permission($user2,'modify'), "other users can't view other users' kernels");
 ok(!$kernel->has_permission($user2,'delete'), "other users can't view other users' kernels");
-
 
 # test visible_relationships
 my $kernel2 = Notewise::M::CDBI::Kernel->create({name=>'onfoo1',user=>$user});

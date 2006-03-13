@@ -189,17 +189,17 @@ sub relative_url {
         # the url are really spaces, unless we have a specific kernel id.
         $name_has_underscores = 1;
     }
-    if($name){
-        $name =~ s/\s+$//;
-        $name =~ s/\s/_/g;
-    }
     my $safe = 'A-Za-z0-9_\-\.!~*\'\"()';
     my $unsafe = "^$safe";
     if($name eq ''){
         return uri_escape($self->user->username,$unsafe)."//".$self->id;
-    } elsif($name_has_underscores || __PACKAGE__->kernels_with_name($name,$self->user->id) > 1){
+    } elsif($name_has_underscores || (__PACKAGE__->kernels_with_name($name,$self->user->id) > 1)){
+        $name =~ s/\s+$//;
+        $name =~ s/\s/_/g;
         return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe)."/".$self->id;
     } else {
+        $name =~ s/\s+$//;
+        $name =~ s/\s/_/g;
         # only kernel with this name, so we skip the id
         return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe);
     }
