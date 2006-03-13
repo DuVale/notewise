@@ -213,9 +213,9 @@
         };
 
         function hide_confirm_delete() {
-            div.parentNode.removeChild($('permanent_delete'));
+            var div = $('permanent_delete');
+            div.parentNode.removeChild(div);
         };
-        /*Event.observe($('permanent_delete_link'),'click', show_confirm_delete);*/
 
         [% UNLESS c.config.noprecache %]
             window.setTimeout(do_image_precache, 5); //get image caching to happen in separate thread
