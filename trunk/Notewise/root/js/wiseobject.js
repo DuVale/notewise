@@ -524,12 +524,6 @@ WiseObject.prototype.extend({
         // add the object back into the object cache
         objectCache[this.idString()] = this;
 
-        // delete all the old relationships and create new ones
-        if(parentElement != this.oldParentNode){
-            this.deleteRelationships();
-            this.hydrateRelationships();
-        }
-
         // update the contains flags on the html
         if(oldParent && oldParent.updateContains){
             oldParent.updateContains();
@@ -537,6 +531,17 @@ WiseObject.prototype.extend({
         if(vkernel.updateContains){
             vkernel.updateContains();
         }
+
+        // delete all the old relationships and create new ones
+        if(parentElement != this.oldParentNode){
+            // set this on a timer, so it doesn't block the ui
+            window.setTimeout(this.refreshRelationships.bind(this),50);
+        }
+    },
+
+    refreshRelationships: function () {
+            this.deleteRelationships();
+            this.hydrateRelationships();
     },
 
     // Returns whether or not this object is currently selected
