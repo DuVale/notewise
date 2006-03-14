@@ -282,6 +282,20 @@ Utils = {
     getInputTextWidth: function(field){
         return Utils.getTextWidth(field.value, Utils.getStyle(field,
                                                             'font-size'))*1.15+10;
+    },
+
+    get_agent: function () {
+        return navigator.userAgent.toLowerCase();
+    },
+
+    is_gecko: function () {
+        var agt=this.get_agent();
+        return (agt.indexOf('gecko') != -1);
+    },
+
+    is_mac: function () {
+        var agt=this.get_agent();
+        return (agt.indexOf("mac")!=-1);
     }
 };
 
