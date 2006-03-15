@@ -113,6 +113,8 @@ sub do_add : Local {
         $c->stash->{message}="Sorry, those passwords don't match";
     } else {
 	my $user = Notewise::M::CDBI::User->create_from_form( $c->form );
+        $user->password(Digest::MD5::md5_hex($user->password));
+        $user->update;
         my $kernel = $c->model('CDBI::Kernel')->insert({name=>'',
                                                         user=>$user});
         return $c->res->redirect($c->req->base . 'admin/account/list');
