@@ -140,7 +140,10 @@ sub do_edit : Local {
         'the following are invalid: <b>'.
 	join(', ',$c->form->invalid()).'</b>';
     } else {
-	$c->model('CDBI::User')->retrieve($id)->update_from_form( $c->form );
+        my $user = $c->model('CDBI::User')->retrieve($id);
+        $user->update_from_form( $c->form );
+        $user->password(Digest::MD5::md5_hex($user->password));
+        $user->update;
 	$c->stash->{message}='Updated OK';
     }
     $c->forward('edit');
