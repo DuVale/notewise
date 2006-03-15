@@ -1,6 +1,7 @@
 package Notewise::TestUtils;
 use Notewise;
 use Notewise::M::CDBI::User;
+use Digest::MD5;
 
 @EXPORT = qw(new_request login_user);
 
@@ -28,13 +29,15 @@ sub login_user {
     my ($email,$password,$username)=@_;
     my $mech = Test::WWW::Mechanize::Catalyst->new;
 
+    $username ||= ($email =~ /(.*)@/)[0];
+
     # login
     my $user = Notewise::M::CDBI::User->find_or_create({email=>$email});
-    $user->password($password);
+    $user->password(Digest::MD5::md5_hex($password));
     $user->username($username);
     $user->name('automated testing account');
     $user->update;
-    $mech->get("http://localhost/?email=$email&password=$password");
+    $mech->get("http://localhost/?username=$username&password=$password");
     Test::More::is($mech->status,'302');
     return $mech, $user;
 }

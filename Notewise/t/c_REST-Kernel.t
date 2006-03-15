@@ -1,4 +1,4 @@
-use Test::More tests => 16;
+use Test::More tests => 22;
 use Test::XML;
 use_ok( Catalyst::Test, 'Notewise' );
 use_ok('Notewise::C::REST::Kernel');
@@ -56,6 +56,24 @@ is_xml($mech->content,qq#<response><kernel name="fred" created="2004-02-03 02:03
 <containedObjects>
 </containedObjects>
 </kernel></response># );
+
+# Test find_or_create with spaces
+
+$req = new_request('GET', "http://localhost/rest/kernel/find_or_create/foo%20bar");
+
+$mech->request($req);
+$mech->content_lacks('ERROR');
+$mech->content_lacks('FORBIDDEN');
+
+$mech->content_like(qr/name="foo bar"/);
+
+$req = new_request('GET', "http://localhost/rest/kernel/find_or_create/foo%2520bar");
+
+$mech->request($req);
+$mech->content_lacks('ERROR');
+$mech->content_lacks('FORBIDDEN');
+
+$mech->content_like(qr/name="foo%20bar"/);
 
 # login again with a different user
 ($mech, $user2) = login_user('test2@tester.scottyallen.com','password','test2');

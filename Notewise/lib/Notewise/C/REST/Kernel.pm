@@ -2,6 +2,7 @@ package Notewise::C::REST::Kernel;
 
 use strict;
 use base 'Catalyst::Base';
+use URI::Escape;
 
 =head1 NAME
 
@@ -145,6 +146,7 @@ sub delete : Private {
 
 sub find_or_create : Local {
     my ( $self, $c, $searchstring ) = @_;
+    $searchstring = uri_unescape($searchstring);
     my @objects = ($c->controller('Search')->do_search($c, $searchstring,1));
 
     if(@objects){
