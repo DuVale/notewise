@@ -110,11 +110,7 @@ Note.prototype.extend({
                                     Utils.terminateEvent.bindAsEventListener(this));
 
         // handles problem with firefox/gecko not rendering scrollbars properly on mac - see bug #224
-        printfire("is_mac="+Utils.is_mac()+
-                  "is_gecko="+Utils.is_gecko()+
-                  "agent="+Utils.get_agent());
         if(Utils.is_mac() && Utils.is_gecko()) {
-            printfire("registering mac bug fix handlers");
             Event.observe(this.corner, 'mouseover', function () { this.body.style.overflow = "hidden"; }.bind(this));
             Event.observe(this.corner, 'mouseout', function () { this.body.style.overflow = ""; }.bind(this));
         }
