@@ -77,6 +77,7 @@ sub to_xml_hash_shallow {
             source => $self->source,
             created => $self->created ? $self->created->strftime($self->strf_format) : '',
             lastmodified => $self->lastModified ? $self->lastModified->strftime($self->strf_format): '',
+            has_children => $self->has_children
     };
 }
 
@@ -95,6 +96,7 @@ sub to_xml_hash_deep {
                 source => $self->source,
                 created => $self->created ? $self->created->strftime($self->strf_format) : '',
                 lastmodified => $self->lastModified ? $self->lastModified->strftime($self->strf_format): '',
+                has_children => $self->has_children,
                 containedObjects => {
                     visiblekernel => [ @contained_kernels ],
                     note => [ @contained_notes ],
@@ -108,6 +110,13 @@ sub contained_objects {
     my $self = shift;
     my @contained_ids = Notewise::M::CDBI::ContainedObject->search(container_object => $self->id);
     return @contained_ids;
+}
+
+# return true if this kernel has notes or children on it
+# XXX candidate for optimization
+sub has_children {
+    my $self = shift;
+    return ($self->children > 0) || ($self->notes > 0) || 0;
 }
 
 sub children {

@@ -28,9 +28,11 @@ requires( 'URI' => 0 );
 requires( 'Catalyst::Plugin::Authentication::Store::DBIC' => 0 );
 requires( 'Catalyst::Plugin::Session::Store::FastMmap' => 0 );
 requires( 'Catalyst::Plugin::Session::State::Cookie' => 0 );
+requires( 'Template' => 0 );
 
 catalyst_files();
 
 install_script( glob('script/*.pl') );
 auto_install();
 &WriteAll;
+

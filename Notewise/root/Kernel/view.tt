@@ -3,30 +3,29 @@
 <html>
 <head>
     <title>[%kernel.name%] - Notewise.com</title>
-    <script type="text/javascript" src="[%base%]js/ui.js"></script>
-    <script type="text/javascript" src="[%base%]js/wz_jsgraphics.js"></script>
-    <script type="text/javascript" src="[%base%]js/prototype.js"></script>
-    <script type="text/javascript" src="[%base%]js/dragndrop.js"></script>
-    <script type="text/javascript" src="[%base%]js/jsdbi.js"></script>
-    <script type="text/javascript" src="[%base%]js/utils.js"></script>
-    <script type="text/javascript" src="[%base%]js/linedraw.js"></script>
-    <script type="text/javascript" src="[%base%]js/new_relationship.js"></script>
-    <script type="text/javascript" src="[%base%]js/wiseobject.js"></script>
-    <script type="text/javascript" src="[%base%]js/relationship.js"></script>
-    <script type="text/javascript" src="[%base%]js/kernelobject.js"></script>
-    <script type="text/javascript" src="[%base%]js/nonmovingkernel.js"></script>
-    <script type="text/javascript" src="[%base%]js/viewkernel.js"></script>
-    <script type="text/javascript" src="[%base%]js/kernelthumbnail.js"></script>
-    <script type="text/javascript" src="[%base%]js/kernel.js"></script>
-    <script type="text/javascript" src="[%base%]js/visiblekernel.js"></script>
-    <script type="text/javascript" src="[%base%]js/note.js"></script>
-    <script type="text/javascript" src="[%base%]js/controls.js"></script>
-    <script type="text/javascript" src="[%base%]js/effects.js"></script>
-    <script type="text/javascript" src="[%base%]js/bugs.js"></script>
-    [%#
-    use this instead of the above garbage to get faster loading of javascript
-    <script type="text/javascript" src="/javascript"></script>
-    %]
+    [% IF c.config.debug_js %]
+        <script type="text/javascript" src="[%base%]js/ui.js"></script>
+        <script type="text/javascript" src="[%base%]js/wz_jsgraphics.js"></script>
+        <script type="text/javascript" src="[%base%]js/prototype.js"></script>
+        <script type="text/javascript" src="[%base%]js/dragndrop.js"></script>
+        <script type="text/javascript" src="[%base%]js/jsdbi.js"></script>
+        <script type="text/javascript" src="[%base%]js/utils.js"></script>
+        <script type="text/javascript" src="[%base%]js/linedraw.js"></script>
+        <script type="text/javascript" src="[%base%]js/new_relationship.js"></script>
+        <script type="text/javascript" src="[%base%]js/wiseobject.js"></script>
+        <script type="text/javascript" src="[%base%]js/relationship.js"></script>
+        <script type="text/javascript" src="[%base%]js/kernelobject.js"></script>
+        <script type="text/javascript" src="[%base%]js/nonmovingkernel.js"></script>
+        <script type="text/javascript" src="[%base%]js/viewkernel.js"></script>
+        <script type="text/javascript" src="[%base%]js/kernelthumbnail.js"></script>
+        <script type="text/javascript" src="[%base%]js/kernel.js"></script>
+        <script type="text/javascript" src="[%base%]js/visiblekernel.js"></script>
+        <script type="text/javascript" src="[%base%]js/note.js"></script>
+        <script type="text/javascript" src="[%base%]js/controls.js"></script>
+        <script type="text/javascript" src="[%base%]js/effects.js"></script>
+        <script type="text/javascript" src="[%base%]js/bugs.js"></script>
+    [% ELSE %]
+    [% END %]
     <script>
         // configure the base url for jsdbi
         JSDBI.base_url('[% base %]');
