@@ -52,7 +52,6 @@ VisibleKernel.prototype.extend({
                                                      before_complete: this.on_autocomplete_load.bind(this),
                                                      on_complete: this.on_autocomplete_complete.bind(this),
                                                      on_inactive_select: this.on_inactive_select.bind(this)});
-        this.updateContains();
     },
 
     on_inactive_select: function (autocompleter) {
@@ -355,8 +354,6 @@ VisibleKernel.prototype.extend({
                 Element.removeClassName(this.htmlElement,'expanded');
                 Element.addClassName(this.htmlElement,'collapsed');
                 this.setFixedSize(true);
-            }
-            if(this.htmlElement){
                 dndMgr.moveToFront(this.htmlElement);
             }
             this.notifyEndChangeListeners();
@@ -366,9 +363,14 @@ VisibleKernel.prototype.extend({
                 Element.addClassName(this.htmlElement,'expanded');
                 Element.removeClassName(this.htmlElement,'collapsed');
                 this.setFixedSize(false);
-            }
-            if(this.htmlElement){
                 dndMgr.moveToFront(this.htmlElement);
+
+                var vkernels = Utils.getElementsByClassName(this.body,'vkernel');
+                var notes = Utils.getElementsByClassName(this.body,'note');
+                if(this.kernel().has_children() &&
+                   vkernels.length == 0 && notes.length == 0){        
+                    this.hydrateChildren();
+                }
             }
             this.notifyEndChangeListeners();
         }

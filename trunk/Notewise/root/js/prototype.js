@@ -255,7 +255,6 @@ Ajax.Request.prototype = (new Ajax.Base()).extend({
 
     } catch (e) {
         alert('Ajax.Request generated an error: '+e.name+' - '+e.message);
-        debugger;
     }
   },
 

@@ -295,8 +295,7 @@ KernelObject.prototype = {
     updateContains: function() {
         var vkernels = Utils.getElementsByClassName(this.body,'vkernel');
         var notes = Utils.getElementsByClassName(this.body,'note');
-        if(vkernels.length > 0 ||
-           notes.length > 0){
+        if(this.kernel().has_children()){
             Element.addClassName(this.htmlElement,'contains');
             Element.removeClassName(this.htmlElement,'nocontains');
         } else {

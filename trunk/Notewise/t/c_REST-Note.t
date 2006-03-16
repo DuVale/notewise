@@ -135,11 +135,7 @@ is_xml($mech->content,qq#<response><note id="$note_id" container_object="$kernel
 ### Test permissions
 # login a different user
 $mech = Test::WWW::Mechanize::Catalyst->new; #wipe our cookies
-my $user2 = Notewise::M::CDBI::User->create({email=>'test2@tester.scottyallen.com',
-                                          password=>'password',
-                                          name=>'automated testing account'});
-$mech->get('http://localhost/?email=test2@tester.scottyallen.com&password=password');
-is($mech->status,'302');
+($mech, $user2) = login_user('test2@tester.scottyallen.com','password','test2');
 my $user2_id=$user2->id;
 
 $req = new_request('PUT', "http://localhost/rest/note",
