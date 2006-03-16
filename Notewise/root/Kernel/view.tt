@@ -25,6 +25,7 @@
         <script type="text/javascript" src="[%base%]js/effects.js"></script>
         <script type="text/javascript" src="[%base%]js/bugs.js"></script>
     [% ELSE %]
+        <script type="text/javascript" src="[%base%]js/javascript-min.js.gz"></script>
     [% END %]
     <script>
         // configure the base url for jsdbi
