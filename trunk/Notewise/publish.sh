@@ -2,9 +2,9 @@
 
 cd mod_perl/
 svn up -rHEAD
+perl compilejs.pl
 echo "updating prereqs"
 perl Makefile.PL
 sudo make
-perl compilejs.pl
 echo "Restarting apache"
 sudo service httpd restart
