@@ -128,6 +128,8 @@ NewRelationship.prototype = {
         y = Math.max(0,y);
         y = Math.min(y,parent.clientHeight);
         this.line.setP2(x+"px",y+"px");
+        Utils.terminateEvent(e);
+        Utils.preventDefault(e);
     }
 }
 

@@ -117,6 +117,7 @@ WiseObject.prototype.extend({
     startCreateRelationship: function(e){
         newRelationship.startDrag(e,this);
         Utils.terminateEvent(e);
+        Utils.preventDefault(e);
     },
 
     moveInRelationshipHalo: function(e) {
