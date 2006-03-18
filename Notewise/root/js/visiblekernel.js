@@ -228,6 +228,10 @@ VisibleKernel.prototype.extend({
         }
         this.expandbutton = Utils.getElementsByClassName(this.htmlElement, 'expandbutton')[0];
         this.editbutton = Utils.getElementsByClassName(this.htmlElement, 'editbutton')[0];
+        this.leftbackground = Utils.getElementsByClassName(this.htmlElement, 'leftbackground')[0];
+        this.midleftbackground = Utils.getElementsByClassName(this.htmlElement, 'mid-leftbackground')[0];
+        this.midrightbackground = Utils.getElementsByClassName(this.htmlElement, 'mid-rightbackground')[0];
+        this.rightbackground = Utils.getElementsByClassName(this.htmlElement, 'rightbackground')[0];
     },
 
     onNamefieldBlur: function(selected_element) {
@@ -296,6 +300,10 @@ VisibleKernel.prototype.extend({
     // causes the internal elements to resize if necessary
     layoutResize: function() {
         WiseObject.prototype.layoutResize.call(this);
+        this.midleftbackground.style.width = (this.htmlElement.clientWidth -
+                                             this.leftbackground.clientWidth -
+                                             this.rightbackground.clientWidth -
+                                             this.midrightbackground.clientWidth) + 'px';
         this.resizeChildren();
     },
 

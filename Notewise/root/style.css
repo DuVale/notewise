@@ -41,7 +41,6 @@ body.kernelview {
     left: 0px;
     width: 7px;
     top: 0px;
-    z-index: 10;
 }
 
 .note-mid {
@@ -51,7 +50,6 @@ body.kernelview {
     left: 7px;
     right: 6px;
     top: 0px;
-    z-index: 10;
     cursor: move;
 }
 
@@ -62,7 +60,6 @@ body.kernelview {
     width: 6px;
     right: 0px;
     top: 0px;
-    z-index: 10;
 }
 
 .vkernel.contains .leftbackground {
