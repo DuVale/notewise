@@ -48,6 +48,10 @@ WiseObject.prototype.extend({
         this.corner = Utils.getElementsByClassName(this.htmlElement, 'corner')[0];
         this.removebutton = Utils.getElementsByClassName(this.htmlElement, 'removebutton')[0];
         this.relationshiphalo = Utils.getElementsByClassName(this.htmlElement, 'relationshiphalo')[0];
+        this.relationshiphalotop = Utils.getElementsByClassName(this.relationshiphalo, 'halo-top')[0];
+        this.relationshiphalobottom = Utils.getElementsByClassName(this.relationshiphalo, 'halo-bottom')[0];
+        this.relationshiphaloleft = Utils.getElementsByClassName(this.relationshiphalo, 'halo-left')[0];
+        this.relationshiphaloright = Utils.getElementsByClassName(this.relationshiphalo, 'halo-right')[0];
         if(this.relationshiphalo){ // thumbs don't have halos and arrows
             this.newrelationshiparrow = Utils.getElementsByClassName(this.relationshiphalo, 'newrelationshiparrow')[0];
         }
@@ -260,9 +264,12 @@ WiseObject.prototype.extend({
       }
       // XXX could change this to only do this if the halo is visible, for speed.  We'd need to make sure this gets called when the object gets expanded though
       if(this.relationshiphalo != undefined){
-          var width = Utils.getStyle(this.htmlElement,'width');
-          this.relationshiphalo.style.width = Math.max(0,this.htmlElement.clientWidth + 30) + 'px';
-          this.relationshiphalo.style.height = Math.max(0,this.htmlElement.clientHeight + 30) + 'px';
+          this.relationshiphalo.style.width = (this.htmlElement.clientWidth + 30) + 'px';
+          this.relationshiphalo.style.height = (this.htmlElement.clientHeight + 30) + 'px';
+          this.relationshiphalotop.style.width = (this.htmlElement.clientWidth - 8) + 'px';
+          this.relationshiphalobottom.style.width = (this.htmlElement.clientWidth - 8) + 'px';
+          this.relationshiphaloleft.style.height = (this.htmlElement.clientHeight - 8) + 'px';
+          this.relationshiphaloright.style.height = (this.htmlElement.clientHeight - 8) + 'px';
       }
     },
 
