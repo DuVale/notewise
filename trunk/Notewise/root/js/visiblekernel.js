@@ -277,6 +277,13 @@ VisibleKernel.prototype.extend({
                       'mouseover',function(){Element.addClassName(this.editbutton,'hover')}.bind(this));
         Event.observe(this.editbutton,
                       'mouseout',function(){Element.removeClassName(this.editbutton,'hover')}.bind(this));
+
+        // Fix ff bug that causes cursor to disappear sometimes - see bug #273
+        Event.observe(this.namefield,'blur', function() {
+            printfire('got blur on namefield');
+            this.namefield.style.display = "block";
+            window.setTimeout(function(){this.namefield.style.display = "";}.bind(this),100);
+        }.bind(this));
     },
 
     // Select this object and terminate the event
