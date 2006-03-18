@@ -309,16 +309,16 @@ body.kernelview {
     top: 8px;
     width: 9px;
     height: 8px;
-    background: url('/images/spinner-vert.png') no-repeat;
+    background: url('/images/spinner-vert.gif') no-repeat;
     z-index: 5;
 }
 
 .vkernel.collapsed .expandbutton {
     left: 4px;
     top: 6px;
-    width: 7px;
-    height: 10px;
-    background: url('/images/spinner-horiz.png') no-repeat;
+    width: 8px;
+    height: 9px;
+    background: url('/images/spinner-horiz.gif') no-repeat;
     z-index: 5;
 }
 
