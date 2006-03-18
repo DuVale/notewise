@@ -65,7 +65,7 @@
                         <div class="tab">
                             <div id='saving_indicator' style="display: none">Saving...</div>
                             <input type="text" id="viewname" class="namefield" autocomplete="off"
-                                   value="[% kernel.name %]"
+                                   value="[% kernel.name | replace('"','&quot;') %]"
                                    style="width: [% kernel.name.length * 0.55 + 1 %]em;"/>
                             <div class="links">
                                 <a href="[%base%]kernel/add?name=">new view</a><br/>

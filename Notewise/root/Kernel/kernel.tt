@@ -30,7 +30,7 @@
     [% ELSE %]
         [% name_length = 1.05%]
     [% END %]
-    <input class="namefield" style="width: [% name_length %]em;" name="s" value="[% vkernel.contained_kernel.name %]" autocomplete="off"/>
+    <input class="namefield" style="width: [% name_length %]em;" name="s" value="[% vkernel.contained_kernel.name | replace('"','&quot;') %]" autocomplete="off"/>
     <div class="searchresults" style="display: none"></div>
     <a class="namelink" style="width: [% name_length %]em;" href="[% base _ vkernel.contained_kernel.relative_url %]">
         [% vkernel.contained_kernel.name %]
