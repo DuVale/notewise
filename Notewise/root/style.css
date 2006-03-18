@@ -152,82 +152,120 @@ body.kernelview {
 
 .halo-top-left {
     position: absolute;
-    background: url('/images/halo-top-left.png') no-repeat;
     left: 0px;
     top: 0px;
     width: 19px;
     height: 19px;
-    z-index: -2;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-top-left.png');
+}
+
+.halo-top-left[class] {
+    /* IE ignores this block */
+    background: url('/images/halo-top-left.png') no-repeat;*/
 }
 
 .halo-left {
     position: absolute;
-    background: url('/images/halo-left.png');
     left: 0px;
     top: 19px;
     bottom: 19px;
     width: 19px;
     z-index: -2;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-left.png');
+}
+
+.halo-left[class] {
+    /* IE ignores this block */
+    background: url('/images/halo-left.png');
 }
 
 .halo-bottom-left {
     position: absolute;
-    background: url('/images/halo-bottom-left.png') no-repeat;
     left: 0px;
     bottom: 0px;
     width: 19px;
     height: 19px;
     z-index: -2;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-bottom-left.png');
+}
+
+.halo-bottom-left[class] {
+    /* IE ignores this block */
+    background: url('/images/halo-bottom-left.png') no-repeat;
 }
 
 .halo-top {
     position: absolute;
-    background: url('/images/halo-top.png');
     left: 19px;
     top: 0px;
     right: 19px;
     height: 19px;
     z-index: -2;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-top.png');
+}
+
+.halo-top[class] {
+    /* IE ignores this block */
+    background: url('/images/halo-top.png');
 }
 
 .halo-bottom {
     position: absolute;
-    background: url('/images/halo-bottom.png');
     left: 19px;
     bottom: 0px;
     right: 19px;
     height: 19px;
     z-index: -2;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-bottom.png');
+}
+
+.halo-bottom[class] {
+    /* IE ignores this block */
+    background: url('/images/halo-bottom.png');
 }
 
 .halo-right {
     position: absolute;
-    background: url('/images/halo-right.png');
     right: 0px;
     top: 19px;
     bottom: 19px;
     width: 19px;
     z-index: -2;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-right.png');
+}
+
+.halo-right[class] {
+    /* IE ignores this block */
+    background: url('/images/halo-right.png');
 }
 
 .halo-top-right {
     position: absolute;
-    background: url('/images/halo-top-right.png') no-repeat;
     right: 0px;
     top: 0px;
     width: 19px;
     height: 19px;
     z-index: -2;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-top-right.png');
+}
+
+.halo-top-right[class] {
+    background: url('/images/halo-top-right.png') no-repeat;
 }
 
 .halo-bottom-right {
     position: absolute;
-    background: url('/images/halo-bottom-right.png') no-repeat;
     right: 0px;
     bottom: 0px;
     width: 19px;
     height: 19px;
     z-index: -2;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-bottom-right.png');
+}
+
+.halo-bottom-right[class] {
+    /* IE ignores this block */
+    background: url('/images/halo-bottom-right.png') no-repeat;
 }
 
 .newrelationshiparrow {
