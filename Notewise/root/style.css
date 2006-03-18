@@ -896,12 +896,13 @@ div.auto_complete ul strong.highlight {
 /* main layout styles */
 
 #sidebar {
-    position: absolute;
-    top: 0; right: 0;
-    height: 100%; width: 25%;
-    border-left: 1px solid #999;
-    background-color: white;
+    position: relative;
+    margin-left: 5px;
+    width: 192px;
+    float: left;
+    height: 100%;
 }
+
 
 #root {
     height: 100%; width: 75%;
@@ -1181,7 +1182,7 @@ div.search input {
 
 .sidebar-header .spinner {
     float: left;
-    background: url('/images/sidebar-spinner-vert.png');
+    background: url('/images/sidebar-spinner-vert.png') no-repeat;
     height: 6px;
     width: 11px;
     margin: 5px;
@@ -1192,7 +1193,7 @@ div.search input {
 
 .top-sidebar-header .spinner {
     position: absolute;
-    background: url('/images/sidebar-spinner-vert.png');
+    background: url('/images/sidebar-spinner-vert.png') no-repeat;
     height: 6px;
     width: 11px;
     z-index: 5;
@@ -1203,7 +1204,7 @@ div.search input {
 
 .sidebar-header .spinner.closed,
 .top-sidebar-header .spinner.closed {
-    background: url('/images/sidebar-spinner-horiz.png');
+    background: url('/images/sidebar-spinner-horiz.png') no-repeat;
     width: 6px;
     height: 11px;
 }
@@ -1261,7 +1262,7 @@ td.content {
     width: 15px;
     height: 15px;
     position: absolute;
-    left: 0px;
+    left: 8px;
     top: 0px;
 }
 .bottomleft {
@@ -1269,7 +1270,7 @@ td.content {
     width: 14px;
     height: 15px;
     position: absolute;
-    left: 0px;
+    left: 8px;
     bottom: 0px;
 }
 .bottomright {
@@ -1277,19 +1278,49 @@ td.content {
     width: 14px;
     height: 14px;
     position: absolute;
+    right: 5px;
+    bottom: 0px;
+}
+
+#sidebar .bottomleft {
+    left: 0px;
+    bottom: 0px;
+}
+#sidebar .bottomright {
     right: 0px;
     bottom: 0px;
 }
+
+* html #sidebar .bottomright {
+    bottom: -2px;
+}
+
+* html #sidebar .bottomleft {
+    bottom: -1px;
+}
+
+* html .bottomright {
+    right: 4px;
+    bottom: -2px;
+}
+
+* html .bottomleft {
+    bottom: -1px;
+}
+
 div.content {
     position: relative;
-    width:100%;
     height:100%;
     overflow: hidden;
+    margin-left: 0px;
+}
+div.content * {
 }
 .canvas {
+    margin-left: 8px;
+    margin-right: 5px;
     background: white;
     border: 1px solid #989898;
-    width: 100%;
     height: 100%;
 }
 
@@ -1346,4 +1377,8 @@ body.search .searchresultslist a:visited {
 .message {
     color: red;
     font-weight: bold;
+}
+
+#footer {
+    height: 10px;
 }
