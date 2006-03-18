@@ -91,6 +91,10 @@ NewRelationship.prototype = {
                         } else if(element.note) {
                             part2 = element.note.id();
                         }
+                        if(part2 == part1){
+                            // trying to make a relationship with ourselves
+                            break;
+                        }
                         var relationship = Relationship.insert({part1: part1,part2: part2,type: '',nav: 'fromright'});
                         relationship.realize(this.startObject.container_object().id());
                         dndMgr.updateSelection(relationship,false);
