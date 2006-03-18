@@ -36,7 +36,7 @@ body.kernelview {
 
 .note-left {
     position: absolute;
-    background: url('/images/note-upper-left.png') no-repeat;
+    background: url('/images/note-upper-left.gif') no-repeat;
     height: 11px;
     left: 0px;
     width: 7px;
@@ -45,7 +45,7 @@ body.kernelview {
 
 .note-mid {
     position: absolute;
-    background: url('/images/note-upper-mid.png');
+    background: url('/images/note-upper-mid.gif');
     height: 11px;
     left: 7px;
     right: 6px;
@@ -55,7 +55,7 @@ body.kernelview {
 
 .note-right {
     position: absolute;
-    background: url('/images/note-upper-right.png') right no-repeat;
+    background: url('/images/note-upper-right.gif') right no-repeat;
     height: 11px;
     width: 6px;
     right: 0px;
