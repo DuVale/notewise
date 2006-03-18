@@ -135,24 +135,28 @@ KernelObject.prototype = {
 
     gotClick: function (e) {
         if (!e) var e = window.event
-        if(this.blockNoteCreation){
+        if(this.blockObjectCreation){
             Utils.terminateEvent(e);
             return;
         }
         if(e.shiftKey || e.ctrlKey || e.altKey) {
             this.addNewNote(e);
             // block note creation, so we don't create two notes on a double click
-            this.blockNoteCreation = true;
-            window.setTimeout(this.clearNoteCreationBlock.bind(this), 800);
+            this.blockObjectCreation = true;
+            window.setTimeout(this.clearObjectCreationBlock.bind(this), 1500);
         }
     },
 
-    clearNoteCreationBlock: function() {
-        this.blockNoteCreation = false;
+    clearObjectCreationBlock: function() {
+        this.blockObjectCreation = false;
     },
 
     gotDoubleClick: function (e) {
         if (!e) var e = window.event
+        if(this.blockObjectCreation){
+            Utils.terminateEvent(e);
+            return;
+        }
         if(e.shiftKey || e.ctrlKey || e.altKey) {
             // don't do anything, since this was a double click
             Utils.terminateEvent(e);
