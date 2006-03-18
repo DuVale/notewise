@@ -1099,40 +1099,46 @@ td.divider {
 }
 
 .tab {
-    width: 800px;
+    margin-left: 300px;
     height: 48px;
-    float: right;
-    position: absolute;
+    position: relative;
     right: 5px;
     bottom: 0px;
+    height: 70px;
 }
 
 .tab .left{
+    position: absolute;
     background: url('/images/tab-left.png');
     width: 45px;
     height: 48px;
-    float: right;
+    bottom: 0px;
 }
 
 .tab .mid{
-    float: right;
-    background: url('/images/tab-mid.png');
-    width: 600px;
-    height: 48px;
+    background: url('/images/tab-mid.png') bottom repeat-x ;
+    margin-left: 45px;
+    margin-right: 24px;
+    height: 70px;
+    bottom: 0px;
 }
 
 .tab .right{
-    float: right;
     background: url('/images/tab-right.png');
     width: 24px;
     height: 48px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
 }
 
 .tab .links {
     position: absolute;
-    right: 15px;
-    margin-top: 3px;
-    width: 65px;
+    right: 20px;
+    margin-top: 0;
+    margin-bottom: 0;
+    bottom: 5px;
+    z-index: 10;
 }
 
 .dot {
@@ -1349,8 +1355,11 @@ div.content {
     overflow: hidden;
     margin-left: 0px;
 }
-div.content * {
+
+div.headerleft {
+    float: left;
 }
+
 .canvas {
     margin-left: 8px;
     margin-right: 5px;
@@ -1372,13 +1381,18 @@ table.sidebar {
     background: none;
     border: none;
     position: absolute;
-    right: 80px;
-    top: 5px;
+    left: 50px;
+    bottom: 5px;
     width: 320px;
+    text-align: left;
 }
 
 #saving_indicator {
     font-weight: bold;
+    z-index: 100;
+    position: absolute;
+    right: 20px;
+    top: 0px;
 }
 
 .resultsbar {

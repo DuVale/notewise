@@ -8,6 +8,7 @@ ViewKernel.prototype.extend( {
     initialize: function(id, htmlElement) {
         NonMovingKernel.prototype.initialize.call(this,id,htmlElement);
         window.onresize = this.layoutResize.bindAsEventListener(this);
+        this.layoutNamefield();
     },
 
     fetchElements: function () {
@@ -21,8 +22,17 @@ ViewKernel.prototype.extend( {
     },
 
     updateName: function() {
-            this.kernel().name(this.namefield.value);
-            this.kernel().update();
+        this.kernel().name(this.namefield.value);
+        this.kernel().update();
+    },
+
+    layoutResize: function() {
+        NonMovingKernel.prototype.layoutResize.call(this);
+        this.layoutNamefield();
+    },
+
+    layoutNamefield: function() {
+        this.namefield.style.width = (this.namefield.parentNode.clientWidth - 130);
     }
 });
 

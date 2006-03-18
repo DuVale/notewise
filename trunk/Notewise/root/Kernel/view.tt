@@ -44,34 +44,38 @@
         <tr>
             <td class="header" colspan=3>
                 <div class="header">
-                    <div class="tab">
-                        <input type="text" id="viewname" class="namefield" autocomplete="off"
-                               value="[% kernel.name %]"
-                               style="width: [% kernel.name.length * 0.55 + 1 %]em;"/>
+                    <div class="headerleft">
+                        <a href="/"><div class="logo"></div></a>
                         <div class="links">
-                            <a href="[%base%]kernel/add?name=">new view</a><br/>
-                            <a href="#" onclick="$('viewname').focus(); return false;">rename</a><br/>
-                            <a href="#" onclick="show_confirm_delete(); return false;">delete</a>
+                            <a href="/[% c.user.user.username %]">home</a>
+                            <span class="dot">&nbsp;</span>
+                            <a href="[%c.uri_for('/user/settings')%]">settings</a>
+                            <span class="dot">&nbsp;</span>
+                            <a href="[%c.uri_for('/help')%]">help</a>
+                            <span class="dot">&nbsp;</span>
+                            <a href="#" onclick="Bugs.show_window(); false;">report bug</a>
+                            <span class="dot">&nbsp;</span>
+                            <a href="[%c.uri_for('/logout')%]">logout</a>
                         </div>
-                        <div class="right"></div>
-                        <div class="mid"></div>
-                        <div class="left"></div>
+                        <div class="search">
+                            Search: <input autocomplete="off" id="mysearchfield" onfocus="this.className = 'focus';" onblur="this.className='';" name="s" />
+                        </div>
                     </div>
-                    <a href="/"><div class="logo"></div></a>
-                    <div class="links">
-                        <a href="/[% c.user.user.username %]">home</a>
-                        <span class="dot">&nbsp;</span>
-                        <a href="[%c.uri_for('/user/settings')%]">settings</a>
-                        <span class="dot">&nbsp;</span>
-                        <a href="[%c.uri_for('/help')%]">help</a>
-                        <span class="dot">&nbsp;</span>
-                        <a href="#" onclick="Bugs.show_window(); false;">report bug</a>
-                        <span class="dot">&nbsp;</span>
-                        <a href="[%c.uri_for('/logout')%]">logout</a>
+                    <div class="headerright">
+                        <div class="tab">
+                            <div id='saving_indicator' style="display: none">Saving...</div>
+                            <input type="text" id="viewname" class="namefield" autocomplete="off"
+                                   value="[% kernel.name %]"
+                                   style="width: [% kernel.name.length * 0.55 + 1 %]em;"/>
+                            <div class="links">
+                                <a href="[%base%]kernel/add?name=">new view</a><br/>
+                                <a href="#" onclick="$('viewname').focus(); return false;">rename</a><br/>
+                                <a href="#" onclick="show_confirm_delete(); return false;">delete</a>
+                            </div>
+                            <div class="left"></div>
+                            <div class="mid"></div>
+                            <div class="right"></div>
                         </div>
-                    <div class="search">
-                        Search: <input autocomplete="off" id="mysearchfield" onfocus="this.className = 'focus';" onblur="this.className='';" name="s" />
-                        <span id='saving_indicator' style="display: none">Saving...</span>
                     </div>
                 </div>
             </td>
