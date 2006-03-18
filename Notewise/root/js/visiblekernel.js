@@ -300,11 +300,13 @@ VisibleKernel.prototype.extend({
     // causes the internal elements to resize if necessary
     layoutResize: function() {
         WiseObject.prototype.layoutResize.call(this);
-        this.midleftbackground.style.width = (this.htmlElement.clientWidth -
-                                             this.leftbackground.clientWidth -
-                                             this.rightbackground.clientWidth -
-                                             this.midrightbackground.clientWidth) + 'px';
-        this.resizeChildren();
+        if(this.htmlElement){
+            this.midleftbackground.style.width = (this.htmlElement.clientWidth -
+                                                 this.leftbackground.clientWidth -
+                                                 this.rightbackground.clientWidth -
+                                                 this.midrightbackground.clientWidth) + 'px';
+            this.resizeChildren();
+        }
     },
 
     // Size the namefield appropriate
