@@ -198,7 +198,7 @@ sub relative_url {
         # the url are really spaces, unless we have a specific kernel id.
         $name_has_underscores = 1;
     }
-    my $safe = 'A-Za-z0-9_\-\.!~*\'\"()';
+    my $safe = 'A-Za-z0-9_\-\.!~*';
     my $unsafe = "^$safe";
     if($name eq ''){
         return uri_escape($self->user->username,$unsafe)."//".$self->id;

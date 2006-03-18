@@ -1,4 +1,4 @@
-use Test::More tests => 19;
+use Test::More tests => 20;
 use_ok( Catalyst::Test, 'Notewise' );
 use_ok('Notewise::M::CDBI::Kernel');
 use Data::Dumper;
@@ -35,23 +35,28 @@ is($object_id,undef,'object_id is deleted when kernel is deleted');
 is($kernel->relative_url, 'fred/foo','test relative_url');
 $kernel->name('This is a name with  spaces ');
 $kernel->update;
-is($kernel->relative_url, 'fred/This_is_a_name_with__spaces','test relative_url 2 - spaces');
+is($kernel->relative_url, 'fred/This_is_a_name_with__spaces','test relative_url - spaces');
 $kernel->name('This is a name with /slashes ');
 $kernel->update;
-is($kernel->relative_url, 'fred/This_is_a_name_with_%2Fslashes','test relative_url 3 - slashes');
+is($kernel->relative_url, 'fred/This_is_a_name_with_%2Fslashes','test relative_url - slashes');
 $kernel->name('This is a name with ?question marks ');
 $kernel->update;
-is($kernel->relative_url, 'fred/This_is_a_name_with_%3Fquestion_marks','test relative_url 4 - question marks');
+is($kernel->relative_url, 'fred/This_is_a_name_with_%3Fquestion_marks','test relative_url - question marks');
+$kernel->name('This is a name with " double quotes and ( parens');
+$kernel->update;
+is($kernel->relative_url,
+   'fred/This_is_a_name_with_%22_double_quotes_and_%28_parens',
+   'test relative_url - double quotes and parens');
 
 $kernel->name('this is a test');
 $kernel->update;
-is($kernel->relative_url, 'fred/this_is_a_test','test relative_url 5');
+is($kernel->relative_url, 'fred/this_is_a_test','test relative_url');
 my $kernel6 = Notewise::M::CDBI::Kernel->create({name=>'this is a test',user=>$user->id});
 
 $kernel_id=$kernel->id;
-is($kernel->relative_url, "fred/this_is_a_test/$kernel_id",'test relative_url 6');
+is($kernel->relative_url, "fred/this_is_a_test/$kernel_id",'test relative_url');
 my $kernel_id6 = $kernel6->id;
-is($kernel6->relative_url, "fred/this_is_a_test/$kernel_id6",'test relative_url 7');
+is($kernel6->relative_url, "fred/this_is_a_test/$kernel_id6",'test relative_url');
 
 # test permissions
 ok($kernel->has_permission($user,'view'), "users can view their own kernel");
