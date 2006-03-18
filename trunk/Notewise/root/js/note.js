@@ -191,5 +191,22 @@ Note.prototype.extend({
     idString: function() {
         var id = this.container_object()+'/'+this.id();
         return id;
+    },
+
+    // causes the internal elements to resize if necessary
+    layoutResize: function() {
+        WiseObject.prototype.layoutResize.call(this);
+        this.midbackground.style.width = (this.htmlElement.clientWidth -
+                                          this.leftbackground.clientWidth -
+                                          this.rightbackground.clientWidth) + 'px';
+    },
+
+    // retrieves references to all the relevant html elements and stores them
+    // as properties in this object
+    fetchElements: function () {
+        WiseObject.prototype.fetchElements.call(this);
+        this.midbackground = Utils.getElementsByClassName(this.htmlElement, 'note-mid')[0];
+        this.rightbackground = Utils.getElementsByClassName(this.htmlElement, 'note-right')[0];
+        this.leftbackground = Utils.getElementsByClassName(this.htmlElement, 'note-left')[0];
     }
 });
