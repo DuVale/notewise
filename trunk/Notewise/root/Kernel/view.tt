@@ -108,7 +108,7 @@
                                             <input class="namefield"
                                                    style="width: [% name_length %]em;"
                                                    name="s"
-                                                   value="[% parent.name %]"
+                                                   value="[% parent.name | replace('"','&quot;') %]"
                                                    autocomplete="off"/>
                                             <a class="namelink"
                                                style="width: [% name_length %]em;"
