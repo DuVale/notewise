@@ -20,12 +20,14 @@ __PACKAGE__->add_trigger(before_create => \&Notewise::M::CDBI::add_created_date)
 __PACKAGE__->add_trigger(before_delete => sub {
      my $self = shift;
 
+     my $id=$self->object_id->id;
+
      # delete all the related stuff
-     map $_->delete, Notewise::M::CDBI::Note->search(container_object => $self->object_id->id);
-     map $_->delete, Notewise::M::CDBI::Relationship->search(part1 => $self->object_id->id);
-     map $_->delete, Notewise::M::CDBI::Relationship->search(part2 => $self->object_id->id);
-     map $_->delete, Notewise::M::CDBI::ContainedObject->search(contained_object => $self->object_id->id);
-     map $_->delete, Notewise::M::CDBI::ContainedObject->search(container_object => $self->object_id->id);
+     map $_->delete, Notewise::M::CDBI::Note->search(container_object => $id);
+     map $_->delete, Notewise::M::CDBI::Relationship->search(part1 => $id);
+     map $_->delete, Notewise::M::CDBI::Relationship->search(part2 => $id);
+     map $_->delete, Notewise::M::CDBI::ContainedObject->search(contained_object => $id);
+     map $_->delete, Notewise::M::CDBI::ContainedObject->search(container_object => $id);
 });
 
 __PACKAGE__->add_trigger(after_delete => sub {
@@ -151,7 +153,8 @@ sub relationships {
     my $self = shift;
     my @relationships1 = Notewise::M::CDBI::Relationship->search(part1 => $self->id);
     my @relationships2 = Notewise::M::CDBI::Relationship->search(part2 => $self->id);
-    return (@relationships1,@relationships2);
+    my @rels = (@relationships1,@relationships2);
+    return @rels;
 }
 
 sub notes {
