@@ -32,7 +32,7 @@ ViewKernel.prototype.extend( {
     },
 
     layoutNamefield: function() {
-        this.namefield.style.width = (this.namefield.parentNode.clientWidth - 130);
+        this.namefield.style.width = (this.namefield.parentNode.clientWidth - 130) + 'px';
     }
 });
 
