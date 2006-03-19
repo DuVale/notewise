@@ -143,7 +143,7 @@ VisibleKernel.prototype.extend({
     realize: function(parent) {
         this.htmlElement = document.createElement('div');
         this.htmlElement.id="vkernel"+this.idString();
-        this.htmlElement.className="vkernel collapsed nothighlighted";
+        this.htmlElement.className="vkernel collapsed nothighlighted nocontains";
         var expandButtonLabel = this.collapsed() ? '+' : '-';
         var name;
         if(this.kernel().name() === undefined){
