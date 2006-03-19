@@ -5,6 +5,19 @@ use strict;
 __PACKAGE__->has_a(contained_object => 'Notewise::M::CDBI::ObjectId');
 __PACKAGE__->has_a(container_object => 'Notewise::M::CDBI::ObjectId');
 
+__PACKAGE__->add_trigger(after_delete => sub {
+     my $self = shift;
+
+     # delete all the related stuff
+     unless($self->contained_object->object->notes ||
+            $self->contained_object->object->relationships ||
+            $self->contained_object->object->parents ||
+            $self->contained_object->object->children ||
+            defined $self->contained_object->object->name){
+         $self->contained_object->object->delete;
+     }
+});
+
 sub to_xml_hash_deep {
     my $self = shift;
     my $base_url = shift;

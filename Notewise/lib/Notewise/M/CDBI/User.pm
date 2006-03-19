@@ -32,6 +32,7 @@ sub clear {
     # of the cascade, and once because we found them in the search).
     my @kernels = Notewise::M::CDBI::ObjectId->search(user => $self->id, type=>'kernel');
     foreach my $object_id (@kernels){
+        next if ref($object_id) =~ /Has::Been::Deleted/;
         if($object_id->object){
             $object_id->object->delete;
         } else {
