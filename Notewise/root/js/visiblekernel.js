@@ -311,7 +311,7 @@ VisibleKernel.prototype.extend({
             this.midleftbackground.style.width = (this.htmlElement.clientWidth -
                                                  this.leftbackground.clientWidth -
                                                  this.rightbackground.clientWidth -
-                                                 this.midrightbackground.clientWidth) + 'px';
+                                                 this.midrightbackground.clientWidth + 1) + 'px';
             this.resizeChildren();
         }
     },
