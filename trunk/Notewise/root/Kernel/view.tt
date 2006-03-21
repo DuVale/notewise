@@ -175,14 +175,12 @@
                 </div>
                 <div class="content">
                     <div class="canvas" id="viewkernel">
-                        [% FILTER collapse %]
-                            [% FOR vkernel = visible_kernels %]
-                                [%INCLUDE 'Kernel/kernel.tt' i=0 %]
-                            [%END%]
-                            [% FOR note = notes %]
-                                [%INCLUDE 'Kernel/note.tt' i=0 %]
-                            [%END%]
-                        [% END %]
+                        [% FOR vkernel = visible_kernels %]
+                            [%INCLUDE 'Kernel/kernel.tt' i=0 %]
+                        [%END%]
+                        [% FOR note = notes %]
+                            [%INCLUDE 'Kernel/note.tt' i=0 %]
+                        [%END%]
                     </div>
                     <div class="topleft"></div>
                     <div class="bottomleft"></div>
@@ -194,18 +192,16 @@
             <td></td>
         </tr>
     </table>
-    [% FILTER collapse %]
-        [% FOR vkernel = visible_kernels %]
-            [% i = 0 %]
-            [%INCLUDE 'Kernel/kernel-js.tt'%]
-        [%END%]
-        [% FOR note = notes %]
-            [% i = 0 %]
-            [%INCLUDE 'Kernel/note-js.tt'%]
-        [%END%]
-        [% FOR relationship = visible_relationships %]
-            [%INCLUDE 'Kernel/relationship.tt'%]
-        [%END%]
+    [% FOR vkernel = visible_kernels %]
+        [% i = 0 %]
+        [%INCLUDE 'Kernel/kernel-js.tt'%]
+    [%END%]
+    [% FOR note = notes %]
+        [% i = 0 %]
+        [%INCLUDE 'Kernel/note-js.tt'%]
+    [%END%]
+    [% FOR relationship = visible_relationships %]
+        [%INCLUDE 'Kernel/relationship.tt'%]
     [%END%]
     <script>
         var viewKernelId=[%kernel.id%];
