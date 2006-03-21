@@ -7,15 +7,21 @@ __PACKAGE__->has_a(user=>'Notewise::M::CDBI::User');
 
 sub object {
     my $self = shift;
+
+    # check to see if we've cached the object
+    return $self->{__object} if $self->{__object};
+
+    my $object;
     if($self->type eq 'kernel'){
-        return Notewise::M::CDBI::Kernel->retrieve($self->id);
+        $object = Notewise::M::CDBI::Kernel->retrieve($self->id);
     } elsif($self->type eq 'note'){
-        return Notewise::M::CDBI::Note->retrieve($self->id);
+        $object = Notewise::M::CDBI::Note->retrieve($self->id);
     } elsif($self->type eq 'relationship'){
-        return Notewise::M::CDBI::Relationship->retrieve($self->id);
+        $object = Notewise::M::CDBI::Relationship->retrieve($self->id);
     } else {
         Carp::confess "Unknown object type ".$self->type;
     }
+    return $self->{__object} = $object;
 }
 
 sub has_permission {
