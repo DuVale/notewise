@@ -63,23 +63,23 @@ body.kernelview {
 }
 
 .vkernel.contains .leftbackground {
-    background: url('/images/kernel-blue-left.png') no-repeat;
+    background: url('/images/kernel-blue-left.gif') no-repeat;
 }
 
 .vkernel.contains .mid-leftbackground {
-    background: url('/images/kernel-blue-mid.png');
+    background: url('/images/kernel-blue-mid.gif');
 }
 
 .vkernel.contains .rightbackground {
-    background: url('/images/kernel-blue-right.png') right no-repeat;
+    background: url('/images/kernel-blue-right.gif') right no-repeat;
 }
 
 .vkernel.expanded.contains .vkernel.collapsed.contains.nothighlighted .leftbackground {
-    background: url('/images/kernel-mini-blue-left.png') no-repeat;
+    background: url('/images/kernel-mini-blue-left.gif') no-repeat;
 }
 
 .vkernel.expanded.contains .vkernel.collapsed.contains.nothighlighted .mid-leftbackground {
-    background: url('/images/kernel-mini-blue-mid.png');
+    background: url('/images/kernel-mini-blue-mid.gif');
 }
 
 .vkernel.expanded.contains .vkernel.collapsed.contains.nothighlighted .mid-rightbackground {
@@ -87,39 +87,39 @@ body.kernelview {
 }
 
 .vkernel.expanded.contains .vkernel.collapsed.contains.nothighlighted .rightbackground {
-    background: url('/images/kernel-mini-blue-right.png') right no-repeat;
+    background: url('/images/kernel-mini-blue-right.gif') right no-repeat;
 }
 
 .vkernel.contains.expanded .leftbackground {
-    background: url('/images/kernel-expanded-left.png') no-repeat;
+    background: url('/images/kernel-expanded-left.gif') no-repeat;
 }
 
 .vkernel.contains.expanded .mid-leftbackground {
-    background: url('/images/kernel-expanded-mid-left.png');
+    background: url('/images/kernel-expanded-mid-left.gif');
 }
 
 .vkernel.contains.expanded .mid-rightbackground {
-    background: url('/images/kernel-expanded-mid-right.png');
+    background: url('/images/kernel-expanded-mid-right.gif');
 }
 
 .vkernel.contains.expanded .rightbackground {
-    background: url('/images/kernel-expanded-right.png') right no-repeat;
+    background: url('/images/kernel-expanded-right.gif') right no-repeat;
 }
 
 .vkernel.contains.expanded .vkernel.contains.expanded.nothighlighted .leftbackground {
-    background: url('/images/kernel-mini-blue-expanded-left.png') no-repeat;
+    background: url('/images/kernel-mini-blue-expanded-left.gif') no-repeat;
 }
 
 .vkernel.contains.expanded .vkernel.contains.expanded.nothighlighted .mid-leftbackground {
-    background: url('/images/kernel-mini-blue-expanded-midleft.png');
+    background: url('/images/kernel-mini-blue-expanded-midleft.gif');
 }
 
 .vkernel.contains.expanded .vkernel.contains.expanded.nothighlighted .mid-rightbackground {
-    background: url('/images/kernel-mini-blue-expanded-midright.png');
+    background: url('/images/kernel-mini-blue-expanded-midright.gif');
 }
 
 .vkernel.contains.expanded .vkernel.contains.expanded.nothighlighted .rightbackground {
-    background: url('/images/kernel-mini-blue-expanded-right.png') right no-repeat;
+    background: url('/images/kernel-mini-blue-expanded-right.gif') right no-repeat;
 }
 
 .relationshiphalo {
@@ -274,15 +274,61 @@ body.kernelview {
     height: 14px;
 }
 
-.newrelationshiparrow.up { background: url('/images/rel-arrow-up.png') no-repeat; }
-.newrelationshiparrow.down { background: url('/images/rel-arrow-down.png') no-repeat; }
-.newrelationshiparrow.left { background: url('/images/rel-arrow-left.png') no-repeat; }
-.newrelationshiparrow.right { background: url('/images/rel-arrow-right.png') no-repeat; }
+.newrelationshiparrow.up {
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-up.png');
+}
+.newrelationshiparrow.up[class] {
+    background: url('/images/rel-arrow-up.png') no-repeat; 
+}
 
-.newrelationshiparrow.upleft { background: url('/images/rel-arrow-up-left.png') no-repeat; }
-.newrelationshiparrow.upright { background: url('/images/rel-arrow-up-right.png') no-repeat; }
-.newrelationshiparrow.downleft { background: url('/images/rel-arrow-down-left.png') no-repeat; }
-.newrelationshiparrow.downright { background: url('/images/rel-arrow-down-right.png') no-repeat; }
+.newrelationshiparrow.down {
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-down.png');
+}
+.newrelationshiparrow.down[class] {
+    background: url('/images/rel-arrow-down.png') no-repeat; 
+}
+
+.newrelationshiparrow.left {
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-left.png');
+}
+.newrelationshiparrow.left[class] {
+    background: url('/images/rel-arrow-left.png') no-repeat; 
+}
+
+.newrelationshiparrow.right {
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-right.png');
+}
+.newrelationshiparrow.right[class] {
+    background: url('/images/rel-arrow-right.png') no-repeat; 
+}
+
+.newrelationshiparrow.upleft {
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-up-left.png');
+}
+.newrelationshiparrow.upleft[class] {
+    background: url('/images/rel-arrow-up-left.png') no-repeat; 
+}
+
+.newrelationshiparrow.upright {
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-up-right.png');
+}
+.newrelationshiparrow.upright[class] {
+    background: url('/images/rel-arrow-up-right.png') no-repeat; 
+}
+
+.newrelationshiparrow.downleft {
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-down-left.png');
+}
+.newrelationshiparrow.downleft[class] {
+    background: url('/images/rel-arrow-down-left.png') no-repeat; 
+}
+
+.newrelationshiparrow.downright {
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-down-right.png');
+}
+.newrelationshiparrow.downright[class] {
+    background: url('/images/rel-arrow-down-right.png') no-repeat; 
+}
 
 .relationship {
     border: 0px;
@@ -572,7 +618,7 @@ img {
 
 .vkernel .leftbackground {
     position: absolute;
-    background: url('/images/body-left.png') no-repeat;
+    background: url('/images/body-left.gif') no-repeat;
     height: 24px;
     left: 0px;
     width: 8px;
@@ -582,7 +628,7 @@ img {
 
 .vkernel .mid-leftbackground {
     position: absolute;
-    background: url('/images/body-mid.png');
+    background: url('/images/body-mid.gif');
     height: 24px;
     left: 8px;
     right: 33px;
@@ -596,7 +642,7 @@ img {
 
 .vkernel .rightbackground {
     position: absolute;
-    background: url('/images/body-right.png') right no-repeat;
+    background: url('/images/body-right.gif') right no-repeat;
     height: 24px;
     width: 33px;
     right: 0px;
@@ -607,7 +653,7 @@ img {
 
 .vkernel.expanded .leftbackground {
     position: absolute;
-    background: url('/images/kernel-expanded-gray-left.png') no-repeat;
+    background: url('/images/kernel-expanded-gray-left.gif') no-repeat;
     height: 24px;
     left: 0px;
     width: 6px;
@@ -617,7 +663,7 @@ img {
 
 .vkernel.expanded .mid-leftbackground {
     position: absolute;
-    background: url('/images/kernel-expanded-gray-mid-left.png');
+    background: url('/images/kernel-expanded-gray-mid-left.gif');
     height: 24px;
     left: 6px;
     right: 33px;
@@ -628,7 +674,7 @@ img {
 .vkernel.expanded .mid-rightbackground {
     display: block;
     position: absolute;
-    background: url('/images/kernel-expanded-gray-mid-right.png');
+    background: url('/images/kernel-expanded-gray-mid-right.gif');
     height: 24px;
     right: 6px;
     width: 33px;
@@ -639,7 +685,7 @@ img {
 
 .vkernel.expanded .rightbackground {
     position: absolute;
-    background: url('/images/kernel-expanded-gray-right.png') right no-repeat;
+    background: url('/images/kernel-expanded-gray-right.gif') right no-repeat;
     height: 24px;
     width: 6px;
     right: 0px;
@@ -681,23 +727,23 @@ img {
 }
 
 .vkernel.highlighted .leftbackground {
-    background: url('/images/kernel-highlighted-left.png') no-repeat;
+    background: url('/images/kernel-highlighted-left.gif') no-repeat;
 }
 
 .vkernel.highlighted .mid-leftbackground {
-    background: url('/images/kernel-highlighted-mid.png');
+    background: url('/images/kernel-highlighted-mid.gif');
 }
 
 .vkernel.highlighted .rightbackground {
-    background: url('/images/kernel-highlighted-right.png') right no-repeat;
+    background: url('/images/kernel-highlighted-right.gif') right no-repeat;
 }
 
 .vkernel.contains.expanded .vkernel.collapsed.highlighted .leftbackground {
-    background: url('/images/kernel-mini-highlighted-left.png') no-repeat;
+    background: url('/images/kernel-mini-highlighted-left.gif') no-repeat;
 }
 
 .vkernel.contains.expanded .vkernel.collapsed.highlighted .mid-leftbackground {
-    background: url('/images/kernel-mini-highlighted-mid.png');
+    background: url('/images/kernel-mini-highlighted-mid.gif');
 }
 
 .vkernel.contains.expanded .vkernel.collapsed.highlighted .mid-rightbackground {
@@ -705,15 +751,15 @@ img {
 }
 
 .vkernel.contains.expanded .vkernel.collapsed.highlighted .rightbackground {
-    background: url('/images/kernel-mini-highlighted-right.png') right no-repeat;
+    background: url('/images/kernel-mini-highlighted-right.gif') right no-repeat;
 }
 
 .vkernel.expanded.contains .vkernel.collapsed.nocontains.nothighlighted .leftbackground {
-    background: url('/images/kernel-mini-left.png') no-repeat;
+    background: url('/images/kernel-mini-left.gif') no-repeat;
 }
 
 .vkernel.expanded.contains .vkernel.collapsed.nocontains.nothighlighted .mid-leftbackground {
-    background: url('/images/kernel-mini-mid.png');
+    background: url('/images/kernel-mini-mid.gif');
 }
 
 .vkernel.expanded.contains .vkernel.collapsed.nocontains.nothighlighted .mid-rightbackground {
@@ -721,7 +767,7 @@ img {
 }
 
 .vkernel.expanded.contains .vkernel.collapsed.nocontains.nothighlighted .rightbackground {
-    background: url('/images/kernel-mini-right.png') right no-repeat;
+    background: url('/images/kernel-mini-right.gif') right no-repeat;
 }
 
 .vkernel .vkernel .namelink {
@@ -749,7 +795,7 @@ img {
 
 .vkernel.expanded.contains .vkernel.expanded.nocontains.nothighlighted .leftbackground {
     position: absolute;
-    background: url('/images/kernel-mini-gray-expanded-left.png') no-repeat;
+    background: url('/images/kernel-mini-gray-expanded-left.gif') no-repeat;
     height: 15px;
     left: 0px;
     width: 6px;
@@ -759,7 +805,7 @@ img {
 
 .vkernel.expanded.contains .vkernel.expanded.nocontains.nothighlighted .mid-leftbackground {
     position: absolute;
-    background: url('/images/kernel-mini-gray-expanded-midleft.png');
+    background: url('/images/kernel-mini-gray-expanded-midleft.gif');
     height: 15px;
     left: 6px;
     right: 33px;
@@ -770,7 +816,7 @@ img {
 .vkernel.expanded.contains .vkernel.expanded.nocontains.nothighlighted .mid-rightbackground {
     display: block;
     position: absolute;
-    background: url('/images/kernel-mini-gray-expanded-midright.png');
+    background: url('/images/kernel-mini-gray-expanded-midright.gif');
     height: 15px;
     right: 6px;
     width: 33px;
@@ -780,7 +826,7 @@ img {
 
 .vkernel.expanded.contains .vkernel.expanded.nocontains.nothighlighted .rightbackground {
     position: absolute;
-    background: url('/images/kernel-mini-gray-expanded-right.png') right no-repeat;
+    background: url('/images/kernel-mini-gray-expanded-right.gif') right no-repeat;
     height: 15px;
     width: 6px;
     right: 0px;
@@ -790,19 +836,19 @@ img {
 }
 
 .vkernel.contains.expanded .vkernel.expanded.highlighted .leftbackground {
-    background: url('/images/kernel-mini-orange-expanded-left.png') no-repeat;
+    background: url('/images/kernel-mini-orange-expanded-left.gif') no-repeat;
 }
 
 .vkernel.contains.expanded .vkernel.expanded.highlighted .mid-leftbackground {
-    background: url('/images/kernel-mini-orange-expanded-midleft.png');
+    background: url('/images/kernel-mini-orange-expanded-midleft.gif');
 }
 
 .vkernel.contains.expanded .vkernel.expanded.highlighted .mid-rightbackground {
-    background: url('/images/kernel-mini-orange-expanded-midright.png');
+    background: url('/images/kernel-mini-orange-expanded-midright.gif');
 }
 
 .vkernel.contains.expanded .vkernel.expanded.highlighted .rightbackground {
-    background: url('/images/kernel-mini-orange-expanded-right.png') right no-repeat;
+    background: url('/images/kernel-mini-orange-expanded-right.gif') right no-repeat;
 }
 
 .vkernel.collapsed .corner {
@@ -811,7 +857,7 @@ img {
 
 .corner {
     position: absolute;
-    background: url('/images/note-corner.png') right no-repeat;
+    background: url('/images/note-corner.gif') right no-repeat;
     right: 3px;
     bottom: 3px;
     width: 10px;
@@ -856,7 +902,7 @@ div.auto_complete ul strong.highlight {
 
 .dummyDiv .left {
     position: absolute;
-    background: url('/images/kernel-pending-left.png');
+    background: url('/images/kernel-pending-left.gif');
     left: 0px;
     top: 0px;
     width: 6px;
@@ -865,7 +911,7 @@ div.auto_complete ul strong.highlight {
 
 .dummyDiv .mid {
     position: absolute;
-    background: url('/images/kernel-pending-mid.png');
+    background: url('/images/kernel-pending-mid.gif');
     left: 6px;
     right: 34px;
     height: 24px;
@@ -873,7 +919,7 @@ div.auto_complete ul strong.highlight {
 
 .dummyDiv .right {
     position: absolute;
-    background: url('/images/kernel-pending-right.png');
+    background: url('/images/kernel-pending-right.gif');
     height: 24px;
     width: 34px;
     right: 0px;
@@ -887,7 +933,7 @@ div.auto_complete ul strong.highlight {
 
 .dummyNoteDiv .left {
     position: absolute;
-    background: url('/images/note-pending-left.png');
+    background: url('/images/note-pending-left.gif');
     left: 0px;
     top: 0px;
     width: 7px;
@@ -896,7 +942,7 @@ div.auto_complete ul strong.highlight {
 
 .dummyNoteDiv .mid {
     position: absolute;
-    background: url('/images/note-pending-mid.png');
+    background: url('/images/note-pending-mid.gif');
     left: 7px;
     right: 6px;
     height: 11px;
@@ -904,7 +950,7 @@ div.auto_complete ul strong.highlight {
 
 .dummyNoteDiv .right {
     position: absolute;
-    background: url('/images/note-pending-right.png');
+    background: url('/images/note-pending-right.gif');
     height: 11px;
     width: 6px;
     right: 0px;
@@ -921,7 +967,7 @@ div.auto_complete ul strong.highlight {
 
 .dummyNoteDiv .corner {
     position: absolute;
-    background: url('/images/note-pending-corner.png');
+    background: url('/images/note-pending-corner.gif');
     height: 10px;
     width: 10px;
     right: 3px;

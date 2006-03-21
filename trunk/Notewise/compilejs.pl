@@ -19,5 +19,6 @@ sub compile_javascript {
 
     warn "Compiling javascript to javascript.js\n";
     $template->process('javascript.tt', {}, 'root/js/javascript.js') or die $template->error();
+    warn "Minifying to javascript-min.js\n";
     system('java -jar utils/custom_rhino.jar -c js/javascript.js > js/javascript-min.js');
 }

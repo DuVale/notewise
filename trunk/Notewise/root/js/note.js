@@ -198,7 +198,7 @@ Note.prototype.extend({
         WiseObject.prototype.layoutResize.call(this);
         this.midbackground.style.width = (this.htmlElement.clientWidth -
                                           this.leftbackground.clientWidth -
-                                          this.rightbackground.clientWidth) + 'px';
+                                          this.rightbackground.clientWidth + 1) + 'px';
     },
 
     // retrieves references to all the relevant html elements and stores them
