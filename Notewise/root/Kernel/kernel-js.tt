@@ -1,5 +1,4 @@
 [% id = vkernel.container_kernel.id _ '/' _ vkernel.contained_kernel.id %]
-<script>
     var kernelDiv = document.getElementById('vkernel[%id%]');
     var vkernel = new VisibleKernel([%vkernel.container_kernel.id%],
                                     [%vkernel.contained_kernel.id%],
@@ -12,7 +11,6 @@
                                     );
     vkernel.layout();
     objectCache['[%vkernel.container_kernel.id%]/[%vkernel.contained_kernel.id%]']=vkernel;
-</script>
 [% UNLESS vkernel.collapsed %]
     [% INCLUDE 'Kernel/kernel-innerjs.tt' kernel=vkernel.contained_kernel%]
 [% END %]

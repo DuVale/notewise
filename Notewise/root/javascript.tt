@@ -22,3 +22,4 @@
 [% INCLUDE 'js/controls.js' %]
 [% INCLUDE 'js/effects.js' %]
 [% INCLUDE 'js/bugs.js' %]
+[% INCLUDE 'js/quicksearch.js' %]

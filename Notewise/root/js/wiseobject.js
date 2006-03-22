@@ -48,11 +48,11 @@ WiseObject.prototype.extend({
         this.corner = Utils.getElementsByClassName(this.htmlElement, 'corner')[0];
         this.removebutton = Utils.getElementsByClassName(this.htmlElement, 'removebutton')[0];
         this.relationshiphalo = Utils.getElementsByClassName(this.htmlElement, 'relationshiphalo')[0];
-        this.relationshiphalotop = Utils.getElementsByClassName(this.relationshiphalo, 'halo-top')[0];
-        this.relationshiphalobottom = Utils.getElementsByClassName(this.relationshiphalo, 'halo-bottom')[0];
-        this.relationshiphaloleft = Utils.getElementsByClassName(this.relationshiphalo, 'halo-left')[0];
-        this.relationshiphaloright = Utils.getElementsByClassName(this.relationshiphalo, 'halo-right')[0];
         if(this.relationshiphalo){ // thumbs don't have halos and arrows
+            this.relationshiphalotop = Utils.getElementsByClassName(this.relationshiphalo, 'halo-top')[0];
+            this.relationshiphalobottom = Utils.getElementsByClassName(this.relationshiphalo, 'halo-bottom')[0];
+            this.relationshiphaloleft = Utils.getElementsByClassName(this.relationshiphalo, 'halo-left')[0];
+            this.relationshiphaloright = Utils.getElementsByClassName(this.relationshiphalo, 'halo-right')[0];
             this.newrelationshiparrow = Utils.getElementsByClassName(this.relationshiphalo, 'newrelationshiparrow')[0];
         }
     },

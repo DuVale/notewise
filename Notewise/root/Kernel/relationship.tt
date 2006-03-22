@@ -1,4 +1,3 @@
-<script>
 var object1=objectCache['[%kernel.id%]/[%relationship.part1.id%]'];
 var object2=objectCache['[%kernel.id%]/[%relationship.part2.id%]'];
 if(object1 && object2){
@@ -11,4 +10,3 @@ if(object1 && object2){
 } else {
     alert("couldn't find the right objects to create the relationship for [%kernel.id%]/[%relationship.part1.id%] to [%kernel.id%]/[%relationship.part2.id%]");
 }
-</script>
