@@ -54,7 +54,7 @@ sub clear {
 # returns true if the given password matches the user's password
 sub check_password {
     my ($self, $password) = @_;
-    return $self->password eq $password; #XXX this will change when passwords get encrypted
+    return $self->password eq Digest::MD5::md5_hex($password); #XXX this will change when passwords get encrypted
 }
 
 sub authentication_hash {
