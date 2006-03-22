@@ -3,16 +3,15 @@
     $stash->{content} =~ s/\n/\\n/g;
 [% END %]
 [% content = content.replace('"', '\"'); %]
-<script>
-    var noteDiv = document.getElementById('note[%id%]');
-    var noteObj = new Note([%id%],[% note.container_object %],
-                        noteDiv,
-                        [%note.x%],
-                        [%note.y%],
-                        [%note.width%],
-                        [%note.height%],
-                        "[% content %]");
-                        
-    noteObj.layout();
-    objectCache['[%note.container_object%]/[%note.id%]']=noteObj;
-</script>
+
+var noteDiv = document.getElementById('note[%id%]');
+var noteObj = new Note([%id%],[% note.container_object %],
+                    noteDiv,
+                    [%note.x%],
+                    [%note.y%],
+                    [%note.width%],
+                    [%note.height%],
+                    "[% content %]");
+                    
+noteObj.layout();
+objectCache['[%note.container_object%]/[%note.id%]']=noteObj;

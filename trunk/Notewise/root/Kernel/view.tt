@@ -3,37 +3,6 @@
 <html>
 <head>
     <title>[%kernel.name%] - Notewise.com</title>
-    [% IF c.config.debug_js %]
-        <script type="text/javascript" src="[%base%]js/ui.js"></script>
-        <script type="text/javascript" src="[%base%]js/wz_jsgraphics.js"></script>
-        <script type="text/javascript" src="[%base%]js/prototype.js"></script>
-        <script type="text/javascript" src="[%base%]js/dragndrop.js"></script>
-        <script type="text/javascript" src="[%base%]js/jsdbi.js"></script>
-        <script type="text/javascript" src="[%base%]js/utils.js"></script>
-        <script type="text/javascript" src="[%base%]js/linedraw.js"></script>
-        <script type="text/javascript" src="[%base%]js/new_relationship.js"></script>
-        <script type="text/javascript" src="[%base%]js/wiseobject.js"></script>
-        <script type="text/javascript" src="[%base%]js/relationship.js"></script>
-        <script type="text/javascript" src="[%base%]js/kernelobject.js"></script>
-        <script type="text/javascript" src="[%base%]js/nonmovingkernel.js"></script>
-        <script type="text/javascript" src="[%base%]js/viewkernel.js"></script>
-        <script type="text/javascript" src="[%base%]js/kernelthumbnail.js"></script>
-        <script type="text/javascript" src="[%base%]js/kernel.js"></script>
-        <script type="text/javascript" src="[%base%]js/visiblekernel.js"></script>
-        <script type="text/javascript" src="[%base%]js/note.js"></script>
-        <script type="text/javascript" src="[%base%]js/controls.js"></script>
-        <script type="text/javascript" src="[%base%]js/effects.js"></script>
-        <script type="text/javascript" src="[%base%]js/bugs.js"></script>
-    [% ELSE %]
-        <script type="text/javascript" src="[%base%]js/javascript-min.js"></script>
-    [% END %]
-    <script>
-        // configure the base url for jsdbi
-        JSDBI.base_url('[% base %]');
-        base_url = '[% base %]';
-        // XXX this is pretty nasty - put this inside the view's vkernel instead
-        var objectCache = {};
-    </script>
     <link rel="stylesheet" type="text/css" href="[%base%]style.css"/>
     <link rel="icon" href="[%base%]images/favicon.ico" />
     <link rel="shortcut icon" href="[%base%]images/favicon.ico" />
@@ -95,34 +64,31 @@
                                 </div>
                             <div class="sidebar-content open" id="parents_content">
                                 [% FOR parent = kernel.parents %]
-                                        <div class="vkernel kernelthumbnail expanded notselected noedit contains" id="parentthumbnail[%parent.id%]">
-                                            <div class="leftbackground"></div>
-                                            <div class="mid-leftbackground"></div>
-                                            <div class="mid-rightbackground"></div>
-                                            <div class="rightbackground"></div>
-                                            [% IF parent.name %]
-                                                [% name_length = parent.name.length * 0.55 + 1%]
-                                            [% ELSE %]
-                                                [% name_length = 1.05%]
-                                            [% END %]
-                                            <input class="namefield"
-                                                   style="width: [% name_length %]em;"
-                                                   name="s"
-                                                   value="[% parent.name | replace('"','&quot;') %]"
-                                                   autocomplete="off"/>
-                                            <a class="namelink"
+                                    <div class="vkernel kernelthumbnail expanded notselected noedit contains" id="parentthumbnail[%parent.id%]">
+                                        <div class="leftbackground"></div>
+                                        <div class="mid-leftbackground"></div>
+                                        <div class="mid-rightbackground"></div>
+                                        <div class="rightbackground"></div>
+                                        [% IF parent.name %]
+                                            [% name_length = parent.name.length * 0.55 + 1%]
+                                        [% ELSE %]
+                                            [% name_length = 1.05%]
+                                        [% END %]
+                                        <input class="namefield"
                                                style="width: [% name_length %]em;"
-                                               href="[% base _ parent.relative_url %]">
-                                                  [% parent.name %]
-                                            </a>
-                                            <div class="body">
-                                                [%# set i higher so we don't go so deep %]
-                                                [% INCLUDE 'Kernel/kernel-innerhtml.tt' i=thumbnail_start_depth kernel=parent highlight=kernel%]
-                                            </div>
+                                               name="s"
+                                               value="[% parent.name | replace('"','&quot;') %]"
+                                               autocomplete="off"/>
+                                        <a class="namelink"
+                                           style="width: [% name_length %]em;"
+                                           href="[% base _ parent.relative_url %]">
+                                              [% parent.name %]
+                                        </a>
+                                        <div class="body">
+                                            [%# set i higher so we don't go so deep %]
+                                            [% INCLUDE 'Kernel/kernel-body.tt' i=thumbnail_start_depth kernel=parent highlight=kernel%]
                                         </div>
-                                        <script>
-                                            new KernelThumbnail([%parent.id%],$('parentthumbnail[%parent.id%]'));
-                                        </script>
+                                    </div>
                                 [% END %]
                             </div>
                             <div class="sidebar-header">
@@ -192,18 +158,58 @@
             <td></td>
         </tr>
     </table>
-    [% FOR vkernel = visible_kernels %]
-        [% i = 0 %]
-        [%INCLUDE 'Kernel/kernel-js.tt'%]
-    [%END%]
-    [% FOR note = notes %]
-        [% i = 0 %]
-        [%INCLUDE 'Kernel/note-js.tt'%]
-    [%END%]
-    [% FOR relationship = visible_relationships %]
-        [%INCLUDE 'Kernel/relationship.tt'%]
-    [%END%]
+    [% IF c.config.debug_js %]
+        <script type="text/javascript" src="[%base%]js/ui.js"></script>
+        <script type="text/javascript" src="[%base%]js/wz_jsgraphics.js"></script>
+        <script type="text/javascript" src="[%base%]js/prototype.js"></script>
+        <script type="text/javascript" src="[%base%]js/dragndrop.js"></script>
+        <script type="text/javascript" src="[%base%]js/jsdbi.js"></script>
+        <script type="text/javascript" src="[%base%]js/utils.js"></script>
+        <script type="text/javascript" src="[%base%]js/linedraw.js"></script>
+        <script type="text/javascript" src="[%base%]js/new_relationship.js"></script>
+        <script type="text/javascript" src="[%base%]js/wiseobject.js"></script>
+        <script type="text/javascript" src="[%base%]js/relationship.js"></script>
+        <script type="text/javascript" src="[%base%]js/kernelobject.js"></script>
+        <script type="text/javascript" src="[%base%]js/nonmovingkernel.js"></script>
+        <script type="text/javascript" src="[%base%]js/viewkernel.js"></script>
+        <script type="text/javascript" src="[%base%]js/kernelthumbnail.js"></script>
+        <script type="text/javascript" src="[%base%]js/kernel.js"></script>
+        <script type="text/javascript" src="[%base%]js/visiblekernel.js"></script>
+        <script type="text/javascript" src="[%base%]js/note.js"></script>
+        <script type="text/javascript" src="[%base%]js/controls.js"></script>
+        <script type="text/javascript" src="[%base%]js/effects.js"></script>
+        <script type="text/javascript" src="[%base%]js/bugs.js"></script>
+        <script type="text/javascript" src="[%base%]js/quicksearch.js"></script>
+    [% ELSE %]
+        <script type="text/javascript" src="[%base%]js/javascript-min.js"></script>
+    [% END %]
     <script>
+        // configure the base url for jsdbi
+        JSDBI.base_url('[% base %]');
+        base_url = '[% base %]';
+        // XXX this is pretty nasty - put this inside the view's vkernel instead
+        var objectCache = {};
+
+        [% FOR parent = kernel.parents %]
+            new KernelThumbnail([%parent.id%],$('parentthumbnail[%parent.id%]'));
+        [% END %]
+
+        [% FOR parent = kernel.parents %]
+            [% INCLUDE 'Kernel/kernel-innerjs.tt' i=thumbnail_start_depth kernel=parent highlight=kernel%]
+        [% END %]
+
+        [% FOR vkernel = visible_kernels %]
+            [% i = 0 %]
+            [%INCLUDE 'Kernel/kernel-js.tt'%]
+        [%END%]
+        [% FOR note = notes %]
+            [% i = 0 %]
+            [%INCLUDE 'Kernel/note-js.tt'%]
+        [%END%]
+        [% FOR relationship = visible_relationships %]
+            [%INCLUDE 'Kernel/relationship.tt'%]
+        [%END%]
+
         var viewKernelId=[%kernel.id%];
         var view = new ViewKernel([%kernel.id%],$('viewkernel'));
 
@@ -224,6 +230,5 @@
             window.setTimeout(do_image_precache, 5); //get image caching to happen in separate thread
         [% END %]
     </script>
-    <script type="text/javascript" src="[%base%]js/quicksearch.js"></script>
 </body>
 </html>
