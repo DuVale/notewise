@@ -137,6 +137,21 @@ sub delete : Local {
     $c->res->redirect($c->req->base . $lastviewed->relative_url);
 }
 
+sub parentshtml : Local {
+    my ( $self, $c, $id ) = @_;
+    my $kernel = $c->model('CDBI::Kernel')->retrieve($id);
+    unless($kernel){
+        $c->res->status(404);
+        return $c->res->output("That kernel doesn't exist");
+    }
+    unless($kernel->has_permission($c->user->user->id,'delete')){
+        $c->res->status(403); # Forbidden
+        return $c->res->output('You do not have permission to view the parents of this kernel');
+    }
+    $c->stash->{kernel} = $kernel;
+    $c->stash->{template} = 'Kernel/parentshtml.tt';
+}
+
 =back
 
 =head1 AUTHOR
