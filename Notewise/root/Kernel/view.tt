@@ -192,9 +192,6 @@
 
         [% FOR parent = kernel.parents %]
             new KernelThumbnail([%parent.id%],$('parentthumbnail[%parent.id%]'));
-        [% END %]
-
-        [% FOR parent = kernel.parents %]
             [% INCLUDE 'Kernel/kernel-innerjs.tt' i=thumbnail_start_depth kernel=parent highlight=kernel%]
         [% END %]
 
