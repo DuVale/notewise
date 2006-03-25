@@ -39,6 +39,14 @@ KernelObject.prototype = {
         Event.observe(this.namefield,
                                    'dblclick',
                                    Utils.terminateEvent.bindAsEventListener(this));
+
+        Event.observe(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
+    },
+
+    // make this kernel into the current view (ie, switch the url to this kernel)
+    makeView: function(e){
+        window.location = this.kernel().object_url();
+        Utils.terminateEvent(e);
     },
 
     updateNamelink: function () {

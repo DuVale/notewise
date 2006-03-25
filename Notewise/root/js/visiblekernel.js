@@ -247,7 +247,6 @@ VisibleKernel.prototype.extend({
         // TODO check to see if all these terminate event listeners are necessary
 
         // setup the click handlers
-        Event.observe(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
         Event.observe(this.namelink,'click', Utils.terminateEvent.bindAsEventListener(this));
         Event.observe(this.namelink,'mousedown', Utils.terminateEvent.bindAsEventListener(this));
         
@@ -290,12 +289,6 @@ VisibleKernel.prototype.extend({
     selectAndTerminate: function(e) {
         WiseObject.prototype.selectAndTerminate.call(this);
         this.namefield.focus();
-    },
-
-    // make this kernel into the current view (ie, switch the url to this kernel)
-    makeView: function(e){
-        window.location = this.kernel().object_url();
-        Utils.terminateEvent(e);
     },
 
     // performs internal visual layout of the html elements for this kernel
