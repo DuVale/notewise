@@ -283,6 +283,8 @@ VisibleKernel.prototype.extend({
             this.namefield.style.display = "block";
             window.setTimeout(function(){this.namefield.style.display = "";}.bind(this),100);
         }.bind(this));
+
+        Event.observe(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
     },
 
     // Select this object and terminate the event
