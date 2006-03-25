@@ -501,7 +501,7 @@ img {
 
 .labelDiv {
     position: absolute;
-    z-index: 10;
+    z-index: 9;
 }
 
 .relationshipLabel {
@@ -1060,6 +1060,11 @@ div.auto_complete ul strong.highlight {
     width: 160px;
     height: 140px;
     margin: 5px;
+}
+
+.kernelthumbnail .relationshipLabel {
+    font-size: 8px;
+    height: 15px;
 }
 
 /* interface */
