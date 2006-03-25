@@ -17,6 +17,7 @@ KernelThumbnail.prototype.extend({
 
     registerHandlers: function() {
         NonMovingKernel.prototype.registerHandlers.call(this);
+        Event.observe(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
     },
 
     // Select this object and terminate the event

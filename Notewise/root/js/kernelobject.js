@@ -39,8 +39,6 @@ KernelObject.prototype = {
         Event.observe(this.namefield,
                                    'dblclick',
                                    Utils.terminateEvent.bindAsEventListener(this));
-
-        Event.observe(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
     },
 
     // make this kernel into the current view (ie, switch the url to this kernel)
@@ -160,7 +158,7 @@ KernelObject.prototype = {
     },
 
     gotDoubleClick: function (e) {
-        if (!e) var e = window.event
+        if (!e) var e = window.event;
         if(this.blockObjectCreation){
             Utils.terminateEvent(e);
             return;
