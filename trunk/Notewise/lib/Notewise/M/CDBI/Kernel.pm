@@ -253,6 +253,17 @@ sub _most_recently_kernel {
     my @kernels = $class->sth_to_objects($sth);
     return @kernels;
 }
+
+# returns true if this kernel can be safely deleted without any adverse effects
+sub is_useless {
+    my $self = shift;
+    return not ($self->notes ||
+           $self->relationships ||
+           $self->parents ||
+           $self->children ||
+           defined $self->name);
+}
+
 =head1 NAME
 
 Notewise::M::CDBI::Kernel - CDBI Model Component Table Class

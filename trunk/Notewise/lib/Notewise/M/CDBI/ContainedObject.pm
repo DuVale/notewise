@@ -9,11 +9,7 @@ __PACKAGE__->add_trigger(after_delete => sub {
      my $self = shift;
 
      # delete all the related stuff
-     unless($self->contained_object->object->notes ||
-            $self->contained_object->object->relationships ||
-            $self->contained_object->object->parents ||
-            $self->contained_object->object->children ||
-            defined $self->contained_object->object->name){
+     unless($self->contained_object->object->is_useless){
          $self->contained_object->object->delete;
      }
 });
