@@ -30,12 +30,6 @@ __PACKAGE__->add_trigger(before_delete => sub {
      map $_->delete, Notewise::M::CDBI::ContainedObject->search(container_object => $id);
 });
 
-__PACKAGE__->add_trigger(before_update => sub {
-    my ($self, %args) = @_;
-    my $discard_columns = $args{discard_columns};
-    push @$discard_columns, 'lastmodified';
-});
-
 __PACKAGE__->add_trigger(after_delete => sub {
      my $self = shift;
 
@@ -259,13 +253,6 @@ sub _most_recently_kernel {
     my @kernels = $class->sth_to_objects($sth);
     return @kernels;
 }
-
-sub last_modified {
-    my $self = shift;
-
-    return $self->lastmodified->epoch;
-}
-
 =head1 NAME
 
 Notewise::M::CDBI::Kernel - CDBI Model Component Table Class
