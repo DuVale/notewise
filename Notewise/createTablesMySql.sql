@@ -90,7 +90,6 @@ CREATE TABLE IF NOT EXISTS contained_object (
     width float,
     height float,
     collapsed TINYINT,
-    lastModified TIMESTAMP NOT NULL,
     -- Note: MySQL "BOOLEAN" type is just a synonym for TINYINT(1).  As in C,
     --   zero is false, nonzero is true.
     PRIMARY KEY (id),
