@@ -196,9 +196,9 @@ Note.prototype.extend({
     // causes the internal elements to resize if necessary
     layoutResize: function() {
         WiseObject.prototype.layoutResize.call(this);
-        this.midbackground.style.width = (this.htmlElement.clientWidth -
-                                          this.leftbackground.clientWidth -
-                                          this.rightbackground.clientWidth + 1) + 'px';
+        this.midbackground.style.width = Math.max(0,this.htmlElement.clientWidth -
+                                                    this.leftbackground.clientWidth -
+                                                    this.rightbackground.clientWidth + 1) + 'px';
     },
 
     // retrieves references to all the relevant html elements and stores them
