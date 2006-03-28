@@ -80,10 +80,8 @@ Note.prototype.extend({
            +"<textarea class='body'>"
                + this.content()
            +"</textarea>"
-           +"<div class=\"cornercontainer\">"
-               +"<div class=\"corner\">"
-               +"</div>"
-           +"</div>";
+           +"<div class=\"corner\">"
+           +"</div>"
         this.htmlElement.innerHTML = innerHTML;
         this.htmlElement.note=this;
         WiseObject.prototype.realize.call(this,parent);
@@ -210,7 +208,6 @@ Note.prototype.extend({
         this.midbackground = Utils.getElementsByClassName(this.htmlElement, 'note-mid')[0];
         this.rightbackground = Utils.getElementsByClassName(this.htmlElement, 'note-right')[0];
         this.leftbackground = Utils.getElementsByClassName(this.htmlElement, 'note-left')[0];
-        var cornercontainer = Utils.getElementsByClassName(this.htmlElement, 'cornercontainer')[0];
-        this.corner = Utils.getElementsByClassName(cornercontainer, 'corner')[0];
+        this.corner = Utils.getElementsByClassName(this.htmlElement, 'corner')[0];
     }
 });
