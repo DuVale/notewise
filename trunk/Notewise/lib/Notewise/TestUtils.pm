@@ -1,7 +1,6 @@
 package Notewise::TestUtils;
 use Notewise;
 use Notewise::M::CDBI::User;
-use Digest::MD5;
 
 @EXPORT = qw(new_request login_user);
 
@@ -33,7 +32,7 @@ sub login_user {
 
     # login
     my $user = Notewise::M::CDBI::User->find_or_create({email=>$email});
-    $user->password(Digest::MD5::md5_hex($password));
+    $user->password($password);
     $user->username($username);
     $user->name('automated testing account');
     $user->update;

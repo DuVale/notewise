@@ -4,9 +4,17 @@ use strict;
 use Digest::MD5;
 
 __PACKAGE__->add_trigger(before_delete => sub {
-                             my $self = shift;
-                             $self->clear;
-                        });
+     my $self = shift;
+     $self->clear;
+});
+
+# encrypt the password on set
+__PACKAGE__->add_trigger(before_set_password => sub {
+    my ($self,$value,$valueshash)=@_;
+    if (defined($valueshash->{password})) {
+        $valueshash->{password} = Digest::MD5::md5_hex($value);
+    }
+});
 
 sub kernel_count {
     my $self = shift;
