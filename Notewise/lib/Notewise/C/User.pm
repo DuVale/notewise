@@ -105,7 +105,7 @@ sub change_password : Local {
         return $c->forward('settings');
     }
 
-    $c->user->user->password(Digest::MD5::md5_hex($c->form->valid('newpassword')));
+    $c->user->user->password($c->form->valid('newpassword'));
     $c->user->user->update;
 
     $c->stash->{'message'} = "Your password has successfully been changed.";

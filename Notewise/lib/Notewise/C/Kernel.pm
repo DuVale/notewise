@@ -81,6 +81,7 @@ sub view : Private {
             $c->res->status(403);
             return $c->res->output("Sorry, you don't have permission to view that kernel.");
         } else {
+            $c->res->status(404);
             # TODO make this look prettier
             return $c->res->output("Couldn't find a kernel by that name.");
         }
