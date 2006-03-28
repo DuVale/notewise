@@ -21,7 +21,5 @@
     <a title="Delete note" class='removebutton'></a>
     <textarea class='body'>[% note.content %]</textarea>
     
-    <div class="cornercontainer">
-        <div class="corner"></div>
-    </div>
+    <div class="corner"></div>
 </div>
