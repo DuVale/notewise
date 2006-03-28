@@ -267,10 +267,10 @@ WiseObject.prototype.extend({
       if(this.relationshiphalo != undefined){
           this.relationshiphalo.style.width = (this.htmlElement.clientWidth + 30) + 'px';
           this.relationshiphalo.style.height = (this.htmlElement.clientHeight + 30) + 'px';
-          this.relationshiphalotop.style.width = (this.htmlElement.clientWidth - 8) + 'px';
-          this.relationshiphalobottom.style.width = (this.htmlElement.clientWidth - 8) + 'px';
-          this.relationshiphaloleft.style.height = (this.htmlElement.clientHeight - 8) + 'px';
-          this.relationshiphaloright.style.height = (this.htmlElement.clientHeight - 8) + 'px';
+          this.relationshiphalotop.style.width = Math.max(0,this.htmlElement.clientWidth - 8) + 'px';
+          this.relationshiphalobottom.style.width = Math.max(0,this.htmlElement.clientWidth - 8) + 'px';
+          this.relationshiphaloleft.style.height = Math.max(0,this.htmlElement.clientHeight - 8) + 'px';
+          this.relationshiphaloright.style.height = Math.max(0,this.htmlElement.clientHeight - 8) + 'px';
       }
     },
 
