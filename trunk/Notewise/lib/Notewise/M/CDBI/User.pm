@@ -62,6 +62,12 @@ sub authentication_hash {
     return $self->username . ':' . Digest::MD5::md5_hex("s3kr3tw0rd".$self->username);
 }
 
+sub kernels {
+    my $self = shift;
+    my @kernels = Notewise::M::CDBI::Kernel->search_kernels_for_user($self->id);
+    return @kernels;
+}
+
 =head1 NAME
 
 Notewise::M::CDBI::User - CDBI Model Component Table Class

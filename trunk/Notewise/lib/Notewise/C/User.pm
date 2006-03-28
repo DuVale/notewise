@@ -112,4 +112,23 @@ sub change_password : Local {
     $c->forward('settings');
 }
 
+sub calendar : Local {
+    my ( $self, $c ) = @_;
+
+    my @kernels = $c->user->user->kernels();
+    my %kernels;
+    my @dates;
+    foreach my $kernel (@kernels){
+        my $date = $kernel->created->mdy;
+        unless($kernels{$date}){
+            $kernels{$date} = [];
+            push @dates, $date;
+        }
+        push @{$kernels{$date}}, $kernel;
+    }
+    $c->stash->{kernels} = \%kernels;
+    $c->stash->{dates} = \@dates;
+    $c->stash->{template} = 'User/calendar.tt';
+}
+
 1;

@@ -30,6 +30,14 @@ __PACKAGE__->add_trigger(before_delete => sub {
      map $_->delete, Notewise::M::CDBI::ContainedObject->search(container_object => $id);
 });
 
+__PACKAGE__->set_sql( kernels_for_user => qq{
+    SELECT kernel.object_id
+      FROM kernel, object_id
+     WHERE kernel.object_id = object_id.id
+     AND object_id.user = ?
+     ORDER BY kernel.created DESC
+});
+
 __PACKAGE__->add_trigger(after_delete => sub {
      my $self = shift;
 
