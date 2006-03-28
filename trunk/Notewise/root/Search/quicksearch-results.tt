@@ -22,9 +22,27 @@
             my $search = $stash->get('search');
             my $object = $stash->get('object');
             if($object->content =~ /$search/i){
-                $stash->set(prematch=>substr($`,-10));
+                my @pre_words = split / /,$`;
+                my $prematch;
+                if(@pre_words > 2){
+                    $prematch = join ' ',@pre_words[-2..-1];
+                    $prematch = '...' . $prematch . ' ';
+                } else {
+                    $prematch = join(' ',@pre_words) . ' ';
+                }
+
+                my @post_words = split / /,$';
+                my $postmatch;
+                if(@post_words > 2){
+                    $postmatch = join ' ',@post_words[0..2];
+                    $postmatch = $postmatch . '...';
+                } else {
+                    $postmatch = join(' ',@post_words[0..2]) . ' ';
+                }
+
+                $stash->set(prematch=>$prematch);
                 $stash->set(match=>$&);
-                $stash->set(postmatch=>substr($',0,10));
+                $stash->set(postmatch=>$postmatch);
             }
         [% END -%]
         <li><a href="[%base _ object.kernel.relative_url%]">
