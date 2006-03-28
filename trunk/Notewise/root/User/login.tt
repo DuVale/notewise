@@ -1,4 +1,3 @@
-Note: We switched from using email addresses to login to usernames.  Feel free to email me at <a href="mailto:scotty@notewise.com">scotty@notewise.com</a> if you don't know your username, but more than likely, it's your first name.  Sorry for the inconveniance.
 <form action='[% base _ c.req.path.replace('beta-perl/?','') %]' method='POST'>
     [% FOREACH var IN c.req.params %]
         [% NEXT IF var.key == 'username'%]
