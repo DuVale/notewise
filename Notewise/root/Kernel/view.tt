@@ -20,9 +20,9 @@
                             <span class="dot">&nbsp;</span>
                             <a href="[%c.uri_for('/user/settings')%]">settings</a>
                             <span class="dot">&nbsp;</span>
-                            <a href="[%c.uri_for('/help')%]">help</a>
+                            <a href="" onclick="Bugs.show_window('/help/quick'); return false;">help</a>
                             <span class="dot">&nbsp;</span>
-                            <a href="#" onclick="Bugs.show_window(); false;">report bug</a>
+                            <a href="" onclick="Bugs.show_window('/user/bug_report'); return false;">report bug</a>
                             <span class="dot">&nbsp;</span>
                             <a href="[%c.uri_for('/logout')%]">logout</a>
                         </div>

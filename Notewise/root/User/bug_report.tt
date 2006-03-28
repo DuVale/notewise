@@ -1,4 +1,5 @@
 <script type="text/javascript" src="[%base%]js/bugs.js"></script>
+<script type="text/javascript" src="[%base%]js/prototype.js"></script>
 <style>
     #summary {
         width: 300px;
