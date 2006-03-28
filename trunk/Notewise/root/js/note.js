@@ -78,9 +78,11 @@ Note.prototype.extend({
                +"<div class='halo-bottom-right'></div>"
            +"</div>"
            +"<textarea class='body'>"
-           + this.content()
+               + this.content()
            +"</textarea>"
-           +"<div class=\"corner\">"
+           +"<div class=\"cornercontainer\">"
+               +"<div class=\"corner\">"
+               +"</div>"
            +"</div>";
         this.htmlElement.innerHTML = innerHTML;
         this.htmlElement.note=this;
@@ -208,5 +210,7 @@ Note.prototype.extend({
         this.midbackground = Utils.getElementsByClassName(this.htmlElement, 'note-mid')[0];
         this.rightbackground = Utils.getElementsByClassName(this.htmlElement, 'note-right')[0];
         this.leftbackground = Utils.getElementsByClassName(this.htmlElement, 'note-left')[0];
+        var cornercontainer = Utils.getElementsByClassName(this.htmlElement, 'cornercontainer')[0];
+        this.corner = Utils.getElementsByClassName(cornercontainer, 'corner')[0];
     }
 });

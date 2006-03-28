@@ -8,4 +8,9 @@ sub help : Path {
     $c->stash->{template} = 'help.tt';
 }
 
+sub quick : Local {
+    my ( $self, $c ) = @_;
+    $c->stash->{template} = 'quickhelp.tt';
+}
+
 1;
