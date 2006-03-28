@@ -911,6 +911,7 @@ div.auto_complete ul strong.highlight {
     top: 0px;
     width: 6px;
     height: 24px;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=false);
 }
 
 .dummyDiv .mid {
@@ -919,6 +920,7 @@ div.auto_complete ul strong.highlight {
     left: 6px;
     right: 34px;
     height: 24px;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=false);
 }
 
 .dummyDiv .right {
@@ -927,6 +929,7 @@ div.auto_complete ul strong.highlight {
     height: 24px;
     width: 34px;
     right: 0px;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=false);
 }
 
 .dummyNoteDiv {
@@ -942,6 +945,7 @@ div.auto_complete ul strong.highlight {
     top: 0px;
     width: 7px;
     height: 11px;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=false);
 }
 
 .dummyNoteDiv .mid {
@@ -950,6 +954,7 @@ div.auto_complete ul strong.highlight {
     left: 7px;
     right: 6px;
     height: 11px;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=false);
 }
 
 .dummyNoteDiv .right {
@@ -958,6 +963,7 @@ div.auto_complete ul strong.highlight {
     height: 11px;
     width: 6px;
     right: 0px;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=false);
 }
 
 .dummyNoteDiv .body {
@@ -1168,6 +1174,7 @@ td.divider {
     width: 45px;
     height: 48px;
     bottom: 0px;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=false);
 }
 
 .tab .mid{
@@ -1176,6 +1183,7 @@ td.divider {
     margin-right: 24px;
     height: 70px;
     bottom: 0px;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=false);
 }
 
 .tab .right{
@@ -1185,6 +1193,7 @@ td.divider {
     position: absolute;
     right: 0;
     bottom: 0;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=false);
 }
 
 .tab .links {
@@ -1237,6 +1246,7 @@ div.search input {
     background: url('/images/sidebar-top-left.png') no-repeat;
     top: 0px;
     left: 0px;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=false);
 }
 
 .top-sidebar-header .mid {
@@ -1245,6 +1255,7 @@ div.search input {
     width: 170px;
     background: url('/images/sidebar-top-mid.png');
     left: 15px;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=false);
 }
 
 .top-sidebar-header .right {
@@ -1254,6 +1265,7 @@ div.search input {
     right: 0px;
     top: 0px;
     background: url('/images/sidebar-top-right.png') no-repeat;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=false);
 }
 
 .top-sidebar-header .label {
