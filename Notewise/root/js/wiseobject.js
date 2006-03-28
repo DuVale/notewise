@@ -666,7 +666,7 @@ ResizeCornerDraggable.prototype = (new Draggable()).extend( {
     },
  
     cancelDrag: function() {
-       this.sizeFromCorner(); // XXX 12/19 just turned this back on - could be an issue
+       this.sizeFromCorner();
        this.wiseobject.notifyEndChangeListeners();
        dndMgr.giveSearchBoxFocus();
     },
