@@ -19,7 +19,8 @@
         <div class="halo-bottom-right"></div>
     </div>
     <a title="Delete note" class='removebutton'></a>
-    <textarea class='body'>[% note.content %]</textarea>
-    
-    <div class="corner"></div>
+    <div class="bodycontainer">
+        <textarea class='body'>[% note.content %]</textarea>
+        <div class="corner"></div>
+    </div>
 </div>

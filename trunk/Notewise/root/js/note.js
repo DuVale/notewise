@@ -77,10 +77,12 @@ Note.prototype.extend({
                +"<div class='halo-bottom'></div>"
                +"<div class='halo-bottom-right'></div>"
            +"</div>"
-           +"<textarea class='body'>"
-               + this.content()
-           +"</textarea>"
-           +"<div class=\"corner\">"
+           +"<div class=\"bodycontainer\">"
+               +"<textarea class='body'>"
+                   + this.content()
+               +"</textarea>"
+               +"<div class=\"corner\">"
+               +"</div>"
            +"</div>"
         this.htmlElement.innerHTML = innerHTML;
         this.htmlElement.note=this;
@@ -208,6 +210,8 @@ Note.prototype.extend({
         this.midbackground = Utils.getElementsByClassName(this.htmlElement, 'note-mid')[0];
         this.rightbackground = Utils.getElementsByClassName(this.htmlElement, 'note-right')[0];
         this.leftbackground = Utils.getElementsByClassName(this.htmlElement, 'note-left')[0];
-        this.corner = Utils.getElementsByClassName(this.htmlElement, 'corner')[0];
+        var bodycontainer = Utils.getElementsByClassName(this.htmlElement, 'bodycontainer')[0];
+        this.body = Utils.getElementsByClassName(bodycontainer, 'body')[0];
+        this.corner = Utils.getElementsByClassName(bodycontainer, 'corner')[0];
     }
 });

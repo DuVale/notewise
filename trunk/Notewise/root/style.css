@@ -34,7 +34,7 @@ body.kernelview {
     font-size: 0.8em;
 }
 
-.note .cornercontainer {
+.note .bodycontainer {
     position: absolute;
     z-index: 2;
     width: 100%;
