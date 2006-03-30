@@ -93,12 +93,12 @@ WiseObject.prototype.extend({
         Event.observe(this.relationshiphalo,
                                     'mouseout',
                                     this.leaveRelationshipHalo.bindAsEventListener(this));
+        Event.observe(this.relationshiphalo,
+                                    'mousedown',
+                                    this.startCreateRelationship.bindAsEventListener(this));
         Event.observe(this.newrelationshiparrow,
                                     'mouseout',
                                     this.leaveRelationshipHalo.bindAsEventListener(this));
-        Event.observe(this.newrelationshiparrow,
-                                    'mousedown',
-                                    this.startCreateRelationship.bindAsEventListener(this));
 
         Event.observe(this.removebutton,
                                     'mouseover',function(){Element.addClassName(this.removebutton,'removebutton-hover')}.bind(this));

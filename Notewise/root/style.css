@@ -344,6 +344,7 @@ body.kernelview {
     top: 0px;
     width: 19px;
     height: 19px;
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-top-left.png');
 }
 
@@ -359,6 +360,7 @@ body.kernelview {
     bottom: 19px;
     width: 19px;
     z-index: -2;
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-left.png');
 }
 
@@ -374,6 +376,7 @@ body.kernelview {
     width: 19px;
     height: 19px;
     z-index: -2;
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-bottom-left.png');
 }
 
@@ -389,6 +392,7 @@ body.kernelview {
     right: 19px;
     height: 19px;
     z-index: -2;
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-top.png');
 }
 
@@ -404,6 +408,7 @@ body.kernelview {
     right: 19px;
     height: 19px;
     z-index: -2;
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-bottom.png');
 }
 
@@ -419,6 +424,7 @@ body.kernelview {
     bottom: 19px;
     width: 19px;
     z-index: -2;
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-right.png');
 }
 
@@ -434,6 +440,7 @@ body.kernelview {
     width: 19px;
     height: 19px;
     z-index: -2;
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-top-right.png');
 }
 
@@ -448,6 +455,7 @@ body.kernelview {
     width: 19px;
     height: 19px;
     z-index: -2;
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/halo-bottom-right.png');
 }
 
@@ -463,6 +471,7 @@ body.kernelview {
 }
 
 .newrelationshiparrow.up {
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-up.png');
 }
 .newrelationshiparrow.up[class] {
@@ -470,6 +479,7 @@ body.kernelview {
 }
 
 .newrelationshiparrow.down {
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-down.png');
 }
 .newrelationshiparrow.down[class] {
@@ -477,6 +487,7 @@ body.kernelview {
 }
 
 .newrelationshiparrow.left {
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-left.png');
 }
 .newrelationshiparrow.left[class] {
@@ -484,6 +495,7 @@ body.kernelview {
 }
 
 .newrelationshiparrow.right {
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-right.png');
 }
 .newrelationshiparrow.right[class] {
@@ -491,6 +503,7 @@ body.kernelview {
 }
 
 .newrelationshiparrow.upleft {
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-up-left.png');
 }
 .newrelationshiparrow.upleft[class] {
@@ -498,6 +511,7 @@ body.kernelview {
 }
 
 .newrelationshiparrow.upright {
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-up-right.png');
 }
 .newrelationshiparrow.upright[class] {
@@ -505,6 +519,7 @@ body.kernelview {
 }
 
 .newrelationshiparrow.downleft {
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-down-left.png');
 }
 .newrelationshiparrow.downleft[class] {
@@ -512,6 +527,7 @@ body.kernelview {
 }
 
 .newrelationshiparrow.downright {
+    background: url('/images/clear.gif');
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale src='/images/rel-arrow-down-right.png');
 }
 .newrelationshiparrow.downright[class] {
