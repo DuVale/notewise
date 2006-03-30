@@ -307,10 +307,8 @@ KernelObject.prototype = {
         var vkernels = Utils.getElementsByClassName(this.body,'vkernel');
         var notes = Utils.getElementsByClassName(this.body,'note');
         if(this.kernel().has_children() > 0){
-            printfire("marking "+this.htmlElement.id+" contains");
             this.changeClass('contains');
         } else {
-            printfire("marking "+this.htmlElement.id+" notcontains");
             this.changeClass('notcontains');
         }
     },
@@ -327,13 +325,11 @@ KernelObject.prototype = {
             oldClass = newClass.replace(/^not/,'');
         }
 
-        printfire("switching header class "+oldClass+" to "+newClass);
         this.htmlElement.className =
             this.htmlElement.className.replace(new RegExp('-'+oldClass,'g'),'-'+newClass);
         for(var i=0; i<this.headerDivs.length; i++){
             this.headerDivs[i].className =
                 this.headerDivs[i].className.replace(new RegExp('-'+oldClass,'g'),'-'+newClass);
-            printfire("current classes: "+this.headerDivs[i].className);
         }
     }
 };
