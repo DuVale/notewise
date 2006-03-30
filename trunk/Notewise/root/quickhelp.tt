@@ -21,6 +21,9 @@
     .error {
         color: red;
     }
+    body {
+        border: none;
+    }
 </style>
 <a href="#" onclick="Bugs.close_window()" style="float: right">Close</a>
 <b>Create Kernel</b> - Double click</br>
