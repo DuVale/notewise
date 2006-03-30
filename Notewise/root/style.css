@@ -11,15 +11,243 @@ body.kernelview {
     z-index: 10;
 }
 
+.vkernel-collapsed {
+    height: 24px;
+}
+
+.vkernel .vkernel-collapsed {
+    height: 15px;
+}
+
+/* vkernel header images */
+
+/* regular collapsed header image sizes */
+.vkernel-leftbackground {
+    position: absolute;
+    height: 24px;
+    left: 0px;
+    width: 8px;
+    top: 0px;
+    z-index: 0;
+}
+.vkernel-mid-leftbackground {
+    position: absolute;
+    height: 24px;
+    left: 8px;
+    right: 33px;
+    top: 0px;
+    z-index: 0;
+}
+.vkernel-rightbackground {
+    position: absolute;
+    height: 24px;
+    width: 33px;
+    right: 0px;
+    top: 0px;
+    z-index: 0;
+    cursor: move;
+}
+
+/* mini collapsed header image sizes */
+.vkernel .vkernel .vkernel-leftbackground {
+    position: absolute;
+    height: 15px;
+    left: 0px;
+    width: 6px;
+    top: 0px;
+    z-index: 0;
+}
+
+.vkernel .vkernel .vkernel-mid-leftbackground {
+    position: absolute;
+    height: 15px;
+    left: 6px;
+    right: 23px;
+    top: 0px;
+    z-index: 0;
+}
+
+.vkernel .vkernel .vkernel-rightbackground {
+    position: absolute;
+    height: 15px;
+    width: 23px;
+    right: 0px;
+    top: 0px;
+    z-index: 0;
+    cursor: move;
+}
+
+.vkernel-mid-rightbackground-collapsed {
+    display: none;
+}
+
+
+/* regular expanded header sizes */
+.vkernel-leftbackground-expanded {
+    position: absolute;
+    height: 24px;
+    left: 0px;
+    width: 6px;
+    top: 0px;
+    z-index: 0;
+}
+.vkernel-mid-leftbackground-expanded {
+    position: absolute;
+    height: 24px;
+    left: 6px;
+    right: 33px;
+    top: 0px;
+    z-index: 0;
+}
+.vkernel-mid-rightbackground-expanded {
+    display: block;
+    position: absolute;
+    height: 24px;
+    right: 6px;
+    width: 33px;
+    top: 0px;
+    z-index: 0;
+    cursor: move;
+}
+.vkernel-rightbackground-expanded {
+    position: absolute;
+    height: 24px;
+    width: 6px;
+    right: 0px;
+    top: 0px;
+    z-index: 0;
+    cursor: default;
+}
+
+/* mini expanded header sizes */
+.vkernel .vkernel .vkernel-leftbackground-expanded {
+    position: absolute;
+    height: 15px;
+    left: 0px;
+    width: 6px;
+    top: 0px;
+    z-index: 0;
+}
+.vkernel .vkernel .vkernel-mid-leftbackground-expanded {
+    position: absolute;
+    height: 15px;
+    left: 6px;
+    right: 33px;
+    top: 0px;
+    z-index: 0;
+}
+.vkernel .vkernel .vkernel-mid-rightbackground-expanded {
+    display: block;
+    position: absolute;
+    height: 15px;
+    right: 6px;
+    width: 33px;
+    top: 0px;
+    z-index: 0;
+    cursor: move;
+}
+.vkernel .vkernel .vkernel-rightbackground-expanded {
+    position: absolute;
+    height: 15px;
+    width: 6px;
+    right: 0px;
+    top: 0px;
+    z-index: 0;
+    cursor: default;
+}
+
+/* gray collapsed*/
+.vkernel-leftbackground-collapsed-nothighlighted-notcontains { background: url('/images/body-left.gif') no-repeat; }
+.vkernel-mid-leftbackground-collapsed-nothighlighted-notcontains { background: url('/images/body-mid.gif'); }
+.vkernel-rightbackground-collapsed-nothighlighted-notcontains { background: url('/images/body-right.gif') no-repeat; }
+
+/* blue collapsed*/
+.vkernel-leftbackground-collapsed-nothighlighted-contains { background: url('/images/kernel-blue-left.gif') no-repeat; }
+.vkernel-mid-leftbackground-collapsed-nothighlighted-contains { background: url('/images/kernel-blue-mid.gif'); }
+.vkernel-rightbackground-collapsed-nothighlighted-contains { background: url('/images/kernel-blue-right.gif') right no-repeat; }
+
+/* grey expanded */
+.vkernel-leftbackground-expanded-nothighlighted-notcontains { background: url('/images/kernel-expanded-gray-left.gif') no-repeat; }
+.vkernel-mid-leftbackground-expanded-nothighlighted-notcontains { background: url('/images/kernel-expanded-gray-mid-left.gif'); }
+.vkernel-mid-rightbackground-expanded-nothighlighted-notcontains { background: url('/images/kernel-expanded-gray-mid-right.gif'); }
+.vkernel-rightbackground-expanded-nothighlighted-notcontains { background: url('/images/kernel-expanded-gray-right.gif') right no-repeat; }
+
+/* blue expanded */
+.vkernel-leftbackground-expanded-nothighlighted-contains { background: url('/images/kernel-expanded-left.gif') no-repeat; }
+.vkernel-mid-leftbackground-expanded-nothighlighted-contains { background: url('/images/kernel-expanded-mid-left.gif'); }
+.vkernel-mid-rightbackground-expanded-nothighlighted-contains { background: url('/images/kernel-expanded-mid-right.gif'); }
+.vkernel-rightbackground-expanded-nothighlighted-contains { background: url('/images/kernel-expanded-right.gif') right no-repeat; }
+
+/* mini gray collapsed*/
+.vkernel .vkernel .vkernel-leftbackground-collapsed-nothighlighted-notcontains { background: url('/images/kernel-mini-left.gif') no-repeat; }
+.vkernel .vkernel .vkernel-mid-leftbackground-collapsed-nothighlighted-notcontains { background: url('/images/kernel-mini-mid.gif'); }
+.vkernel .vkernel .vkernel-rightbackground-collapsed-nothighlighted-notcontains { background: url('/images/kernel-mini-right.gif') no-repeat; }
+
+/* mini blue collapsed*/
+.vkernel .vkernel .vkernel-leftbackground-collapsed-nothighlighted-contains { background: url('/images/kernel-mini-blue-left.gif') no-repeat; }
+.vkernel .vkernel .vkernel-mid-leftbackground-collapsed-nothighlighted-contains { background: url('/images/kernel-mini-blue-mid.gif'); }
+.vkernel .vkernel .vkernel-rightbackground-collapsed-nothighlighted-contains { background: url('/images/kernel-mini-blue-right.gif') right no-repeat; }
+
+/* mini grey expanded */
+.vkernel .vkernel .vkernel-leftbackground-expanded-nothighlighted-notcontains { background: url('/images/kernel-mini-gray-expanded-left.gif') no-repeat; }
+.vkernel .vkernel .vkernel-mid-leftbackground-expanded-nothighlighted-notcontains { background: url('/images/kernel-mini-gray-expanded-midleft.gif'); }
+.vkernel .vkernel .vkernel-mid-rightbackground-expanded-nothighlighted-notcontains { background: url('/images/kernel-mini-gray-expanded-midright.gif'); }
+.vkernel .vkernel .vkernel-rightbackground-expanded-nothighlighted-notcontains { background: url('/images/kernel-mini-gray-expanded-right.gif') right no-repeat; }
+
+/* mini blue expanded */
+.vkernel .vkernel .vkernel-leftbackground-expanded-nothighlighted-contains { background: url('/images/kernel-mini-blue-expanded-left.gif') no-repeat; }
+.vkernel .vkernel .vkernel-mid-leftbackground-expanded-nothighlighted-contains { background: url('/images/kernel-mini-blue-expanded-midleft.gif'); }
+.vkernel .vkernel .vkernel-mid-rightbackground-expanded-nothighlighted-contains { background: url('/images/kernel-mini-blue-expanded-midright.gif'); }
+.vkernel .vkernel .vkernel-rightbackground-expanded-nothighlighted-contains { background: url('/images/kernel-mini-blue-expanded-right.gif') right no-repeat; }
+
+.vkernel-leftbackground.highlighted { background: url('/images/kernel-highlighted-left.gif') no-repeat; }
+.vkernel-mid-leftbackground.highlighted { background: url('/images/kernel-highlighted-mid.gif'); }
+.vkernel-rightbackground.hightlighted { background: url('/images/kernel-highlighted-right.gif') right no-repeat; }
+
+
+.vkernel .vkernel .vkernel-leftbackground-collapsed-highlighted-contains,
+.vkernel .vkernel .vkernel-leftbackground-collapsed-highlighted-notcontains {
+    background: url('/images/kernel-mini-highlighted-left.gif') no-repeat;
+}
+.vkernel .vkernel .vkernel-mid-leftbackground-collapsed-highlighted-contains,
+.vkernel .vkernel .vkernel-mid-leftbackground-collapsed-highlighted-notcontains {
+    background: url('/images/kernel-mini-highlighted-mid.gif');
+}
+
+.vkernel .vkernel .vkernel-rightbackground-collapsed-highlighted-contains,
+.vkernel .vkernel .vkernel-rightbackground-collapsed-highlighted-notcontains {
+    background: url('/images/kernel-mini-highlighted-right.gif') right no-repeat;
+}
+
+
+.vkernel .vkernel .vkernel-leftbackground-expanded-highlighted-contains,
+.vkernel .vkernel .vkernel-leftbackground-expanded-highlighted-notcontains {
+    background: url('/images/kernel-mini-orange-expanded-left.gif') no-repeat;
+}
+
+.vkernel .vkernel .vkernel-mid-leftbackground-expanded-highlighted-contains,
+.vkernel .vkernel .vkernel-mid-leftbackground-expanded-highlighted-contains {
+    background: url('/images/kernel-mini-orange-expanded-midleft.gif');
+}
+
+.vkernel .vkernel .vkernel-mid-rightbackground-expanded-highlighted-contains,
+.vkernel .vkernel .vkernel-mid-rightbackground-expanded-highlighted-notcontains {
+    background: url('/images/kernel-mini-orange-expanded-midright.gif');
+}
+
+.vkernel .vkernel .vkernel-rightbackground-expanded-highlighted-contains,
+.vkernel .vkernel .vkernel-rightbackground-expanded-highlighted-notcontains {
+    background: url('/images/kernel-mini-orange-expanded-right.gif') right no-repeat;
+}
+
+
 .note {
     position: absolute;
     z-index: 10;
 }
 
 
-.note .body,
-.vkernel .note .body,
-.vkernel .vkernel .note .body {
+.notebody {
     background: white;
     position: absolute;
     border: 1px solid #767676;
@@ -45,7 +273,7 @@ body.kernelview {
 
 .note-left {
     position: absolute;
-    background: url('/images/note-upper-left.gif') no-repeat;
+    background: url('/images/note-upper-left.gif') top no-repeat;
     height: 11px;
     left: 0px;
     width: 7px;
@@ -55,7 +283,7 @@ body.kernelview {
 
 .note-mid {
     position: absolute;
-    background: url('/images/note-upper-mid.gif');
+    background: url('/images/note-upper-mid.gif') repeat-x;
     height: 11px;
     left: 7px;
     right: 6px;
@@ -66,72 +294,12 @@ body.kernelview {
 
 .note-right {
     position: absolute;
-    background: url('/images/note-upper-right.gif') right no-repeat;
+    background: url('/images/note-upper-right.gif') top right no-repeat;
     height: 11px;
     width: 6px;
     right: 0px;
     top: 0px;
     z-index: 3;
-}
-
-.vkernel.contains .leftbackground {
-    background: url('/images/kernel-blue-left.gif') no-repeat;
-}
-
-.vkernel.contains .mid-leftbackground {
-    background: url('/images/kernel-blue-mid.gif');
-}
-
-.vkernel.contains .rightbackground {
-    background: url('/images/kernel-blue-right.gif') right no-repeat;
-}
-
-.vkernel.expanded.contains .vkernel.collapsed.contains.nothighlighted .leftbackground {
-    background: url('/images/kernel-mini-blue-left.gif') no-repeat;
-}
-
-.vkernel.expanded.contains .vkernel.collapsed.contains.nothighlighted .mid-leftbackground {
-    background: url('/images/kernel-mini-blue-mid.gif');
-}
-
-.vkernel.expanded.contains .vkernel.collapsed.contains.nothighlighted .mid-rightbackground {
-    display: none;
-}
-
-.vkernel.expanded.contains .vkernel.collapsed.contains.nothighlighted .rightbackground {
-    background: url('/images/kernel-mini-blue-right.gif') right no-repeat;
-}
-
-.vkernel.contains.expanded .leftbackground {
-    background: url('/images/kernel-expanded-left.gif') no-repeat;
-}
-
-.vkernel.contains.expanded .mid-leftbackground {
-    background: url('/images/kernel-expanded-mid-left.gif');
-}
-
-.vkernel.contains.expanded .mid-rightbackground {
-    background: url('/images/kernel-expanded-mid-right.gif');
-}
-
-.vkernel.contains.expanded .rightbackground {
-    background: url('/images/kernel-expanded-right.gif') right no-repeat;
-}
-
-.vkernel.contains.expanded .vkernel.contains.expanded.nothighlighted .leftbackground {
-    background: url('/images/kernel-mini-blue-expanded-left.gif') no-repeat;
-}
-
-.vkernel.contains.expanded .vkernel.contains.expanded.nothighlighted .mid-leftbackground {
-    background: url('/images/kernel-mini-blue-expanded-midleft.gif');
-}
-
-.vkernel.contains.expanded .vkernel.contains.expanded.nothighlighted .mid-rightbackground {
-    background: url('/images/kernel-mini-blue-expanded-midright.gif');
-}
-
-.vkernel.contains.expanded .vkernel.contains.expanded.nothighlighted .rightbackground {
-    background: url('/images/kernel-mini-blue-expanded-right.gif') right no-repeat;
 }
 
 .relationshiphalo {
@@ -146,19 +314,27 @@ body.kernelview {
     z-index: -3;
 }
 
-.selected .relationshiphalo {
+.vkernel-selected .relationshiphalo,
+.note-selected .relationshiphalo {
     display: block;
 }
 
-.notselected .relationshiphalo {
+.vkernel-notselected .relationshiphalo,
+.note-notselected .relationshiphalo {
     display: none;
 }
 
-.notselected .selected .relationshiphalo {
+.vkernel-notselected .vkernel-selected .relationshiphalo,
+.vkernel-notselected .note-selected .relationshiphalo,
+.note-notselected .vkernel-selected .relationshiphalo,
+.note-notselected .vkernel-selected .relationshiphalo {
     display: block;
 }
 
-.selected .notselected .relationshiphalo {
+.vkernel-selected .vkernel-notselected .relationshiphalo,
+.vkernel-selected .note-notselected .relationshiphalo,
+.note-selected .vkernel-notselected .relationshiphalo,
+.note-selected .note-notselected .relationshiphalo {
     display: none;
 }
 
@@ -362,7 +538,7 @@ body.kernelview {
     z-index: 5;
 }
 
-.vkernel.expanded .expandbutton {
+.vkernel-expanded .expandbutton {
     left: 4px;
     top: 8px;
     width: 9px;
@@ -371,7 +547,7 @@ body.kernelview {
     z-index: 5;
 }
 
-.vkernel.collapsed .expandbutton {
+.vkernel-collapsed .expandbutton {
     left: 4px;
     top: 6px;
     width: 8px;
@@ -388,7 +564,7 @@ body.kernelview {
     height: 12px;
 }
 
-.removebutton.hover {
+.removebutton-hover {
     background: url('/images/close-button-highlighted.png') no-repeat;
 }
 
@@ -400,87 +576,88 @@ body.kernelview {
     height: 12px;
 }
 
-.editbutton.hover {
+.editbutton-hover {
     background: url('/images/edit-button-highlighted.png') no-repeat;
 }
 
-.note.selected .removebutton {
+.note-selected .removebutton {
     display: block;
 }
 
-.note.notselected .removebutton {
+.note-notselected .removebutton {
     display: none;
 }
 
-.notselected .note.selected .removebutton {
+.note-notselected .note-selected .removebutton,
+.vkernel-notselected .note-selected .removebutton {
     display: block;
 }
 
-.selected .note.notselected .removebutton {
+.note-selected .note-notselected .removebutton,
+.vkernel-selected .note-notselected .removebutton {
     display: none;
 }
 
-.vkernel.selected .removebutton,
-.vkernel.selected .editbutton {
+.vkernel-selected .removebutton,
+.vkernel-selected .editbutton {
     display: block;
 }
 
-.vkernel.notselected .removebutton,
-.vkernel.notselected .editbutton {
+.vkernel-notselected .removebutton,
+.vkernel-notselected .editbutton {
     display: none;
 }
 
-.vkernel.notselected .vkernel.selected .removebutton,
-.vkernel.notselected .vkernel.selected .editbutton {
+.vkernel-notselected .vkernel-selected .removebutton,
+.vkernel-notselected .vkernel-selected .editbutton {
     display: block;
 }
 
-.vkernel.selected .vkernel.notselected .removebutton,
-.vkernel.selected .vkernel.notselected .editbutton {
+.vkernel-selected .vkernel-notselected .removebutton,
+.vkernel-selected .vkernel-notselected .editbutton {
     display: none;
 }
 
-.relationship.selected .relationshipLabel {
+.relationship-selected .relationshipLabel {
     border: 1px solid black;
 }
 
-.relationship.notselected .relationshipLabel {
+.relationship-notselected .relationshipLabel {
     border: 1px solid white;
 }
 
-.notselected .relationship.selected .relationshipLabel {
+/*.notselected .relationship-selected .relationshipLabel {
     border: 1px solid black;
 }
 
-.selected .relationship.notselected .relationshipLabel {
+.selected .relationship-notselected .relationshipLabel {
     border: 1px solid white;
-}
+}*/
 
-.relationship.selected .removebutton {
+.relationship-selected .removebutton {
     display: block;
 }
 
-.relationship.notselected .removebutton {
+.relationship-notselected .removebutton {
     display: none;
 }
 
-.notselected .relationship.selected .removebutton {
+.vkernel-notselected .relationship-selected .removebutton {
     display: block;
 }
 
-.selected .relationship.notselected .removebutton {
+.vkernel-selected .relationship-notselected .removebutton {
     display: none;
 }
 
 .relationship .removebutton {
     position: absolute;
-    width: 20px;
-    height: 20px;
+    background: url('/images/rel-close-button.gif') no-repeat;
+    width: 13px;
+    height: 12px;
     padding: 0px;
-    background: blue;
-    color: white;
     left: 55px;
-    top: -12px;
+    top: -6px;
     z-index: 10;
 }
 
@@ -567,36 +744,36 @@ img {
     left: 15px;
 }
 
-.vkernel.edit .namefield {
+.vkernel-edit .namefield {
     display: block;
 }
 
-.vkernel.noedit .namefield {
+.vkernel-notedit .namefield {
     display: none;
 }
 
-.vkernel.noedit .vkernel.edit .namefield {
+.vkernel-notedit .vkernel-edit .namefield {
     display: block;
     background: white;
 }
 
-.vkernel.edit .vkernel.noedit .namefield {
+.vkernel-edit .vkernel-notedit .namefield {
     display: none;
 }
 
-.vkernel.edit .namelink {
+.vkernel-edit .namelink {
     display: none;
 }
 
-.vkernel.noedit .namelink {
+.vkernel-notedit .namelink {
     display: block;
 }
 
-.vkernel.noedit .vkernel.edit .namelink {
+.vkernel-notedit .vkernel-edit .namelink {
     display: none;
 }
 
-.vkernel.edit .vkernel.noedit .namelink {
+.vkernel-edit .vkernel-notedit .namelink {
     display: block;
 }
 
@@ -615,173 +792,14 @@ img {
     height: 88%;
 }
 
-.vkernel .body.activated {
+.vkernel .body-activated {
     background: #d2eeff;
 }
 
-.vkernel.collapsed {
-    height: 24px;
-}
-
-.vkernel.collapsed .body {
+.vkernel-collapsed .body {
     height: 0px;
     display: none;
 }
-
-.vkernel .leftbackground {
-    position: absolute;
-    background: url('/images/body-left.gif') no-repeat;
-    height: 24px;
-    left: 0px;
-    width: 8px;
-    top: 0px;
-    z-index: 0;
-}
-
-.vkernel .mid-leftbackground {
-    position: absolute;
-    background: url('/images/body-mid.gif');
-    height: 24px;
-    left: 8px;
-    right: 33px;
-    top: 0px;
-    z-index: 0;
-}
-
-.vkernel .mid-rightbackground {
-    display: none;
-}
-
-.vkernel .rightbackground {
-    position: absolute;
-    background: url('/images/body-right.gif') right no-repeat;
-    height: 24px;
-    width: 33px;
-    right: 0px;
-    top: 0px;
-    z-index: 0;
-    cursor: move;
-}
-
-.vkernel.expanded .leftbackground {
-    position: absolute;
-    background: url('/images/kernel-expanded-gray-left.gif') no-repeat;
-    height: 24px;
-    left: 0px;
-    width: 6px;
-    top: 0px;
-    z-index: 0;
-}
-
-.vkernel.expanded .mid-leftbackground {
-    position: absolute;
-    background: url('/images/kernel-expanded-gray-mid-left.gif');
-    height: 24px;
-    left: 6px;
-    right: 33px;
-    top: 0px;
-    z-index: 0;
-}
-
-.vkernel.expanded .mid-rightbackground {
-    display: block;
-    position: absolute;
-    background: url('/images/kernel-expanded-gray-mid-right.gif');
-    height: 24px;
-    right: 6px;
-    width: 33px;
-    top: 0px;
-    z-index: 0;
-    cursor: move;
-}
-
-.vkernel.expanded .rightbackground {
-    position: absolute;
-    background: url('/images/kernel-expanded-gray-right.gif') right no-repeat;
-    height: 24px;
-    width: 6px;
-    right: 0px;
-    top: 0px;
-    z-index: 0;
-    cursor: default;
-}
-
-.vkernel .vkernel.collapsed {
-    height: 15px;
-}
-
-.vkernel .vkernel .leftbackground {
-    position: absolute;
-    height: 15px;
-    left: 0px;
-    width: 6px;
-    top: 0px;
-    z-index: 0;
-}
-
-.vkernel .vkernel .mid-leftbackground {
-    position: absolute;
-    height: 15px;
-    left: 6px;
-    right: 23px;
-    top: 0px;
-    z-index: 0;
-}
-
-.vkernel .vkernel .rightbackground {
-    position: absolute;
-    height: 15px;
-    width: 23px;
-    right: 0px;
-    top: 0px;
-    z-index: 0;
-    cursor: move;
-}
-
-.vkernel.highlighted .leftbackground {
-    background: url('/images/kernel-highlighted-left.gif') no-repeat;
-}
-
-.vkernel.highlighted .mid-leftbackground {
-    background: url('/images/kernel-highlighted-mid.gif');
-}
-
-.vkernel.highlighted .rightbackground {
-    background: url('/images/kernel-highlighted-right.gif') right no-repeat;
-}
-
-.vkernel.contains.expanded .vkernel.collapsed.highlighted .leftbackground {
-    background: url('/images/kernel-mini-highlighted-left.gif') no-repeat;
-}
-
-.vkernel.contains.expanded .vkernel.collapsed.highlighted .mid-leftbackground {
-    background: url('/images/kernel-mini-highlighted-mid.gif');
-}
-
-.vkernel.contains.expanded .vkernel.collapsed.highlighted .mid-rightbackground {
-    display: none;
-}
-
-.vkernel.contains.expanded .vkernel.collapsed.highlighted .rightbackground {
-    background: url('/images/kernel-mini-highlighted-right.gif') right no-repeat;
-}
-
-.vkernel.expanded.contains .vkernel.collapsed.nocontains.nothighlighted .leftbackground {
-    background: url('/images/kernel-mini-left.gif') no-repeat;
-}
-
-.vkernel.expanded.contains .vkernel.collapsed.nocontains.nothighlighted .mid-leftbackground {
-    background: url('/images/kernel-mini-mid.gif');
-}
-
-.vkernel.expanded.contains .vkernel.collapsed.nocontains.nothighlighted .mid-rightbackground {
-    display: none;
-}
-
-.vkernel.expanded.contains .vkernel.collapsed.nocontains.nothighlighted .rightbackground {
-    background: url('/images/kernel-mini-right.gif') right no-repeat;
-}
-
 .vkernel .vkernel .namelink {
     font-style: normal;
     font-size: 9px;
@@ -805,65 +823,7 @@ img {
     top: 14px;
 }
 
-.vkernel.expanded.contains .vkernel.expanded.nocontains.nothighlighted .leftbackground {
-    position: absolute;
-    background: url('/images/kernel-mini-gray-expanded-left.gif') no-repeat;
-    height: 15px;
-    left: 0px;
-    width: 6px;
-    top: 0px;
-    z-index: 0;
-}
-
-.vkernel.expanded.contains .vkernel.expanded.nocontains.nothighlighted .mid-leftbackground {
-    position: absolute;
-    background: url('/images/kernel-mini-gray-expanded-midleft.gif');
-    height: 15px;
-    left: 6px;
-    right: 33px;
-    top: 0px;
-    z-index: 0;
-}
-
-.vkernel.expanded.contains .vkernel.expanded.nocontains.nothighlighted .mid-rightbackground {
-    display: block;
-    position: absolute;
-    background: url('/images/kernel-mini-gray-expanded-midright.gif');
-    height: 15px;
-    right: 6px;
-    width: 33px;
-    z-index: 0;
-    cursor: move;
-}
-
-.vkernel.expanded.contains .vkernel.expanded.nocontains.nothighlighted .rightbackground {
-    position: absolute;
-    background: url('/images/kernel-mini-gray-expanded-right.gif') right no-repeat;
-    height: 15px;
-    width: 6px;
-    right: 0px;
-    top: 0px;
-    z-index: 0;
-    cursor: default;
-}
-
-.vkernel.contains.expanded .vkernel.expanded.highlighted .leftbackground {
-    background: url('/images/kernel-mini-orange-expanded-left.gif') no-repeat;
-}
-
-.vkernel.contains.expanded .vkernel.expanded.highlighted .mid-leftbackground {
-    background: url('/images/kernel-mini-orange-expanded-midleft.gif');
-}
-
-.vkernel.contains.expanded .vkernel.expanded.highlighted .mid-rightbackground {
-    background: url('/images/kernel-mini-orange-expanded-midright.gif');
-}
-
-.vkernel.contains.expanded .vkernel.expanded.highlighted .rightbackground {
-    background: url('/images/kernel-mini-orange-expanded-right.gif') right no-repeat;
-}
-
-.vkernel.collapsed .corner {
+.vkernel-collapsed .corner {
     display: none;
 }
 
@@ -1083,6 +1043,11 @@ div.auto_complete ul strong.highlight {
 .kernelthumbnail .relationshipLabel {
     font-size: 8px;
     height: 15px;
+}
+
+/* XXX this will need to change when we get the sidebar scalable */
+.kernelthumbnail .vkernel-mid-leftbackground {
+    width: 121px;
 }
 
 /* interface */
@@ -1318,18 +1283,18 @@ div.search input {
     cursor: default;
 }
 
-.sidebar-header .spinner.closed,
-.top-sidebar-header .spinner.closed {
+.sidebar-header .spinner-closed,
+.top-sidebar-header .spinner-closed {
     background: url('/images/sidebar-spinner-horiz.png') no-repeat;
     width: 6px;
     height: 11px;
 }
 
-.sidebar-header .spinner.closed {
+.sidebar-header .spinner-closed {
     margin-left: 9px;
     margin-right: 1px;
 }
-.top-sidebar-header .spinner.closed {
+.top-sidebar-header .spinner-closed {
     top: 8px;
     left: 10px;
 }
@@ -1344,7 +1309,7 @@ div.search input {
     overflow: auto;
 }
 
-.sidebar-content.closed {
+.sidebar-content-closed {
     display: none;
     height: 0px;
 }

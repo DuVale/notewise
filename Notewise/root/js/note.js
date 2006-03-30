@@ -22,7 +22,7 @@ Note.prototype.extend({
             this.setup();
         }
         
-        this.type        = 'Note';
+        this.type        = 'note';
         this.id(id);
         this.container_object(container_object);
         this.__x=x;
@@ -78,7 +78,7 @@ Note.prototype.extend({
                +"<div class='halo-bottom-right'></div>"
            +"</div>"
            +"<div class=\"bodycontainer\">"
-               +"<textarea class='body'>"
+               +"<textarea class='notebody'>"
                    + this.content()
                +"</textarea>"
                +"<div class=\"corner\">"
@@ -211,7 +211,26 @@ Note.prototype.extend({
         this.rightbackground = Utils.getElementsByClassName(this.htmlElement, 'note-right')[0];
         this.leftbackground = Utils.getElementsByClassName(this.htmlElement, 'note-left')[0];
         var bodycontainer = Utils.getElementsByClassName(this.htmlElement, 'bodycontainer')[0];
-        this.body = Utils.getElementsByClassName(bodycontainer, 'body')[0];
+        this.body = Utils.getElementsByClassName(bodycontainer, 'notebody')[0];
         this.corner = Utils.getElementsByClassName(bodycontainer, 'corner')[0];
+    },
+
+    // Select this object
+    select: function () {
+        // make sure the newrelationshiparrow is hidden to start with
+        Element.hide(this.newrelationshiparrow);
+        if( !this.isSelected() ){
+            Element.removeClassName(this.htmlElement,'note-notselected');
+            Element.addClassName(this.htmlElement,'note-selected');
+        }
+        dndMgr.moveToFront(this.htmlElement);
+    },
+
+    // Mark this object as not selected
+    deselect: function () {
+        if( this.isSelected()){
+            Element.removeClassName(this.htmlElement,'note-selected');
+            Element.addClassName(this.htmlElement,'note-notselected');
+        }
     }
 });

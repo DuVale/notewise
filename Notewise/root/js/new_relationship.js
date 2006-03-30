@@ -80,9 +80,9 @@ NewRelationship.prototype = {
                     if(posx > left && posx < right
                        && posy > top && posy < bottom){
                         var part1;
-                        if(this.startObject.type == 'Kernel'){
+                        if(this.startObject.type == 'vkernel'){
                             part1 = this.startObject.kernel_id();
-                        } else if(this.startObject.type == 'Note') {
+                        } else if(this.startObject.type == 'note') {
                             part1 = this.startObject.id();
                         }
                         var part2;

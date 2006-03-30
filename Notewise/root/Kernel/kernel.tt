@@ -1,5 +1,28 @@
+[%
+classes = [];
+IF vkernel.collapsed;
+    collapsed = 'collapsed';
+  ELSE;
+    collapsed = 'expanded';
+  END;
+  classes.push(collapsed);
+
+  IF highlight.id == vkernel.contained_kernel.id;
+    classes.push('highlighted');
+  ELSE;
+    classes.push('nothighlighted');
+  END;
+
+  IF vkernel.contained_kernel.children.size > 0 ||
+     vkernel.contained_kernel.notes.size > 0;
+        classes.push('contains');
+  ELSE;
+        classes.push('notcontains');
+  END;
+
+%]
 [% id = vkernel.container_kernel.id _ '/' _ vkernel.contained_kernel.id %]
-<div id="vkernel[%id%]" class="vkernel [%IF vkernel.collapsed%]collapsed[%ELSE%]expanded[%END%] [%IF highlight.id == vkernel.contained_kernel.id%]highlighted[%ELSE%]nothighlighted[%END%] notselected noedit [%IF vkernel.contained_kernel.children.size > 0 || vkernel.contained_kernel.notes.size > 0%]contains[%ELSE%]nocontains[%END%]"
+<div id="vkernel[%id%]" class="vkernel vkernel-notselected vkernel-notedit vkernel-[%classes.join(' vkernel-')%]"
          style="left: [% vkernel.x %]%; top: [% vkernel.y %]%;
                 [% IF vkernel.collapsed %]
                     width: [% vkernel.contained_kernel.name.length * 0.55 + 4%]em;
@@ -21,10 +44,10 @@
         <div class="halo-bottom"></div>
         <div class="halo-bottom-right"></div>
     </div>
-    <div class="leftbackground"></div>
-    <div class="mid-leftbackground"></div>
-    <div class="mid-rightbackground"></div>
-    <div class="rightbackground"></div>
+    <div class="vkernel-leftbackground vkernel-leftbackground-[%collapsed%] vkernel-leftbackground-[%classes.join('-')%]"></div>
+    <div class="vkernel-mid-leftbackground vkernel-mid-leftbackground-[%collapsed%] vkernel-mid-leftbackground-[%classes.join('-')%]"></div>
+    <div class="vkernel-mid-rightbackground vkernel-mid-rightbackground-[%collapsed%] vkernel-mid-rightbackground-[%classes.join('-')%]"></div>
+    <div class="vkernel-rightbackground vkernel-rightbackground-[%collapsed%] vkernel-rightbackground-[%classes.join('-')%]"></div>
     [% IF vkernel.contained_kernel.name %]
         [% name_length = vkernel.contained_kernel.name.length * 0.55 + 1%]
     [% ELSE %]

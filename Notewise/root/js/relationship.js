@@ -29,7 +29,7 @@ Relationship.prototype.extend( {
         this.midx;  // center of line, in terms of pixels relative to image
         this.midy;  // center of line, in terms of pixels relative to image
         this.htmlElement = document.createElement('div');
-        this.htmlElement.className='relationship notselected';
+        this.htmlElement.className='relationship relationship-notselected';
         this.htmlElement.id=this.idString();
         this.htmlElement.relationship=this;
         this.part1ContainedObject.htmlElement.parentNode.appendChild(this.htmlElement);
@@ -78,10 +78,8 @@ Relationship.prototype.extend( {
     },
 
     createButtons: function() {
-        this.removeButton = document.createElement('input');
-        this.removeButton.type='button';
+        this.removeButton = document.createElement('div');
         this.removeButton.className='removebutton';
-        this.removeButton.value = 'X';
         this.labelDiv.appendChild(this.removeButton);
     },
 
@@ -545,22 +543,22 @@ Relationship.prototype.extend( {
     select: function () {
         this.showLabel();
         if( !this.isSelected() ){
-          Element.removeClassName(this.htmlElement, 'notselected');
-          Element.addClassName(this.htmlElement, 'selected');
+          Element.removeClassName(this.htmlElement, 'relationship-notselected');
+          Element.addClassName(this.htmlElement, 'relationship-selected');
         }
     },
 
     // Mark this relationship as not selected
     deselect: function () {
         if( this.isSelected()){
-            Element.removeClassName(this.htmlElement, 'selected');
-            Element.addClassName(this.htmlElement, 'notselected');
+            Element.removeClassName(this.htmlElement, 'relationship-selected');
+            Element.addClassName(this.htmlElement, 'relationship-notselected');
         }
     },
 
     // Returns whether or not this relationship is currently selected
     isSelected: function () {
-        return Element.hasClassName(this.htmlElement, 'selected');
+        return Element.hasClassName(this.htmlElement, 'relationship-selected');
     },
 
     removeFromView: function () {
