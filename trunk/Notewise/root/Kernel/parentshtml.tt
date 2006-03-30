@@ -1,11 +1,11 @@
 [% max_depth=2 %]
 [% thumbnail_start_depth=1 %]
 [% FOR parent = kernel.parents %]
-    <div class="vkernel kernelthumbnail expanded notselected noedit contains" id="parentthumbnail[%parent.id%]">
-        <div class="leftbackground"></div>
-        <div class="mid-leftbackground"></div>
-        <div class="mid-rightbackground"></div>
-        <div class="rightbackground"></div>
+    <div class="vkernel kernelthumbnail vkernel-expanded vkernel-notselected vkernel-noedit vkernel-contains" id="parentthumbnail[%parent.id%]">
+        <div class="vkernel-leftbackground vkernel-leftbackground-expanded vkernel-leftbackground-expanded-nothighlighted-contains"></div>
+        <div class="vkernel-mid-leftbackground vkernel-mid-leftbackground-expanded vkernel-mid-leftbackground-expanded-nothighlighted-contains"></div>
+        <div class="vkernel-mid-rightbackground vkernel-mid-rightbackground-expanded vkernel-mid-rightbackground-expanded-nothighlighted-contains"></div>
+        <div class="vkernel-rightbackground vkernel-rightbackground-expanded vkernel-rightbackground-expanded-nothighlighted-contains"></div>
         [% IF parent.name %]
             [% name_length = parent.name.length * 0.55 + 1%]
         [% ELSE %]

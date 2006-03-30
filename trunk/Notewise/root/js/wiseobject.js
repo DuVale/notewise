@@ -101,9 +101,9 @@ WiseObject.prototype.extend({
                                     this.startCreateRelationship.bindAsEventListener(this));
 
         Event.observe(this.removebutton,
-                                    'mouseover',function(){Element.addClassName(this.removebutton,'hover')}.bind(this));
+                                    'mouseover',function(){Element.addClassName(this.removebutton,'removebutton-hover')}.bind(this));
         Event.observe(this.removebutton,
-                                    'mouseout',function(){Element.removeClassName(this.removebutton,'hover')}.bind(this));
+                                    'mouseout',function(){Element.removeClassName(this.removebutton,'removebutton-hover')}.bind(this));
       },
 
     // Select this object and terminate the event
@@ -554,29 +554,20 @@ WiseObject.prototype.extend({
 
     // Returns whether or not this object is currently selected
     isSelected: function () {
-        return Element.hasClassName(this.htmlElement,'selected');
+        alert("isSelected() needs to be overridden in subclasses");
     },
-
-    // Rico draggable stuff
 
     // Select this object
     select: function () {
-        // make sure the newrelationshiparrow is hidden to start with
-        Element.hide(this.newrelationshiparrow);
-        if( !this.isSelected() ){
-            Element.removeClassName(this.htmlElement,'notselected');
-            Element.addClassName(this.htmlElement,'selected');
-        }
-        dndMgr.moveToFront(this.htmlElement);
+        alert("isSelected() needs to be overridden in subclasses");
     },
 
     // Mark this object as not selected
     deselect: function () {
-        if( this.isSelected()){
-            Element.removeClassName(this.htmlElement,'selected');
-            Element.addClassName(this.htmlElement,'notselected');
-        }
+        alert("isSelected() needs to be overridden in subclasses");
     },
+
+    // Rico draggable stuff
 
     startDrag: function() {
         this.notifyStartChangeListeners();
@@ -593,8 +584,8 @@ WiseObject.prototype.extend({
 
         // convert this element to pixels, so it doesn't change size as we reparent
         this.htmlElement.style.width=this.htmlElement.clientWidth+'px';
-        if( (this.type == 'Kernel' && ! this.collapsed()) ||
-             this.type == 'Note' ){
+        if( (this.type == 'vkernel' && ! this.collapsed()) ||
+             this.type == 'note' ){
             // only do this if it's expanded - otherwise the kernel and halo
             // don't size correctly between being in the view, and being in a
             // thumbnail
@@ -648,6 +639,12 @@ WiseObject.prototype.extend({
         this.layoutResize();
 
         this.notifyEndChangeListeners();
+    },
+
+    // Returns whether or not this object is currently selected
+    isSelected: function () {
+        var result = this.htmlElement.className.search(/\-selected/) != -1;
+        return result;
     }
 });
 

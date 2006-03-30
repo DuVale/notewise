@@ -6,6 +6,7 @@ var KernelObject = Class.create();
 KernelObject.prototype = {
     initialize: function(htmlElement){
         this.htmlElement = htmlElement;
+        this.headerDivs = new Array();
 
         if(this.htmlElement){
             this.setup();
@@ -15,7 +16,7 @@ KernelObject.prototype = {
     // setup all the event listeners
     registerHandlers: function() {
         // set up the dnd
-        dndMgr.registerDropZone( new CustomDropzone(this.body,this) );
+        dndMgr.registerDropZone( new KernelDropzone(this.body,this) );
 
         // setup the click handlers
         Event.observe(this.body,'dblclick', this.gotDoubleClick.bindAsEventListener(this));
@@ -306,11 +307,68 @@ KernelObject.prototype = {
         var vkernels = Utils.getElementsByClassName(this.body,'vkernel');
         var notes = Utils.getElementsByClassName(this.body,'note');
         if(this.kernel().has_children() > 0){
-            Element.addClassName(this.htmlElement,'contains');
-            Element.removeClassName(this.htmlElement,'nocontains');
+            printfire("marking "+this.htmlElement.id+" contains");
+            this.changeClass('contains');
         } else {
-            Element.addClassName(this.htmlElement,'nocontains');
-            Element.removeClassName(this.htmlElement,'contains');
+            printfire("marking "+this.htmlElement.id+" notcontains");
+            this.changeClass('notcontains');
+        }
+    },
+
+    changeClass: function(newClass){
+        var oldClass;
+        if(newClass == 'collapsed'){
+            oldClass = 'expanded';
+        } else if(newClass == 'expanded'){
+            oldClass = 'collapsed';
+        } else if(newClass.search(/^not/) == -1){
+            oldClass = 'not'+newClass;
+        } else {
+            oldClass = newClass.replace(/^not/,'');
+        }
+
+        printfire("switching header class "+oldClass+" to "+newClass);
+        this.htmlElement.className =
+            this.htmlElement.className.replace(new RegExp('-'+oldClass,'g'),'-'+newClass);
+        for(var i=0; i<this.headerDivs.length; i++){
+            this.headerDivs[i].className =
+                this.headerDivs[i].className.replace(new RegExp('-'+oldClass,'g'),'-'+newClass);
+            printfire("current classes: "+this.headerDivs[i].className);
         }
     }
 };
+
+var KernelDropzone = Class.create();
+
+KernelDropzone.prototype = (new Dropzone()).extend( {
+
+   initialize: function( htmlElement, vkernel ) {
+        this.type        = 'Kernel';
+        this.htmlElement = htmlElement;
+        this.vkernel        = vkernel;
+   },
+
+   accept: function(draggableObjects) {
+       for(var i=0;i<draggableObjects.length;i++){
+           if(draggableObjects[i].type != 'vkernel' && draggableObjects[i].type != 'note'){
+               continue;
+           }
+           draggableObjects[i].reparent(this.vkernel);
+       }
+   },
+
+   // XXX showHover and hideHover are all broken, because rico dnd doesn't understand layers
+   showHover: function() {
+//        Element.addClassName(this.htmlElement,'activated');
+   },
+
+   hideHover: function() {
+//        Element.removeClassName(this.htmlElement,'activated');
+   },
+
+   activate: function() {
+   },
+
+   deactivate: function() {
+   }
+});

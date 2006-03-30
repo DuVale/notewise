@@ -25,7 +25,7 @@ VisibleKernel.has_a('container_object','Kernel');
 
 VisibleKernel.prototype.extend({
     initialize: function(container_object,contained_object,htmlElement,x,y,width,height,collapsed) {
-        this.type        = 'Kernel';
+        this.type        = 'vkernel';
         this.container_object(container_object);
         this.contained_object(contained_object);
         this.__x=x;
@@ -52,6 +52,11 @@ VisibleKernel.prototype.extend({
                                                      before_complete: this.on_autocomplete_load.bind(this),
                                                      on_complete: this.on_autocomplete_complete.bind(this),
                                                      on_inactive_select: this.on_inactive_select.bind(this)});
+
+        this.headerDivs = new Array(this.leftbackground,
+                                    this.midleftbackground,
+                                    this.midrightbackground,
+                                    this.rightbackground);
     },
 
     on_inactive_select: function (autocompleter) {
@@ -143,7 +148,7 @@ VisibleKernel.prototype.extend({
     realize: function(parent) {
         this.htmlElement = document.createElement('div');
         this.htmlElement.id="vkernel"+this.idString();
-        this.htmlElement.className="vkernel collapsed nothighlighted nocontains";
+        this.htmlElement.className="vkernel vkernel-notselected vkernel-notedit vkernel-collapsed vkernel-nothighlighted vkernel-contains";
         var expandButtonLabel = this.collapsed() ? '+' : '-';
         var name;
         if(this.kernel().name() === undefined){
@@ -151,6 +156,7 @@ VisibleKernel.prototype.extend({
         } else {
             name = this.kernel().name();
         }
+        var startClasses = new Array("collapsed","collapsed-nothighlighted-notcontains");
         var innerHTML =
            "<div class=\"expandbutton\"></div>"
            +"<a title='Remove kernel' class=\"removebutton\"></a>"
@@ -166,10 +172,10 @@ VisibleKernel.prototype.extend({
                +"<div class='halo-bottom'></div>"
                +"<div class='halo-bottom-right'></div>"
            +"</div>"
-           +"<div class='leftbackground'></div>"
-           +"<div class='mid-leftbackground'></div>"
-           +"<div class='mid-rightbackground'></div>"
-           +"<div class='rightbackground'></div>"
+           +"<div class='vkernel-leftbackground "+"vkernel-leftbackground-"+startClasses.join(" vkernel-leftbackground-")+"'></div>"
+           +"<div class='vkernel-mid-leftbackground "+"vkernel-mid-leftbackground-"+startClasses.join(" vkernel-mid-leftbackground-")+"'></div>"
+           +"<div class='vkernel-mid-rightbackground "+"vkernel-mid-rightbackground-"+startClasses.join(" vkernel-mid-rightbackground-")+"'></div>"
+           +"<div class='vkernel-rightbackground "+"vkernel-rightbackground-"+startClasses.join(" vkernel-rightbackground-")+"'></div>"
            +"<input value=\"\" type=\"text\" class=\"namefield\" autocomplete=\"off\" name=\"s\" value=\""+name+"\"/>"
            +"<a class=\"namelink\" href=\""+this.kernel().object_url()+"\">"
            +name+"</a>"
@@ -228,10 +234,10 @@ VisibleKernel.prototype.extend({
         }
         this.expandbutton = Utils.getElementsByClassName(this.htmlElement, 'expandbutton')[0];
         this.editbutton = Utils.getElementsByClassName(this.htmlElement, 'editbutton')[0];
-        this.leftbackground = Utils.getElementsByClassName(this.htmlElement, 'leftbackground')[0];
-        this.midleftbackground = Utils.getElementsByClassName(this.htmlElement, 'mid-leftbackground')[0];
-        this.midrightbackground = Utils.getElementsByClassName(this.htmlElement, 'mid-rightbackground')[0];
-        this.rightbackground = Utils.getElementsByClassName(this.htmlElement, 'rightbackground')[0];
+        this.leftbackground = Utils.getElementsByClassName(this.htmlElement, 'vkernel-leftbackground')[0];
+        this.midleftbackground = Utils.getElementsByClassName(this.htmlElement, 'vkernel-mid-leftbackground')[0];
+        this.midrightbackground = Utils.getElementsByClassName(this.htmlElement, 'vkernel-mid-rightbackground')[0];
+        this.rightbackground = Utils.getElementsByClassName(this.htmlElement, 'vkernel-rightbackground')[0];
     },
 
     onNamefieldBlur: function(selected_element) {
@@ -273,13 +279,12 @@ VisibleKernel.prototype.extend({
                                    Utils.terminateEvent.bindAsEventListener(this));
 
         Event.observe(this.editbutton,
-                      'mouseover',function(){Element.addClassName(this.editbutton,'hover')}.bind(this));
+                      'mouseover',function(){Element.addClassName(this.editbutton,'editbutton-hover')}.bind(this));
         Event.observe(this.editbutton,
-                      'mouseout',function(){Element.removeClassName(this.editbutton,'hover')}.bind(this));
+                      'mouseout',function(){Element.removeClassName(this.editbutton,'editbutton-hover')}.bind(this));
 
         // Fix ff bug that causes cursor to disappear sometimes - see bug #273
         Event.observe(this.namefield,'blur', function() {
-            printfire('got blur on namefield');
             this.namefield.style.display = "block";
             window.setTimeout(function(){this.namefield.style.display = "";}.bind(this),100);
         }.bind(this));
@@ -363,8 +368,7 @@ VisibleKernel.prototype.extend({
         } else if(collapsed){
             results = VisibleKernel.superclass.collapsed.call(this, 1);
             if(this.htmlElement){
-                Element.removeClassName(this.htmlElement,'expanded');
-                Element.addClassName(this.htmlElement,'collapsed');
+                this.changeClass('collapsed');
                 this.setFixedSize(true);
                 dndMgr.moveToFront(this.htmlElement);
             }
@@ -372,8 +376,7 @@ VisibleKernel.prototype.extend({
         } else {
             results = VisibleKernel.superclass.collapsed.call(this, 0);
             if(this.htmlElement){
-                Element.addClassName(this.htmlElement,'expanded');
-                Element.removeClassName(this.htmlElement,'collapsed');
+                this.changeClass('expanded');
                 this.setFixedSize(false);
                 dndMgr.moveToFront(this.htmlElement);
 
@@ -401,52 +404,29 @@ VisibleKernel.prototype.extend({
 
     edit: function(edit) {
         if(edit){
-            Element.addClassName(this.htmlElement,'edit');
-            Element.removeClassName(this.htmlElement,'noedit');
+            this.changeClass('edit');
             this.namefield.focus();
         } else {
-            Element.removeClassName(this.htmlElement,'edit');
-            Element.addClassName(this.htmlElement,'noedit');
+            this.changeClass('notedit');
         }
     },
 
+    // Select this object
+    select: function () {
+        // make sure the newrelationshiparrow is hidden to start with
+        Element.hide(this.newrelationshiparrow);
+        if( !this.isSelected() ){
+            this.changeClass('selected');
+        }
+        dndMgr.moveToFront(this.htmlElement);
+    },
+
+    // Mark this object as not selected
     deselect: function () {
-        WiseObject.prototype.deselect.call(this);
+        if( this.isSelected()){
+            this.changeClass('notselected');
+        }
         this.edit(false);
     }
 });
 
-var CustomDropzone = Class.create();
-
-CustomDropzone.prototype = (new Dropzone()).extend( {
-
-   initialize: function( htmlElement, vkernel ) {
-        this.type        = 'Kernel';
-        this.htmlElement = htmlElement;
-        this.vkernel        = vkernel;
-   },
-
-   accept: function(draggableObjects) {
-       for(var i=0;i<draggableObjects.length;i++){
-           if(draggableObjects[i].type != 'Kernel' && draggableObjects[i].type != 'Note'){
-               continue;
-           }
-           draggableObjects[i].reparent(this.vkernel);
-       }
-   },
-
-   // XXX showHover and hideHover are all broken, because rico dnd doesn't understand layers
-   showHover: function() {
-//        Element.addClassName(this.htmlElement,'activated');
-   },
-
-   hideHover: function() {
-//        Element.removeClassName(this.htmlElement,'activated');
-   },
-
-   activate: function() {
-   },
-
-   deactivate: function() {
-   }
-});
