@@ -1,3 +1,5 @@
+[% INCLUDE 'Admin/header.tt' %]
+
 <style>
     table, td, th {
         border: 1px solid black;
@@ -23,3 +25,5 @@ Are you sure you want to clear this account?
         <td>[% user.email %]</td>
     </tr>
 </table>
+
+[% INCLUDE 'Admin/footer.tt' %]

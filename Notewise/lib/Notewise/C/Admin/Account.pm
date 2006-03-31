@@ -168,28 +168,11 @@ sub list : Local {
     $c->stash->{template} = 'Admin-Account/list.tt';
 }
 
-=item view
-
-Fetches a row and sets a template.
-
-=cut
-
-sub view : Local {
-    my ( $self, $c, $id ) = @_;
-    $c->stash->{item} = $c->model('CDBI::User')->retrieve($id);
-    $c->stash->{template} = 'Admin-Account/view.tt';
-}
-
 =back
 
 =head1 AUTHOR
 
 Scotty Allen
-
-=head1 LICENSE
-
-This library is free software . You can redistribute it and/or modify
-it under the same terms as perl itself.
 
 =cut
 

@@ -1,11 +1,5 @@
-<style>
-    table, td, th {
-        border: 1px solid black;
-        border-collapse: collapse;
-        padding: 5px;
-        margin: 5px;
-    }
-</style>
+[% INCLUDE 'Admin/header.tt' %]
+
 [% USE table_class = Class('Notewise::M::CDBI::User') %]
 <a href="[% base _ 'admin/account/add' %]">Add New User</a>
 <table>
@@ -27,7 +21,6 @@
             <td>[% object.note_count %]</td>
             <td>[% object.relationship_count %]</td>
             <td>
-                <a href="[% base _ 'admin/account/view/' _ object.id %]">View</a>
                 <a href="[% base _ 'admin/account/edit/' _ object.id %]">Edit</a>
                 <a href="[% base _ 'admin/account/delete/' _ object.id %]">Delete</a>
                 <a href="[% base _ 'admin/account/clear/' _ object.id %]">Clear</a>
@@ -35,3 +28,4 @@
         </tr>
     [% END %]
 </table>
+[% INCLUDE 'Admin/footer.tt' %]
