@@ -4,32 +4,26 @@
 <form action="[% base _ 'admin/account/do_edit/' _ item.id %]"
     method="post">
     <table border=0 cellpadding=0 cellspacing=0>
-    
-        
         <tr>
-            <td>email</td>
-            <td>[% item.to_field('email').as_XML %]</td>
-        </tr>
-    
-        
-        <tr>
-            <td>password</td>
-            <td>[% item.to_field('password').as_XML %]</td>
-        </tr>
-    
-        
-        <tr>
-            <td>name</td>
-            <td>[% item.to_field('name').as_XML %]</td>
-        </tr>
-    
-        
-        
-        <tr>
-            <td>username</td>
+            <td>Username</td>
             <td>[% item.to_field('username').as_XML %]</td>
         </tr>
-    
+        <tr>
+            <td>Name</td>
+            <td>[% item.to_field('name').as_XML %]</td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td>[% item.to_field('email').as_XML %]</td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input name="password" type="password"></td>
+        </tr>
+        <tr>
+            <td>Confirm Password</td>
+            <td><input name="confirm_password" type="password" /></td>
+        </tr>
     </table>
     <input type="submit" value="Edit"/>
 <form/>
