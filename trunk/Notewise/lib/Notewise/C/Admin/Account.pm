@@ -135,11 +135,11 @@ sub do_edit : Local {
         $c->stash->{message}='Some fields are correctly filled in.'.
         'the following are invalid: <b>'.
 	join(', ',$c->form->invalid()).'</b>';
+    } elsif ($c->req->params->{password} ne $c->req->params->{confirm_password}) {
+        $c->stash->{message}="Sorry, those passwords don't match";
     } else {
         my $user = $c->model('CDBI::User')->retrieve($id);
         $user->update_from_form( $c->form );
-        $user->password(Digest::MD5::md5_hex($user->password));
-        $user->update;
 	$c->stash->{message}='Updated OK';
     }
     $c->forward('edit');
