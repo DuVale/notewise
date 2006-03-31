@@ -107,7 +107,7 @@
                             </div>
                         </td></tr>
                         <tr id="sidebar-bottom" class="sidebar-bottom" style="height: 100%"><td style="height: 100%" valign="top">
-                            <div id="sandbox"></div>
+                            <div id="sandbox">Loading...</div>
                         </td></tr>
                     </table>
                     <div class="bottomleft"></div>
@@ -154,6 +154,7 @@
         <script type="text/javascript" src="[%base%]js/effects.js"></script>
         <script type="text/javascript" src="[%base%]js/bugs.js"></script>
         <script type="text/javascript" src="[%base%]js/quicksearch.js"></script>
+        <script type="text/javascript" src="[%base%]js/sandbox.js"></script>
     [% ELSE %]
         <script type="text/javascript" src="[%base%]js/javascript-min.js"></script>
     [% END %]
@@ -203,6 +204,16 @@
                              method: 'get',
                              asynchronous: true
                          });},100);
+
+        window.setTimeout(function () {new Ajax.Updater('sandbox',
+                         '[% c.uri_for('/user/sandbox') %]',
+                         {
+                             evalScripts: 1,
+                             method: 'get',
+                             asynchronous: true
+                         });},100);
+
+        var sandbox = new Sandbox($('sandbox'),[%sandbox.id%]);
     </script>
 </body>
 </html>

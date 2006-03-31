@@ -109,6 +109,7 @@ sub view_kernel : Private {
     $c->stash->{visible_kernels} = [$c->model('CDBI::ContainedObject')->search({container_object=>$kernel->id})];
     $c->stash->{notes} = [$c->model('CDBI::Note')->search({container_object=>$kernel->id})];
     $c->stash->{visible_relationships} = [$c->stash->{kernel}->visible_relationships];
+    $c->stash->{sandbox} = $c->model('CDBI::ObjectId')->search({type=>'sandbox',user=>$c->user->user->id})->first;
     $c->stash->{template} = 'Kernel/view.tt';
 }
 

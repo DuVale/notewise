@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS object_id (
     id MEDIUMINT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT,
     user MEDIUMINT UNSIGNED,
-    type ENUM('kernel','note','relationship') NOT NULL,
+    type ENUM('kernel','note','relationship','sandbox') NOT NULL,
     INDEX userIndex (user),
     PRIMARY KEY (id),
     FOREIGN KEY (user) REFERENCES user (id)

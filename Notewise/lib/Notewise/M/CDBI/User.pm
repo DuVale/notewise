@@ -16,6 +16,18 @@ __PACKAGE__->add_trigger(before_set_password => sub {
     }
 });
 
+__PACKAGE__->add_trigger(after_create => sub {
+    my $self = shift;
+
+    # create starting kernel
+    my $kernel = Notewise::M::CDBI::Kernel->insert({name=>'',
+                                                    user=>$self});
+
+    # Create sandbox
+    my $sandbox = Notewise::M::CDBI::ObjectId->insert({type=>'sandbox',
+                                                       user=>$self});
+});
+
 sub kernel_count {
     my $self = shift;
     return scalar(Notewise::M::CDBI::ObjectId->search(user=>$self->id, type=>'kernel'));

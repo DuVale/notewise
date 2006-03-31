@@ -222,6 +222,9 @@ WiseObject.prototype.extend({
 
     // create html elements for the relationships that are visible for this object
     hydrateRelationships: function() {
+        if(this.__container_object == sandbox.id){
+            return;
+        }
         var rels = this.container_object().visible_relationships();
         for(var i=0; i<rels.length; i++){
             var rel = rels[i];
