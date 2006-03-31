@@ -1,4 +1,4 @@
-
+[% INCLUDE 'Admin/header.tt' %]
 
 <p>[%message%]</p>
 <form action="[% base _ 'admin/account/do_edit/' _ item.id %]"
@@ -29,3 +29,5 @@
 <form/>
 <br/>
 <a href="[% base _ 'admin/account/list' %]">List</a>
+
+[% INCLUDE 'Admin/footer.tt' %]
