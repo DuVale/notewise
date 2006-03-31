@@ -191,7 +191,7 @@ Note.prototype.extend({
     // returns the id in the form '1/2' where the first number is the
     // container_id and the second number is the note id
     idString: function() {
-        var id = this.container_object()+'/'+this.id();
+        var id = this.__container_object+'/'+this.id();
         return id;
     },
 
@@ -232,5 +232,9 @@ Note.prototype.extend({
             Element.removeClassName(this.htmlElement,'note-selected');
             Element.addClassName(this.htmlElement,'note-notselected');
         }
+    },
+
+    kernel_id: function () {
+        return this.__id;
     }
 });

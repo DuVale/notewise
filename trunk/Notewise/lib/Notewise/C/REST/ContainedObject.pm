@@ -117,7 +117,7 @@ sub update : Private {
     elsif ($c->form->has_invalid) { $c->detach('/rest/error',['invalid fields']); }
 
     # check permissions
-    my $container=$c->model('CDBI::Kernel')->retrieve($container_id);
+    my $container=$c->model('CDBI::ObjectId')->retrieve($container_id);
     unless ($container->has_permission($c->user->user->id,'modify')){
         $c->detach('/rest/forbidden',["You do not have permission to modify $container_id"]);
     }

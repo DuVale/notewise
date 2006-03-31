@@ -131,4 +131,19 @@ sub calendar : Local {
     $c->stash->{template} = 'User/calendar.tt';
 }
 
+sub sandbox : Local {
+    my ( $self, $c ) = @_;
+    my $sandbox = $c->model('CDBI::ObjectId')->search({type=>'sandbox',user=>$c->user->user->id})->first;
+    unless ($sandbox){
+        $c->res->status(404);
+        return $c->res->output("Sorry, your sandbox doesn't seem to exist.");
+    }
+    my @kernels = $c->model('CDBI::ContainedObject')->search(container_object=>$sandbox->id);
+    my @notes = $c->model('CDBI::Note')->search(container_object=>$sandbox->id);
+    $c->stash->{sandbox}=$sandbox;
+    $c->stash->{kernels}=\@kernels;
+    $c->stash->{notes}=\@notes;
+    $c->stash->{template}='Kernel/sandbox.tt';
+}
+
 1;
