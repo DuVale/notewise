@@ -260,8 +260,8 @@ WiseObject.prototype.extend({
     // causes the internal elements to resize if necessary
     layoutResize: function() {
       if(this.body != undefined){
-          this.body.style.width = Math.max(0,this.htmlElement.clientWidth) + 'px';
-          this.body.style.height = Math.max(0,this.htmlElement.clientHeight - this.body.offsetTop) + 'px';
+          this.body.style.width = Math.max(0,this.htmlElement.clientWidth - 1) + 'px';
+          this.body.style.height = Math.max(0,this.htmlElement.clientHeight - this.body.offsetTop - 1) + 'px';
       }
       // XXX could change this to only do this if the halo is visible, for speed.  We'd need to make sure this gets called when the object gets expanded though
       if(this.relationshiphalo != undefined){
