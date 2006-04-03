@@ -4,7 +4,7 @@ if(object1 && object2){
     var relationship = new Relationship([%relationship.id%],
                                         [%relationship.part1.id%],
                                         [%relationship.part2.id%],
-                                        '[%relationship.type.relationship_type%]',
+                                        "[%relationship.type.relationship_type | replace('"','&quot;')%]",
                                         '[%relationship.nav%]');
     relationship.realize(object1.container_object().id());
 } else {
