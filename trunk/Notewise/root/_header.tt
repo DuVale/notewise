@@ -28,5 +28,7 @@
             <span class="dot">&nbsp;</span>
             <a href="[%c.uri_for('/help')%]">help</a>
             <span class="dot">&nbsp;</span>
+            <a href="http://community.notewise.com">community</a>
+            <span class="dot">&nbsp;</span>
             <a href="[%c.uri_for('/logout')%]">logout</a>
         </div>
