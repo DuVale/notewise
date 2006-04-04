@@ -24,6 +24,8 @@
                             <span class="dot">&nbsp;</span>
                             <a href="" onclick="Bugs.show_window('/user/bug_report'); return false;">report bug</a>
                             <span class="dot">&nbsp;</span>
+                            <a href="http://community.notewise.com">community</a>
+                            <span class="dot">&nbsp;</span>
                             <a href="[%c.uri_for('/logout')%]">logout</a>
                         </div>
                         <div class="search">
