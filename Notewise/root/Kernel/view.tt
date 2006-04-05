@@ -37,7 +37,7 @@
                         <input type="text" id="viewname" class="namefield" autocomplete="off"
                                value="[% kernel.name | replace('"','&quot;') %]"
                                style="width: [% kernel.name.length * 0.55 + 1 %]em;"/>
-                        <div class="links">
+                        <div class="tablinks">
                             <a href="[%base%]kernel/add?name=">new view</a><br/>
                             <a href="#" onclick="$('viewname').focus(); return false;">rename</a><br/>
                             <a href="#" onclick="show_confirm_delete(); return false;">delete</a>
