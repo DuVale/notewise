@@ -1103,6 +1103,7 @@ table.interface {
     width: 100%;
     border: 0px solid black;
     padding: 0px;
+    z-index: 0;
 }
 
 .interface td {
@@ -1112,6 +1113,7 @@ td.header {
     height: 70px;
     padding: 0px;
     margin: 0px;
+    z-index: 0;
 }
 
 div.header {
@@ -1156,6 +1158,7 @@ td.divider {
     right: 5px;
     bottom: 0px;
     height: 70px;
+    z-index: 0;
 }
 
 .tab .left{
@@ -1188,6 +1191,7 @@ td.divider {
 
 .tab .links {
     position: absolute;
+    left: auto;
     right: 20px;
     margin-top: 0;
     margin-bottom: 0;
@@ -1202,8 +1206,11 @@ td.divider {
 }
 
 .links {
-    margin-top: 7px;
+    position: absolute;
+    margin-top: 0px;
     margin-bottom: 15px;
+    left: 90px;
+    z-index: 1000;
 }
 
 .links a,
@@ -1216,6 +1223,7 @@ td.divider {
 div.search {
     font-family: sans-serif;
     font-size: 13px;
+    margin-top: 30px;
 }
 
 div.search input {
@@ -1415,6 +1423,7 @@ div.content {
 
 div.headerleft {
     float: left;
+    z-index: 1000;
 }
 
 .canvas {
