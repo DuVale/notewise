@@ -15,38 +15,36 @@
                 <div class="header">
                     <div class="headerleft">
                         <a href="/"><div class="logo"></div></a>
-                        <div class="links">
-                            <a href="/[% c.user.user.username %]">home</a>
-                            <span class="dot">&nbsp;</span>
-                            <a href="[%c.uri_for('/user/settings')%]">settings</a>
-                            <span class="dot">&nbsp;</span>
-                            <a href="" onclick="Bugs.show_window('/help/quick'); return false;">help</a>
-                            <span class="dot">&nbsp;</span>
-                            <a href="" onclick="Bugs.show_window('/user/bug_report'); return false;">report bug</a>
-                            <span class="dot">&nbsp;</span>
-                            <a href="http://community.notewise.com">community</a>
-                            <span class="dot">&nbsp;</span>
-                            <a href="[%c.uri_for('/logout')%]">logout</a>
-                        </div>
                         <div class="search">
                             Search: <input autocomplete="off" id="mysearchfield" onfocus="this.className = 'focus';" onblur="this.className='';" name="s" />
                         </div>
                     </div>
-                    <div class="headerright">
-                        <div class="tab">
-                            <div id='saving_indicator' style="display: none">Saving...</div>
-                            <input type="text" id="viewname" class="namefield" autocomplete="off"
-                                   value="[% kernel.name | replace('"','&quot;') %]"
-                                   style="width: [% kernel.name.length * 0.55 + 1 %]em;"/>
-                            <div class="links">
-                                <a href="[%base%]kernel/add?name=">new view</a><br/>
-                                <a href="#" onclick="$('viewname').focus(); return false;">rename</a><br/>
-                                <a href="#" onclick="show_confirm_delete(); return false;">delete</a>
-                            </div>
-                            <div class="left"></div>
-                            <div class="mid"></div>
-                            <div class="right"></div>
+                    <div class="links">
+                        <a href="/[% c.user.user.username %]">home</a>
+                        <span class="dot">&nbsp;</span>
+                        <a href="[%c.uri_for('/user/settings')%]">settings</a>
+                        <span class="dot">&nbsp;</span>
+                        <a href="" onclick="Bugs.show_window('/help/quick'); return false;">help</a>
+                        <span class="dot">&nbsp;</span>
+                        <a href="" onclick="Bugs.show_window('/user/bug_report'); return false;">report bug</a>
+                        <span class="dot">&nbsp;</span>
+                        <a href="http://community.notewise.com">community</a>
+                        <span class="dot">&nbsp;</span>
+                        <a href="[%c.uri_for('/logout')%]">logout</a>
+                    </div>
+                    <div class="tab">
+                        <div id='saving_indicator' style="display: none">Saving...</div>
+                        <input type="text" id="viewname" class="namefield" autocomplete="off"
+                               value="[% kernel.name | replace('"','&quot;') %]"
+                               style="width: [% kernel.name.length * 0.55 + 1 %]em;"/>
+                        <div class="links">
+                            <a href="[%base%]kernel/add?name=">new view</a><br/>
+                            <a href="#" onclick="$('viewname').focus(); return false;">rename</a><br/>
+                            <a href="#" onclick="show_confirm_delete(); return false;">delete</a>
                         </div>
+                        <div class="left"></div>
+                        <div class="mid"></div>
+                        <div class="right"></div>
                     </div>
                 </div>
             </td>
