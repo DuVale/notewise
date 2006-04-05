@@ -1189,7 +1189,7 @@ td.divider {
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=false);
 }
 
-.tab .links {
+.tablinks {
     position: absolute;
     left: auto;
     right: 20px;
@@ -1199,13 +1199,20 @@ td.divider {
     z-index: 10;
 }
 
+.tablinks a,
+.tablinks a:visited {
+    color: black;
+    font-family: sans-serif;
+    font-size: 13px;
+}
+
 .dot {
     width: 3px;
     height: 3px;
     background: url('/images/dot.png') center center no-repeat;
 }
 
-.links {
+.kernelview .links {
     position: absolute;
     margin-top: 0px;
     margin-bottom: 15px;
@@ -1222,7 +1229,11 @@ td.divider {
 
 div.search {
     font-family: sans-serif;
+    margin-top: 10px;
     font-size: 13px;
+}
+
+.kernelview div.search {
     margin-top: 30px;
 }
 
