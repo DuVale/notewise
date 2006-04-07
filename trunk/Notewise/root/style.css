@@ -1381,22 +1381,25 @@ td.content {
     position: absolute;
     left: 8px;
     top: 0px;
+    font-size: 1px;
 }
 .bottomleft {
-    background: url('/images/content-bottom-left.png');
+    background: url('/images/content-bottom-left.png') no-repeat;
     width: 14px;
     height: 15px;
     position: absolute;
     left: 8px;
     bottom: 0px;
+    font-size: 1px;
 }
 .bottomright {
-    background: url('/images/content-bottom-right.png');
+    background: url('/images/content-bottom-right.png') no-repeat;
     width: 14px;
     height: 14px;
     position: absolute;
     right: 5px;
     bottom: 0px;
+    font-size: 1px;
 }
 
 #sidebar .bottomleft {
@@ -1408,21 +1411,8 @@ td.content {
     bottom: 0px;
 }
 
-* html #sidebar .bottomright {
-    bottom: -2px;
-}
-
-* html #sidebar .bottomleft {
-    bottom: -1px;
-}
-
 * html .bottomright {
     right: 4px;
-    bottom: -2px;
-}
-
-* html .bottomleft {
-    bottom: -1px;
 }
 
 div.content {
