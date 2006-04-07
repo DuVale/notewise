@@ -65,6 +65,7 @@ body.kernelview {
     right: 23px;
     top: 0px;
     z-index: 0;
+    font-size: 1px;
 }
 
 .vkernel .vkernel .vkernel-rightbackground {
@@ -75,6 +76,7 @@ body.kernelview {
     top: 0px;
     z-index: 0;
     cursor: move;
+    font-size: 1px;
 }
 
 .vkernel-mid-rightbackground-collapsed {
@@ -312,6 +314,10 @@ body.kernelview {
     width: 100%;
     height: 100%;
     z-index: -3;
+}
+
+.relationshiphalo * {
+    font-size: 1px;
 }
 
 .vkernel-selected .relationshiphalo,
@@ -1502,8 +1508,9 @@ body.search .searchresultslist a:visited {
 #selectbox {
     position: absolute;
     border: 1px solid black;
-    background: blue;
+    background: #CCC;
     opacity: .2;
     filter: alpha(opacity=20);
     z-index: 100;
+    font-size: 1px;
 }
