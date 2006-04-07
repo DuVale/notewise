@@ -26,6 +26,15 @@ __PACKAGE__->add_trigger(after_delete => sub {
      $self->object_id->delete;
 });
 
+# search_notes_for_user
+__PACKAGE__->set_sql( notes_for_user => qq{
+    SELECT note.object_id
+      FROM note, object_id
+     WHERE note.object_id = object_id.id
+     AND object_id.user = ?
+     ORDER BY note.created DESC
+});
+
 sub hydrate_object_id {
     my $self = shift;
     my $object_id = Notewise::M::CDBI::ObjectId->retrieve($self->object_id);
