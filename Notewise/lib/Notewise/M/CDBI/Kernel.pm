@@ -30,6 +30,7 @@ __PACKAGE__->add_trigger(before_delete => sub {
      map $_->delete, Notewise::M::CDBI::ContainedObject->search(container_object => $id);
 });
 
+# search_kernels_for_user
 __PACKAGE__->set_sql( kernels_for_user => qq{
     SELECT kernel.object_id
       FROM kernel, object_id

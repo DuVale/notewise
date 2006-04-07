@@ -18,6 +18,8 @@ sub object {
         $object = Notewise::M::CDBI::Note->retrieve($self->id);
     } elsif($self->type eq 'relationship'){
         $object = Notewise::M::CDBI::Relationship->retrieve($self->id);
+    } elsif($self->type eq 'sandbox'){
+        $object = $self;
     } else {
         Carp::confess "Unknown object type ".$self->type." for object ".$self->id;
     }

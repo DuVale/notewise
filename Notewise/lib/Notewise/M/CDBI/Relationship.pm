@@ -11,6 +11,15 @@ __PACKAGE__->has_a(type => 'Notewise::M::CDBI::RelationshipType');
 
 __PACKAGE__->columns(TEMP => qw/user/);
 
+# search_rels_for_user
+__PACKAGE__->set_sql( rels_for_user => qq{
+    SELECT relationship.relationship_id
+      FROM relationship, object_id
+     WHERE relationship.relationship_id = object_id.id
+     AND object_id.user = ?
+     ORDER BY relationship.relationship_id DESC
+});
+
 sub create_id {
     my $self=shift;
     my $object_id = Notewise::M::CDBI::ObjectId->create({user=>$self->user,type=>'relationship'});
