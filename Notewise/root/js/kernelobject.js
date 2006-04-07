@@ -338,19 +338,24 @@ KernelObject.prototype = {
         printfire("startdrag");
 
         this.duringSelectionBoxInstance = this.duringSelectionBox.bindAsEventListener(this);
-        Event.observe(this.body,
+        Event.observe(document,
                       'mousemove',
                       this.duringSelectionBoxInstance);
 
         this.endSelectionBoxInstance = this.endSelectionBox.bindAsEventListener(this);
-        Event.observe(this.body,
+        Event.observe(document,
                       'mouseup',
                       this.endSelectionBoxInstance);
 
         var bodyPos = Utils.toViewportPosition(this.body);
 
-        this.selectboxstartx = Utils.mousex(e) - bodyPos.x + 10;
+        this.selectboxstartx = Utils.mousex(e) - bodyPos.x + 8;
         this.selectboxstarty = Utils.mousey(e) - bodyPos.y;
+
+        if(this.selectbox &&
+           this.selectbox.parentNode == this.body){
+                this.body.removeChild(this.selectbox);
+        }
 
         var box = document.createElement('div');
         box.id = 'selectbox';
@@ -363,7 +368,7 @@ KernelObject.prototype = {
 
    duringSelectionBox: function(e) {
         var bodyPos = Utils.toViewportPosition(this.body);
-        var newx = Utils.mousex(e) - bodyPos.x + 10;
+        var newx = Utils.mousex(e) - bodyPos.x + 8;
         var newy = Utils.mousey(e) - bodyPos.y;
         var x = Math.min(newx,this.selectboxstartx);
         var y = Math.min(newy,this.selectboxstarty);
@@ -378,7 +383,7 @@ KernelObject.prototype = {
 
    endSelectionBox: function(e) {
         var bodyPos = Utils.toViewportPosition(this.body);
-        var endx = Utils.mousex(e) - bodyPos.x + 10;
+        var endx = Utils.mousex(e) - bodyPos.x + 8;
         var endy = Utils.mousey(e) - bodyPos.y;
         var startx = this.selectboxstartx;
         var starty = this.selectboxstarty;
@@ -387,13 +392,15 @@ KernelObject.prototype = {
         var boxtop = Math.min(endy,starty);
         var boxbottom = Math.max(endy,starty);
 
-        this.body.removeChild(this.selectbox);
+        if(this.selectbox.parentNode == this.body){
+            this.body.removeChild(this.selectbox);
+        }
 
-        Event.stopObserving(this.body,
+        Event.stopObserving(document,
                             'mousemove',
                             this.duringSelectionBoxInstance);
 
-        Event.stopObserving(this.body,
+        Event.stopObserving(document,
                             'mouseup',
                             this.endSelectionBoxInstance);
 
@@ -406,7 +413,7 @@ KernelObject.prototype = {
                  Element.hasClassName(element,'note'))
                ){
                 var pos = Utils.toViewportPosition(element);
-                var left = pos.x - bodyPos.x + 10;;
+                var left = pos.x - bodyPos.x + 8;
                 var top = pos.y - bodyPos.y;
                 var right = left + element.offsetWidth;
                 var bottom = top + element.offsetHeight;
