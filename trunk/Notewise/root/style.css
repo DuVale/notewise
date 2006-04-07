@@ -1508,3 +1508,12 @@ body.search .searchresultslist a:visited {
 #footer {
     height: 10px;
 }
+
+#selectbox {
+    position: absolute;
+    border: 1px solid black;
+    background: blue;
+    opacity: .2;
+    filter: alpha(opacity=20);
+    z-index: 100;
+}

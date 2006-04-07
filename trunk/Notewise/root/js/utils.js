@@ -296,6 +296,32 @@ Utils = {
     is_mac: function () {
         var agt=this.get_agent();
         return (agt.indexOf("mac")!=-1);
+    },
+
+    mousex: function(e) {
+        // get the start point
+        var posx = 0;
+        if (!e) var e = window.event;
+        if (e.pageX || e.pageY) {
+            posx = e.pageX;
+        }
+        else if (e.clientX || e.clientY) {
+            posx = e.clientX + document.body.scrollLeft;
+        }
+        return posx;
+    },
+
+    mousey: function(e) {
+        // get the start point
+        var posy = 0;
+        if (!e) var e = window.event;
+        if (e.pageX || e.pageY) {
+            posy = e.pageY;
+        }
+        else if (e.clientX || e.clientY) {
+            posy = e.clientY + document.body.scrollTop;
+        }
+        return posy;
     }
 };
 

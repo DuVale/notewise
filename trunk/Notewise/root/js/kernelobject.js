@@ -21,9 +21,10 @@ KernelObject.prototype = {
         // setup the click handlers
         Event.observe(this.body,'dblclick', this.gotDoubleClick.bindAsEventListener(this));
         Event.observe(this.body,'click', this.gotClick.bindAsEventListener(this));
+        Event.observe(this.body,'mousedown', this.startSelectionBox.bindAsEventListener(this));
         Event.observe(this.body,
-                                   'mousedown',
-                                   Utils.clearSelectionAndTerminate.bindAsEventListener(this));
+                      'mousedown',
+                      Utils.clearSelectionAndTerminate.bindAsEventListener(this));
         
         // setup the namefield actions
         Event.observe(this.namefield,'keyup', this.layoutNamefield.bind(this));
@@ -331,7 +332,95 @@ KernelObject.prototype = {
             this.headerDivs[i].className =
                 this.headerDivs[i].className.replace(new RegExp('-'+oldClass,'g'),'-'+newClass);
         }
-    }
+    },
+
+   startSelectionBox: function(e){
+        printfire("startdrag");
+
+        this.duringSelectionBoxInstance = this.duringSelectionBox.bindAsEventListener(this);
+        Event.observe(this.body,
+                      'mousemove',
+                      this.duringSelectionBoxInstance);
+
+        this.endSelectionBoxInstance = this.endSelectionBox.bindAsEventListener(this);
+        Event.observe(this.body,
+                      'mouseup',
+                      this.endSelectionBoxInstance);
+
+        var bodyPos = Utils.toViewportPosition(this.body);
+
+        this.selectboxstartx = Utils.mousex(e) - bodyPos.x + 10;
+        this.selectboxstarty = Utils.mousey(e) - bodyPos.y;
+
+        var box = document.createElement('div');
+        box.id = 'selectbox';
+        box.style.left=this.selectboxstartx+'px';
+        box.style.top=this.selectboxstarty+'px';
+        this.selectbox = box;
+
+        this.body.appendChild(box);
+   },
+
+   duringSelectionBox: function(e) {
+        var bodyPos = Utils.toViewportPosition(this.body);
+        var newx = Utils.mousex(e) - bodyPos.x + 10;
+        var newy = Utils.mousey(e) - bodyPos.y;
+        var x = Math.min(newx,this.selectboxstartx);
+        var y = Math.min(newy,this.selectboxstarty);
+        var w = Math.abs(newx - this.selectboxstartx);
+        var h = Math.abs(newy - this.selectboxstarty);
+        var box = this.selectbox;
+        box.style.width = w + 'px';
+        box.style.height = h + 'px';
+        box.style.left = x + 'px';
+        box.style.top = y + 'px';
+   }, 
+
+   endSelectionBox: function(e) {
+        var bodyPos = Utils.toViewportPosition(this.body);
+        var endx = Utils.mousex(e) - bodyPos.x + 10;
+        var endy = Utils.mousey(e) - bodyPos.y;
+        var startx = this.selectboxstartx;
+        var starty = this.selectboxstarty;
+        var boxleft = Math.min(endx,startx);
+        var boxright = Math.max(endx,startx);
+        var boxtop = Math.min(endy,starty);
+        var boxbottom = Math.max(endy,starty);
+
+        this.body.removeChild(this.selectbox);
+
+        Event.stopObserving(this.body,
+                            'mousemove',
+                            this.duringSelectionBoxInstance);
+
+        Event.stopObserving(this.body,
+                            'mouseup',
+                            this.endSelectionBoxInstance);
+
+        printfire("box: "+boxleft+" "+boxright+" "+boxtop+" "+boxbottom);
+        var children = this.body.childNodes;
+        for(var i=0; i<children.length; i++){
+            var element = children[i];
+            if(element.id &&
+                (Element.hasClassName(element,'vkernel')||
+                 Element.hasClassName(element,'note'))
+               ){
+                var pos = Utils.toViewportPosition(element);
+                var left = pos.x - bodyPos.x + 10;;
+                var top = pos.y - bodyPos.y;
+                var right = left + element.offsetWidth;
+                var bottom = top + element.offsetHeight;
+                printfire("element: "+left+" "+right+" "+top+" "+bottom);
+                if(left > boxleft && right < boxright
+                   && top > boxtop && bottom < boxbottom){
+                        printfire("Yes");
+                        dndMgr.updateSelection(element.draggable,true);
+                } else {
+                        printfire("No");
+                }
+            }
+        }
+   }
 };
 
 var KernelDropzone = Class.create();
