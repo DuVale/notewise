@@ -20,11 +20,11 @@ KernelObject.prototype = {
 
         // setup the click handlers
         Event.observe(this.body,'dblclick', this.gotDoubleClick.bindAsEventListener(this));
-        Event.observe(this.body,'click', this.gotClick.bindAsEventListener(this));
         Event.observe(this.body,'mousedown', this.startSelectionBox.bindAsEventListener(this));
+        Event.observe(this.body,'click', this.gotClick.bindAsEventListener(this));
         Event.observe(this.body,
                       'mousedown',
-                      Utils.clearSelectionAndTerminate.bindAsEventListener(this));
+                      function() { dndMgr.clearSelection(); dndMgr.giveSearchBoxFocus(); } );
         
         // setup the namefield actions
         Event.observe(this.namefield,'keyup', this.layoutNamefield.bind(this));
@@ -334,9 +334,7 @@ KernelObject.prototype = {
         }
     },
 
-   startSelectionBox: function(e){
-        printfire("startdrag");
-
+    startSelectionBox: function(e){
         this.duringSelectionBoxInstance = this.duringSelectionBox.bindAsEventListener(this);
         Event.observe(document,
                       'mousemove',
@@ -359,14 +357,13 @@ KernelObject.prototype = {
 
         var box = document.createElement('div');
         box.id = 'selectbox';
-        box.style.left=this.selectboxstartx+'px';
-        box.style.top=this.selectboxstarty+'px';
         this.selectbox = box;
 
         this.body.appendChild(box);
-   },
+        return;
+    },
 
-   duringSelectionBox: function(e) {
+    duringSelectionBox: function(e) {
         var bodyPos = Utils.toViewportPosition(this.body);
         var newx = Utils.mousex(e) - bodyPos.x + 8;
         var newy = Utils.mousey(e) - bodyPos.y;
@@ -379,9 +376,9 @@ KernelObject.prototype = {
         box.style.height = h + 'px';
         box.style.left = x + 'px';
         box.style.top = y + 'px';
-   }, 
+    }, 
 
-   endSelectionBox: function(e) {
+    endSelectionBox: function(e) {
         var bodyPos = Utils.toViewportPosition(this.body);
         var endx = Utils.mousex(e) - bodyPos.x + 8;
         var endy = Utils.mousey(e) - bodyPos.y;
@@ -404,7 +401,6 @@ KernelObject.prototype = {
                             'mouseup',
                             this.endSelectionBoxInstance);
 
-        printfire("box: "+boxleft+" "+boxright+" "+boxtop+" "+boxbottom);
         var children = this.body.childNodes;
         for(var i=0; i<children.length; i++){
             var element = children[i];
@@ -417,17 +413,13 @@ KernelObject.prototype = {
                 var top = pos.y - bodyPos.y;
                 var right = left + element.offsetWidth;
                 var bottom = top + element.offsetHeight;
-                printfire("element: "+left+" "+right+" "+top+" "+bottom);
                 if(left > boxleft && right < boxright
                    && top > boxtop && bottom < boxbottom){
-                        printfire("Yes");
                         dndMgr.updateSelection(element.draggable,true);
-                } else {
-                        printfire("No");
                 }
             }
         }
-   }
+    }
 };
 
 var KernelDropzone = Class.create();
