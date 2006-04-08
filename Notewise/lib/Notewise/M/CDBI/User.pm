@@ -140,7 +140,8 @@ sub fullcopy {
             # we see every relationship twice, so skip it if we've already seen it
             next if $object_map{$old_rel->relationship_id->id};
             my $new_rel = $old_rel->copy({part1=>$object_map{$old_rel->part1},
-                                          part2=>$object_map{$old_rel->part2}
+                                          part2=>$object_map{$old_rel->part2},
+                                          user=>$user,
                                         });
             my $new_rel_id = $new_rel->relationship_id;
             $object_map{$old_rel->relationship_id->id} = $new_rel_id;
