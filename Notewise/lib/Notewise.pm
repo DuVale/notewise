@@ -74,6 +74,11 @@ sub auto : Local {
         return 1;
     }
 
+    # skip authentication for public areas
+    if($c->req->path =~ m#^tutorial#){
+        return 1;
+    }
+
     # check to see if they're already logged in
     if ($c->user_exists){
         return 1;
