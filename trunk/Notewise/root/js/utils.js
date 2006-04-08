@@ -298,6 +298,11 @@ Utils = {
         return (agt.indexOf("mac")!=-1);
     },
 
+    is_ie: function () {
+        var agt=this.get_agent();
+        return (agt.indexOf("msie")!=-1);
+    },
+
     mousex: function(e) {
         // get the start point
         var posx = 0;

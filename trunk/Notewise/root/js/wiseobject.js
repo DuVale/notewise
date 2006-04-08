@@ -263,8 +263,8 @@ WiseObject.prototype.extend({
     // causes the internal elements to resize if necessary
     layoutResize: function() {
       if(this.body != undefined){
-          this.body.style.width = Math.max(0,this.htmlElement.clientWidth - 1) + 'px';
-          this.body.style.height = Math.max(0,this.htmlElement.clientHeight - this.body.offsetTop - 1) + 'px';
+          this.body.style.width = Math.max(0,this.htmlElement.clientWidth) + 'px';
+          this.body.style.height = Math.max(0,this.htmlElement.clientHeight - this.body.offsetTop) + 'px';
       }
       // XXX could change this to only do this if the halo is visible, for speed.  We'd need to make sure this gets called when the object gets expanded though
       if(this.relationshiphalo != undefined){
@@ -506,17 +506,23 @@ WiseObject.prototype.extend({
         var width = this.htmlElement.clientWidth;
         var height = this.htmlElement.clientHeight;
 
+        var parentMarginLeft = Utils.chopPx(Utils.getStyle(parentElement,'margin-left'));
+        var parentMarginRight = Utils.chopPx(Utils.getStyle(parentElement,'margin-right'));
+        if(Utils.is_ie()){
+            parentMarginRight = 0;
+        }
+
         // actually reparent
         parentElement.appendChild(this.htmlElement);
 
         // switch all the position and size info to match the new parent
-        this.moveX((pos.x-parentPos.x)*100/parentElement.clientWidth);
-        this.moveY((pos.y-parentPos.y)*100/parentElement.clientHeight);
+        this.moveX(((pos.x-parentPos.x+parentMarginLeft)*100/(parentElement.clientWidth+parentMarginLeft+parentMarginRight+2)));
+        this.moveY((pos.y-parentPos.y)*100/(parentElement.clientHeight+2));
         if(!this.collapsed()){
             // don't set the size if we're collapsed, cause it'll wipe
             // out the currently saved size
-            this.moveHeight(height*100/parentElement.clientHeight);
-            this.moveWidth(width*100/parentElement.clientWidth);
+            this.moveWidth(width*100/(parentElement.clientWidth+parentMarginLeft+parentMarginRight+2));
+            this.moveHeight(height*100/(parentElement.clientHeight+2));
         }
 
         // move the object to the frontmost layer
@@ -575,10 +581,13 @@ WiseObject.prototype.extend({
     startDrag: function() {
         this.notifyStartChangeListeners();
 
+        var parentElement = this.htmlElement.parentNode;
+
         // change the startx/starty offsets so they're correct when we pop up
         // into the document body
-        var parentPos = Utils.toViewportPosition(this.htmlElement.parentNode);
-        this.startx -= parentPos.x;
+        var parentPos = Utils.toViewportPosition(parentElement);
+        var parentMarginLeft = Utils.chopPx(Utils.getStyle(parentElement,'margin-left'));
+        this.startx -= parentPos.x - parentMarginLeft;
         this.starty -= parentPos.y;
 
         // make sure the original position is relative to the viewport, not the
@@ -596,8 +605,8 @@ WiseObject.prototype.extend({
         }
 
         // pop the element up into the document body, so it can drag anywhere
-        this.oldParentNode = this.htmlElement.parentNode;
-        this.htmlElement.parentNode.removeChild(this.htmlElement);
+        this.oldParentNode = parentElement;
+        parentElement.removeChild(this.htmlElement);
         document.body.appendChild(this.htmlElement);
 
         // relayout
