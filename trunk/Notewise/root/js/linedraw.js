@@ -116,10 +116,6 @@ LineDraw.Line.prototype = {
         var y = Math.min(y1Coord.value, y2Coord.value)+y1Coord.units;
 
         var direction;
-//        window.status = x1Coord.value + ' ' +
-//                        x2Coord.value + ' ' +
-//                        y1Coord.value + ' ' +
-//                        y2Coord.value + ' ';
         if( (x2Coord.value > x1Coord.value && y2Coord.value < y1Coord.value)
             || (x2Coord.value < x1Coord.value && y2Coord.value > y1Coord.value) ){
             direction = 'l';
@@ -127,59 +123,34 @@ LineDraw.Line.prototype = {
             direction = 'r';
         }
         var imageName;
-        if(wPx>hPx){
-            if(hPx<5){
-                h='1px';
-                y = ((y1Coord.value+y2Coord.value)/2) + x1Coord.units;
-                imageName='l5x1.png';
-            } else if(hPx<7){ imageName=direction+'12x6.png';
-            } else if(hPx<9){ imageName=direction+'14x7.png';
-            } else if(hPx<11){ imageName=direction+'18x9.png';
-            } else if(hPx<14){ imageName=direction+'22x11.png';
-            } else if(hPx<18){ imageName=direction+'28x14.png';
-            } else if(hPx<23){ imageName=direction+'36x18.png';
-            } else if(hPx<29){ imageName=direction+'46x23.png';
-            } else if(hPx<37){ imageName=direction+'58x29.png';
-            } else if(hPx<48){ imageName=direction+'74x37.png';
-            } else if(hPx<62){ imageName=direction+'96x48.png';
-            } else if(hPx<80){ imageName=direction+'124x62.png';
-            } else if(hPx<104){ imageName=direction+'160x80.png';
-            } else if(hPx<135){ imageName=direction+'208x104.png';
-            } else if(hPx<175){ imageName=direction+'270x135.png';
-            } else if(hPx<227){ imageName=direction+'350x175.png';
-            } else if(hPx<295){ imageName=direction+'454x227.png';
-            } else if(hPx<383){ imageName=direction+'590x295.png';
-            } else if(hPx<497){ imageName=direction+'766x383.png';
-            } else if(hPx<646){ imageName=direction+'994x497.png';
-            } else { imageName=direction+'1292x646.png';
-            }
-        } else {
-            if(wPx<5){
+        var smallerDim = Math.min(wPx,hPx);
+        if(smallerDim<5){
+            if(wPx < hPx) {
                 w='1px';
                 x = ((x1Coord.value+x2Coord.value)/2) + x1Coord.units;
                 imageName='l1x5.png';
-            } else if(wPx<7){ imageName=direction+'6x12.png';
-            } else if(wPx<9){ imageName=direction+'7x14.png';
-            } else if(wPx<11){ imageName=direction+'9x18.png';
-            } else if(wPx<14){ imageName=direction+'11x22.png';
-            } else if(wPx<18){ imageName=direction+'14x28.png';
-            } else if(wPx<23){ imageName=direction+'18x36.png';
-            } else if(wPx<29){ imageName=direction+'23x46.png';
-            } else if(wPx<37){ imageName=direction+'29x58.png';
-            } else if(wPx<48){ imageName=direction+'37x74.png';
-            } else if(wPx<62){ imageName=direction+'48x96.png';
-            } else if(wPx<80){ imageName=direction+'62x124.png';
-            } else if(wPx<104){ imageName=direction+'80x160.png';
-            } else if(wPx<135){ imageName=direction+'104x208.png';
-            } else if(wPx<175){ imageName=direction+'135x270.png';
-            } else if(wPx<227){ imageName=direction+'175x350.png';
-            } else if(wPx<295){ imageName=direction+'227x454.png';
-            } else if(wPx<383){ imageName=direction+'295x590.png';
-            } else if(wPx<497){ imageName=direction+'383x766.png';
-            } else if(wPx<646){ imageName=direction+'497x994.png';
-            } else { imageName=direction+'646x1292.png';
+            } else {
+                h='1px';
+                y = ((y1Coord.value+y2Coord.value)/2) + x1Coord.units;
+                imageName='l5x1.png';
             }
-        }
+        } else if(smallerDim<14){ imageName=direction+'11x11.png';
+        } else if(smallerDim<18){ imageName=direction+'14x14.png';
+        } else if(smallerDim<23){ imageName=direction+'18x18.png';
+        } else if(smallerDim<29){ imageName=direction+'23x23.png';
+        } else if(smallerDim<37){ imageName=direction+'29x29.png';
+        } else if(smallerDim<48){ imageName=direction+'37x37.png';
+        } else if(smallerDim<62){ imageName=direction+'48x48.png';
+        } else if(smallerDim<80){ imageName=direction+'62x62.png';
+        } else if(smallerDim<104){ imageName=direction+'80x80.png';
+        } else if(smallerDim<135){ imageName=direction+'104x104.png';
+        } else if(smallerDim<175){ imageName=direction+'135x135.png';
+        } else if(smallerDim<227){ imageName=direction+'175x175.png';
+        } else if(smallerDim<295){ imageName=direction+'227x227.png';
+        } else if(smallerDim<383){ imageName=direction+'295x295.png';
+        } else if(smallerDim<497){ imageName=direction+'383x383.png';
+        } else if(smallerDim<646){ imageName=direction+'497x497.png';
+        } else { imageName=direction+'646x646.png'; }
         this.img.src = "/images/"+imageName;
         this.img.style.left=x;
         this.img.style.top=y;
@@ -192,26 +163,23 @@ LineDraw.Line.prototype = {
 // precache images
 
 var dims = [
-    [12,6],
-    [14,7],
-    [18,9],
-    [22,11],
-    [28,14],
-    [36,18],
-    [46,23],
-    [58,29],
-    [74,37],
-    [96,48],
-    [124,62],
-    [160,80],
-    [208,104],
-    [270,135],
-    [350,175],
-    [454,227],
-    [590,295],
-    [766,383],
-    [994,497],
-    [1292,646]
+    [11,11],
+    [14,14],
+    [18,18],
+    [23,23],
+    [29,29],
+    [37,37],
+    [48,48],
+    [62,62],
+    [80,80],
+    [104,104],
+    [135,135],
+    [175,175],
+    [227,227],
+    [295,295],
+    [383,383],
+    [497,497],
+    [646,646],
 ];
 
 var image_cache=[];
