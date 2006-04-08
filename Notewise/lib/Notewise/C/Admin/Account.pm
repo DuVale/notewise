@@ -100,7 +100,8 @@ Adds a new row to the table and forwards to list.
 
 sub do_add : Local {
     my ( $self, $c ) = @_;
-    $c->form( required => [ qw(email password name username confirm_password) ] );
+    $c->req->params->{user_type} = 2;
+    $c->form( required => [ qw(email password name username confirm_password user_type) ] );
     if ($c->form->has_missing) {
         $c->stash->{message}='You have to fill in all fields. '.
         'The following are missing: <b>'.
@@ -154,6 +155,7 @@ Sets a template.
 sub edit : Local {
     my ( $self, $c, $id ) = @_;
     $c->stash->{item} = $c->model('CDBI::User')->retrieve($id);
+    $c->stash->{user_types} = [$c->model('CDBI::UserType')->retrieve_all];
     $c->stash->{template} = 'Admin-Account/edit.tt';
 }
 

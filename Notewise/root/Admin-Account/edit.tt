@@ -17,6 +17,18 @@
             <td>[% item.to_field('email').as_XML %]</td>
         </tr>
         <tr>
+            <td>Type</td>
+            <td>
+                <select name='user_type'>
+                    [% FOR user_type = user_types %]
+                    <option value='[%user_type.id%]' [%IF user_type.id == item.user_type%]selected[%END%]>
+                        [%user_type.name | replace('_',' ')%] - [%user_type.description%]
+                    </option>
+                    [% END %]
+                </select>
+            </td>
+        </tr>
+        <tr>
             <td>Password</td>
             <td><input name="password" type="password"></td>
         </tr>

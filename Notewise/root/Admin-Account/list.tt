@@ -7,6 +7,7 @@
         <th>Username</th>
         <th>Name</th>
         <th>Email</th>
+        <th>Type</th>
         <th>Kernels</th>
         <th>Notes</th>
         <th>Relationships</th>
@@ -17,6 +18,7 @@
             <td>[% object.username %]</td>
             <td>[% object.name %]</td>
             <td>[% object.email %]</td>
+            <td>[% object.user_type.name | replace('_',' ') %]</td>
             <td>[% object.kernel_count %]</td>
             <td>[% object.note_count %]</td>
             <td>[% object.relationship_count %]</td>

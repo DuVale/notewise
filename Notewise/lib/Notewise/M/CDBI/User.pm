@@ -3,6 +3,8 @@ package Notewise::M::CDBI::User;
 use strict;
 use Digest::MD5;
 
+__PACKAGE__->has_a(user_type => 'Notewise::M::CDBI::UserType');
+
 __PACKAGE__->add_trigger(before_delete => sub {
      my $self = shift;
      $self->clear;
