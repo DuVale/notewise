@@ -12,7 +12,7 @@ sub start : Local {
     my ( $self, $c ) = @_;
 
     # create new tutorial user
-    my $tutorial_template_user = Notewise::M::CDBI::User->search({username=>'tutorial'})->first;
+    my $tutorial_template_user = Notewise::M::CDBI::User->search({username=>'tutorial_template'})->first;
     my $user = $tutorial_template_user->fullcopy('tutorialtemp','tutorialtemp@notewise.com');
     $user->username('tutorial'.$user->id);
     $user->email('tutorial'.$user->id.'@notewise.com');
