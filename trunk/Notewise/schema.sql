@@ -121,11 +121,19 @@ CREATE TABLE IF NOT EXISTS quicksearch_choice (
     FOREIGN KEY (user) REFERENCES user (id)
 );
 
--- XXX is there any reason to have users also use object ids, like kernel and notes?
 CREATE TABLE IF NOT EXISTS user (
     id MEDIUMINT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT,
     name varchar(255) not null,
     username varchar(255) not null,
     email varchar(255) unique not null,
-    password varchar(100) not null
+    password varchar(100) not null,
+    user_type INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_type) REFERENCES user_type (id)
+);
+
+CREATE TABLE IF NOT EXISTS user_type (
+    id MEDIUMINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    name varchar(255),
+    description varchar(255)
 );
