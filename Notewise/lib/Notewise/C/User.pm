@@ -33,7 +33,7 @@ sub home : Local {
     my $user = $c->model('CDBI::User')->search(username=>lc($username))->first;
     unless($user->id == $c->user->user->id){
         # TODO - need to make a different version for the public
-        die "Sorry, you don't have permission to look at that user's homepage";
+        return $c->res->output("Sorry, you don't have permission to look at that user's homepage");
     }
     $c->stash->{user}=$user;
     $c->stash->{lastviewed}=[$c->model('CDBI::Kernel')->most_recently_viewed_kernel($user->id,15)];
@@ -144,6 +144,55 @@ sub sandbox : Local {
     $c->stash->{kernels}=\@kernels;
     $c->stash->{notes}=\@notes;
     $c->stash->{template}='Kernel/sandbox.tt';
+}
+
+sub start_trial : Local {
+    my ( $self, $c ) = @_;
+
+    # create new trial user
+    my $user = Notewise::M::CDBI::User->create({
+        username=>'trialtemp',
+        email=>'trialtemp@notewise.com',
+        password=>'sup3rs3kr3t',
+        name=>'',
+        user_type=>$c->model('CDBI::UserType')->search(name=>'unregistered_trial_user')->first,
+    });
+    $user->username('trial'.$user->id);
+    $user->email('trial'.$user->id.'@notewise.com');
+    $user->update;
+
+    # log user in as trial user
+    my $auth_user = $c->get_user($user->username);
+    $c->set_authenticated($auth_user);
+
+    # TODO give them a persistent cookie
+
+    # redirect them to first kernel
+    my $kernel = $c->model('CDBI::ObjectId')->search(user=>$user,type=>'kernel')->first->object;
+    return $c->res->redirect($c->req->base . $kernel->relative_url);
+}
+
+sub register : Local {
+    my ( $self, $c ) = @_;
+    $c->stash->{template} = 'User/register.tt';
+}
+
+sub do_register : Local {
+    my ( $self, $c ) = @_;
+    $c->form( required => [ qw(username email password password2) ] );
+
+    # TODO check for dupe username, email.  Check passwords match and are long enough
+    my $user = $c->user->user;
+    $user->update_from_form($c->form);
+    $user->user_type($c->model('CDBI::UserType')->search(name=>'trial_user')->first);
+    $user->update;
+
+    # relogin
+    my $auth_user = $c->get_user($user->username);
+    $c->set_authenticated($auth_user);
+
+    ($c->stash->{last_kernel})=$c->model('CDBI::Kernel')->most_recently_viewed_kernel($user->id,1);
+    $c->stash->{template}='User/registration_thankyou.tt';
 }
 
 1;
