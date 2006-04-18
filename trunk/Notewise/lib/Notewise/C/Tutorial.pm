@@ -5,7 +5,7 @@ use base 'Catalyst::Base';
 
 sub tutorial : Path {
     my ( $self, $c ) = @_;
-    $c->stash->{template} = 'Tutorial/start.tt';
+    $c->forward('start');
 }
 
 sub start : Local {
@@ -16,6 +16,7 @@ sub start : Local {
     my $user = $tutorial_template_user->fullcopy('tutorialtemp','tutorialtemp@notewise.com');
     $user->username('tutorial'.$user->id);
     $user->email('tutorial'.$user->id.'@notewise.com');
+    $user->user_type($c->model('CDBI::UserType')->search(name=>'tutorial_user')->first);
     $user->update;
 
     # log user in as tutorial user

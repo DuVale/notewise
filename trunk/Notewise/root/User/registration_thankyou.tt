@@ -1,0 +1,13 @@
+<html>
+<head>
+    <style>
+        input {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<p>Thanks for registering.  Your information will now be saved.</p>
+<input type="button" value="Done" onclick="parent.location='[%base _ last_kernel.relative_url%]'"/>
+</body>
+</html
