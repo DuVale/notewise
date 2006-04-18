@@ -1,7 +1,0 @@
-<html>
-<head>
-</head>
-<body>
-    <a href="[%c.uri_for('/tutorial/start')%]">Start Tutorial</a>
-</body>
-</html>

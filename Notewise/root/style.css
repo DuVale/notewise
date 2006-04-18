@@ -1514,3 +1514,29 @@ body.search .searchresultslist a:visited {
     z-index: 100;
     font-size: 1px;
 }
+
+#start_using_notewise,
+#start_using_notewise:visited {
+    position: absolute;
+    border: none;
+    left: 60%;
+    top: 3px;
+    z-index: 100;
+}
+
+#start_using_notewise img {
+    border: none;
+}
+
+#register,
+#register:visited {
+    position: absolute;
+    border: none;
+    left: 60%;
+    top: 3px;
+    z-index: 100;
+}
+
+#register img {
+    border: none;
+}

@@ -32,6 +32,12 @@
                         <span class="dot">&nbsp;</span>
                         <a href="[%c.uri_for('/logout')%]">logout</a>
                     </div>
+                    [% IF c.user.user.user_type.name == 'tutorial_user'%]
+                    <a href="[% c.uri_for('/user/start_trial')%]" id="start_using_notewise"><img src="/images/start_using_notewise.png"></a>
+                    [% END%]
+                    [% IF c.user.user.user_type.name == 'unregistered_trial_user'%]
+                        <a href="" id="register" onclick="Bugs.show_window('/user/register'); return false;"><img src="/images/register.png"></a>
+                    [% END%]
                     <div class="tab">
                         <div id='saving_indicator' style="display: none">Saving...</div>
                         <input type="text" id="viewname" class="namefield" autocomplete="off"

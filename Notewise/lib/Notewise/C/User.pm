@@ -4,6 +4,7 @@ use strict;
 use base 'Catalyst::Base';
 use LWP::UserAgent;
 use HTTP::Request::Common;
+use Data::FormValidator::Constraints qw(:closures);
 
 =head1 NAME
 
@@ -149,6 +150,7 @@ sub sandbox : Local {
 sub start_trial : Local {
     my ( $self, $c ) = @_;
 
+    # XXX this might fail with a race condition on super high volume
     # create new trial user
     my $user = Notewise::M::CDBI::User->create({
         username=>'trialtemp',
@@ -179,10 +181,54 @@ sub register : Local {
 
 sub do_register : Local {
     my ( $self, $c ) = @_;
-    $c->form( required => [ qw(username email password password2) ] );
+    use Data::Dumper;
+    $c->form(
+        required => [ qw(username email password password2) ],
+        constraint_methods => {
+            email => Data::FormValidator::Constraints::email(),
+            password => [
+                {
+                    constraint => qr/^.{5,}/,
+                    name => 'password_length'
+                },
+                {
+                    constraint => sub {
+                        my ($self, $pw, $pw2) = @_;
+                        return $pw eq $pw2;
+                    },
+                    params => [ qw( password password2 ) ],
+                    name=> 'password_match',
+                }
+            ]
+        },
+    );
 
-    # TODO check for dupe username, email.  Check passwords match and are long enough
+    if ($c->form->has_missing) {
+        $c->stash->{message}="Please fill in all fields";
+        return $c->forward('register');
+    }
+    if ($c->form->has_invalid) {
+        my %invalid = %{scalar $c->form->invalid};
+        if(grep /^password_match$/, @{$invalid{password}}){
+            $c->stash->{message}="Sorry, the passwords didn't match";
+        } elsif(grep /^password_length$/, @{$invalid{password}}){
+            $c->stash->{message}="Sorry, your password must be 5 characters or more";
+        } elsif($invalid{email}){
+            $c->stash->{message}="Sorry, the email you gave is invalid";
+        }
+        return $c->forward('register');
+    }
+    if ($c->model('CDBI::User')->search(username=>$c->req->params->{username})) {
+        $c->stash->{message}="Sorry, that username is already taken.";
+        return $c->forward('register');
+    }
+
     my $user = $c->user->user;
+
+    if($user->user_type->name ne 'unregistered_trial_user'){
+        $c->stash->{message}="It appears you've already registered.  No need to do it again.";
+        return $c->forward('register');
+    }
     $user->update_from_form($c->form);
     $user->user_type($c->model('CDBI::UserType')->search(name=>'trial_user')->first);
     $user->update;
