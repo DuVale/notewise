@@ -13,6 +13,8 @@ __PACKAGE__->config(
     additional_base_classes => [qw/Class::DBI::FromForm Class::DBI::AsForm Class::DBI::AbstractSearch/],
 );
 
+__PACKAGE__->purge_object_index_every(1);
+
 sub to_xml {
     my $self = shift;
     my $label = shift;
