@@ -55,6 +55,7 @@ sub begin : Private {
         $c->req->base( new URI($self->config->{'BaseUrl'} ) );
     }
     $c->session_expires(0);
+    $c->model('CDBI')->clear_object_index();
 }
 
 sub end : Private {
