@@ -276,5 +276,11 @@ sub related_objects {
     return @related_objects;
 }
 
+sub parents {
+    my $self = shift;
+    my @contained_ids = $self->result_source->schema->resultset('ContainedObject')->search({contained_object => $self->id});
+    my @parents = map $_->container_kernel, @contained_ids;
+    return @parents;
+}
 
 1;
