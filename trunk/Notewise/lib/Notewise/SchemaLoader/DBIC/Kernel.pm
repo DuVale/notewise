@@ -81,12 +81,24 @@ sub relative_url {
     }
     my $unsafe = '^A-Za-z0-9_\-.!~*\'()';
     if($name eq ''){
-        return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe)."/".$self->get_column('object_id');
+        return uri_escape($self->user->username,$unsafe)."//".$self->get_column('object_id');
     } elsif($self->result_source->resultset->count_kernels_with_name($name,$self->object_id->get_column('user')) > 1){
         return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe)."/".$self->get_column('object_id');
     } else {
         return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe);
     }
+}
+
+# url that includes id
+sub full_url {
+    my $self = shift;
+    my $name = defined $self->name ? $self->name : '';
+    if($name){
+        $name =~ s/\s+$//;
+        $name =~ s/\s/_/g;
+    }
+    my $unsafe = '^A-Za-z0-9_\-.!~*\'()';
+    return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe)."/".$self->get_column('object_id');
 }
 
 sub count_kernels_with_name : ResultSet {

@@ -15,7 +15,7 @@
                 $stash->set(postmatch=>$');
             }
         [% END -%]
-        <li><a href="[%base _ object.relative_url%]">[%prematch%]<b>[%match%]</b>[%postmatch%]</a></li>
+        <li><a href="[%base _ object.full_url%]">[%prematch%]<b>[%match%]</b>[%postmatch%]</a></li>
     [%- END -%]
     [%- IF type.match('Note$') -%]
         [%- PERL %]
