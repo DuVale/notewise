@@ -90,36 +90,43 @@ sub do_search {
     my $c = shift;
     my $searchstring = shift;
     my $max_results = shift;
+    my $user_id = $c->user_object->id;
 
-    my @objects = grep {$_->has_permission($c->user->user->id,'view')}
-                    $c->model('DBIC::Kernel')->search({
-                            name => { 'like', $searchstring."%" }
-                        });
-    if(@objects < $max_results){
+    my $kernel_rs = $c->model('DBIC::Kernel')->search(
+                        { 'object_id.user' => $user_id },
+                        { join => {object_id => 'user'},
+                          prefetch => {object_id => 'user'},
+                          page => 0,
+                          rows => $max_results,
+                        }
+                    );
+
+    my @objects = $kernel_rs->search( { 'me.name' => { 'like', $searchstring."%" } } );
+
+    my $fulltext_query;
+    if(@objects < $max_results) {
         # if we didn't get enough, get some more
-        push @objects,
-            grep {$_->has_permission($c->user->user->id,'view')}
-                $c->model('DBIC::Kernel')->search({
-                    name => { 'like', "% ".$searchstring."%" }
-                });
+        my $last_space = rindex $searchstring, ' ';
+        if($last_space == -1){
+            $fulltext_query = "+$searchstring*";
+        } else {
+            $fulltext_query = '+"'.substr($searchstring,0,$last_space).'" +'.substr($searchstring,$last_space+1).'*';
+        }
+        #push @objects, $kernel_rs->search( { 'me.name' => { 'like', '% '.$searchstring."%" } } );
+        push @objects, $kernel_rs->search_literal("MATCH(me.name) AGAINST (? IN BOOLEAN MODE) AND me.name LIKE ? AND me.name NOT LIKE ?",$fulltext_query, "%".$searchstring."%", "$searchstring%");
     }
 
     if(@objects < $max_results){
         # if we didn't get enough, get some more
-        push @objects,
-            grep {$_->kernel->has_permission($c->user->user->id,'view')}
-                $c->model('DBIC::Note')->search({
-                    content => { 'like', $searchstring."%" }
-                });
-    }
-
-    if(@objects < $max_results){
-        # if we didn't get enough, get some more
-        push @objects,
-            grep {$_->kernel->has_permission($c->user->user->id,'view')}
-                $c->model('DBIC::Note')->search({
-                    content => { 'like', "% ".$searchstring."%" }
-                });
+        my $note_rs = $c->model('DBIC::Note')->search(
+                        { 'object_id.user' => $user_id },
+                        { join => {object_id => ['user','kernel']},
+                          prefetch => {object_id => ['user','kernel']},
+                          page => 0,
+                          rows => $max_results,
+                        }
+                    );
+        push @objects, $note_rs->search_literal("MATCH(me.content) AGAINST (? IN BOOLEAN MODE) AND me.content LIKE ?",$fulltext_query, "%".$searchstring."%");
     }
 
     # only show up to max_results and don't show duplicates
