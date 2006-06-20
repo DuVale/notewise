@@ -50,9 +50,10 @@ if(__PACKAGE__->config->{Static}){
 #        @lines = grep !/^\s*DBIx/, @lines;
 #        @lines = grep !/^\s*Catalyst/, @lines;
 #        $message = join "\n",@lines[0..4];
-#        open TRACE, '>>/tmp/trace.out';
-#        print TRACE "$message\n\n";
-#        close TRACE;
+#        warn "$message\n\n";
+##        open TRACE, '>>/tmp/trace.out';
+##        print TRACE "$message\n\n";
+##        close TRACE;
 #    });
 
 use Data::Dumper;

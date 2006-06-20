@@ -5,7 +5,7 @@ use URI::Escape;
 use strict;
 use warnings;
 
-__PACKAGE__->load_components(qw/ResultSetManager Core/);
+__PACKAGE__->load_components(qw/ResultSetManager Core +Notewise::UpdateFromForm/);
 __PACKAGE__->load_resultset_components(qw/+Notewise::CreateFromForm/);
 __PACKAGE__->table('kernel');
 __PACKAGE__->add_columns(qw/object_id name uri source created lastModified lastViewed/);
@@ -81,9 +81,9 @@ sub relative_url {
     }
     my $unsafe = '^A-Za-z0-9_\-.!~*\'()';
     if($name eq ''){
-        return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe)."/".$self->id;
-    } elsif($self->result_source->resultset->count_kernels_with_name($name,$self->user->id) > 1){
-        return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe)."/".$self->id;
+        return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe)."/".$self->get_column('object_id');
+    } elsif($self->result_source->resultset->count_kernels_with_name($name,$self->object_id->get_column('user')) > 1){
+        return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe)."/".$self->get_column('object_id');
     } else {
         return uri_escape($self->user->username,$unsafe)."/".uri_escape($name,$unsafe);
     }
