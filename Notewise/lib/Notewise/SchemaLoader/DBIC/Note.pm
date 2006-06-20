@@ -2,7 +2,7 @@ package Notewise::SchemaLoader::DBIC::Note;
 
 use base qw/DBIx::Class/;
 
-__PACKAGE__->load_components(qw/ResultSetManager Core WebForm +Notewise::UpdateFromForm/);
+__PACKAGE__->load_components(qw/ResultSetManager Core +Notewise::UpdateFromForm/);
 __PACKAGE__->table('note');
 __PACKAGE__->add_columns(qw/container_object object_id content source created lastModified x y width height/);
 __PACKAGE__->set_primary_key('object_id');
