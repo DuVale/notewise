@@ -18,17 +18,17 @@ my $user_id=$user->id;
 
 # Setup some search results
 my @kernels;
-push @kernels, Notewise::M::CDBI::Kernel->create({name=>'asdf',user=>$user->id});
-push @kernels, Notewise::M::CDBI::Kernel->create({name=>'asdffoo',user=>$user->id});
-push @kernels, Notewise::M::CDBI::Kernel->create({name=>'foo asdf',user=>$user->id});
-push @kernels, Notewise::M::CDBI::Kernel->create({name=>'foo asdffoo',user=>$user->id});
+push @kernels, Notewise->model('DBIC::Kernel')->create({name=>'asdf',user=>$user->id});
+push @kernels, Notewise->model('DBIC::Kernel')->create({name=>'asdffoo',user=>$user->id});
+push @kernels, Notewise->model('DBIC::Kernel')->create({name=>'foo asdf',user=>$user->id});
+push @kernels, Notewise->model('DBIC::Kernel')->create({name=>'foo asdffoo',user=>$user->id});
 is(get_type($kernels[-1]),'kernel', "Kernel has type 'kernel'");
 
 my @notes;
-push @notes, Notewise::M::CDBI::Note->create({container_object=>$kernels[-1]->object_id,content=>'asdf',user=>$user->id});
-push @notes, Notewise::M::CDBI::Note->create({container_object=>$kernels[-1]->object_id,content=>'asdffoo',user=>$user->id});
-push @notes, Notewise::M::CDBI::Note->create({container_object=>$kernels[-1]->object_id,content=>'foo asdf',user=>$user->id});
-push @notes, Notewise::M::CDBI::Note->create({container_object=>$kernels[-1]->object_id,content=>'foo asdffoo',user=>$user->id});
+push @notes, Notewise->model('DBIC::Note')->create({container_object=>$kernels[-1]->object_id,content=>'asdf',user=>$user->id});
+push @notes, Notewise->model('DBIC::Note')->create({container_object=>$kernels[-1]->object_id,content=>'asdffoo',user=>$user->id});
+push @notes, Notewise->model('DBIC::Note')->create({container_object=>$kernels[-1]->object_id,content=>'foo asdf',user=>$user->id});
+push @notes, Notewise->model('DBIC::Note')->create({container_object=>$kernels[-1]->object_id,content=>'foo asdffoo',user=>$user->id});
 is(get_type($notes[-1]),'note', "Note has type 'note'");
 
 # generated expected xml
@@ -42,8 +42,8 @@ my $xml = XMLout(\%xml, RootName => 'response');
 
 
 # these shouldn't match
-push @kernels, Notewise::M::CDBI::Kernel->create({name=>'bar baz',user=>$user->id});
-push @notes, Notewise::M::CDBI::Note->create({container_object=>$kernels[-1]->object_id,content=>'bar baz',user=>$user->id});
+push @kernels, Notewise->model('DBIC::Kernel')->create({name=>'bar baz',user=>$user->id});
+push @notes, Notewise->model('DBIC::Note')->create({container_object=>$kernels[-1]->object_id,content=>'bar baz',user=>$user->id});
 
 $req = new_request('GET', 'http://localhost/rest/search/asdf');
 $mech->request($req);

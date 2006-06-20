@@ -7,25 +7,28 @@ IF vkernel.collapsed;
   END;
   classes.push(collapsed);
 
-  IF highlight.id == vkernel.contained_kernel.id;
+  IF highlight.id == vkernel.get_column('contained_object');
     classes.push('highlighted');
   ELSE;
     classes.push('nothighlighted');
   END;
 
-  IF vkernel.contained_kernel.children.size > 0 ||
-     vkernel.contained_kernel.notes.size > 0;
+  IF vkernel.contained_kernel.has_children;
         classes.push('contains');
   ELSE;
         classes.push('notcontains');
   END;
 
 %]
-[% id = vkernel.container_object.id _ '/' _ vkernel.contained_object.id %]
+[% id = vkernel.get_column('container_object') _ '/' _ vkernel.get_column('contained_object') %]
 <div id="vkernel[%id%]" class="vkernel vkernel-notselected vkernel-notedit vkernel-[%classes.join(' vkernel-')%]"
          style="left: [% vkernel.x %]%; top: [% vkernel.y %]%;
                 [% IF vkernel.collapsed %]
-                    width: [% vkernel.contained_kernel.name.length * 0.55 + 4%]em;
+                    [% IF vkernel.contained_kernel.name.length %]
+                        width: [% vkernel.contained_kernel.name.length * 0.55 + 4%]em;
+                    [% ELSE %]
+                        width: 4em;
+                    [% END %]
                 [% ELSE %]
                     width: [% vkernel.width %]%;
                     height: [% vkernel.height %]%;

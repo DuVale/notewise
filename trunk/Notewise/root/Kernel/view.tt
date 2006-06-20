@@ -42,7 +42,11 @@
                         <div id='saving_indicator' style="display: none">Saving...</div>
                         <input type="text" id="viewname" class="namefield" autocomplete="off"
                                value="[% kernel.name | replace('"','&quot;') %]"
-                               style="width: [% kernel.name.length * 0.55 + 1 %]em;"/>
+                               [% IF kernel.name.length %]
+                                   style="width: [% kernel.name.length * 0.55 + 1 %]em;"/>
+                               [% ELSE %]
+                                   style="width: 1em;"/>
+                               [% END %]
                         <div class="tablinks">
                             <a href="[%base%]kernel/add?name=">new view</a><br/>
                             <a href="#" onclick="$('viewname').focus(); return false;">rename</a><br/>
@@ -78,7 +82,7 @@
                             <div class="sidebar-content open" id="rel_content">
                                     [% FOR relationship = kernel.relationships %]
 
-                                        [% IF relationship.part1.object == kernel %]
+                                        [% IF relationship.get_column('part1') == kernel.get_column('object_id') %]
                                             [% IF relationship.nav == 'fromleft' %]
                                                 &lt;-[%relationship.type.relationship_type%]-
                                             [% ELSIF relationship.nav == 'fromright' %]
@@ -98,7 +102,7 @@
                                             -[%relationship.type.relationship_type%]-
                                         [% END %]
 
-                                        [% IF relationship.part1.object == kernel %]
+                                        [% IF relationship.get_column('part1') == kernel.get_column('object_id') %]
                                             [% sibling = relationship.part2.object %]
                                         [% ELSE %]
                                             [% sibling = relationship.part1.object %]

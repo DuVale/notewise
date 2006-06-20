@@ -49,7 +49,7 @@ Destroys a row and forwards to list.
 
 sub destroy : Local {
     my ( $self, $c, $id ) = @_;
-    $c->model('CDBI::ObjectId')->retrieve($id)->delete;
+    $c->model('DBIC::ObjectId')->find($id)->delete;
     $c->forward('list');
 }
 
@@ -61,7 +61,7 @@ Adds a new row to the table and forwards to list.
 
 sub do_add : Local {
     my ( $self, $c ) = @_;
-    $c->form( optional => [ $c->model('CDBI::ObjectId')->columns ] );
+    $c->form( optional => [ $c->model('DBIC::ObjectId')->result_source->columns ] );
     if ($c->form->has_missing) {
         $c->stash->{message}='You have to fill in all fields. '.
         'The following are missing: <b>'.
@@ -71,7 +71,7 @@ sub do_add : Local {
         'The following are invalid: <b>'.
 	join(', ',$c->form->invalid()).'</b>';
     } else {
-        Notewise::M::CDBI::ObjectId->create_from_form( $c->form );
+        $c->model('DBIC::ObjectId')->create_from_form( $c->form );
     	return $c->forward('list');
     }
     $c->forward('add');
@@ -85,7 +85,7 @@ Edits a row and forwards to edit.
 
 sub do_edit : Local {
     my ( $self, $c, $id ) = @_;
-    $c->form( optional => [ $c->model('CDBI::ObjectId')->columns ] );
+    $c->form( optional => [ $c->model('DBIC::ObjectId')->result_source->columns ] );
     if ($c->form->has_missing) {
         $c->stash->{message}='You have to fill in all fields.'.
         'the following are missing: <b>'.
@@ -95,7 +95,7 @@ sub do_edit : Local {
         'the following are invalid: <b>'.
 	join(', ',$c->form->invalid()).'</b>';
     } else {
-	$c->model('CDBI::ObjectId')->retrieve($id)->update_from_form( $c->form );
+	$c->model('DBIC::ObjectId')->find($id)->update_from_form( $c->form );
 	$c->stash->{message}='Updated OK';
     }
     $c->forward('edit');
@@ -109,7 +109,7 @@ Sets a template.
 
 sub edit : Local {
     my ( $self, $c, $id ) = @_;
-    $c->stash->{item} = $c->model('CDBI::ObjectId')->retrieve($id);
+    $c->stash->{item} = $c->model('DBIC::ObjectId')->find($id);
     $c->stash->{template} = 'ObjectId/edit.tt';
 }
 
@@ -132,7 +132,7 @@ Fetches a row and sets a template.
 
 sub view : Local {
     my ( $self, $c, $id ) = @_;
-    $c->stash->{item} = $c->model('CDBI::ObjectId')->retrieve($id);
+    $c->stash->{item} = $c->model('DBIC::ObjectId')->find($id);
     $c->stash->{template} = 'ObjectId/view.tt';
 }
 

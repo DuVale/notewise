@@ -27,24 +27,28 @@ sub search : Path {
 
     my $max_results = 1000;
 
-    my @objects = $c->model('CDBI::Kernel')->search_where(
-                            name => { 'like', $searchstring."%" });
+    my @objects = $c->model('DBIC::Kernel')->search({
+                            name => { 'like', $searchstring."%" }
+                        });
     if(@objects < $max_results){
         # if we didn't get enough, get some more
-        push @objects, $c->model('CDBI::Kernel')->search_where(
-                            name => { 'like', "% ".$searchstring."%" });
+        push @objects, $c->model('DBIC::Kernel')->search({
+                            name => { 'like', "% ".$searchstring."%" }
+                        });
     }
 
     if(@objects < $max_results){
         # if we didn't get enough, get some more
-        push @objects, $c->model('CDBI::Note')->search_where(
-                            content => { 'like', $searchstring."%" });
+        push @objects, $c->model('DBIC::Note')->search({
+                            content => { 'like', $searchstring."%" }
+                        });
     }
 
     if(@objects < $max_results){
         # if we didn't get enough, get some more
-        push @objects, $c->model('CDBI::Note')->search_where(
-                            content => { 'like', "% ".$searchstring."%" });
+        push @objects, $c->model('DBIC::Note')->search({
+                            content => { 'like', "% ".$searchstring."%" }
+                        });
     }
 
     # only show up to max_results

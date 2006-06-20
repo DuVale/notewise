@@ -1,7 +1,10 @@
 package Notewise;
 
 use Carp;
-#$SIG{__DIE__} = sub { Carp::confess(shift) };
+
+#$SIG{__DIE__} = sub {
+#    Carp::confess(shift);
+#};
 
 use strict;
 use YAML ();
@@ -15,10 +18,12 @@ use Catalyst qw/FormValidator
 
 our $VERSION = '0.01';
 
+#use Data::Dumper;
+#die Dumper(YAML::LoadFile( __PACKAGE__->path_to('config.yml') ) );
 __PACKAGE__->config( YAML::LoadFile( __PACKAGE__->path_to('config.yml') ) );
 
 __PACKAGE__->config->{authentication}->{dbic} = {
-               user_class           => 'Notewise::M::CDBI::User',
+               user_class           => 'DBIC::User',
                user_field           => 'username',
                password_field       => 'password',
                password_type        => 'hashed',
@@ -38,6 +43,27 @@ if(__PACKAGE__->config->{Static}){
     __PACKAGE__->setup();
 }
 
+#use Carp;
+#__PACKAGE__->model('DBIC')->schema->storage->debugcb(sub {
+#        my $message = $_[1];
+#        my @lines = split /\n/,Carp::longmess($message);
+#        @lines = grep !/^\s*DBIx/, @lines;
+#        @lines = grep !/^\s*Catalyst/, @lines;
+#        $message = join "\n",@lines[0..4];
+#        open TRACE, '>>/tmp/trace.out';
+#        print TRACE "$message\n\n";
+#        close TRACE;
+#    });
+
+use Data::Dumper;
+#$Data::Dumper::Freezer = '_dumper_hook';
+$Data::Dumper::Maxdepth = 3;
+sub _dumper_hook {
+    $_[0] = bless {
+        _column_data => ${%{ $_[0] }}{_column_data},
+        _relationship_data => ${%{ $_[0] }}{_relationship_data},
+    }, ref($_[0]);
+}
 
 sub default : Private {
     my ( $self, $c, $username, $name, $id ) = @_;
