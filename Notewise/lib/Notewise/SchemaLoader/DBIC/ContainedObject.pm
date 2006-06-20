@@ -2,7 +2,8 @@ package Notewise::SchemaLoader::DBIC::ContainedObject;
 
 use base qw/DBIx::Class/;
 
-__PACKAGE__->load_components(qw/ResultSetManager Core/);
+__PACKAGE__->load_components(qw/ResultSetManager Core +Notewise::UpdateFromForm/);
+__PACKAGE__->load_resultset_components(qw/+Notewise::CreateFromForm/);
 __PACKAGE__->table('contained_object');
 __PACKAGE__->add_columns(qw/id container_object contained_object x y width height collapsed/);
 __PACKAGE__->set_primary_key('id');

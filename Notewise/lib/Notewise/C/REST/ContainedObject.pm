@@ -102,12 +102,7 @@ sub add : Private {
                             $c->model('DBIC::Kernel')->result_source->columns
                           ] );
 
-    my $contained_object = $c->model('DBIC::ContainedObject')->create({});
-    foreach my $column ($c->model('DBIC::ContainedObject')->result_source->columns){
-        $contained_object->$column($c->form->valid($column))
-            if defined $c->form->valid($column);
-    }
-    $contained_object->update();
+    my $contained_object = $c->model('DBIC::ContainedObject')->create_from_form($c->form);
 
     $c->res->status(201); # Created
     return $c->forward('view',[$contained_object->get_column('container_object'),
