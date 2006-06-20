@@ -1,7 +1,7 @@
-[% id = vkernel.container_object.id _ '/' _ vkernel.contained_object.id %]
+[% id = vkernel.get_column('container_object') _ '/' _ vkernel.get_column('contained_object') %]
     var kernelDiv = document.getElementById('vkernel[%id%]');
-    var vkernel = new VisibleKernel([%vkernel.container_object.id%],
-                                    [%vkernel.contained_object.id%],
+    var vkernel = new VisibleKernel([%vkernel.get_column('container_object')%],
+                                    [%vkernel.get_column('contained_object')%],
                                     kernelDiv,
                                     [%vkernel.x%],
                                     [%vkernel.y%],
@@ -10,7 +10,7 @@
                                     [%vkernel.collapsed%]
                                     );
     vkernel.layout();
-    objectCache['[%vkernel.container_object.id%]/[%vkernel.contained_object.id%]']=vkernel;
+    objectCache['[%id%]']=vkernel;
 [% UNLESS vkernel.collapsed %]
     [% INCLUDE 'Kernel/kernel-innerjs.tt' kernel=vkernel.contained_kernel%]
 [% END %]

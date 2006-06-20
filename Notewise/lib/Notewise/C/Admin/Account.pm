@@ -49,7 +49,7 @@ Confirms a delete.
 
 sub delete : Local {
     my ( $self, $c, $id ) = @_;
-    $c->stash->{user} = $c->model('CDBI::User')->retrieve($id);
+    $c->stash->{user} = $c->model('DBIC::User')->find($id);
     $c->stash->{template} = 'Admin-Account/delete.tt';
 }
 
@@ -61,7 +61,7 @@ Deletes a row and forwards to list.
 
 sub do_delete : Local {
     my ( $self, $c, $id ) = @_;
-    $c->model('CDBI::User')->retrieve($id)->delete;
+    $c->model('DBIC::User')->find($id)->delete;
     $c->res->redirect($c->req->base . 'admin/account/');
 }
 
@@ -73,7 +73,7 @@ Confirms a clear.
 
 sub clear : Local {
     my ( $self, $c, $id ) = @_;
-    $c->stash->{user} = $c->model('CDBI::User')->retrieve($id);
+    $c->stash->{user} = $c->model('DBIC::User')->find($id);
     $c->stash->{template} = 'Admin-Account/clear.tt';
 }
 
@@ -85,9 +85,9 @@ Clears the kernels, notes, and relationships for a user.
 
 sub do_clear : Local {
     my ( $self, $c, $id ) = @_;
-    my $user = $c->model('CDBI::User')->retrieve($id);
+    my $user = $c->model('DBIC::User')->find($id);
     $user->clear;
-    my $kernel = $c->model('CDBI::Kernel')->insert({name=>'',
+    my $kernel = $c->model('DBIC::Kernel')->insert({name=>'',
                                                     user=>$user});
     $c->res->redirect($c->req->base . 'admin/account/');
 }
@@ -113,7 +113,7 @@ sub do_add : Local {
     } elsif ($c->req->params->{password} ne $c->req->params->{confirm_password}) {
         $c->stash->{message}="Sorry, those passwords don't match";
     } else {
-	my $user = Notewise::M::CDBI::User->create_from_form( $c->form );
+	my $user = $c->model('DBIC::User')->create_from_form( $c->form );
         return $c->res->redirect($c->req->base . 'admin/account/list');
     }
     return $c->forward('add');
@@ -127,7 +127,7 @@ Edits a row and forwards to edit.
 
 sub do_edit : Local {
     my ( $self, $c, $id ) = @_;
-    $c->form( optional => [ $c->model('CDBI::User')->columns ] );
+    $c->form( optional => [ $c->model('DBIC::User')->result_source->columns ] );
     if ($c->form->has_missing) {
         $c->stash->{message}='You have to fill in all fields.'.
         'the following are missing: <b>'.
@@ -139,7 +139,7 @@ sub do_edit : Local {
     } elsif ($c->req->params->{password} ne $c->req->params->{confirm_password}) {
         $c->stash->{message}="Sorry, those passwords don't match";
     } else {
-        my $user = $c->model('CDBI::User')->retrieve($id);
+        my $user = $c->model('DBIC::User')->find($id);
         $user->update_from_form( $c->form );
 	$c->stash->{message}='Updated OK';
     }
@@ -154,8 +154,8 @@ Sets a template.
 
 sub edit : Local {
     my ( $self, $c, $id ) = @_;
-    $c->stash->{item} = $c->model('CDBI::User')->retrieve($id);
-    $c->stash->{user_types} = [$c->model('CDBI::UserType')->retrieve_all];
+    $c->stash->{item} = $c->model('DBIC::User')->find($id);
+    $c->stash->{user_types} = [$c->model('DBIC::UserType')->all];
     $c->stash->{template} = 'Admin-Account/edit.tt';
 }
 

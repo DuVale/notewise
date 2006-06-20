@@ -5,7 +5,7 @@
 [% content = content.replace('"', '\"'); %]
 
 var noteDiv = document.getElementById('note[%id%]');
-var noteObj = new Note([%id%],[% note.container_object %],
+var noteObj = new Note([%id%],[% note.container_object.id %],
                     noteDiv,
                     [%note.x%],
                     [%note.y%],
@@ -14,4 +14,4 @@ var noteObj = new Note([%id%],[% note.container_object %],
                     "[% content %]");
                     
 noteObj.layout();
-objectCache['[%note.container_object%]/[%note.id%]']=noteObj;
+objectCache['[%note.get_column('container_object')%]/[%note.get_column('object_id')%]']=noteObj;

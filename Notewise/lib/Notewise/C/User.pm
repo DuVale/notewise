@@ -31,14 +31,14 @@ sub login : Local {
 
 sub home : Local {
     my ( $self, $c, $username ) = @_;
-    my $user = $c->model('CDBI::User')->search(username=>lc($username))->first;
+    my $user = $c->model('DBIC::User')->search(username=>lc($username))->first;
     unless($user->id == $c->user->user->id){
         # TODO - need to make a different version for the public
         return $c->res->output("Sorry, you don't have permission to look at that user's homepage");
     }
     $c->stash->{user}=$user;
-    $c->stash->{lastviewed}=[$c->model('CDBI::Kernel')->most_recently_viewed_kernel($user->id,15)];
-    $c->stash->{lastcreated}=[$c->model('CDBI::Kernel')->most_recently_created_kernel($user->id,15)];
+    $c->stash->{lastviewed}=[$c->model('DBIC::Kernel')->most_recently_viewed_kernel($user->id,15)];
+    $c->stash->{lastcreated}=[$c->model('DBIC::Kernel')->most_recently_created_kernel($user->id,15)];
     $c->stash->{template} = 'User/home.tt';
 }
 
@@ -134,13 +134,13 @@ sub calendar : Local {
 
 sub sandbox : Local {
     my ( $self, $c ) = @_;
-    my $sandbox = $c->model('CDBI::ObjectId')->search({type=>'sandbox',user=>$c->user->user->id})->first;
+    my $sandbox = $c->model('DBIC::ObjectId')->search({type=>'sandbox',user=>$c->user->user->id})->first;
     unless ($sandbox){
         $c->res->status(404);
         return $c->res->output("Sorry, your sandbox doesn't seem to exist.");
     }
-    my @kernels = $c->model('CDBI::ContainedObject')->search(container_object=>$sandbox->id);
-    my @notes = $c->model('CDBI::Note')->search(container_object=>$sandbox->id);
+    my @kernels = $c->model('DBIC::ContainedObject')->search(container_object=>$sandbox->id);
+    my @notes = $c->model('DBIC::Note')->search(container_object=>$sandbox->id);
     $c->stash->{sandbox}=$sandbox;
     $c->stash->{kernels}=\@kernels;
     $c->stash->{notes}=\@notes;
@@ -152,12 +152,12 @@ sub start_trial : Local {
 
     # XXX this might fail with a race condition on super high volume
     # create new trial user
-    my $user = Notewise::M::CDBI::User->create({
+    my $user = Notewise::M::DBIC::User->create({
         username=>'trialtemp',
         email=>'trialtemp@notewise.com',
         password=>'sup3rs3kr3t',
         name=>'',
-        user_type=>$c->model('CDBI::UserType')->search(name=>'unregistered_trial_user')->first,
+        user_type=>$c->model('DBIC::UserType')->search(name=>'unregistered_trial_user')->first,
     });
     $user->username('trial'.$user->id);
     $user->email('trial'.$user->id.'@notewise.com');
@@ -170,7 +170,7 @@ sub start_trial : Local {
     # TODO give them a persistent cookie
 
     # redirect them to first kernel
-    my $kernel = $c->model('CDBI::ObjectId')->search(user=>$user,type=>'kernel')->first->object;
+    my $kernel = $c->model('DBIC::ObjectId')->search(user=>$user,type=>'kernel')->first->object;
     return $c->res->redirect($c->req->base . $kernel->relative_url);
 }
 
@@ -218,7 +218,7 @@ sub do_register : Local {
         }
         return $c->forward('register');
     }
-    if ($c->model('CDBI::User')->search(username=>$c->req->params->{username})) {
+    if ($c->model('DBIC::User')->search(username=>$c->req->params->{username})) {
         $c->stash->{message}="Sorry, that username is already taken.";
         return $c->forward('register');
     }
@@ -230,14 +230,14 @@ sub do_register : Local {
         return $c->forward('register');
     }
     $user->update_from_form($c->form);
-    $user->user_type($c->model('CDBI::UserType')->search(name=>'trial_user')->first);
+    $user->user_type($c->model('DBIC::UserType')->search(name=>'trial_user')->first);
     $user->update;
 
     # relogin
     my $auth_user = $c->get_user($user->username);
     $c->set_authenticated($auth_user);
 
-    ($c->stash->{last_kernel})=$c->model('CDBI::Kernel')->most_recently_viewed_kernel($user->id,1);
+    ($c->stash->{last_kernel})=$c->model('DBIC::Kernel')->most_recently_viewed_kernel($user->id,1);
     $c->stash->{template}='User/registration_thankyou.tt';
 }
 

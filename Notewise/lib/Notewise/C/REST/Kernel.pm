@@ -43,7 +43,7 @@ sub kernel : Path {
 sub children : Private {
     my ( $self, $c, $id) = @_;
 
-    my $kernel = $c->model('CDBI::Kernel')->retrieve($id);
+    my $kernel = $c->model('DBIC::Kernel')->find($id);
     unless($kernel){
         $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
         return;
@@ -59,7 +59,7 @@ sub children : Private {
 sub visible_relationships : Private {
     my ( $self, $c, $id) = @_;
 
-    my $kernel = $c->model('CDBI::Kernel')->retrieve($id);
+    my $kernel = $c->model('DBIC::Kernel')->find($id);
     unless($kernel){
         $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
         return;
@@ -71,7 +71,7 @@ sub visible_relationships : Private {
 sub view : Private {
     my ( $self, $c, $id) = @_;
 
-    my $kernel = $c->model('CDBI::Kernel')->retrieve($id);
+    my $kernel = $c->model('DBIC::Kernel')->find($id);
     unless($kernel){
         $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
         return;
@@ -87,14 +87,15 @@ sub view : Private {
 sub add : Private {
     my ( $self, $c) = @_;
 
-    $c->form( optional => [ $c->model('CDBI::Kernel')->columns ] );
+    $c->form( optional => [ $c->model('DBIC::Kernel')->result_source->columns ] );
     if ($c->form->has_missing) {
         $c->detach('/rest/error',['missing fields']);
     } elsif ($c->form->has_invalid) {
         $c->detach('/rest/error',['invalid fields']);
     } else {
-        my $kernel = Notewise::M::CDBI::Kernel->create_from_form( $c->form );
+        my $kernel = $c->model('DBIC::Kernel')->create_from_form( $c->form );
         $kernel->user($c->user->user->id);
+        warn "user_id: ".$kernel->object_id->user->id;
         $kernel->update;
         $c->res->status(201); # Created
     	return $c->forward('view',[$kernel->object_id->id]);
@@ -104,13 +105,13 @@ sub add : Private {
 sub update : Private {
     my ( $self, $c, $id) = @_;
 
-    $c->form( optional => [ $c->model('CDBI::Kernel')->columns ] );
+    $c->form( optional => [ $c->model('DBIC::Kernel')->result_source->columns ] );
     if ($c->form->has_missing) {
         $c->detach('/rest/error',['missing fields']);
     } elsif ($c->form->has_invalid) {
         $c->detach('/rest/error',['invalid fields']);
     } else {
-        my $kernel = $c->model('CDBI::Kernel')->retrieve($id);
+        my $kernel = $c->model('DBIC::Kernel')->find($id);
         unless($kernel){
             $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
         }
@@ -129,7 +130,7 @@ sub update : Private {
 sub delete : Private {
     my ( $self, $c, $id) = @_;
 
-    my $kernel = $c->model('CDBI::Kernel')->retrieve($id);
+    my $kernel = $c->model('DBIC::Kernel')->find($id);
     if($kernel){
         # check permissions
         unless ($kernel->has_permission($c->user->user->id,'delete')){

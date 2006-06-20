@@ -12,11 +12,11 @@ sub start : Local {
     my ( $self, $c ) = @_;
 
     # create new tutorial user
-    my $tutorial_template_user = Notewise::M::CDBI::User->search({username=>'tutorial_template'})->first;
+    my $tutorial_template_user = $c->model('DBIC::User')->search({username=>'tutorial_template'})->first;
     my $user = $tutorial_template_user->fullcopy('tutorialtemp','tutorialtemp@notewise.com');
     $user->username('tutorial'.$user->id);
     $user->email('tutorial'.$user->id.'@notewise.com');
-    $user->user_type($c->model('CDBI::UserType')->search(name=>'tutorial_user')->first);
+    $user->user_type($c->model('DBIC::UserType')->search(name=>'tutorial_user')->first);
     $user->update;
 
     # log user in as tutorial user

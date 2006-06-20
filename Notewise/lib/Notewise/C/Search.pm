@@ -92,30 +92,34 @@ sub do_search {
     my $max_results = shift;
 
     my @objects = grep {$_->has_permission($c->user->user->id,'view')}
-                    $c->model('CDBI::Kernel')->search_where(
-                            name => { 'like', $searchstring."%" });
+                    $c->model('DBIC::Kernel')->search({
+                            name => { 'like', $searchstring."%" }
+                        });
     if(@objects < $max_results){
         # if we didn't get enough, get some more
         push @objects,
             grep {$_->has_permission($c->user->user->id,'view')}
-                $c->model('CDBI::Kernel')->search_where(
-                    name => { 'like', "% ".$searchstring."%" });
+                $c->model('DBIC::Kernel')->search({
+                    name => { 'like', "% ".$searchstring."%" }
+                });
     }
 
     if(@objects < $max_results){
         # if we didn't get enough, get some more
         push @objects,
             grep {$_->kernel->has_permission($c->user->user->id,'view')}
-                $c->model('CDBI::Note')->search_where(
-                    content => { 'like', $searchstring."%" });
+                $c->model('DBIC::Note')->search({
+                    content => { 'like', $searchstring."%" }
+                });
     }
 
     if(@objects < $max_results){
         # if we didn't get enough, get some more
         push @objects,
             grep {$_->kernel->has_permission($c->user->user->id,'view')}
-                $c->model('CDBI::Note')->search_where(
-                    content => { 'like', "% ".$searchstring."%" });
+                $c->model('DBIC::Note')->search({
+                    content => { 'like', "% ".$searchstring."%" }
+                });
     }
 
     # only show up to max_results and don't show duplicates

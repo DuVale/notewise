@@ -1,5 +1,5 @@
 new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '/s',
-                        {frequency: .1,
+                        {frequency: .2,
                          min_chars: 2,
                          on_select: function (selected_element){
                             value = Element.collectTextNodesIgnoreClass(selected_element, 'informal').unescapeHTML();

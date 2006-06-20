@@ -40,7 +40,7 @@ sub containedobject : Path {
 sub view : Private {
     my ( $self, $c, $container_id, $contained_id) = @_;
 
-    my $contained_object = ($c->model('CDBI::ContainedObject')->search(container_object=>$container_id, contained_object=>$contained_id))[0];
+    my $contained_object = ($c->model('DBIC::ContainedObject')->search(container_object=>$container_id, contained_object=>$contained_id))[0];
     unless($contained_object){
         $c->detach('/rest/notfound',["contained object $container_id/$contained_id was not found"]);
     }
@@ -58,7 +58,7 @@ sub view : Private {
 sub add : Private {
     my ( $self, $c) = @_;
 
-    $c->form( optional => [ $c->model('CDBI::ContainedObject')->columns ] );
+    $c->form( optional => [ $c->model('DBIC::ContainedObject')->result_source->columns ] );
     if ($c->form->has_missing) {
         $c->detach('/rest/error',["missing fields"]);
     } elsif ($c->form->has_invalid) {
@@ -68,11 +68,11 @@ sub add : Private {
     # This is a bit of a hack to allow us to add a newly created kernel to
     # this view in one request, instead of two, by allowing the values for
     # the kernel itself to be passed in as well
-    $c->form( optional => [ $c->model('CDBI::ContainedObject')->columns,
-                            $c->model('CDBI::Kernel')->columns] );
+    $c->form( optional => [ $c->model('DBIC::ContainedObject')->result_source->columns,
+                            $c->model('DBIC::Kernel')->result_source->columns] );
 
     # check permissions
-    my $container_object=$c->model('CDBI::Kernel')->retrieve(
+    my $container_object=$c->model('DBIC::Kernel')->find(
                            $c->form->valid('container_object')
                          );
     unless ($container_object->has_permission($c->user->user->id,'modify')){
@@ -82,14 +82,14 @@ sub add : Private {
     # figure out if we need to create the kernel as well
     unless($c->req->params->{contained_object}){
         my %create_hash;
-        foreach my $column ($c->model('CDBI::Kernel')->columns){
+        foreach my $column ($c->model('DBIC::Kernel')->result_source->columns){
             $create_hash{$column} = $c->form->valid($column);
         }
         $create_hash{user}=$c->user->user->id;
-        my $kernel = $c->model('CDBI::Kernel')->create( \%create_hash );
+        my $kernel = $c->model('DBIC::Kernel')->create( \%create_hash );
         $c->req->params->{contained_object}=$kernel->id;
     } else {
-        my $contained_object=$c->model('CDBI::Kernel')->retrieve(
+        my $contained_object=$c->model('DBIC::Kernel')->find(
                                $c->form->valid('contained_object')
                              );
         unless ($contained_object->has_permission($c->user->user->id,'view')){
@@ -98,45 +98,54 @@ sub add : Private {
     }
 
     # cause $c->form to be generated again
-    $c->form( optional => [ $c->model('CDBI::ContainedObject')->columns,
-                            $c->model('CDBI::Kernel')->columns
+    $c->form( optional => [ $c->model('DBIC::ContainedObject')->result_source->columns,
+                            $c->model('DBIC::Kernel')->result_source->columns
                           ] );
 
-    my $contained_object = Notewise::M::CDBI::ContainedObject->create_from_form( $c->form );
+    my $contained_object = $c->model('DBIC::ContainedObject')->create({});
+    foreach my $column ($c->model('DBIC::ContainedObject')->result_source->columns){
+        $contained_object->$column($c->form->valid($column))
+            if defined $c->form->valid($column);
+    }
+    $contained_object->update();
 
     $c->res->status(201); # Created
-    return $c->forward('view',[$contained_object->container_object,
-                               $contained_object->contained_object]);
+    return $c->forward('view',[$contained_object->get_column('container_object'),
+                               $contained_object->get_column('contained_object')]);
 }
 
 sub update : Private {
     my ( $self, $c, $container_id, $contained_id) = @_;
 
-    $c->form( optional => [ $c->model('CDBI::ContainedObject')->columns ] );
+    $c->form( optional => [ $c->model('DBIC::ContainedObject')->result_source->columns ] );
     if ($c->form->has_missing) { $c->detach('/rest/error',['missing fields']); }
     elsif ($c->form->has_invalid) { $c->detach('/rest/error',['invalid fields']); }
 
     # check permissions
-    my $container=$c->model('CDBI::ObjectId')->retrieve($container_id);
+    my $container=$c->model('DBIC::ObjectId')->find($container_id);
     unless ($container->has_permission($c->user->user->id,'modify')){
         $c->detach('/rest/forbidden',["You do not have permission to modify $container_id"]);
     }
 
     # do the update
     my $contained_object = (
-        $c->model('CDBI::ContainedObject')->search(container_object=>$container_id,
+        $c->model('DBIC::ContainedObject')->search(container_object=>$container_id,
                                                    contained_object=>$contained_id))[0];
     unless($contained_object){
         $c->detach('/rest/notfound');
     }
-    $contained_object->update_from_form( $c->form );
+    foreach my $column ($c->model('DBIC::ContainedObject')->result_source->columns){
+        $contained_object->set_column($column,$c->form->valid($column))
+            if defined $c->form->valid($column);
+    }
+    $contained_object->update();
     $c->detach('/rest/ok');
 }
 
 sub delete : Private {
     my ( $self, $c, $container_id, $contained_id) = @_;
 
-    my $containedobject = ($c->model('CDBI::ContainedObject')->search(container_object=>$container_id, contained_object=>$contained_id))[0];
+    my $containedobject = ($c->model('DBIC::ContainedObject')->search(container_object=>$container_id, contained_object=>$contained_id))[0];
 
     # check permissions
     unless ($containedobject->container_object->has_permission($c->user->user->id,'modify')){
