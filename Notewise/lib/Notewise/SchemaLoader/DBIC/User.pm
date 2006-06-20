@@ -2,7 +2,8 @@ package Notewise::SchemaLoader::DBIC::User;
 
 use base qw/DBIx::Class/;
 
-__PACKAGE__->load_components(qw/PK::Auto::MySQL ResultSetManager Core/);
+__PACKAGE__->load_components(qw/PK::Auto::MySQL ResultSetManager Core +Notewise::UpdateFromForm/);
+__PACKAGE__->load_resultset_components(qw/+Notewise::CreateFromForm/);
 __PACKAGE__->table('user');
 __PACKAGE__->add_columns(qw/id name email username password user_type/);
 __PACKAGE__->set_primary_key('id');
