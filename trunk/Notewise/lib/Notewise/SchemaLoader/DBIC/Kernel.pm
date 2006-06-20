@@ -5,8 +5,7 @@ use URI::Escape;
 use strict;
 use warnings;
 
-#__PACKAGE__->load_components(qw/PK::Auto ResultSetManager Core/);
-__PACKAGE__->load_components(qw/ResultSetManager Core WebForm/);
+__PACKAGE__->load_components(qw/ResultSetManager Core/);
 __PACKAGE__->load_resultset_components(qw/+Notewise::CreateFromForm/);
 __PACKAGE__->table('kernel');
 __PACKAGE__->add_columns(qw/object_id name uri source created lastModified lastViewed/);

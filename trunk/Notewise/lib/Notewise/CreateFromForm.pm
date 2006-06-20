@@ -1,4 +1,4 @@
-package Notewise::FromForm;
+package Notewise::CreateFromForm;
 use base qw(DBIx::Class);
 use strict;
 use warnings;
