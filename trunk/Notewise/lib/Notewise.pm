@@ -115,7 +115,7 @@ sub auto : Local {
     if (my $auth_cookie = $c->req->cookie('persistent_auth')){
         my ($username, $hash) = split /:/, $auth_cookie->value;
         my $user = $c->get_user($username);
-        if($auth_cookie->value eq $user->user->authentication_hash){
+        if($auth_cookie->value eq $user->authentication_hash){
             $c->set_authenticated($user);
             return 1;
         }
