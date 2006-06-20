@@ -255,8 +255,8 @@ body.kernelview {
     border: 1px solid #767676;
     top: 9px;
     left: 0px;
-    right: 0px;
-    bottom: 0px;
+    right: 1px;
+    bottom: 1px;
     clear: both;
     overflow: auto;
     z-index: 0;
@@ -299,7 +299,7 @@ body.kernelview {
     background: url('/images/note-upper-right.gif') top right no-repeat;
     height: 11px;
     width: 6px;
-    right: 0px;
+    right: 1px;
     top: 0px;
     z-index: 3;
 }
@@ -802,8 +802,8 @@ img {
 .vkernel .body {
     background: white;
     position: absolute;
-    left: 0px; right: 0px;
-    top: 23px; bottom: 0px;
+    left: 0px; right: 1px;
+    top: 23px; bottom: 1px;
     border: 1px solid #767676;
     clear: both;
     overflow: hidden;

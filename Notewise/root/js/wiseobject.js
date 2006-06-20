@@ -263,6 +263,13 @@ WiseObject.prototype.extend({
     // causes the internal elements to resize if necessary
     layoutResize: function() {
       if(this.body != undefined){
+          // The -1 is to compensate for problems with calculating the width of
+          // html elements that are set via a percentage.  It seems that
+          // firefox always rounds up to the nearest integer for things like
+          // clientWidth, when what we really want is to always round down.
+          // Instead, we compensate by always subtracting one, and setting the
+          // right and bottom in the css to be 1px rather than 0px, for both
+          // the body, and the right header image (so they line up)
           this.body.style.width = Math.max(0,this.htmlElement.clientWidth - 1) + 'px';
           this.body.style.height = Math.max(0,this.htmlElement.clientHeight - this.body.offsetTop - 1) + 'px';
       }
