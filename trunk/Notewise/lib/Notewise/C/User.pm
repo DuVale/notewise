@@ -152,7 +152,7 @@ sub start_trial : Local {
 
     # XXX this might fail with a race condition on super high volume
     # create new trial user
-    my $user = Notewise::M::DBIC::User->create({
+    my $user = $c->model('DBIC::User')->create({
         username=>'trialtemp',
         email=>'trialtemp@notewise.com',
         password=>'sup3rs3kr3t',
@@ -170,7 +170,7 @@ sub start_trial : Local {
     # TODO give them a persistent cookie
 
     # redirect them to first kernel
-    my $kernel = $c->model('DBIC::ObjectId')->search(user=>$user,type=>'kernel')->first->object;
+    my $kernel = $c->model('DBIC::ObjectId')->search({user=>$user->id,type=>'kernel'})->next->object;
     return $c->res->redirect($c->req->base . $kernel->relative_url);
 }
 
@@ -218,7 +218,7 @@ sub do_register : Local {
         }
         return $c->forward('register');
     }
-    if ($c->model('DBIC::User')->search(username=>$c->req->params->{username})) {
+    if ($c->model('DBIC::User')->count({username=>$c->req->params->{username}})) {
         $c->stash->{message}="Sorry, that username is already taken.";
         return $c->forward('register');
     }

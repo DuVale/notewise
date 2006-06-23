@@ -16,7 +16,7 @@ sub start : Local {
     my $user = $tutorial_template_user->fullcopy('tutorialtemp','tutorialtemp@notewise.com');
     $user->username('tutorial'.$user->id);
     $user->email('tutorial'.$user->id.'@notewise.com');
-    $user->user_type($c->model('DBIC::UserType')->search(name=>'tutorial_user')->first);
+    $user->user_type($c->model('DBIC::UserType')->search(name=>'tutorial_user')->next);
     $user->update;
 
     # log user in as tutorial user
