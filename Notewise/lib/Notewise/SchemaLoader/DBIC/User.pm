@@ -6,6 +6,7 @@ __PACKAGE__->load_components(qw/ResultSetManager PK::Auto::MySQL Core +Notewise:
 __PACKAGE__->load_resultset_components(qw/+Notewise::CreateFromForm/);
 __PACKAGE__->table('user');
 __PACKAGE__->add_columns(qw/id name email username password user_type/);
+__PACKAGE__->belongs_to(user_type => 'Notewise::SchemaLoader::DBIC::UserType');
 __PACKAGE__->set_primary_key('id');
 
 sub insert {
