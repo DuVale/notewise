@@ -116,7 +116,7 @@ sub change_password : Local {
 sub calendar : Local {
     my ( $self, $c ) = @_;
 
-    my @kernels = $c->user->user->kernels();
+    my @kernels = $c->model('DBIC::Kernel')->search({'object_id.user'=>$c->user_object->id},{join => 'object_id', order_by=>'created DESC'});
     my %kernels;
     my @dates;
     foreach my $kernel (@kernels){
