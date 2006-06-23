@@ -10,9 +10,10 @@ __PACKAGE__->load_resultset_components(qw/+Notewise::CreateFromForm/);
 __PACKAGE__->table('kernel');
 __PACKAGE__->add_columns(qw/object_id name uri source created lastModified lastViewed/);
 __PACKAGE__->set_primary_key('object_id');
-__PACKAGE__->belongs_to(object_id => 'Notewise::SchemaLoader::DBIC::ObjectId', undef, { proxy => ['user'] });
-__PACKAGE__->has_many(notes => 'Notewise::SchemaLoader::DBIC::Note', 'container_object');
-__PACKAGE__->has_many(contained_objects => 'Notewise::SchemaLoader::DBIC::ContainedObject', 'container_object');
+__PACKAGE__->belongs_to(object_id => 'Notewise::SchemaLoader::DBIC::ObjectId', undef, { proxy => ['user'],
+                                                                                        cascade_copy=>0 });
+__PACKAGE__->has_many(notes => 'Notewise::SchemaLoader::DBIC::Note', 'container_object',{cascade_copy=>0});
+__PACKAGE__->has_many(contained_objects => 'Notewise::SchemaLoader::DBIC::ContainedObject', 'container_object',{cascade_copy=>0});
 __PACKAGE__->inflate_column(created => {inflate=> \&Notewise::M::CDBI::inflate_datetime,
                                         deflate=> \&Notewise::M::CDBI::deflate_datetime});
 __PACKAGE__->inflate_column(lastModified => {inflate=> \&Notewise::M::CDBI::inflate_timestamp,

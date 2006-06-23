@@ -8,6 +8,23 @@ __PACKAGE__->table('user');
 __PACKAGE__->add_columns(qw/id name email username password user_type/);
 __PACKAGE__->set_primary_key('id');
 
+sub insert {
+    my $self = shift;
+
+    my $result =  $self->next::method( @_ );
+
+    # create starting kernel
+    my $kernel = Notewise::M::CDBI::Kernel->insert({name=>''});
+    $kernel->user($self->id);
+    $kernel->update();
+
+    # Create sandbox
+    my $sandbox = Notewise::M::CDBI::ObjectId->insert({type=>'sandbox',
+                                                       user=>$self->id});
+
+    return $result;
+}
+
 sub resultset {
     $self = shift;
     return $self->result_source->schema->resultset(shift);
@@ -70,19 +87,19 @@ sub authentication_hash {
 
 sub kernels {
     my $self = shift;
-    my @kernels = $self->resultset('Kernel')->search_kernels_for_user($self->id);
+    my @kernels = $self->resultset('Kernel')->search({'object_id.user' => $self->id}, { join => 'object_id' });
     return @kernels;
 }
 
 sub notes {
     my $self = shift;
-    my @notes = $self->resultset('Note')->search_notes_for_user($self->id);
+    my @notes = $self->resultset('Note')->search({'object_id.user' => $self->id}, { join => 'object_id' });
     return @notes;
 }
 
 sub relationships {
     my $self = shift;
-    my @notes = $self->resultset('Relationship')->search_notes_for_user($self->id);
+    my @notes = $self->resultset('Relationship')->search({'relationship_id.user' => $self->id}, { join => 'relationship_id' });
     return @notes;
 }
 
@@ -93,30 +110,40 @@ sub fullcopy {
     my $username = shift;
     my $email = shift;
 
-    my $user = $self->copy({email=>$email,
+    my $user = $self->copy({id=>undef,
+                            email=>$email,
                             username=>$username});
 
     # maps from old user's object ids to new user object ids
     my %object_map;
     foreach my $old_kernel ($self->kernels){
-        my $new_kernel = $old_kernel->copy({user=>$user});
-        $object_map{$old_kernel->object_id->id} = $new_kernel->object_id->id;
+        my $new_kernel = $old_kernel->copy({object_id=>undef});
+        $new_kernel->user($user);
+        $new_kernel->update();
+        $object_map{$old_kernel->get_column('object_id')} = $new_kernel->get_column('object_id');
     }
+
+    warn Data::Dumper::Dumper(\%object_map);
 
     # have to do second pass here, so we're sure that all the container objects
     # have been created first.
     foreach my $old_kernel ($self->kernels){
-        my @contained = $self->resultset('ContainedObject')->search({contained_object => $old_kernel->object_id->id});
+        my @contained = $self->resultset('ContainedObject')->search({contained_object => $old_kernel->get_column('object_id')});
         foreach my $old_contained (@contained){
-            my $new_contained = $old_contained->copy({container_object=>$object_map{$old_contained->container_object},
-                                                      contained_object=>$object_map{$old_contained->contained_object}
+            warn "container_object: ".$old_contained->get_column('container_object')." => ".$object_map{$old_contained->get_column('container_object')};
+            warn "contained_object: ".$old_contained->get_column('contained_object')." => ".$object_map{$old_contained->get_column('contained_object')};
+            my $new_contained = $old_contained->copy({id=>undef,
+                                                      container_object=>$object_map{$old_contained->get_column('container_object')},
+                                                      contained_object=>$object_map{$old_contained->get_column('contained_object')}
                                                     });
         }
      }
 
     foreach my $old_note ($self->notes){
-        my $new_note = $old_note->copy({user=>$user, container_object=>$object_map{$old_note->container_object}});
-        $object_map{$old_note->object_id->id} = $new_note->object_id->id;
+        my $new_note = $old_note->copy({object_id=>undef,container_object=>$object_map{$old_note->get_column('container_object')}});
+        $new_note->user($user);
+        $new_note->update();
+        $object_map{$old_note->get_column('object_id')} = $new_note->get_column('object_id');
     }
 
     foreach my $old_object ($self->notes, $self->kernels){
@@ -125,7 +152,8 @@ sub fullcopy {
         foreach my $old_rel (@old_rels) {
             # we see every relationship twice, so skip it if we've already seen it
             next if $object_map{$old_rel->relationship_id->id};
-            my $new_rel = $old_rel->copy({part1=>$object_map{$old_rel->part1},
+            my $new_rel = $old_rel->copy({relationship_id=>undef,
+                                          part1=>$object_map{$old_rel->part1},
                                           part2=>$object_map{$old_rel->part2},
                                           user=>$user,
                                         });
