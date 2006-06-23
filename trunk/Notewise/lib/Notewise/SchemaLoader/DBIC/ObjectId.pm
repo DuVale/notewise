@@ -6,8 +6,8 @@ __PACKAGE__->load_components(qw/PK::Auto::MySQL Core/);
 __PACKAGE__->table('object_id');
 __PACKAGE__->add_columns(qw/id user type/);
 __PACKAGE__->set_primary_key('id');
-__PACKAGE__->belongs_to(user => 'Notewise::SchemaLoader::DBIC::User');
-__PACKAGE__->might_have(kernel => 'Notewise::SchemaLoader::DBIC::Kernel', 'object_id');
+__PACKAGE__->belongs_to(user => 'Notewise::SchemaLoader::DBIC::User', undef, undef, { cascade_copy => 0 });
+__PACKAGE__->might_have(kernel => 'Notewise::SchemaLoader::DBIC::Kernel', 'object_id', undef, { cascade_copy => 0 });
 #__PACKAGE__->might_have(note => 'Notewise::SchemaLoader::DBIC::Note');
 #__PACKAGE__->might_have(relationship => 'Notewise::SchemaLoader::DBIC::Relationship');
 

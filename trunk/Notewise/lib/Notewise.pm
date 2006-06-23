@@ -50,6 +50,7 @@ if(__PACKAGE__->config->{Static}){
 #        @lines = grep !/^\s*DBIx/, @lines;
 #        @lines = grep !/^\s*Catalyst/, @lines;
 #        $message = join "\n",@lines[0..4];
+#        #$message = join "\n",@lines;
 #        warn "$message\n\n";
 ##        open TRACE, '>>/tmp/trace.out';
 ##        print TRACE "$message\n\n";
