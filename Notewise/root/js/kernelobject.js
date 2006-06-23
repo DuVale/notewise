@@ -16,37 +16,91 @@ KernelObject.prototype = {
     // setup all the event listeners
     registerHandlers: function() {
         // set up the dnd
-        dndMgr.registerDropZone( new KernelDropzone(this.body,this) );
+        this.dropzone = new KernelDropzone(this.body,this);
+        dndMgr.registerDropZone( this.dropzone );
 
         // setup the click handlers
-        Event.observe(this.body,'dblclick', this.gotDoubleClick.bindAsEventListener(this));
-        Event.observe(this.body,'mousedown', this.startSelectionBox.bindAsEventListener(this));
-        Event.observe(this.body,'click', this.gotClick.bindAsEventListener(this));
-        Event.observe(this.body,
+        this.observe(this.body,'dblclick', this.gotDoubleClick.bindAsEventListener(this));
+        this.observe(this.body,'mousedown', this.startSelectionBox.bindAsEventListener(this));
+        this.observe(this.body,'click', this.gotClick.bindAsEventListener(this));
+        this.observe(this.body,
                       'mousedown',
                       function() { dndMgr.clearSelection(); dndMgr.giveSearchBoxFocus(); } );
         
         // setup the namefield actions
-        Event.observe(this.namefield,'keyup', this.layoutNamefield.bind(this));
+        this.observe(this.namefield,'keyup', this.layoutNamefield.bind(this));
 //        Event.observe(this.namefield,'keypress', this.loseFocusOnEnter.bindAsEventListener(this));
 
         // drag in namefield should select text, not drag object
-        Event.observe(this.namefield,
+        this.observe(this.namefield,
                                    'mousedown',
                                    Utils.terminateEvent.bindAsEventListener(this));
-        Event.observe(this.namefield,
+        this.observe(this.namefield,
                                    'mouseup',
                                    Utils.terminateEvent.bindAsEventListener(this));
         // double click in namefield should select text, not create kernel
-        Event.observe(this.namefield,
+        this.observe(this.namefield,
                                    'dblclick',
                                    Utils.terminateEvent.bindAsEventListener(this));
+
+        if(this.namelink){
+            var id = this.kernel_id();
+            this.observe(this.namelink,'click', this.makeView.bindAsEventListener(this));
+            this.observe(this.namelink,'dblclick', this.makeView.bindAsEventListener(this));
+        }
+    },
+
+    observe: function(element, name, observer, useCapture) {
+        if (!this.observers) this.observers = [];
+        this.observers.push([element, name, observer, useCapture]);
+        Event.observe(element, name, observer, useCapture);
+    },
+
+    unregisterHandlers: function() {
+        dndMgr.deregisterDropZone(this.dropzone);
+        if (this.observers) {
+            for (var i = 0; i < this.observers.length; i++) {
+                Event.stopObserving.apply(this, this.observers[i]);
+            }
+        }
     },
 
     // make this kernel into the current view (ie, switch the url to this kernel)
     makeView: function(e){
-        window.location = this.kernel().object_url();
+        var id = this.kernel_id() + "";
+        printfire("makeView("+id+")");
+        dhtmlHistory.add(id,{});
         Utils.terminateEvent(e);
+        Utils.preventDefault(e);
+        this.do_make_view(id);
+    },
+
+    do_make_view: function(id) {
+        printfire("do_make_view("+id+")");
+        var date = new Date();
+        time = date.getTime();
+        // wipe existing view
+        if(view){
+            view.unregisterHandlers();
+        }
+        $('viewname').value = 'Loading...';
+        $('parents_content').innerHTML = 'Loading...';
+        $('viewkernel').innerHTML = '';
+        window.setTimeout(this.finishMakeView.bindWithParams(this, id), 10);
+    },
+
+    finishMakeView: function(id){
+        var date = new Date();
+        // setup new view
+        viewKernelId=id;
+        view = new ViewKernel(viewKernelId,$('viewkernel'));
+        view.realize();
+        $('viewname').value = view.kernel().name();
+        document.title = view.kernel().name() + " - Notewise.com";
+
+        date = new Date();
+        printfire("switching took: "+(date.getTime() - time));
+        $('mysearchfield').focus();
     },
 
     updateNamelink: function () {
@@ -171,6 +225,7 @@ KernelObject.prototype = {
         } else {
             this.addNewKernel(e);
         }
+        Utils.terminateEvent(e);
     },
     
     addNewNote: function (e) {

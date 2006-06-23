@@ -51,9 +51,9 @@ sub update {
 sub to_xml_hash {
     my $self = shift;
     return {
-        id => $self->relationship_id->id,
-        part1 => $self->part1->id,
-        part2 => $self->part2->id,
+        id => $self->get_column('relationship_id'),
+        part1 => $self->get_column('part1'),
+        part2 => $self->get_column('part2'),
         type => $self->type->relationship_type,
         nav => $self->nav
     };

@@ -184,6 +184,10 @@ VisibleKernel.prototype.extend({
         
         this.htmlElement.innerHTML = innerHTML;
         WiseObject.prototype.realize.call(this,parent);
+
+        this.namefield.value = this.kernel().name();
+        this.layout();
+        this.updateContains();
     },
 
     // create html elements for the child objects

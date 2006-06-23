@@ -67,7 +67,7 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
         new Effect.Appear(update,{duration:0.2});
       };
     this.options.onHide = this.options.onHide || 
-      function(element, update){ new Effect.Fade(update,{duration:0.5}) };
+      function(element, update){ printfire("hide"); Element.hide(update); };
     
     
     if(this.options.indicator)
@@ -212,8 +212,10 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
   onClick: function(event) {
     var element = Event.findElement(event, 'LI');
     this.index = element.autocompleteIndex;
-    this.select_entry();
+    Element.hide(this.update);
     Event.stop(event);
+    Utils.preventDefault(event);
+    this.select_entry();
   },
   
   onBlur: function(event) {

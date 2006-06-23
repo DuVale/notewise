@@ -19,9 +19,9 @@ sub to_xml_hash_deep {
         width=>$self->width,
         height=>$self->height,
         collapsed=>$self->collapsed,
-        container_object=>$self->container_object->id,
-        contained_object=>$self->contained_object->id,
-        kernel=>[$self->contained_object->object->to_xml_hash_shallow($base_url)],
+        container_object=>$self->get_column('container_object'),
+        contained_object=>$self->get_column('contained_object'),
+        kernel=>[$self->resultset('Kernel')->find($self->get_column('contained_object'))->to_xml_hash_shallow],
     };
 }
 
@@ -39,13 +39,17 @@ sub contained_kernel {
 
     return $self->{__contained_kernel} if $self->{__contained_kernel};
 
-    return $self->{__contained_kernel} = $self->result_source->schema->resultset('Kernel')->find($self->get_column('contained_object'),{prefetch => {object_id=>'user'}});
+    return $self->{__contained_kernel} = $self->resultset('Kernel')->find($self->get_column('contained_object'),{prefetch => {object_id=>'user'}});
 }
 
 sub container_kernel {
     my $self = shift;
-    return $self->result_source->schema->resultset('Kernel')->find($self->get_column('container_object'));
+    return $self->resultset('Kernel')->find($self->get_column('container_object'));
 }
 
+sub resultset {
+    my $self = shift;
+    return $self->result_source->schema->resultset(shift);
+}
 
 1;

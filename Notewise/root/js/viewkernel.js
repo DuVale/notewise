@@ -18,7 +18,7 @@ ViewKernel.prototype.extend( {
 
     registerHandlers: function() {
         NonMovingKernel.prototype.registerHandlers.call(this);
-        Event.observe(this.namefield,'blur', this.updateName.bind(this));
+        this.observe(this.namefield,'blur', this.updateName.bind(this));
     },
 
     updateName: function() {
@@ -33,6 +33,45 @@ ViewKernel.prototype.extend( {
 
     layoutNamefield: function() {
         this.namefield.style.width = (this.namefield.parentNode.clientWidth - 130) + 'px';
+    },
+
+    realize: function() {
+        var children = this.kernel().children();
+        for(var i=0;i<children.length; i++){
+            var child = children[i];
+            objectCache[child.idString()] = child;
+            child.realize($('viewkernel'));
+        }
+
+        var notes = this.kernel().notes();
+        for(var i=0;i<notes.length; i++){
+            var note = notes[i];
+            objectCache[note.idString()] = note;
+            note.realize($('viewkernel'));
+        }
+
+        var rels = this.kernel().visible_relationships();
+        for(var i=0;i<rels.length; i++){
+            var rel = rels[i];
+            rel.realize(this.kernel().id());
+        }
+
+        var kernel_id = this.kernel_id();
+        window.setTimeout(function () {new Ajax.Updater('parents_content',
+                         '/kernel/parentshtml/' + kernel_id,
+                         {
+                             evalScripts: 1,
+                             method: 'get',
+                             asynchronous: true
+                         });},100);
+
+    },
+
+    destroy: function() {
+        printfire("deleteing view "+this.kernel_id());
+        this.unregisterHandlers();
+        this.kernel().destroy();
+        window.history.back();
     }
 });
 

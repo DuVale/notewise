@@ -164,7 +164,8 @@ JSDBI.prototype = {
         return url;
     },
 
-    // Takes in an xml element or document, and populates the fields for this object from it
+    // Takes in an xml element or document, and populates the fields for this object from it.
+    // Also populates any children that are included in the xml.
     __populate: function(xml) {
         if(xml.nodeName != this.__elementTag){
             var elements = xml.getElementsByTagName(this.__docTag);
@@ -179,6 +180,47 @@ JSDBI.prototype = {
                 this[field](xml.getAttribute(field));
             }
         }
+
+        // prepopulate any has_a relationships for which we have xml
+        if(this.__has_a_relationships){
+            for(var i=0;i<this.__has_a_relationships.length;i++){
+                var fieldName = this.__has_a_relationships[i][0];
+                var className = this.__has_a_relationships[i][1];
+                var fclass = eval(className);
+                var elementTag = fclass.elementTag();
+                var elements = xml.getElementsByTagName(elementTag);
+                for(var j=0;j<elements.length;j++){
+                    var object = new fclass();
+                    object.__populate(elements[j]);
+                    if(object.id() == this.__getField(fieldName)){
+                        this.__setField(fieldName,object);
+                    }
+                }
+            }
+        }
+
+        // prepopulate any has_many relationships for which we have xml
+        if(this.__has_many_relationships){
+            for(var i=0;i<this.__has_many_relationships.length;i++){
+                var fieldName = this.__has_many_relationships[i][0];
+                var className = this.__has_many_relationships[i][1];
+                var fclass = eval(className);
+                var elementGroup = xml.getElementsByTagName(fieldName);
+                if(elementGroup){
+                    elementGroup = elementGroup[0];
+                    var elementTag = fclass.elementTag();
+                    var elements = xml.getElementsByTagName(elementTag);
+                    var objects = [];
+                    for(var j=0;j<elements.length;j++){
+                        var object = new fclass();
+                        object.__populate(elements[j]);
+                        objects.push(object);
+                    }
+                    this.__setField(fieldName,objects);
+                }
+            }
+        }
+
         this.internalUrl(this.url());
     },
 
@@ -381,6 +423,9 @@ JSDBI.insert = function (values) {
 // has_a - define relationship on this object. It creates a few methods on the 
 // prototype, including the _field_ accessor
 JSDBI.has_a = function (fieldName, className) {
+    // XXX this might be better as a hash
+    if(!this.prototype.__has_a_relationships) this.prototype.__has_a_relationships = [];
+    this.prototype.__has_a_relationships.push([fieldName,className]);
     this.prototype[fieldName] = function (value) {
         if(value) {
             return this.__setField(fieldName,value);
@@ -403,10 +448,15 @@ JSDBI.has_a = function (fieldName, className) {
 // has_many - define relationship on this object. It creates a few methods on
 // the prototype, including the _field_ accessor and the add_to_field method.
 JSDBI.has_many = function (field, className, key, retrieveUrl) {
+    if(!this.prototype.__has_many_relationships) this.prototype.__has_many_relationships = [];
+    this.prototype.__has_many_relationships.push([field,className,key,retrieveUrl]);
     this.prototype[field] = function (value) {
         if(value) {
             alert("not quite sure what to do here");
         } else {
+            if(this.__getField(field)){
+                return this.__getField(field);
+            }
             var retArray = new Array;
             var eClass = eval(className);
             var opts = { 
@@ -421,6 +471,7 @@ JSDBI.has_many = function (field, className, key, retrieveUrl) {
                 obj.__populate(elements[i]);
                 retArray.push(obj);
             }
+            this.__setField(field.retArray);
             return retArray;    
         }
     };

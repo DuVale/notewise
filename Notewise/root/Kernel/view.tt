@@ -2,7 +2,7 @@
 [% thumbnail_start_depth=1 %]
 <html>
 <head>
-    <title>[%kernel.name%] - Notewise.com</title>
+    <title>Notewise.com</title>
     <link rel="stylesheet" type="text/css" href="[%base%]style.css"/>
     <link rel="icon" href="[%base%]images/favicon.ico" />
     <link rel="shortcut icon" href="[%base%]images/favicon.ico" />
@@ -41,14 +41,10 @@
                     <div class="tab">
                         <div id='saving_indicator' style="display: none">Saving...</div>
                         <input type="text" id="viewname" class="namefield" autocomplete="off"
-                               value="[% kernel.name | replace('"','&quot;') %]"
-                               [% IF kernel.name.length %]
-                                   style="width: [% kernel.name.length * 0.55 + 1 %]em;"/>
-                               [% ELSE %]
-                                   style="width: 1em;"/>
-                               [% END %]
+                               value="Loading..."
+                               style="width: 6.5em;"/>
                         <div class="tablinks">
-                            <a href="[%base%]kernel/add?name=">new view</a><br/>
+                            <a href="javascript:new_view();">new view</a><br/>
                             <a href="#" onclick="$('viewname').focus(); return false;">rename</a><br/>
                             <a href="#" onclick="show_confirm_delete(); return false;">delete</a>
                         </div>
@@ -70,48 +66,18 @@
                                     <div class="mid"></div>
                                     <div class="right"></div>
                                     <div class="spinner" onmousedown="expandMenu(this, 'parents_content');"></div>
-                                    <div class="label">parents ([%kernel.parents.size or '0'%])</div>
+                                    <div class="label">parents</div>
                                 </div>
                             <div class="sidebar-content open" id="parents_content">
                                 Loading...
                             </div>
+                            <!--
                             <div class="sidebar-header">
                                 <div class="spinner" onmousedown="expandMenu(this, 'rel_content');"></div>
-                                <div class="label">relationships ([%kernel.related_kernels.size or '0'%])</div>
+                                <div class="label">relationships</div>
                             </div>
                             <div class="sidebar-content open" id="rel_content">
-                                    [% FOR relationship = kernel.relationships %]
-
-                                        [% IF relationship.get_column('part1') == kernel.get_column('object_id') %]
-                                            [% IF relationship.nav == 'fromleft' %]
-                                                &lt;-[%relationship.type.relationship_type%]-
-                                            [% ELSIF relationship.nav == 'fromright' %]
-                                                -[%relationship.type.relationship_type%]-&gt;
-                                            [% END %]
-                                        [% ELSE %]
-                                            [% IF relationship.nav == 'fromleft' %]
-                                                -[%relationship.type.relationship_type%]-&gt;
-                                            [% ELSIF relationship.nav == 'fromright' %]
-                                                &lt;-[%relationship.type.relationship_type%]-
-                                            [% END %]
-                                        [% END %]
-
-                                        [% IF relationship.nav == 'bi' %]
-                                            &lt;-[%relationship.type.relationship_type%]-&gt;
-                                        [% ELSIF relationship.nav == 'non' %]
-                                            -[%relationship.type.relationship_type%]-
-                                        [% END %]
-
-                                        [% IF relationship.get_column('part1') == kernel.get_column('object_id') %]
-                                            [% sibling = relationship.part2.object %]
-                                        [% ELSE %]
-                                            [% sibling = relationship.part1.object %]
-                                        [% END %]
-                                        <a href="[% base _ sibling.relative_url %]">
-                                            [%sibling.name.defined ? sibling.name : 'unnamed' %]
-                                        </a><br/>
-                                    [% END %]
-                            </div>
+                            </div> -->
                             <div class="sidebar-header">
                                 <div class="label">sandbox</div>
                             </div>
@@ -125,12 +91,6 @@
                 </div>
                 <div class="content">
                     <div class="canvas" id="viewkernel">
-                        [% FOR vkernel = visible_kernels %]
-                            [%INCLUDE 'Kernel/kernel.tt' i=0 %]
-                        [%END%]
-                        [% FOR note = notes %]
-                            [%INCLUDE 'Kernel/note.tt' i=0 %]
-                        [%END%]
                     </div>
                     <div class="topleft"></div>
                     <div class="bottomleft"></div>
@@ -148,6 +108,11 @@
         <script type="text/javascript" src="[%base%]js/prototype.js"></script>
         <script type="text/javascript" src="[%base%]js/dragndrop.js"></script>
         <script type="text/javascript" src="[%base%]js/jsdbi.js"></script>
+        <script>
+            if(!JSDBI){
+                alert("Couldn't load JSDBI");
+            }
+        </script>
         <script type="text/javascript" src="[%base%]js/utils.js"></script>
         <script type="text/javascript" src="[%base%]js/linedraw.js"></script>
         <script type="text/javascript" src="[%base%]js/new_relationship.js"></script>
@@ -165,6 +130,7 @@
         <script type="text/javascript" src="[%base%]js/bugs.js"></script>
         <script type="text/javascript" src="[%base%]js/quicksearch.js"></script>
         <script type="text/javascript" src="[%base%]js/sandbox.js"></script>
+        <script type="text/javascript" src="[%base%]js/dhtmlHistory.js"></script>
     [% ELSE %]
         <script type="text/javascript" src="[%base%]js/javascript-min.js"></script>
     [% END %]
@@ -175,28 +141,48 @@
         // XXX this is pretty nasty - put this inside the view's vkernel instead
         var objectCache = {};
 
-        [% FOR vkernel = visible_kernels %]
-            [% i = 0 %]
-            [%INCLUDE 'Kernel/kernel-js.tt'%]
-        [%END%]
-        [% FOR note = notes %]
-            [% i = 0 %]
-            [%INCLUDE 'Kernel/note-js.tt'%]
-        [%END%]
-        [% FOR relationship = visible_relationships %]
-            [%INCLUDE 'Kernel/relationship.tt'%]
-        [%END%]
+        dhtmlHistory.initialize();
+        dhtmlHistory.addListener(function(location,data){
+            printfire("history changed: "+location+", "+data);
+            if(location > 0){
+                printfire("navigating to: "+location+", "+data);
+                KernelObject.prototype.do_make_view(location);
+            }
+        });
 
-        var viewKernelId=[%kernel.id%];
-        var view = new ViewKernel([%kernel.id%],$('viewkernel'));
+        var kernel_id = dhtmlHistory.getCurrentLocation();
+
+        var viewKernelId;
+        if(kernel_id > 0){
+            viewKernelId = kernel_id;
+        } else {
+            viewKernelId = [%lastviewed.get_column('object_id')%];
+        }
+        printfire("starting at "+viewKernelId);
+        var view = null;
+        KernelObject.prototype.do_make_view(viewKernelId);
 
         function show_confirm_delete(){
             var div = document.createElement('div');
             div.id = 'permanent_delete';
-            div.innerHTML = "Permanently delete this kernel? <a href='"+JSDBI.base_url()+"kernel/delete/"+viewKernelId+"'>yes</a> <a onclick='hide_confirm_delete()' href='#'>no</a>";
+            div.innerHTML = "Permanently delete this kernel? <a href='javascript:view.destroy();hide_confirm_delete();'>yes</a> <a href='javascript:hide_confirm_delete()'>no</a>";
             var body=document.getElementsByTagName('body')[0];
             body.appendChild(div);
         };
+
+        function new_view(kernel_name){
+            var kernel;
+            if(kernel_name){
+                kernel = Kernel.insert({name: kernel_name});
+            } else {
+                kernel = Kernel.insert({});
+            }
+            dhtmlHistory.add(kernel.id(),{});
+            KernelObject.prototype.do_make_view(kernel.id());
+            if(!kernel_name){
+                window.setTimeout(function(){$('viewname').focus();},500);
+            }
+        }
 
         function hide_confirm_delete() {
             var div = $('permanent_delete');
@@ -206,14 +192,6 @@
         [% UNLESS c.config.noprecache %]
             window.setTimeout(do_image_precache, 5); //get image caching to happen in separate thread
         [% END %]
-
-        window.setTimeout(function () {new Ajax.Updater('parents_content',
-                         '[% c.uri_for('/kernel/parentshtml/') _ kernel.id %]',
-                         {
-                             evalScripts: 1,
-                             method: 'get',
-                             asynchronous: true
-                         });},100);
 
         window.setTimeout(function () {new Ajax.Updater('sandbox',
                          '[% c.uri_for('/user/sandbox') %]',

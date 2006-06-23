@@ -112,7 +112,11 @@ Utils = {
 
           x += parent.offsetLeft - parent.scrollLeft + borderXOffset;
           y += parent.offsetTop - parent.scrollTop + borderYOffset;
-          parent = parent.offsetParent;
+          try {
+              parent = parent.offsetParent;
+          } catch (e) {
+              break;
+          }
        }
 
        if ( accountForDocScroll ) {

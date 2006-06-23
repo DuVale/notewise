@@ -106,12 +106,12 @@ sub view_kernel : Private {
         $kernel->lastViewed(DateTime->now());
         $kernel->update();
     }
-    my $visible_kernels = [$kernel->contained_objects];
-    $c->stash->{visible_kernels} = $visible_kernels;
-    my $notes = [$kernel->notes];
-    $c->stash->{notes} = $notes;
+    $c->res->redirect($c->req->base . "notewise#".$kernel->get_column('object_id'));
+}
 
-    $c->stash->{visible_relationships} = [$c->stash->{kernel}->visible_relationships($visible_kernels,$notes)];
+sub interface : Path('/notewise') {
+    my ( $self, $c ) = @_;
+    ($c->stash->{lastviewed})=$c->model('DBIC::Kernel')->most_recently_viewed_kernel($c->user_object->id,1);
     $c->stash->{sandbox} = $c->model('DBIC::ObjectId')->search({type=>'sandbox',user=>$c->user->obj->id})->first;
     $c->stash->{template} = 'Kernel/view.tt';
 }
