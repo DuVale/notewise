@@ -24,43 +24,56 @@
         Music = {
         };
 
-        Music.Artist = Class.create();
-        Music.Artist.extend(JSDBI);
-        Music.Artist.prototype = (new JSDBI()).extend( {
-            initialize: function () {
-            },
-        });
 
-        // basic class setup
-        Music.Artist.fields(['artistid', 'name']);
-        Music.Artist.url('http://localhost:3004/rest/artist');
-        Music.Artist.elementTag('artist'); //optional
-        Music.Artist.has_many('cds', 'Music.Cd', 'artist', 'http://localhost:3004/rest/artist/find/$/cd'); 
+
 
         Music.Cd = Class.create();
         Music.Cd.extend(JSDBI);
-        Music.Cd.prototype = (new JSDBI()).extend({
-                initialize: function () {
-                },
-        });
 
         Music.Cd.fields(['cdid', 'artist', 'title', 'year']);
         Music.Cd.url('http://localhost:3004/rest/cd');
         Music.Cd.elementTag('cd');
         Music.Cd.has_a('artist', 'Music.Artist');
 
-        Music.Track = Class.create();
-        Music.Track.extend(JSDBI);
-        Music.Track.prototype = (new JSDBI()).extend({
+        Music.Cd.prototype = new JSDBI();
+        Music.Cd.prototype.extend({
                 initialize: function () {
                 },
         });
+
+
+        Music.Artist = Class.create();
+        Music.Artist.extend(JSDBI);
+
+        Music.Artist.fields(['artistid', 'name']);
+        Music.Artist.url('http://localhost:3004/rest/artist');
+        Music.Artist.elementTag('artist'); //optional
+        Music.Artist.has_many('cds', 'Music.Cd', 'artist', 'http://localhost:3004/rest/artist/find/$/cd'); 
+
+        debugger;
+
+        Music.Artist.prototype = new JSDBI();
+        Music.Artist.prototype.extend( {
+            initialize: function () {
+            },
+        });
+
+
+        Music.Track = Class.create();
+        Music.Track.extend(JSDBI);
 
         Music.Track.fields(['trackid', 'cd', 'position', 'title']);
         Music.Track.contentField('title');
         Music.Track.url('http://localhost:3004/rest/track');
         Music.Track.elementTag('track');
         Music.Track.has_a('cd', 'Music.Cd');
+
+        Music.Track.prototype = new JSDBI()
+        Music.Track.extend({
+                initialize: function () {
+                },
+        });
+
 
         artist = Music.Artist.insert({name: 'Billy'});
     }
@@ -72,6 +85,24 @@
         assert('artistid',artist.artistid() > 0);
         assert('id',artist.id() > 0);
         assertEquals('artist as string',String(artist.id()),""+artist);
+    }
+
+    function testMultipleInsert() {
+        debug("testInsert()");
+
+        cd = Music.Cd.insert({artist: artist, title: 'Death March', year: '2005'});
+
+        assertEquals('name','Billy',artist.name());
+        assert('artistid',artist.artistid() > 0);
+        assert('id',artist.id() > 0);
+        assertEquals('artist as string',String(artist.id()),""+artist);
+
+        assertEquals('artist',artist,cd.artist());
+        assertEquals('title','Death March',cd.title());
+        assertEquals('year','2005',cd.year());
+        assert('cdid',cd.cdid() > 0);
+        assert('id',cd.id() > 0);
+        assertEquals('cdid = id',cd.id(),cd.cdid());
     }
 
     function testRetrieve() {

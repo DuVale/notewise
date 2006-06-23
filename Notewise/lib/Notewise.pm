@@ -73,8 +73,10 @@ sub default : Private {
         $c->detach('/kernel/view',[$username,$name,$id]);
     } elsif ($username){
         $c->detach('/user/home',[$username]);
+    } else {
+        $c->detach('/user/home',[$c->user_object->username]);
     }
-    $c->stash->{template}='home.tt';
+        #$c->stash->{template}='home.tt';
 }
 
 sub begin : Private {
