@@ -1205,15 +1205,16 @@ td.divider {
     right: 20px;
     margin-top: 0;
     margin-bottom: 0;
-    bottom: 5px;
+    bottom: 0px;
     z-index: 10;
+    height: 40px;
 }
 
 .tablinks a,
 .tablinks a:visited {
     color: black;
     font-family: sans-serif;
-    font-size: 13px;
+    font-size: 11px;
 }
 
 .dot {
