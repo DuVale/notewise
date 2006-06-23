@@ -4,13 +4,18 @@ new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '/s',
                          on_select: function (selected_element){
                             value = Element.collectTextNodesIgnoreClass(selected_element, 'informal').unescapeHTML();
                             var link=selected_element.getElementsByTagName('a')[0];
-                            if(link.href.search(/^http:\/\/[^\/]+\/0$/) != -1){
+                            var matches=link.href.match(/^http:\/\/.*\/(\d+)$/);
+                            printfire(matches);
+                            if(matches && matches[1] == 0){
                                 name = $('mysearchfield').value;
-                                window.location=base_url+'kernel/add?name='+encodeURIComponent(name);
+                                new_view(name);
+                            } else if(matches){
+                                dhtmlHistory.add(matches[1],{});
+                                KernelObject.prototype.do_make_view(matches[1]);
                             } else {
                                 window.location=link.href;
                             }
-                            $('mysearchfield').value = value;
+                            $('mysearchfield').value = '';
                          },
                          on_complete: function(autocompleter){
                             if(autocompleter.entry_count == 1){
@@ -24,7 +29,7 @@ new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '/s',
                          },
                          before_complete: function (autocompleter,request) {
                              match = request.responseText.match(/>new '(.*?)'</);
-                             if(match[1] == $('mysearchfield').value){
+                             if(match && match[1] == $('mysearchfield').value){
                                  // show the results
                                  return 1;
                              } else {

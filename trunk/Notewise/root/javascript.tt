@@ -1,7 +1,3 @@
-[%#
-    Note: this should eventually be a static file
-%]
-
 [% INCLUDE 'js/ui.js' %]
 [% INCLUDE 'js/wz_jsgraphics.js' %]
 [% INCLUDE 'js/prototype.js' %]
@@ -24,3 +20,4 @@
 [% INCLUDE 'js/bugs.js' %]
 [% INCLUDE 'js/quicksearch.js' %]
 [% INCLUDE 'js/sandbox.js' %]
+[% INCLUDE 'js/dhtmlHistory.js' %]

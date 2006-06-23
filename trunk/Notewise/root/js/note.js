@@ -60,7 +60,7 @@ Note.prototype.extend({
         
         this.htmlElement = document.createElement('div');
         this.htmlElement.id="note"+this.id();
-        this.htmlElement.className="note";
+        this.htmlElement.className="note note-notselected";
         var innerHTML =
            "<a title='Delete note' class=\"removebutton\"></a>"
            +"<div class='note-left'></div>"

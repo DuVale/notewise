@@ -26,7 +26,7 @@ sub default : Private {
 sub kernel : Path {
     my ( $self, $c, $id, $action) = @_;
 
-    my $method = $c->req->method;
+    my $method = uc($c->req->method);
     if(defined $action && $action){
         $c->forward($action);
     } elsif($method eq 'GET'){
@@ -68,6 +68,18 @@ sub visible_relationships : Private {
     $c->forward('Notewise::V::XML');
 }
 
+sub notes : Private {
+    my ( $self, $c, $id) = @_;
+
+    my $kernel = $c->model('DBIC::Kernel')->find($id);
+    unless($kernel){
+        $c->detach('/rest/notfound',["couldn't find kernel with id $id"]);
+        return;
+    }
+    $c->stash->{note}=[map $_->to_xml_hash, $kernel->notes];
+    $c->forward('Notewise::V::XML');
+}
+
 sub view : Private {
     my ( $self, $c, $id) = @_;
 
@@ -81,6 +93,7 @@ sub view : Private {
         $c->detach('/rest/forbidden',["You do not have access to view object $id"]);
     }
     $c->stash->{kernel}=$kernel->to_xml_hash_deep($c->req->base);
+
     $c->forward('Notewise::V::XML');
 }
 

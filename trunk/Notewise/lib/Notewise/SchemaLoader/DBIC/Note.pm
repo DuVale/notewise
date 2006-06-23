@@ -64,8 +64,8 @@ sub delete {
 sub to_xml_hash {
     my $self = shift;
     return {
-        id => $self->object_id->id,
-        container_object => $self->container_object->id,
+        id => $self->get_column('object_id'),
+        container_object => $self->get_column('container_object'),
         content => $self->content,
         source => $self->source,
         created => $self->created->strftime($self->strf_format),

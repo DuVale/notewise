@@ -59,6 +59,7 @@ sub delete {
     my $self = shift;
 
     my $result =  $self->next::method( @_ );
+    map $_->delete(), $self->result_source->schema->resultset('ContainedObject')->search({contained_object=>$self->get_column('object_id')});
     $self->object_id->delete;
     return $result;
 }
@@ -202,9 +203,9 @@ sub to_xml_hash_deep {
     my $base_url = shift;
     my @contained_kernels = map $_->to_xml_hash_deep(), $self->contained_objects;
     my @contained_notes = map $_->to_xml_hash, $self->notes;
-    my @contained_relationships; #= $self->visible_relationships;
+    my @contained_relationships = map $_->to_xml_hash, $self->visible_relationships;
     return {kernel=>{
-                id => $self->object_id->id,
+                id => $self->get_column('object_id'),
                 name => $self->name,
                 uri => $self->uri,
                 object_url => $base_url . $self->relative_url,
@@ -212,11 +213,15 @@ sub to_xml_hash_deep {
                 created => $self->created ? $self->created->strftime($self->strf_format) : '',
                 lastmodified => $self->lastModified ? $self->lastModified->strftime($self->strf_format): '',
                 has_children => $self->has_children,
-                containedObjects => {
+                children => {
                     visiblekernel => [ @contained_kernels ],
+                },
+                notes => {
                     note => [ @contained_notes ],
+                },
+                relationships => {
                     relationship => [ @contained_relationships ],
-                }
+                },
             }
     };
 }

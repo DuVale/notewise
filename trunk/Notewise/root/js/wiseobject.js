@@ -29,7 +29,7 @@ WiseObject.prototype.extend({
         }
     },
 
-    // creates the actual html for this object. Subclasses should override thi,
+    // creates the actual html for this object. Subclasses should override this,
     // supply the actual html node in this.htmlElement.
     realize: function(parent) {
         parent.appendChild(this.htmlElement);

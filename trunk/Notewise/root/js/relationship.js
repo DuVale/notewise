@@ -24,6 +24,12 @@ Relationship.prototype.extend( {
     realize: function(parent_id){
         this.part1ContainedObject=objectCache[parent_id+'/'+this.part1()];
         this.part2ContainedObject=objectCache[parent_id+'/'+this.part2()];
+        if(!this.part1ContainedObject){
+            alert("Couldn't find "+parent_id+'/'+this.part1());
+        }
+        if(!this.part2ContainedObject){
+            alert("Couldn't find "+parent_id+'/'+this.part2());
+        }
         this.intersect1={x:0, y:0}; // in percentage
         this.intersect2={x:0, y:0}; // in percentage
         this.midx;  // center of line, in terms of pixels relative to image

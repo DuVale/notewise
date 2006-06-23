@@ -7,3 +7,4 @@ Kernel.fields(['id', 'name', 'uri', 'object_url', 'source', 'created', 'lastModi
 Kernel.url('rest/kernel');
 Kernel.has_many('children','VisibleKernel','container_object','/rest/kernel/$/children');
 Kernel.has_many('visible_relationships','Relationship','container_object','/rest/kernel/$/visible_relationships');
+Kernel.has_many('notes','Note','object_id','/rest/kernel/$/notes');
