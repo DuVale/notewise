@@ -142,14 +142,6 @@
         var objectCache = {};
 
         dhtmlHistory.initialize();
-        dhtmlHistory.addListener(function(location,data){
-            printfire("history changed: "+location+", "+data);
-            if(location > 0){
-                printfire("navigating to: "+location+", "+data);
-                KernelObject.prototype.do_make_view(location);
-            }
-        });
-
         var kernel_id = dhtmlHistory.getCurrentLocation();
 
         var viewKernelId;
@@ -161,6 +153,18 @@
         printfire("starting at "+viewKernelId);
         var view = null;
         KernelObject.prototype.do_make_view(viewKernelId);
+
+        // prevent calling the listener on a page reload
+        dhtmlHistory.fireOnNewListener = false;
+        dhtmlHistory.addListener(function(location,data){
+            var parts = location.split(':');
+            printfire("history changed: "+location+", "+data);
+            if(parts[1] > 0){
+                printfire("navigating to: "+location+", "+data);
+                KernelObject.prototype.do_make_view(parts[1]);
+            }
+        });
+
 
         function show_confirm_delete(){
             var div = document.createElement('div');
@@ -177,7 +181,7 @@
             } else {
                 kernel = Kernel.insert({});
             }
-            dhtmlHistory.add(kernel.id(),{});
+            dhtmlHistory.add('[%c.user_object.username%]:'+kernel.id(),{});
             KernelObject.prototype.do_make_view(kernel.id());
             if(!kernel_name){
                 window.setTimeout(function(){$('viewname').focus();},500);
