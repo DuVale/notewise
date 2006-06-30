@@ -334,10 +334,10 @@ Utils = {
     }
 };
 
-function printfire()
-{
-    if (document.createEvent)
-    {
+function printfire() {
+    if (console) {
+        console.debug(arguments[0]);
+    } else if (document.createEvent) {
         printfire.args = arguments;
         var ev = document.createEvent("Events");
         ev.initEvent("printfire", false, true);
