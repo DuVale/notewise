@@ -112,7 +112,6 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
   },
   
   addObservers: function(element) {
-    Event.observe(element, "mouseover", this.onHover.bindAsEventListener(this));
     Event.observe(element, "click", this.onClick.bindAsEventListener(this));
     var links = element.getElementsByTagName('a');
     for(var i=0; i<links.length; i++){
