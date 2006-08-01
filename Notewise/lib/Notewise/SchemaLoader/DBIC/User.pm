@@ -75,6 +75,15 @@ sub clear {
     }
 }
 
+sub set_column {
+    my ($self,$name,$value)=@_;
+    warn("name: $name value: $value");
+    $value = Digest::MD5::md5_hex($value);
+    my $result =  $self->next::method( $name, $value );
+    return $result;
+}
+
+
 # returns true if the given password matches the user's password
 sub check_password {
     my ($self, $password) = @_;
