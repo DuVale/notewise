@@ -69,7 +69,7 @@ KernelObject.prototype = {
     makeView: function(e){
         var id = this.kernel_id() + "";
         printfire("makeView("+id+")");
-        dhtmlHistory.add('scotty:'+id,{});
+        dhtmlHistory.add(''+id,{}); // TODO add in username or kernel title here
         Utils.terminateEvent(e);
         Utils.preventDefault(e);
         this.do_make_view(id);
