@@ -68,8 +68,7 @@ NewRelationship.prototype = {
             var siblings = this.startObject.htmlElement.parentNode.childNodes;
             for(var i=0; i<siblings.length; i++){
                 var element = siblings[i];
-                if(element.id &&
-                    (Element.hasClassName(element,'vkernel')||
+                if( (Element.hasClassName(element,'vkernel')||
                      Element.hasClassName(element,'note'))
                    ){
                     var pos = Utils.toViewportPosition(element);
@@ -95,10 +94,17 @@ NewRelationship.prototype = {
                             // trying to make a relationship with ourselves
                             break;
                         }
-                        var relationship = Relationship.insert({part1: part1,part2: part2,type: '',nav: 'fromright'});
+                        this.line.destroy();
+                        var relationship = new Relationship;
+                        relationship.part1(part1);
+                        relationship.part2(part2);
+                        relationship.type('');
+                        relationship.nav('fromright');
+                        relationship.insert({asynchronous: true});
                         relationship.realize(this.startObject.container_object().id());
                         dndMgr.updateSelection(relationship,false);
                         relationship.label.focus();
+                        return;
                     }
                 }
             }

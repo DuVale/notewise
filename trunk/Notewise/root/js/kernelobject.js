@@ -69,7 +69,7 @@ KernelObject.prototype = {
     makeView: function(e){
         var id = this.kernel_id() + "";
         printfire("makeView("+id+")");
-        dhtmlHistory.add(id,{});
+        dhtmlHistory.add('scotty:'+id,{});
         Utils.terminateEvent(e);
         Utils.preventDefault(e);
         this.do_make_view(id);
@@ -205,7 +205,7 @@ KernelObject.prototype = {
             this.addNewNote(e);
             // block note creation, so we don't create two notes on a double click
             this.blockObjectCreation = true;
-            window.setTimeout(this.clearObjectCreationBlock.bind(this), 1500);
+            window.setTimeout(this.clearObjectCreationBlock.bind(this), 1000);
         }
     },
 
@@ -241,41 +241,28 @@ KernelObject.prototype = {
             posx = e.clientX + document.body.scrollLeft;
             posy = e.clientY + document.body.scrollTop; 
         }
+
+        Utils.terminateEvent(e);
         
         var parentPos = Utils.toViewportPosition(this.body);
         
         var x = (posx - parentPos.x) * 100 / this.body.clientWidth;
         var y = (posy - parentPos.y) * 100 / this.body.clientHeight;
-        var dummyDiv = document.createElement('div');
-        dummyDiv.className = 'dummyNoteDiv';
-        dummyDiv.style.left = x + '%';
-        dummyDiv.style.top = y + '%';
 
-        var left = document.createElement('div');
-        left.className='left';
-        dummyDiv.appendChild(left);
+        var note = new Note;
+        note.container_object(this.kernel());
+        note.x(x);
+        note.y(y);
+        note.width(15);
+        note.height(15);
+        note.content('');
+        note.insert({asynchronous:true, onSuccess: function(){objectCache[this.idString()]=this;}.bind(note)});
 
-        var mid = document.createElement('div');
-        mid.className='mid';
-        dummyDiv.appendChild(mid);
+        note.realize(this.body);
+        dndMgr.updateSelection(note, false);
+        note.body.focus();
 
-        var right = document.createElement('div');
-        right.className='right';
-        dummyDiv.appendChild(right);
-
-        var body = document.createElement('div');
-        body.className='body';
-        dummyDiv.appendChild(body);
-
-        var corner = document.createElement('div');
-        corner.className='corner';
-        dummyDiv.appendChild(corner);
-
-        this.body.appendChild(dummyDiv);
-        
-        // give the brower some time to paint the dummy div
-        window.setTimeout(this.createNote.bindWithParams(this, x, y, dummyDiv), 5);
-        Utils.terminateEvent(e);
+        this.updateContains();
     },
 
     // Adds a new kernel to the kernel body for the mouse event given (currently called from a double click)
@@ -293,69 +280,37 @@ KernelObject.prototype = {
             posy = e.clientY + document.body.scrollTop;
         }
 
+        Utils.terminateEvent(e);
+
         var parentPos = Utils.toViewportPosition(this.body);
 
         var x = (posx-parentPos.x)*100/this.body.clientWidth;
         var y = (posy-parentPos.y)*100/this.body.clientHeight;
-        var dummyDiv = document.createElement('div');
-        dummyDiv.className='dummyDiv';
-        dummyDiv.style.left=x+'%';
-        dummyDiv.style.top=y+'%';
 
-        var left = document.createElement('div');
-        left.className='left';
-        dummyDiv.appendChild(left);
-
-        var mid = document.createElement('div');
-        mid.className='mid';
-        dummyDiv.appendChild(mid);
-
-        var right = document.createElement('div');
-        right.className='right';
-        dummyDiv.appendChild(right);
-
-        this.body.appendChild(dummyDiv);
-
-        // Give the browser a little bit of time to refresh, so the dummyDiv paints
-        window.setTimeout(this.createVKernel.bindWithParams(this,x,y,dummyDiv),5);
-        Utils.terminateEvent(e);
-    },
-
-    // actually create the new kernel, at coordinates x,y, and remove the dummyDiv.
-    createVKernel: function(x,y,dummyDiv){
         // create the vkernel object on the server, and a matching js object
-        var vkernel = VisibleKernel.insert({container_object: this.kernel(),
-                                            x: x,
-                                            y: y,
-                                            width: 30,
-                                            height: 30,
-                                            collapsed: 1});
-        // XXX make sure that this is the right order - whatever order doesn't cause a blink is fine
-        if(dummyDiv != undefined){
-            this.body.removeChild(dummyDiv);
-        }
+        var vkernel = new VisibleKernel;
+        vkernel.container_object(this.kernel());
+        vkernel.x(x);
+        vkernel.y(y);
+        vkernel.width(30);
+        vkernel.height(30);
+        vkernel.collapsed(1);
+        vkernel.insert({asynchronous:true, onSuccess: function(){objectCache[this.idString()]=this;}.bind(vkernel)});
+
+        // create a temporary kernel so realize() doesn't bomb
+        // XXX this probably creates a nasty race condition, as if the user
+        // makes an update that hits the kernel object, it'll be wiped out when
+        // the object gets populated when the insert callback calls populate
+        vkernel.contained_object(new Kernel());
+        vkernel.kernel().name('');
+
         vkernel.realize(this.body);
         dndMgr.updateSelection(vkernel,false);
         vkernel.edit(true);
         vkernel.namefield.focus();
         vkernel.newlyCreated = true;
-        objectCache[vkernel.idString()]=vkernel;
         this.updateContains();
-    },
-    
-    createNote: function (x, y, dummyDiv) {
-        var note = Note.insert({container_object: this.kernel(),
-                                x: x,
-                                y: y,
-                                width: 15,
-                                height: 15,
-                                content: ""});
-        this.body.removeChild(dummyDiv);
-        note.realize(this.body);
-        dndMgr.updateSelection(note, false);
-        note.body.focus();
-        objectCache[note.idString()]=note;
-        this.updateContains();
+
     },
 
     // marks the html with a css class based on whether it contains any child objects

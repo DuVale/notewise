@@ -147,7 +147,6 @@ VisibleKernel.prototype.extend({
     // XXX this is a bunch of garbage - need to unify this html with the stuff in root/Kernel/kernel.tt.  Maybe think about shipping the html as part of the xml?  Or maybe a seperate ajax call?
     realize: function(parent) {
         this.htmlElement = document.createElement('div');
-        this.htmlElement.id="vkernel"+this.idString();
         this.htmlElement.className="vkernel vkernel-notselected vkernel-notedit vkernel-collapsed vkernel-nothighlighted vkernel-contains";
         var expandButtonLabel = this.collapsed() ? '+' : '-';
         var name;

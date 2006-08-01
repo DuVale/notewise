@@ -105,9 +105,38 @@ JSDBI.prototype = {
         }
     },
 
+    insert: function (options) {
+        var params = this.__getParams();
+        if(!options){
+            options = {asynchronous: false};
+        }
+        try {
+            var request = new Ajax.Request(JSDBI.base_url()+this.__url,
+                                            { method: 'put',
+                                              parameters: params,
+                                              onSuccess: this.onInsertFinish.bindWithParams(this,options),
+                                              onFailure: function(){ alert("insert failed") },
+                                              asynchronous: options.asynchronous} );
+        } catch (e) {
+            alert("error: "+e.message);
+        }
+    },
+
+    onInsertFinish: function (options,transport){
+        if(!transport.responseXML){
+            alert("Got bogus xml response to insert: "+request.transport.responseText);
+        }
+        this.__populate(transport.responseXML);
+        if(options.onSuccess){
+            options.onSuccess();
+        }
+    },
+
+
     // Sends any updated fields in the object to the server.
     update: function(callback) {
         if(!this.__updated){
+            // don't update if we don't need to
             return;
         }
         var params = this.__getParams();
@@ -412,7 +441,7 @@ JSDBI.insert = function (values) {
     var request = new Ajax.Request(this.url(),
                                         { method: 'put',
                                           parameters: params,
-                                          asynchronous: false} );
+                                          asynchronous: false } );
     if(!request.transport.responseXML){
         alert("Got bogus xml response to insert: "+request.transport.responseText);
     }
