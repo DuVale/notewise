@@ -105,7 +105,7 @@ Note.prototype.extend({
         Event.observe(this.body, 'mousedown',
                                     Utils.terminateEvent.bindAsEventListener(this));
 
-        Event.observe(this.body, 'dblclick',
+        Event.observe(this.htmlElement, 'dblclick',
                                     Utils.terminateEvent.bindAsEventListener(this));
                                     
         Event.observe(this.body, 'click',
