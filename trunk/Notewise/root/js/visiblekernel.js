@@ -60,12 +60,14 @@ VisibleKernel.prototype.extend({
     },
 
     on_inactive_select: function (autocompleter) {
+        console.log("on_inactive_select()");
         var url = base_url+"rest/kernel/find_or_create/"+encodeURIComponent(this.namefield.value);
         var new_kernel = new Kernel();
         var request = new Ajax.Request(url,
                                        { method: 'get',
                                          asynchronous: false } );
         new_kernel.__populate(request.transport.responseXML);
+        this.newlyCreated = false;
         this.swap_kernels(new_kernel);
         dndMgr.clearSelection();
         dndMgr.giveSearchBoxFocus();

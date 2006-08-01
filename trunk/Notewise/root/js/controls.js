@@ -58,6 +58,7 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
     
     this.options.onShow = this.options.onShow || 
       function(element, update){ 
+          console.log("onShow");
         if(!update.style.position || update.style.position=='absolute') {
           update.style.position = 'absolute';
           var offsets = Utils.cumulativeOffsetWithBorders(element);
@@ -192,6 +193,7 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
     
     this.changed = true;
     this.has_focus = true;
+    console.log("set has_focus true");
     
     if(this.observer) clearTimeout(this.observer);
       this.observer = 
@@ -223,12 +225,19 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
     if(this.active &&
        this.options.on_blur != null){
         this.options.on_blur(this.get_current_entry());
+    } else {
+        this.has_focus = false;
+        if(this.options.on_inactive_select && this.element.value.length > 0){
+            this.options.on_inactive_select(this);
+        }
     }
     this.has_focus = false;
+    console.log("set has_focus false");
     this.active = false;     
   }, 
   
   render: function() {
+      console.log("render()");
     if(this.entry_count > 0) {
       for (var i = 0; i < this.entry_count; i++)
         this.index==i ? 
@@ -236,6 +245,7 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
           Element.removeClassName(this.get_entry(i),"selected");
         
       if(this.has_focus) { 
+          console.log("has focus");
         if(this.get_current_entry().scrollIntoView) 
           this.get_current_entry().scrollIntoView(false);
         
