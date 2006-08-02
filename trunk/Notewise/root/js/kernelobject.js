@@ -308,7 +308,7 @@ KernelObject.prototype = {
         dndMgr.updateSelection(vkernel,false);
         vkernel.edit(true);
         vkernel.namefield.focus();
-        vkernel.newlyCreated = true;
+        vkernel.newlyCreated(true);
         this.updateContains();
 
     },

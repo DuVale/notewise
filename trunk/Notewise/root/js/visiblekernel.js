@@ -60,21 +60,20 @@ VisibleKernel.prototype.extend({
     },
 
     on_inactive_select: function (autocompleter) {
-        console.log("on_inactive_select()");
         var url = base_url+"rest/kernel/find_or_create/"+encodeURIComponent(this.namefield.value);
         var new_kernel = new Kernel();
         var request = new Ajax.Request(url,
                                        { method: 'get',
                                          asynchronous: false } );
         new_kernel.__populate(request.transport.responseXML);
-        this.newlyCreated = false;
+        this.newlyCreated(false);
         this.swap_kernels(new_kernel);
         dndMgr.clearSelection();
         dndMgr.giveSearchBoxFocus();
     },
 
     on_autocomplete_load: function (autocompleter,request) {
-        match = request.responseText.match(/>new '(.*?)'</);
+        match = request.responseText.match(/'(.*?)'</);
         if(match && match[1] == this.namefield.value){
             // show the results
             return 1;
@@ -91,13 +90,13 @@ VisibleKernel.prototype.extend({
             id = results[1];
         }
         if(Number(id) == 0){
-            this.newlyCreated = false;
+            this.newlyCreated(false);
             this.kernel().name(this.namefield.value);
             this.updateNamelinkText();
             this.kernel().update(this.updateNamelinkUrl.bind(this));
         } else {
             this.swap_kernels(Kernel.retrieve(id));
-            this.newlyCreated = false;
+            this.newlyCreated(false);
         }
         
         dndMgr.clearSelection();
@@ -105,13 +104,18 @@ VisibleKernel.prototype.extend({
     },
 
     on_autocomplete_complete: function (autocompleter) {
-        if(autocompleter.entry_count == 1){
-            // if there were no actual search results, then "new..." should be
-            // the default selection
-            autocompleter.index = 0;
+        if(this.newlyCreated()){
+            if(autocompleter.entry_count == 1){
+                // if there were no actual search results, then "new..." should be
+                // the default selection
+                autocompleter.index = 0;
+            } else {
+                // The first actual search result should be selected
+                autocompleter.index = 1;
+            }
         } else {
-            // The first actual search result should be selected
-            autocompleter.index = 1;
+            // we're doing rename, not new
+            autocompleter.index = 0;
         }
     },
 
@@ -133,9 +137,23 @@ VisibleKernel.prototype.extend({
         this.hydrateChildren();
         this.hydrateRelationships();
         delete objectCache[old_id_string];
-        if(this.newlyCreated){
+        if(this.newlyCreated()){
             this.contained_object().destroy();
         }
+    },
+
+    newlyCreated: function(value) {
+        if(value !== undefined){
+            this.__newlyCreated = value;
+            if(value === false){
+                // change the url of the autocompleter to show the rename
+                // results instead of autocomplete results.  This is kind of a
+                // hack, but seems easier than trying to remove the first
+                // autocompleter and install a second one.
+                this.autocompleter.url = JSDBI.base_url()+'rename';
+            }
+        }
+        return this.__newlyCreated;
     },
 
     // returns the id in the form '1/2' where the first number is the

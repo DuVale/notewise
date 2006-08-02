@@ -71,6 +71,12 @@ sub ac : Global {
     $c->forward('quick_search');
 }
 
+sub rename : Global {
+    my ( $self, $c ) = @_;
+    $c->stash->{template} = 'Search/rename-results.tt';
+    $c->forward('quick_search');
+}
+
 sub quick_search : Private {
     # TODO refactor this
     my ( $self, $c ) = @_;

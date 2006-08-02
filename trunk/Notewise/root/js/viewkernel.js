@@ -41,6 +41,7 @@ ViewKernel.prototype.extend( {
             var child = children[i];
             objectCache[child.idString()] = child;
             child.realize($('viewkernel'));
+            child.newlyCreated(false);
         }
 
         var notes = this.kernel().notes();
