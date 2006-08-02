@@ -869,7 +869,6 @@ div.auto_complete {
   z-index:100;
 }
 div.auto_complete ul {
-  border:1px solid #888;
   margin:0;
   padding:0;
   width:100%;
@@ -1006,7 +1005,6 @@ div.auto_complete ul strong.highlight {
 }
 
 .searchresults ul {
-  border:1px solid #888;
   margin:0;
   padding:0;
   width:100%;
