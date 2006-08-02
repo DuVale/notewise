@@ -109,6 +109,7 @@ Ajax.Autocompleter.prototype = (new Ajax.Base()).extend({
     } else {
       this.active = false;
       this.hide();
+      this.stopIndicator();
     }
   },
   

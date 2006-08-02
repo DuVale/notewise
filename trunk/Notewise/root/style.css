@@ -1028,6 +1028,10 @@ div.auto_complete ul strong.highlight {
   padding:0;
 }
 
+#searchindicator {
+  font-weight: bold;
+}
+
 .panetitle {
     height: 20px; width: 100%; /* width not specified */
     line-height: 20px;

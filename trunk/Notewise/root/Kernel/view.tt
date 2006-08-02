@@ -16,7 +16,8 @@
                     <div class="headerleft">
                         <a href="/"><div class="logo"></div></a>
                         <div class="search">
-                            Search: <input autocomplete="off" id="mysearchfield" onfocus="this.className = 'focus';" onblur="this.className='';" name="s" />
+                            Search: <input autocomplete="off" id="mysearchfield" onfocus="this.className = 'focus';" onblur="this.className='';" name="s" /><br/>
+                            <div id="searchindicator" style="display: none">Searching...</div>
                         </div>
                     </div>
                     <div class="links">

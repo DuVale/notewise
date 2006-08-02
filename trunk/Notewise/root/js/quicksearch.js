@@ -1,6 +1,7 @@
 new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '/s',
                         {frequency: .2,
                          min_chars: 2,
+                         indicator: 'searchindicator',
                          on_select: function (selected_element){
                             value = Element.collectTextNodesIgnoreClass(selected_element, 'informal').unescapeHTML();
                             var link=selected_element.getElementsByTagName('a')[0];
