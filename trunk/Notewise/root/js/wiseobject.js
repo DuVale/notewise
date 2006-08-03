@@ -575,12 +575,12 @@ WiseObject.prototype.extend({
 
     // Select this object
     select: function () {
-        alert("isSelected() needs to be overridden in subclasses");
+        alert("select() needs to be overridden in subclasses");
     },
 
     // Mark this object as not selected
     deselect: function () {
-        alert("isSelected() needs to be overridden in subclasses");
+        alert("deselect() needs to be overridden in subclasses");
     },
 
     // Rico draggable stuff
