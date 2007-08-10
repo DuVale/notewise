@@ -1,5 +1,5 @@
 // KernelObject is the super class for all kernel objects, such as ViewKernel
-// and VisibleKernel.  It contains all the shared logic between these classes.
+// and VisibleKernelController.  It contains all the shared logic between these classes.
 
 var KernelObject = Class.create();
 
@@ -288,21 +288,24 @@ KernelObject.prototype = {
         var y = (posy-parentPos.y)*100/this.body.clientHeight;
 
         // create the vkernel object on the server, and a matching js object
-        var vkernel = new VisibleKernel;
-        vkernel.container_object(this.kernel());
-        vkernel.x(x);
-        vkernel.y(y);
-        vkernel.width(30);
-        vkernel.height(30);
-        vkernel.collapsed(1);
-        vkernel.insert({asynchronous:true, onSuccess: function(){objectCache[this.idString()]=this;}.bind(vkernel)});
+        var vkernel = new VisibleKernelController;
+        var model = vkernel.visible_kernel_model;
+        model.container_object(this.kernel());
+        model.x(x);
+        model.y(y);
+        model.width(30);
+        model.height(30);
+        model.collapsed(1);
+        model.insert({asynchronous:true, onSuccess: function(){
+            objectCache[model.idString()] = vkernel;
+        }});
 
         // create a temporary kernel so realize() doesn't bomb
         // XXX this probably creates a nasty race condition, as if the user
         // makes an update that hits the kernel object, it'll be wiped out when
         // the object gets populated when the insert callback calls populate
-        vkernel.contained_object(new Kernel());
-        vkernel.kernel().name('');
+        model.contained_object(new Kernel());
+        model.contained_object().name('');
 
         vkernel.realize(this.body);
         dndMgr.updateSelection(vkernel,false);
