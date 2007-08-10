@@ -39,9 +39,17 @@ ViewKernel.prototype.extend( {
         var children = this.kernel().children();
         for(var i=0;i<children.length; i++){
             var child = children[i];
-            objectCache[child.idString()] = child;
-            child.realize($('viewkernel'));
-            child.newlyCreated(false);
+            if (child.__elementTag == "visiblekernel") {
+                var visible_kernel_controller = new VisibleKernelController();
+                visible_kernel_controller.visible_kernel_model = child;
+                visible_kernel_controller.realize($('viewkernel'));
+                visible_kernel_controller.newlyCreated(false);
+                objectCache[child.idString()] = visible_kernel_controller;
+            } else {
+                child.realize($('viewkernel'));
+                child.newlyCreated(false);
+                objectCache[child.idString()] = child;
+            }
         }
 
         var notes = this.kernel().notes();

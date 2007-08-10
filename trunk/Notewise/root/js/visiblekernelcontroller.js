@@ -1,43 +1,53 @@
 // A visible kernel is a normal kernel on a view that's draggable and renameable.
 
-var VisibleKernel = Class.create();
-VisibleKernel.extend(JSDBI);
+var VisibleKernelController = Class.create();
 
 // multiple inheritance from both JSDBI and Draggable
-VisibleKernel.prototype = {};
-JSDBI.inherit(VisibleKernel,new JSDBI());
-JSDBI.inherit(VisibleKernel,new WiseObject());
-JSDBI.inherit(VisibleKernel,new KernelObject());
+VisibleKernelController.prototype = {};
+JSDBI.inherit(VisibleKernelController,new WiseObject());
+JSDBI.inherit(VisibleKernelController,new KernelObject());
 
-// Setup the JSDBI data access
-VisibleKernel.fields(['container_object',
-                      'contained_object',
-                      'collapsed',
-                      'height',
-                      'width',
-                      'x',
-                      'y']);
-VisibleKernel.primaryKeys(['container_object', 'contained_object']);
-VisibleKernel.url('rest/vkernel');
-VisibleKernel.elementTag('visiblekernel');
-VisibleKernel.has_a('contained_object','Kernel');
-VisibleKernel.has_a('container_object','Kernel');
-
-VisibleKernel.prototype.extend({
+VisibleKernelController.prototype.extend({
     initialize: function(container_object,contained_object,htmlElement,x,y,width,height,collapsed) {
-        this.type        = 'vkernel';
-        this.container_object(container_object);
-        this.contained_object(contained_object);
-        this.__x=x;
-        this.__y=y;
-        this.__width=width;
-        this.__height=height;
-        this.__collapsed=collapsed;
-        this.superclass=VisibleKernel.superclass;
+        this.type = 'vkernel';
+        model = new VisibleKernelModel();
+        model.container_object(container_object);
+        model.contained_object(contained_object);
+        model.x(x);
+        model.y(y);
+        model.width(width);
+        model.height(height);
+        model.collapsed(collapsed);
+        // TODO(scotty): It's not quite clear why internalUrl is required in the first place, or why we need to set it here.  This should be removed.
+        model.internalUrl(model.url());
+        this.visible_kernel_model = model;
+        this.superclass = VisibleKernelController.superclass;
 
-        JSDBI.prototype.initialize.call(this);
         WiseObject.prototype.initialize.call(this);
         KernelObject.prototype.initialize.call(this, htmlElement);
+
+        var func_names = ['container_object',
+                          'contained_object',
+                          'height',
+                          'id',
+                          'width',
+                          'x',
+                          'y',
+                          'idString',
+                          'update',
+                          'internalUrl'];
+
+        // Note that destroy() is inherited from wiseobject, which calls JSDBI.prototype.destroy.call(this).  Ewww....
+        for (var i = 0; i < func_names.length; i++) {
+            this.addProxyFunction(this, func_names[i]);
+            this.addProxyFunction(this.superclass, func_names[i]);
+        }
+    },
+
+    addProxyFunction: function(object, func_name) {
+        object[func_name] = function(arg1, arg2, arg3) {
+            return this.visible_kernel_model[func_name](arg1, arg2, arg3);
+        }
     },
 
     setup: function () {
@@ -156,13 +166,6 @@ VisibleKernel.prototype.extend({
         return this.__newlyCreated;
     },
 
-    // returns the id in the form '1/2' where the first number is the
-    // container_id and the second number is the contained_id
-    idString: function() {
-        var id = this.id().join('/');
-        return id;
-    },
-
     // creates the actual html for this kernel
     // XXX this is a bunch of garbage - need to unify this html with the stuff in root/Kernel/kernel.tt.  Maybe think about shipping the html as part of the xml?  Or maybe a seperate ajax call?
     realize: function(parent) {
@@ -207,6 +210,12 @@ VisibleKernel.prototype.extend({
         this.namefield.value = this.kernel().name();
         this.layout();
         this.updateContains();
+
+        // This is a horrible, horrible hack to get the kernel to show up as properly expanded.
+        if (!this.visible_kernel_model.collapsed() ||
+            this.visible_kernel_model.collapsed() == "0") {
+            this.collapsed(0);
+        }
     },
 
     // create html elements for the child objects
@@ -233,11 +242,11 @@ VisibleKernel.prototype.extend({
     },
 
     kernel: function() {
-        return this.contained_object();
+        return this.visible_kernel_model.contained_object();
     },
 
     kernel_id: function() {
-        return this.__getField('contained_object');
+        return this.visible_kernel_model.__getField('contained_object');
     },
 
     // retrieves references to all the relevant html elements and stores them
@@ -363,11 +372,6 @@ VisibleKernel.prototype.extend({
 
     // Toggles whether the kernel is collapsed or not
     toggleCollapsed: function() {
-        if(this.expandbutton.value == '-'){
-            this.expandbutton.value = '+';
-        } else {
-            this.expandbutton.value = '-';
-        }
         if(this.collapsed()){
             this.collapsed(false);
         } else {
@@ -378,18 +382,19 @@ VisibleKernel.prototype.extend({
 
     // Just sets the internal collapsed value but don't change the display
     setCollapsed: function(collapsed) {
-        return VisibleKernel.superclass.collapsed.call(this, collapsed);
+        return VisibleKernelController.superclass.collapsed.call(this, collapsed);
     },
 
     // Set whether the kernel is collapsed
+    // TODO(scotty): there are a ton of calls to this.  Maybe split this into an isCollapsed() call to avoid confusion.
     collapsed: function(collapsed) {
         var results;
         if(collapsed == undefined) {
             // skip it
-            results = VisibleKernel.superclass.collapsed.call(this);
-            return results;
-        } else if(collapsed){
-            results = VisibleKernel.superclass.collapsed.call(this, 1);
+            var result = this.visible_kernel_model.collapsed();
+            return result;
+        } else if (collapsed && collapsed != "0") {
+            results = this.visible_kernel_model.collapsed(1);
             if(this.htmlElement){
                 this.changeClass('collapsed');
                 this.setFixedSize(true);
@@ -397,7 +402,7 @@ VisibleKernel.prototype.extend({
             }
             this.notifyEndChangeListeners();
         } else {
-            results = VisibleKernel.superclass.collapsed.call(this, 0);
+            results = this.visible_kernel_model.collapsed(0);
             if(this.htmlElement){
                 this.changeClass('expanded');
                 this.setFixedSize(false);
@@ -450,6 +455,6 @@ VisibleKernel.prototype.extend({
             this.changeClass('notselected');
         }
         this.edit(false);
-    }
+    },
 });
 
