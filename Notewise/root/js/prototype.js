@@ -462,8 +462,8 @@ Object.extend(Element, {
 
   hasClassName: function(element, className) {
     element = $(element);
-    if (!element)
-      return;
+    if (!element || !element.className)
+      return false;
     var a = element.className.split(' ');
     for (var i = 0; i < a.length; i++) {
       if (a[i] == className)
