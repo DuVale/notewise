@@ -43,6 +43,11 @@ Note.prototype.extend({
         }
     },
 
+    model: function() {
+        // TODO(scotty): Factor out the model, after we're done making wiseobject aware about models.
+        return this;
+    },
+
     setup: function () {
         WiseObject.prototype.setup.call(this);
 

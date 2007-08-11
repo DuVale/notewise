@@ -20,7 +20,7 @@ VisibleKernelController.prototype.extend({
         model.collapsed(collapsed);
         // TODO(scotty): It's not quite clear why internalUrl is required in the first place, or why we need to set it here.  This should be removed.
         model.internalUrl(model.url());
-        this.visible_kernel_model = model;
+        this.__model = model;
         this.superclass = VisibleKernelController.superclass;
 
         WiseObject.prototype.initialize.call(this);
@@ -28,11 +28,7 @@ VisibleKernelController.prototype.extend({
 
         var func_names = ['container_object',
                           'contained_object',
-                          'height',
                           'id',
-                          'width',
-                          'x',
-                          'y',
                           'idString',
                           'update',
                           'internalUrl'];
@@ -44,9 +40,21 @@ VisibleKernelController.prototype.extend({
         }
     },
 
+    model: function() {
+        return this.__model;
+    },
+
+    setModel: function(model) {
+        this.__model = model;
+    },
+
     addProxyFunction: function(object, func_name) {
         object[func_name] = function(arg1, arg2, arg3) {
-            return this.visible_kernel_model[func_name](arg1, arg2, arg3);
+            if (func_name == "x") {
+                console.log("x(", arg1, ")");
+                console.trace();
+            }
+            return this.model()[func_name](arg1, arg2, arg3);
         }
     },
 
@@ -212,8 +220,8 @@ VisibleKernelController.prototype.extend({
         this.updateContains();
 
         // This is a horrible, horrible hack to get the kernel to show up as properly expanded.
-        if (!this.visible_kernel_model.collapsed() ||
-            this.visible_kernel_model.collapsed() == "0") {
+        if (!this.model().collapsed() ||
+            this.model().collapsed() == "0") {
             this.collapsed(0);
         }
     },
@@ -242,11 +250,11 @@ VisibleKernelController.prototype.extend({
     },
 
     kernel: function() {
-        return this.visible_kernel_model.contained_object();
+        return this.model().contained_object();
     },
 
     kernel_id: function() {
-        return this.visible_kernel_model.__getField('contained_object');
+        return this.model().__getField('contained_object');
     },
 
     // retrieves references to all the relevant html elements and stores them
@@ -363,8 +371,8 @@ VisibleKernelController.prototype.extend({
             this.htmlElement.style.width = width+'px';
             this.htmlElement.style.height = '';
         } else {
-            this.htmlElement.style.width = this.width() + '%';
-            this.htmlElement.style.height = this.height() + '%';
+            this.htmlElement.style.width = this.model().width() + '%';
+            this.htmlElement.style.height = this.model().height() + '%';
         }
 
         this.layoutResize();
@@ -391,10 +399,10 @@ VisibleKernelController.prototype.extend({
         var results;
         if(collapsed == undefined) {
             // skip it
-            var result = this.visible_kernel_model.collapsed();
+            var result = this.model().collapsed();
             return result;
         } else if (collapsed && collapsed != "0") {
-            results = this.visible_kernel_model.collapsed(1);
+            results = this.model().collapsed(1);
             if(this.htmlElement){
                 this.changeClass('collapsed');
                 this.setFixedSize(true);
@@ -402,7 +410,7 @@ VisibleKernelController.prototype.extend({
             }
             this.notifyEndChangeListeners();
         } else {
-            results = this.visible_kernel_model.collapsed(0);
+            results = this.model().collapsed(0);
             if(this.htmlElement){
                 this.changeClass('expanded');
                 this.setFixedSize(false);

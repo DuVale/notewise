@@ -289,7 +289,7 @@ KernelObject.prototype = {
 
         // create the vkernel object on the server, and a matching js object
         var vkernel = new VisibleKernelController;
-        var model = vkernel.visible_kernel_model;
+        var model = vkernel.model();
         model.container_object(this.kernel());
         model.x(x);
         model.y(y);
