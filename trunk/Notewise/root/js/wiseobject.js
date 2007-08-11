@@ -222,7 +222,10 @@ WiseObject.prototype.extend({
 
     // create html elements for the relationships that are visible for this object
     hydrateRelationships: function() {
-        if(this.__container_object == sandbox.id){
+        // TODO(scotty): we should have jsdbi expose something like
+        // container_object_id() for all hydrated relationships, so we don't
+        // have to do these sort of hacks.
+        if(this.model().__container_object == sandbox.id){
             return;
         }
         var rels = this.container_object().visible_relationships();
@@ -542,7 +545,7 @@ WiseObject.prototype.extend({
 
         // this is a hack to avoid having to retrieve the kernel object
         // itself, since we don't really need it right now
-        this.container_object(vkernel.kernel_id());
+        this.model().container_object(vkernel.kernel_id());
         this.model().update();
 
         // add the object back into the object cache
