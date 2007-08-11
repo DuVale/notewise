@@ -88,7 +88,6 @@ ViewKernel.prototype.extend( {
 
 // make this kernel into the current view (ie, switch the url to this kernel)
 ViewKernel.makeView = function(kernel_id){
-    console.log(kernel_id);
     printfire("makeView("+kernel_id+")");
     dhtmlHistory.add(''+kernel_id,{}); // TODO add in username or kernel title here
     var date = new Date();

@@ -83,10 +83,6 @@ VisibleKernelController.prototype.extend({
 
     addProxyFunction: function(object, func_name) {
         object[func_name] = function(arg1, arg2, arg3) {
-            if (func_name == "contained_object") {
-                console.log("contained_object()");
-                console.trace();
-            }
             return this.model()[func_name](arg1, arg2, arg3);
         }
     },
@@ -362,12 +358,12 @@ VisibleKernelController.prototype.extend({
             window.setTimeout(function(){this.namefield.style.display = "";}.bind(this),100);
         }.bind(this));
 
-        var kernel_id = this.model().kernel_id();
+        var model = this.model();
         Event.observe(this.htmlElement,'dblclick', function (e) {
             e = e || window.event;
             Utils.terminateEvent(e);
             Utils.preventDefault(e);
-            ViewKernel.makeView(kernel_id);
+            ViewKernel.makeView(model.kernel_id());
         });
     },
 

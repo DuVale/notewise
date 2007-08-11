@@ -44,18 +44,18 @@ KernelObject.prototype = {
                                    Utils.terminateEvent.bindAsEventListener(this));
 
         if(this.namelink){
-            var kernel_id = this.kernel_id();
+            var model = this.model();
             this.observe(this.namelink,'click', function (e) {
                 e = e || window.event;
                 Utils.terminateEvent(e);
                 Utils.preventDefault(e);
-                ViewKernel.makeView(kernel_id);
+                ViewKernel.makeView(model.kernel_id());
             });
             this.observe(this.namelink,'dblclick', function () {
                 e = e || window.event;
                 Utils.terminateEvent(e);
                 Utils.preventDefault(e);
-                ViewKernel.makeView(kernel_id);
+                ViewKernel.makeView(model.kernel_id());
             });
         }
     },
