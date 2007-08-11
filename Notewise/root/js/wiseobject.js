@@ -34,10 +34,10 @@ WiseObject.prototype.extend({
     realize: function(parent) {
         parent.appendChild(this.htmlElement);
         this.setup();
-        this.moveX(this.x());
-        this.moveY(this.y());
-        this.moveWidth(this.width());
-        this.moveHeight(this.height());
+        this.moveX(this.model().x());
+        this.moveY(this.model().y());
+        this.moveWidth(this.model().width());
+        this.moveHeight(this.model().height());
         this.layout();
     },
 
@@ -286,32 +286,32 @@ WiseObject.prototype.extend({
 
     // Just sets the internal x coordinate but don't change the display
     setX: function(x) {
-        this.notifyMoveListeners(x+'%',this.y()+'%');
-        return this.superclass.x.call(this, x);
+        this.notifyMoveListeners(x+'%',this.model().y()+'%');
+        return this.model().x(x);
     },
 
     // Sets the x coordinate as a percentage of the parent object's width and moves the object accordingly
     moveX: function(x) {
         if(x && this.htmlElement){
             this.htmlElement.style.left = x+"%";
-            this.notifyMoveListeners(x+'%',this.y()+'%');
+            this.notifyMoveListeners(x+'%',this.model().y()+'%');
         }
-        return this.superclass.x.call(this, x);
+        return this.model().x(x);
     },
 
     // Just sets the internal y coordinate but don't change the display
     setY: function(y) {
-        this.notifyMoveListeners(this.x()+'%',y+'%');
-        return this.superclass.y.call(this, y);
+        this.notifyMoveListeners(this.model().x()+'%',y+'%');
+        return this.model().y(y);
     },
 
     // Sets the y coordinate as a percentage of the parent object's height and moves the object accordingly
     moveY: function(y) {
         if(y && this.htmlElement){
             this.htmlElement.style.top = y+"%";
-            this.notifyMoveListeners(this.x()+'%',y+'%');
+            this.notifyMoveListeners(this.model().x()+'%',y+'%');
         }
-        return this.superclass.y.call(this, y);
+        return this.model().y(y);
     },
 
     // Sets the width as a percentage of the parent object's width and moves
@@ -332,7 +332,7 @@ WiseObject.prototype.extend({
 
     // Just sets the internal width
     setWidth: function(width) {
-        var results = this.superclass.width.call(this, width);
+        var results = this.model().width(width);
         if(width != undefined){
             this.notifySizeListeners();
         }
@@ -357,7 +357,7 @@ WiseObject.prototype.extend({
 
     // Just sets the internal height  but don't change the display
     setHeight: function(height) {
-        var results = this.superclass.height.call(this, height);
+        var results = this.model().height(height);
         if(height != undefined){
             this.notifySizeListeners();
         }
@@ -397,7 +397,7 @@ WiseObject.prototype.extend({
         if(this.collapsed()){
             return this.htmlElement.clientHeight*100/parentElement.clientHeight;
         } else {
-            return this.height();
+            return this.model().height();
         }
     },
 
@@ -409,7 +409,7 @@ WiseObject.prototype.extend({
         if(this.collapsed() && parentElement){
             return this.htmlElement.clientWidth*100/parentElement.clientWidth;
         } else {
-            return this.width();
+            return this.model().width();
         }
     },
 

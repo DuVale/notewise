@@ -41,7 +41,7 @@ ViewKernel.prototype.extend( {
             var child = children[i];
             if (child.__elementTag == "visiblekernel") {
                 var visible_kernel_controller = new VisibleKernelController();
-                visible_kernel_controller.visible_kernel_model = child;
+                visible_kernel_controller.setModel(child);
                 visible_kernel_controller.realize($('viewkernel'));
                 visible_kernel_controller.newlyCreated(false);
                 objectCache[child.idString()] = visible_kernel_controller;

@@ -40,10 +40,10 @@ Relationship.prototype.extend( {
         this.htmlElement.relationship=this;
         this.part1ContainedObject.htmlElement.parentNode.appendChild(this.htmlElement);
         this.line = new LineDraw.Line(this.part1ContainedObject.htmlElement.parentNode,
-                                      (Number(this.part1ContainedObject.x())+this.part1ContainedObject.currentWidth()/2)+'%',
-                                      (Number(this.part1ContainedObject.y())+this.part1ContainedObject.currentHeight()/2)+'%',
-                                      (Number(this.part2ContainedObject.x())+this.part2ContainedObject.currentWidth()/2)+'%',
-                                      (Number(this.part2ContainedObject.y())+this.part2ContainedObject.currentHeight()/2)+'%');
+                                      (Number(this.part1ContainedObject.model().x())+this.part1ContainedObject.currentWidth()/2)+'%',
+                                      (Number(this.part1ContainedObject.model().y())+this.part1ContainedObject.currentHeight()/2)+'%',
+                                      (Number(this.part2ContainedObject.model().x())+this.part2ContainedObject.currentWidth()/2)+'%',
+                                      (Number(this.part2ContainedObject.model().y())+this.part2ContainedObject.currentHeight()/2)+'%');
         this.createLabel();
         this.createButtons();
         this.createArrows();
@@ -133,8 +133,8 @@ Relationship.prototype.extend( {
 
     updatePosition1: function(object,x,y){
         if(x == null || y == null){
-            x = Number(this.part1ContainedObject.x());
-            y = Number(this.part1ContainedObject.y());
+            x = Number(this.part1ContainedObject.model().x());
+            y = Number(this.part1ContainedObject.model().y());
         } else {
             x = Number(Utils.chopPx(x));
             y = Number(Utils.chopPx(y));
@@ -146,8 +146,8 @@ Relationship.prototype.extend( {
 
     updatePosition2: function(object,x,y){
         if(x == null || y == null){
-            x = Number(this.part2ContainedObject.x());
-            y = Number(this.part2ContainedObject.y());
+            x = Number(this.part2ContainedObject.model().x());
+            y = Number(this.part2ContainedObject.model().y());
         } else {
             x = Number(Utils.chopPx(x));
             y = Number(Utils.chopPx(y));
@@ -206,19 +206,19 @@ Relationship.prototype.extend( {
 
     moveArrows: function() {
         // figure out the intersection between each box and the line between them
-        var rect1 = new Rectangle(this.part1ContainedObject.x(),
-                                  this.part1ContainedObject.y(),
+        var rect1 = new Rectangle(this.part1ContainedObject.model().x(),
+                                  this.part1ContainedObject.model().y(),
                                   this.part1ContainedObject.currentWidth(),
                                   this.part1ContainedObject.currentHeight());
-        var rect2 = new Rectangle(this.part2ContainedObject.x(),
-                                  this.part2ContainedObject.y(),
+        var rect2 = new Rectangle(this.part2ContainedObject.model().x(),
+                                  this.part2ContainedObject.model().y(),
                                   this.part2ContainedObject.currentWidth(),
                                   this.part2ContainedObject.currentHeight());
 
-        line = [{x: Number(this.part1ContainedObject.x())+Number(this.part1ContainedObject.currentWidth())/2,
-                 y: Number(this.part1ContainedObject.y())+Number(this.part1ContainedObject.currentHeight())/2},
-                {x: Number(this.part2ContainedObject.x())+Number(this.part2ContainedObject.currentWidth())/2,
-                 y: Number(this.part2ContainedObject.y())+Number(this.part2ContainedObject.currentHeight())/2}];
+        line = [{x: Number(this.part1ContainedObject.model().x())+Number(this.part1ContainedObject.currentWidth())/2,
+                 y: Number(this.part1ContainedObject.model().y())+Number(this.part1ContainedObject.currentHeight())/2},
+                {x: Number(this.part2ContainedObject.model().x())+Number(this.part2ContainedObject.currentWidth())/2,
+                 y: Number(this.part2ContainedObject.model().y())+Number(this.part2ContainedObject.currentHeight())/2}];
 
         // intersects denote where the line intersects the edge of each object
         // - used to place the label and arrows
@@ -427,18 +427,18 @@ Relationship.prototype.extend( {
         var offsetTop;
         var offsetWidth;
         var offsetHeight;
-        if(this.part1ContainedObject.x() < this.part2ContainedObject.x()){
-            offsetLeft = this.part1ContainedObject.x();
+        if(this.part1ContainedObject.model().x() < this.part2ContainedObject.model().x()){
+            offsetLeft = this.part1ContainedObject.model().x();
             offsetWidth = this.part1ContainedObject.currentWidth();
         } else {
-            offsetLeft = this.part2ContainedObject.x();
+            offsetLeft = this.part2ContainedObject.model().x();
             offsetWidth = this.part2ContainedObject.currentWidth();
         }
-        if(this.part1ContainedObject.y() < this.part2ContainedObject.y()){
-            offsetTop = this.part1ContainedObject.y();
+        if(this.part1ContainedObject.model().y() < this.part2ContainedObject.model().y()){
+            offsetTop = this.part1ContainedObject.model().y();
             offsetHeight = this.part1ContainedObject.currentHeight();
         } else {
-            offsetTop = this.part2ContainedObject.y();
+            offsetTop = this.part2ContainedObject.model().y();
             offsetHeight = this.part2ContainedObject.currentHeight();
         }
         midx = midx - offsetLeft - offsetWidth/2;
