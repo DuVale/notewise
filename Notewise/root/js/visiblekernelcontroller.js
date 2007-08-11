@@ -26,8 +26,7 @@ VisibleKernelController.prototype.extend({
         WiseObject.prototype.initialize.call(this);
         KernelObject.prototype.initialize.call(this, htmlElement);
 
-        var func_names = ['contained_object',
-                          'idString',
+        var func_names = ['idString',
                           'internalUrl'];
 
         // Note that destroy() is inherited from wiseobject, which calls JSDBI.prototype.destroy.call(this).  Ewww....
@@ -70,10 +69,15 @@ VisibleKernelController.prototype.extend({
         return this.model().container_object();
     },
 
+    // TODO(scotty): This exposes a model directly to some other caller, which probably isn't good.
+    contained_object: function() {
+        return this.model().contained_object();
+    },
+
     addProxyFunction: function(object, func_name) {
         object[func_name] = function(arg1, arg2, arg3) {
-            if (func_name == "container_object") {
-                console.log("container_object()");
+            if (func_name == "contained_object") {
+                console.log("contained_object()");
                 console.trace();
             }
             return this.model()[func_name](arg1, arg2, arg3);
@@ -162,7 +166,7 @@ VisibleKernelController.prototype.extend({
     swap_kernels: function (kernel) {
         var old_contained_object = this.contained_object();
         var old_id_string = this.idString();
-        this.contained_object(kernel);
+        this.model().contained_object(kernel);
         this.namefield.value = kernel.name();
         this.layout();
         this.updateNamelink();
@@ -272,7 +276,7 @@ VisibleKernelController.prototype.extend({
     },
 
     kernel: function() {
-        return this.model().contained_object();
+        return this.contained_object();
     },
 
     kernel_id: function() {
