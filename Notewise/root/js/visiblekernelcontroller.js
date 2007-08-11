@@ -28,9 +28,7 @@ VisibleKernelController.prototype.extend({
 
         var func_names = ['container_object',
                           'contained_object',
-                          'id',
                           'idString',
-                          'update',
                           'internalUrl'];
 
         // Note that destroy() is inherited from wiseobject, which calls JSDBI.prototype.destroy.call(this).  Ewww....
@@ -64,10 +62,14 @@ VisibleKernelController.prototype.extend({
         return this.model().height();
     },
 
+    id: function() {
+        return this.model().id();
+    },
+
     addProxyFunction: function(object, func_name) {
         object[func_name] = function(arg1, arg2, arg3) {
-            if (func_name == "x") {
-                console.log("x(", arg1, ")");
+            if (func_name == "update") {
+                console.log("update()");
                 console.trace();
             }
             return this.model()[func_name](arg1, arg2, arg3);
@@ -160,7 +162,7 @@ VisibleKernelController.prototype.extend({
         this.namefield.value = kernel.name();
         this.layout();
         this.updateNamelink();
-        this.update();
+        this.model().update();
         objectCache[this.idString()]=this;
         window.setTimeout(this.after_swap_kernels.bindWithParams(this,old_contained_object,old_id_string),500);
     },
@@ -401,7 +403,7 @@ VisibleKernelController.prototype.extend({
         } else {
             this.collapsed(true);
         }
-        this.update();
+        this.model().update();
     },
 
     // Just sets the internal collapsed value but don't change the display
