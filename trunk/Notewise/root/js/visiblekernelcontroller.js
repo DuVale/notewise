@@ -362,7 +362,13 @@ VisibleKernelController.prototype.extend({
             window.setTimeout(function(){this.namefield.style.display = "";}.bind(this),100);
         }.bind(this));
 
-        Event.observe(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
+        var kernel_id = this.model().kernel_id();
+        Event.observe(this.htmlElement,'dblclick', function (e) {
+            e = e || window.event;
+            Utils.terminateEvent(e);
+            Utils.preventDefault(e);
+            ViewKernel.makeView(kernel_id);
+        });
     },
 
     // Select this object and terminate the event

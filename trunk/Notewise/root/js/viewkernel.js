@@ -76,6 +76,7 @@ ViewKernel.prototype.extend( {
 
     },
 
+
     destroy: function() {
         printfire("deleteing view "+this.kernel_id());
         this.unregisterHandlers();
@@ -83,6 +84,37 @@ ViewKernel.prototype.extend( {
         window.history.back();
     }
 });
+
+
+// make this kernel into the current view (ie, switch the url to this kernel)
+ViewKernel.makeView = function(kernel_id){
+    console.log(kernel_id);
+    printfire("makeView("+kernel_id+")");
+    dhtmlHistory.add(''+kernel_id,{}); // TODO add in username or kernel title here
+    var date = new Date();
+    time = date.getTime();
+    // wipe existing view
+    if(view){
+        view.unregisterHandlers();
+    }
+    $('viewname').value = 'Loading...';
+    $('parents_content').innerHTML = 'Loading...';
+    $('viewkernel').innerHTML = '';
+    window.setTimeout(function() {ViewKernel.finishMakeView(kernel_id)}, 10);
+};
+
+ViewKernel.finishMakeView = function(kernel_id){
+    var date = new Date();
+    // setup new view
+    view = new ViewKernel(kernel_id, $('viewkernel'));
+    view.realize();
+    $('viewname').value = view.kernel().name();
+    document.title = view.kernel().name() + " - Notewise.com";
+
+    date = new Date();
+    printfire("switching took: "+(date.getTime() - time));
+    $('mysearchfield').focus();
+};
 
 JSDBI.on_start_update = function () {
     Element.show($('saving_indicator'));

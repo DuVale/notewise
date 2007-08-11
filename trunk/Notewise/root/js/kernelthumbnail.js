@@ -17,7 +17,13 @@ KernelThumbnail.prototype.extend({
 
     registerHandlers: function() {
         NonMovingKernel.prototype.registerHandlers.call(this);
-        Event.observe(this.htmlElement,'dblclick', this.makeView.bindAsEventListener(this));
+        var kernel_id = this.kernel_id();
+        Event.observe(this.htmlElement,'dblclick', function (e) {
+            e = e || window.event;
+            Utils.terminateEvent(e);
+            Utils.preventDefault(e);
+            ViewKernel.makeView(kernel_id);
+        });
     },
 
     // Select this object and terminate the event

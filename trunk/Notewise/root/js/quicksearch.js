@@ -11,8 +11,7 @@ new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '/s',
                                 name = $('mysearchfield').value;
                                 new_view(name);
                             } else if(matches){
-                                dhtmlHistory.add(''+matches[1],{}); // TODO add in username or kernel title here
-                                KernelObject.prototype.do_make_view(matches[1]);
+                                ViewKernel.makeView(matches[1]);
                             } else {
                                 window.location=link.href;
                             }

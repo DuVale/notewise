@@ -44,9 +44,19 @@ KernelObject.prototype = {
                                    Utils.terminateEvent.bindAsEventListener(this));
 
         if(this.namelink){
-            var id = this.kernel_id();
-            this.observe(this.namelink,'click', this.makeView.bindAsEventListener(this));
-            this.observe(this.namelink,'dblclick', this.makeView.bindAsEventListener(this));
+            var kernel_id = this.kernel_id();
+            this.observe(this.namelink,'click', function (e) {
+                e = e || window.event;
+                Utils.terminateEvent(e);
+                Utils.preventDefault(e);
+                ViewKernel.makeView(kernel_id);
+            });
+            this.observe(this.namelink,'dblclick', function () {
+                e = e || window.event;
+                Utils.terminateEvent(e);
+                Utils.preventDefault(e);
+                ViewKernel.makeView(kernel_id);
+            });
         }
     },
 
@@ -63,44 +73,6 @@ KernelObject.prototype = {
                 Event.stopObserving.apply(this, this.observers[i]);
             }
         }
-    },
-
-    // make this kernel into the current view (ie, switch the url to this kernel)
-    makeView: function(e){
-        var id = this.kernel_id() + "";
-        printfire("makeView("+id+")");
-        dhtmlHistory.add(''+id,{}); // TODO add in username or kernel title here
-        Utils.terminateEvent(e);
-        Utils.preventDefault(e);
-        this.do_make_view(id);
-    },
-
-    do_make_view: function(id) {
-        printfire("do_make_view("+id+")");
-        var date = new Date();
-        time = date.getTime();
-        // wipe existing view
-        if(view){
-            view.unregisterHandlers();
-        }
-        $('viewname').value = 'Loading...';
-        $('parents_content').innerHTML = 'Loading...';
-        $('viewkernel').innerHTML = '';
-        window.setTimeout(this.finishMakeView.bindWithParams(this, id), 10);
-    },
-
-    finishMakeView: function(id){
-        var date = new Date();
-        // setup new view
-        viewKernelId=id;
-        view = new ViewKernel(viewKernelId,$('viewkernel'));
-        view.realize();
-        $('viewname').value = view.kernel().name();
-        document.title = view.kernel().name() + " - Notewise.com";
-
-        date = new Date();
-        printfire("switching took: "+(date.getTime() - time));
-        $('mysearchfield').focus();
     },
 
     updateNamelink: function () {

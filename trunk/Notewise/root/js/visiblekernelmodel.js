@@ -28,5 +28,10 @@ VisibleKernelModel.prototype.extend({
     idString: function() {
         var id = this.id().join('/');
         return id;
+    },
+
+    kernel_id: function() {
+        console.log(this);
+        return this.__getField('contained_object');
     }
 });
