@@ -34,10 +34,10 @@ WiseObject.prototype.extend({
     realize: function(parent) {
         parent.appendChild(this.htmlElement);
         this.setup();
-        this.moveX(this.model().x());
-        this.moveY(this.model().y());
-        this.moveWidth(this.model().width());
-        this.moveHeight(this.model().height());
+        this.moveX(this.x());
+        this.moveY(this.y());
+        this.moveWidth(this.width());
+        this.moveHeight(this.height());
         this.layout();
     },
 
@@ -286,7 +286,7 @@ WiseObject.prototype.extend({
 
     // Just sets the internal x coordinate but don't change the display
     setX: function(x) {
-        this.notifyMoveListeners(x+'%',this.model().y()+'%');
+        this.notifyMoveListeners(x+'%',this.y()+'%');
         return this.model().x(x);
     },
 
@@ -294,14 +294,14 @@ WiseObject.prototype.extend({
     moveX: function(x) {
         if(x && this.htmlElement){
             this.htmlElement.style.left = x+"%";
-            this.notifyMoveListeners(x+'%',this.model().y()+'%');
+            this.notifyMoveListeners(x+'%',this.y()+'%');
         }
         return this.model().x(x);
     },
 
     // Just sets the internal y coordinate but don't change the display
     setY: function(y) {
-        this.notifyMoveListeners(this.model().x()+'%',y+'%');
+        this.notifyMoveListeners(this.x()+'%',y+'%');
         return this.model().y(y);
     },
 
@@ -309,7 +309,7 @@ WiseObject.prototype.extend({
     moveY: function(y) {
         if(y && this.htmlElement){
             this.htmlElement.style.top = y+"%";
-            this.notifyMoveListeners(this.model().x()+'%',y+'%');
+            this.notifyMoveListeners(this.x()+'%',y+'%');
         }
         return this.model().y(y);
     },
@@ -397,7 +397,7 @@ WiseObject.prototype.extend({
         if(this.collapsed()){
             return this.htmlElement.clientHeight*100/parentElement.clientHeight;
         } else {
-            return this.model().height();
+            return this.height();
         }
     },
 
@@ -409,7 +409,7 @@ WiseObject.prototype.extend({
         if(this.collapsed() && parentElement){
             return this.htmlElement.clientWidth*100/parentElement.clientWidth;
         } else {
-            return this.model().width();
+            return this.width();
         }
     },
 

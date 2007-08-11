@@ -48,6 +48,22 @@ VisibleKernelController.prototype.extend({
         this.__model = model;
     },
 
+    x: function() {
+        return this.model().x();
+    },
+
+    y: function() {
+        return this.model().y();
+    },
+
+    width: function() {
+        return this.model().width();
+    },
+
+    height: function() {
+        return this.model().height();
+    },
+
     addProxyFunction: function(object, func_name) {
         object[func_name] = function(arg1, arg2, arg3) {
             if (func_name == "x") {
@@ -371,8 +387,8 @@ VisibleKernelController.prototype.extend({
             this.htmlElement.style.width = width+'px';
             this.htmlElement.style.height = '';
         } else {
-            this.htmlElement.style.width = this.model().width() + '%';
-            this.htmlElement.style.height = this.model().height() + '%';
+            this.htmlElement.style.width = this.width() + '%';
+            this.htmlElement.style.height = this.height() + '%';
         }
 
         this.layoutResize();
