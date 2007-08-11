@@ -9,6 +9,10 @@ KernelThumbnail.prototype.extend({
         NonMovingKernel.prototype.initialize.call(this,id,htmlElement);
     },
 
+    model: function() {
+        return this;
+    },
+
     fetchElements: function () {
         KernelObject.prototype.fetchElements.call(this);
         WiseObject.prototype.fetchElements.call(this);
@@ -17,12 +21,12 @@ KernelThumbnail.prototype.extend({
 
     registerHandlers: function() {
         NonMovingKernel.prototype.registerHandlers.call(this);
-        var kernel_id = this.kernel_id();
+        var model = this.model();
         Event.observe(this.htmlElement,'dblclick', function (e) {
             e = e || window.event;
             Utils.terminateEvent(e);
             Utils.preventDefault(e);
-            ViewKernel.makeView(kernel_id);
+            ViewKernel.makeView(model.kernel_id());
         });
     },
 
