@@ -24,7 +24,7 @@ Note.prototype.extend({
         
         this.type        = 'note';
         this.id(id);
-        this.container_object(container_object);
+        this.model().container_object(container_object);
         this.__x=x;
         this.__y=y;
         this.__width=width;

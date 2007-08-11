@@ -250,7 +250,7 @@ KernelObject.prototype = {
         var y = (posy - parentPos.y) * 100 / this.body.clientHeight;
 
         var note = new Note;
-        note.container_object(this.kernel());
+        note.model().container_object(this.kernel());
         note.x(x);
         note.y(y);
         note.width(15);
