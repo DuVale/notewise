@@ -20,8 +20,8 @@ NonMovingKernel.prototype.extend( {
     },
 
     kernel: function() {
-        if(!this.__kernel){
-            this.__kernel = Kernel.retrieve(this.__kernel_id);
+        if(!this.__kernel && this.__kernel_id){
+            this.__kernel = Kernel.retrieve(this.__kernel_id.toString());
         }
 
         return this.__kernel;
