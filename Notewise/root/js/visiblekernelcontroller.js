@@ -26,8 +26,7 @@ VisibleKernelController.prototype.extend({
         WiseObject.prototype.initialize.call(this);
         KernelObject.prototype.initialize.call(this, htmlElement);
 
-        var func_names = ['idString',
-                          'internalUrl'];
+        var func_names = [];
 
         // Note that destroy() is inherited from wiseobject, which calls JSDBI.prototype.destroy.call(this).  Ewww....
         for (var i = 0; i < func_names.length; i++) {
@@ -62,6 +61,14 @@ VisibleKernelController.prototype.extend({
 
     id: function() {
         return this.model().id();
+    },
+
+    idString: function() {
+        return this.model().idString();
+    },
+
+    internalUrl: function() {
+        return this.model().internalUrl();
     },
 
     // TODO(scotty): This exposes a model directly to some other caller, which probably isn't good.
