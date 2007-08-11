@@ -543,7 +543,7 @@ WiseObject.prototype.extend({
         // this is a hack to avoid having to retrieve the kernel object
         // itself, since we don't really need it right now
         this.container_object(vkernel.kernel_id());
-        this.update();
+        this.model().update();
 
         // add the object back into the object cache
         objectCache[this.idString()] = this;
@@ -690,7 +690,7 @@ ResizeCornerDraggable.prototype = (new Draggable()).extend( {
     endDrag: function() {
        this.wiseobject.notifyEndChangeListeners();
        this.wiseobject.layoutCorner();
-       this.wiseobject.update();
+       this.wiseobject.model().update();
        dndMgr.giveSearchBoxFocus();
     },
  

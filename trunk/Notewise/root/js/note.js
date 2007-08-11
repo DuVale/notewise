@@ -144,7 +144,7 @@ Note.prototype.extend({
         var text = this.body.value;
         if(text != this.content()) {
             this.content(text);
-            this.update();
+            this.model().update();
         }
         this.body.__hasFocus = false;
     },
