@@ -1,6 +1,6 @@
 [% id = vkernel.get_column('container_object') _ '/' _ vkernel.get_column('contained_object') %]
     var kernelDiv = document.getElementById('vkernel[%id%]');
-    var vkernel = new VisibleKernel([%vkernel.get_column('container_object')%],
+    var vkernel = new VisibleKernelController([%vkernel.get_column('container_object')%],
                                     [%vkernel.get_column('contained_object')%],
                                     kernelDiv,
                                     [%vkernel.x%],
