@@ -126,7 +126,6 @@
         <script type="text/javascript" src="[%base%]js/viewkernel.js"></script>
         <script type="text/javascript" src="[%base%]js/kernelthumbnail.js"></script>
         <script type="text/javascript" src="[%base%]js/kernel.js"></script>
-        <script type="text/javascript" src="[%base%]js/visiblekernel.js"></script>
         <script type="text/javascript" src="[%base%]js/note.js"></script>
         <script type="text/javascript" src="[%base%]js/controls.js"></script>
         <script type="text/javascript" src="[%base%]js/effects.js"></script>
