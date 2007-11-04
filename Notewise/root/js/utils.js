@@ -335,7 +335,7 @@ Utils = {
 };
 
 function printfire() {
-    if (console) {
+    if (window.console) {
         console.debug(arguments[0]);
     } else if (document.createEvent) {
         printfire.args = arguments;
