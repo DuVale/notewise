@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use lib qw/lib/;
+use PAR 'par_files/*.par';
+use lib qw(lib DBD-mysql/blib/lib DBD-mysql/blib/arch);
 use Notewise;
 
 local $|;

@@ -3,6 +3,8 @@ package Notewise::M::DBIC;
 use strict;
 use base 'Catalyst::Model::DBIC::Schema';
 
+use DBIx::Class::Storage::DBI::mysql;
+
 #__PACKAGE__->config(
 #    schema_class => 'Notewise::SchemaLoader::DBIC',
 #    connect_info => [
@@ -38,4 +40,3 @@ it under the same terms as Perl itself.
 =cut
 
 1;
-

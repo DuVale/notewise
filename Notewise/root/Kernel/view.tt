@@ -193,10 +193,12 @@
         function hide_confirm_delete() {
             var div = $('permanent_delete');
             div.parentNode.removeChild(div);
-        };
+        }
 
         [% UNLESS c.config.noprecache %]
-            window.setTimeout(do_image_precache, 5); //get image caching to happen in separate thread
+            // Delay image caching until after other things have a chance to
+            // render.
+            window.setTimeout(do_image_precache, 5);
         [% END %]
 
         window.setTimeout(function () {new Ajax.Updater('sandbox',
@@ -205,7 +207,7 @@
                              evalScripts: 1,
                              method: 'get',
                              asynchronous: true
-                         });},100);
+                         });}, 100);
 
         var sandbox = new Sandbox($('sandbox'),[%sandbox.id%]);
     </script>

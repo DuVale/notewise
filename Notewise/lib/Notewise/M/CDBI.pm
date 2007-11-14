@@ -3,6 +3,11 @@ package Notewise::M::CDBI;
 use strict;
 use Catalyst::Model::CDBI;
 use base 'Catalyst::Model::CDBI';
+
+# We need to load the following two modules before DateTime::Format::MySQL to
+# handle problems with loading it from a par file.
+use DateTime::Format::Builder::Parser;
+use DateTime::Format::Builder::Parser::Regex;
 use DateTime::Format::MySQL;
 use DateTime;
 use XML::Simple;
