@@ -1,5 +1,10 @@
 #!/usr/bin/perl -w
 
+use PAR 'par_files/*.par';
+use lib qw(DBD-mysql/blib/lib DBD-mysql/blib/arch);
+
+use Catalyst;
+
 BEGIN { 
     $ENV{CATALYST_ENGINE} ||= 'HTTP';
     $ENV{CATALYST_SCRIPT_GEN} = 23;

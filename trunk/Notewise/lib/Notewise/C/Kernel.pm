@@ -67,6 +67,7 @@ sub view : Private {
     } elsif ($name ne '') {
         $name =~ s/_/ /g;
         $name = uri_unescape($name);
+        warn "username: $username";
         my $user = $c->model('DBIC::User')->search({username=>$username})->first;
         my @kernels = $c->model('DBIC::Kernel')->kernels_with_name($name,$user->id);
         my @allowed_kernels = grep $_->has_permission($c->user->obj->id,'view'), @kernels;

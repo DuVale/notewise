@@ -1,67 +1,34 @@
-To setup a notewise development environment:
+To run notewise:
 
-Checkout from svn:
+  Checkout from svn:
 
-svn co svn+ssh://notewise.com/home/advanced/notewise/svn/trunk notewise
+    svn co https://notewise.googlecode.com/svn/trunk/ notewise
 
-Install the following perl modules:
-
-    Bundle::Catalyst
-    Catalyst::Plugin::Authentication::CDBI
-    Catalyst::Plugin::FormValidator
-    Catalyst::View::TT
-    Class::DBI
-    Class::DBI::mysql
-    Class::DBI::FromForm
-    Class::DBI::AsForm
-    Class::DBI::Plugin::Type
-    Class::DBI::AbstractSearch
-    YAML
-    DateTime
-    DateTime::Format::DateParse
-    DateTime::Format::MySQL
-    Test::XML
-    Test::WWW::Mechanize
-    Test::WWW::Mechanize::Catalyst
-    Data::Dumper
-    Test::More
-    XML::Simple
-    Catalyst::View::REST::XML
-    Module::Install
-
-    You can install perl modules by running:
-
-    sudo perl -MCPAN -eshell
-    > install Module::Name
+  Build:
+    perl Makefile.PL
+    make
     
-Create a new mysql database:
+  Create a new mysql database:
 
     mysql -uroot -p -e 'create database notewise'
 
-Import the database schema:
+  Import the database schema:
 
     mysql -uroot -p notewise < createTablesMySql.sql
 
-Create a test user and starting kernel:
-    mysql -uroot -p notewise
-    > insert into user (id,name,email,password) values (1,'Your Name','youremail@notewise.com','password');
-    > insert into object_id values (1,1,'kernel');
-    > insert into kernel (id, name) values (1,'start');
+  Create a test user and starting kernel:
+    ./create_user.pl
 
-Copy config-sample.yml to config.yml and edit as appropriate.
+  Copy config-sample.yml to config.yml and edit as appropriate.
 
-	set Static to 1
-	set Debig to 1
-	set BaseUrl to / or the hostname where things will be loaded
+          set Static to 1
+          set Debug to 1
+          set BaseUrl to /
 
-Run 'script/notewise_server.pl -k -r' to test the application.  The default port number is 3000.  To change the port number, use 'script/notewise_server.pl -k -r -p 3005'.
+  Run 'script/notewise_server.pl -k -r' to test the application.  The default port number is 3000.  To change the port number, use 'script/notewise_server.pl -k -r -p 3005'.
 
 
 To run the command line unit tests, do:
 
     perl Makefile.PL
     make test
-
-To create a user, do:
-
-    ./create_user.pl
