@@ -31,7 +31,6 @@ VisibleKernelModel.prototype.extend({
     },
 
     kernel_id: function() {
-        console.log(this);
         return this.__getField('contained_object');
     }
 });
