@@ -14,7 +14,7 @@ To run notewise:
 
   Import the database schema:
 
-    mysql -uroot -p notewise < createTablesMySql.sql
+    mysql -uroot -p notewise < schema.sql
 
   Create a test user and starting kernel:
     ./create_user.pl
