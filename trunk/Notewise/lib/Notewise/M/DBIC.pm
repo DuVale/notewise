@@ -4,6 +4,7 @@ use strict;
 use base 'Catalyst::Model::DBIC::Schema';
 
 use DBIx::Class::Storage::DBI::mysql;
+use DateTime::Format::MySQL;
 
 #__PACKAGE__->config(
 #    schema_class => 'Notewise::SchemaLoader::DBIC',
@@ -14,6 +15,41 @@ use DBIx::Class::Storage::DBI::mysql;
 #        { AutoCommit => 1 },
 #    ],
 #);
+
+sub inflate_datetime { return _inflate_dt('datetime',@_) }
+sub inflate_timestamp { return _inflate_dt('timestamp',@_) }
+
+sub _inflate_dt { 
+    my $type = shift;
+    my $dt;
+    if($type eq 'datetime'){
+        $dt = DateTime::Format::MySQL->parse_datetime( shift );
+    } elsif ($type eq 'timestamp'){
+        $dt = DateTime::Format::MySQL->parse_timestamp( shift );
+    }
+    return $dt;
+};
+
+sub deflate_datetime { return _deflate_dt('datetime',@_) }
+sub deflate_timestamp { return _deflate_dt('timestamp',@_) }
+
+sub _deflate_dt {
+    my $type = shift;
+    my $dt = shift;
+    if(ref $dt){
+        if($type eq 'datetime'){
+            return DateTime::Format::MySQL->format_datetime($dt);
+        } elsif ($type eq 'timestamp'){
+            return DateTime::Format::MySQL->format_datetime($dt);
+        }
+    } else {
+        return $dt;
+    }
+}
+
+sub strf_format {
+    return '%Y-%m-%d %H:%M:%S';
+}
 
 =head1 NAME
 
