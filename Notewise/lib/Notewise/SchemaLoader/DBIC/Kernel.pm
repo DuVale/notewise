@@ -14,12 +14,12 @@ __PACKAGE__->belongs_to(object_id => 'Notewise::SchemaLoader::DBIC::ObjectId', u
                                                                                         cascade_copy=>0 });
 __PACKAGE__->has_many(notes => 'Notewise::SchemaLoader::DBIC::Note', 'container_object',{cascade_copy=>0});
 __PACKAGE__->has_many(contained_objects => 'Notewise::SchemaLoader::DBIC::ContainedObject', 'container_object',{cascade_copy=>0});
-__PACKAGE__->inflate_column(created => {inflate=> \&Notewise::M::CDBI::inflate_datetime,
-                                        deflate=> \&Notewise::M::CDBI::deflate_datetime});
-__PACKAGE__->inflate_column(lastModified => {inflate=> \&Notewise::M::CDBI::inflate_timestamp,
-                                             deflate=> \&Notewise::M::CDBI::deflate_timestamp});
-__PACKAGE__->inflate_column(lastViewed => {inflate=> \&Notewise::M::CDBI::inflate_timestamp,
-                                           deflate=> \&Notewise::M::CDBI::deflate_timestamp});
+__PACKAGE__->inflate_column(created => {inflate=> \&Notewise::M::DBIC::inflate_datetime,
+                                        deflate=> \&Notewise::M::DBIC::deflate_datetime});
+__PACKAGE__->inflate_column(lastModified => {inflate=> \&Notewise::M::DBIC::inflate_timestamp,
+                                             deflate=> \&Notewise::M::DBIC::deflate_timestamp});
+__PACKAGE__->inflate_column(lastViewed => {inflate=> \&Notewise::M::DBIC::inflate_timestamp,
+                                           deflate=> \&Notewise::M::DBIC::deflate_timestamp});
 
 sub new {
     my $class = shift;

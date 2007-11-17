@@ -15,12 +15,12 @@ sub insert {
     my $result =  $self->next::method( @_ );
 
     # create starting kernel
-    my $kernel = Notewise::M::CDBI::Kernel->insert({name=>''});
+    my $kernel = $self->resultset('Kernel')->insert({name=>''});
     $kernel->user($self->id);
     $kernel->update();
 
     # Create sandbox
-    my $sandbox = Notewise::M::CDBI::ObjectId->insert({type=>'sandbox',
+    my $sandbox = $self->resultset('ObjectId')->insert({type=>'sandbox',
                                                        user=>$self->id});
 
     return $result;

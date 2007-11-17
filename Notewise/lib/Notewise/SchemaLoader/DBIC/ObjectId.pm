@@ -19,11 +19,11 @@ sub object {
 
     my $object;
     if($self->type eq 'kernel'){
-        $object = Notewise::M::CDBI::Kernel->retrieve($self->id);
+        $object = $self->resultset('Kernel')->retrieve($self->id);
     } elsif($self->type eq 'note'){
-        $object = Notewise::M::CDBI::Note->retrieve($self->id);
+        $object = $self->resultset('Note')->retrieve($self->id);
     } elsif($self->type eq 'relationship'){
-        $object = Notewise::M::CDBI::Relationship->retrieve($self->id);
+        $object = $self->resultset('Relationship')->retrieve($self->id);
     } elsif($self->type eq 'sandbox'){
         $object = $self;
     } else {

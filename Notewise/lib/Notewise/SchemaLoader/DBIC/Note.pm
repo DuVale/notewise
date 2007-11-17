@@ -8,10 +8,10 @@ __PACKAGE__->add_columns(qw/container_object object_id content source created la
 __PACKAGE__->set_primary_key('object_id');
 __PACKAGE__->belongs_to(object_id => 'Notewise::SchemaLoader::DBIC::ObjectId');
 __PACKAGE__->belongs_to(container_object => 'Notewise::SchemaLoader::DBIC::ObjectId');
-__PACKAGE__->inflate_column(created => {inflate=> \&Notewise::M::CDBI::inflate_datetime,
-                                        deflate=> \&Notewise::M::CDBI::deflate_datetime});
-__PACKAGE__->inflate_column(lastModified => {inflate=> \&Notewise::M::CDBI::inflate_timestamp,
-                                             deflate=> \&Notewise::M::CDBI::deflate_timestamp});
+__PACKAGE__->inflate_column(created => {inflate=> \&Notewise::M::DBIC::inflate_datetime,
+                                        deflate=> \&Notewise::M::DBIC::deflate_datetime});
+__PACKAGE__->inflate_column(lastModified => {inflate=> \&Notewise::M::DBIC::inflate_timestamp,
+                                             deflate=> \&Notewise::M::DBIC::deflate_timestamp});
 
 sub user {
     my ($self, $user) = @_;
