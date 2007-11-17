@@ -81,12 +81,10 @@ sub default : Private {
 
 sub begin : Private {
     my ( $self, $c ) = @_;
-    warn "DBD::mysql version: " . $DBD::mysql::VERSION;
     if($self->config->{'BaseUrl'}){
         $c->req->base( new URI($self->config->{'BaseUrl'} ) );
     }
     $c->session_expires(0);
-    $c->model('CDBI')->clear_object_index();
 }
 
 sub end : Private {
