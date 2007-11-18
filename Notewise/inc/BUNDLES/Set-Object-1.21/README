@@ -1,0 +1,13 @@
+README for Set::Object 1.21
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Set::Object provides for sets of Perl objects - scalars and references.
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   su root -c "make install"
+

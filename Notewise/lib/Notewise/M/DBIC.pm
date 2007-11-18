@@ -4,7 +4,10 @@ use strict;
 use base 'Catalyst::Model::DBIC::Schema';
 
 use DBIx::Class::Storage::DBI::mysql;
+use DateTime::Format::Builder::Parser;
+use DateTime::Format::Builder::Parser::Regex;
 use DateTime::Format::MySQL;
+use Digest::MD5;
 
 #__PACKAGE__->config(
 #    schema_class => 'Notewise::SchemaLoader::DBIC',
