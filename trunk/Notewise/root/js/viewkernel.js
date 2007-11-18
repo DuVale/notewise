@@ -90,6 +90,14 @@ ViewKernel.prototype.extend( {
 ViewKernel.makeView = function(kernel_id){
     printfire("makeView("+kernel_id+")");
     dhtmlHistory.add(''+kernel_id,{}); // TODO add in username or kernel title here
+    ViewKernel.doMakeView(kernel_id);
+}
+
+// make this kernel into the current view (ie, switch the url to this kernel),
+// but don't add it to the history.  Should only be called when we were
+// notified of a change in history from the browser (ie, the user hit the back
+// button).
+ViewKernel.doMakeView = function(kernel_id){
     var date = new Date();
     time = date.getTime();
     // wipe existing view

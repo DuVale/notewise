@@ -160,10 +160,9 @@
         dhtmlHistory.fireOnNewListener = false;
         dhtmlHistory.addListener(function(location,data){
             var parts = location.split(':');
-            printfire("history changed: "+location+", "+data);
-            if(parts[1] > 0){
-                printfire("navigating to: "+location+", "+data);
-                KernelObject.prototype.do_make_view(parts[1]);
+            var kernel_id = parseInt(parts[0]);
+            if(kernel_id > 0){
+                ViewKernel.doMakeView(kernel_id);
             }
         });
 
@@ -183,8 +182,7 @@
             } else {
                 kernel = Kernel.insert({});
             }
-            dhtmlHistory.add('[%c.user_object.username%]:'+kernel.id(),{});
-            KernelObject.prototype.do_make_view(kernel.id());
+            ViewKernel.makeView(kernel.id());
             if(!kernel_name){
                 window.setTimeout(function(){$('viewname').focus();},500);
             }
