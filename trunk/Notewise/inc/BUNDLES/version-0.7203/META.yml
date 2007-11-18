@@ -1,0 +1,23 @@
+---
+name: version
+version: 0.7203
+author:
+  - 'John Peacock E<lt>jpeacock@cpan.orgE<gt>'
+abstract: Perl extension for Version Objects
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
+requires:
+  perl: '> 5.005, < 5.009'
+dynamic_config: 1
+provides:
+  version:
+    file: lib/version.pm
+    version: 0.7203
+  version::vxs:
+    file: vutil/lib/version/vxs.pm
+    version: 0.7203
+generated_by: Module::Build version 0.2807
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2
