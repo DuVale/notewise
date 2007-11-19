@@ -389,9 +389,8 @@ KernelObject.prototype = {
         var children = this.body.childNodes;
         for(var i=0; i<children.length; i++){
             var element = children[i];
-            if(element.id &&
-                (Element.hasClassName(element,'vkernel')||
-                 Element.hasClassName(element,'note'))
+            if((Element.hasClassName(element,'vkernel')||
+                Element.hasClassName(element,'note'))
                ){
                 var pos = Utils.toViewportPosition(element);
                 var left = pos.x - bodyPos.x + 8;
