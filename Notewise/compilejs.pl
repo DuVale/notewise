@@ -1,5 +1,6 @@
 #! /usr/bin/perl
 
+use lib qw(blib/lib blib/arch);
 use strict;
 use warnings;
 use Template;
@@ -14,7 +15,7 @@ sub compile_javascript {
 
     my $template = Template->new({
         INCLUDE_PATH => "$pwd/root",
-        EVAL_PERL => 1,
+        EVAL_PERL => 1
     });
 
     warn "Compiling javascript to javascript.js\n";
