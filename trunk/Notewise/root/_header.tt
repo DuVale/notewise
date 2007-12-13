@@ -24,6 +24,8 @@
         <div class="links">
             <a href="/[% c.user.user.username %]">home</a>
             <span class="dot">&nbsp;</span>
+            <a href="/user/calendar">calendar</a>
+            <span class="dot">&nbsp;</span>
             <a href="[%c.uri_for('/user/settings')%]">settings</a>
             <span class="dot">&nbsp;</span>
             <a href="[%c.uri_for('/help')%]">help</a>

@@ -229,12 +229,17 @@ sub to_xml_hash_deep {
 
 sub most_recently_viewed_kernel : ResultSet {
     my ($class,$user_id,$max_returned) = @_;
-    return $class->_most_recently_kernel($user_id,$max_returned,'lastViewed');
+    return $class->_most_recently_kernel($user_id, $max_returned, 'lastViewed');
 }
 
 sub most_recently_created_kernel : ResultSet {
     my ($class,$user_id,$max_returned) = @_;
-    return $class->_most_recently_kernel($user_id,$max_returned,'created');
+    return $class->_most_recently_kernel($user_id, $max_returned, 'created');
+}
+
+sub most_recently_modified_kernel : ResultSet {
+    my ($class,$user_id,$max_returned) = @_;
+    return $class->_most_recently_kernel($user_id, $max_returned, 'lastModified');
 }
 
 sub _most_recently_kernel : ResultSet {

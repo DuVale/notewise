@@ -114,13 +114,24 @@ sub change_password : Local {
 }
 
 sub calendar : Local {
-    my ( $self, $c ) = @_;
+    my ( $self, $c, $order ) = @_;
 
-    my @kernels = $c->model('DBIC::Kernel')->search({'object_id.user'=>$c->user_object->id},{join => 'object_id', order_by=>'created DESC'});
+    if ($order eq 'created') {
+    } elsif ($order eq 'viewed') {
+      $order = 'lastViewed';
+    } elsif ($order eq 'modified') {
+      $order = 'lastModified';
+    } else {
+      $order = 'created';
+    }
+
+    warn "****************order: $order";
+
+    my @kernels = $c->model('DBIC::Kernel')->search({'object_id.user'=>$c->user_object->id},{join => 'object_id', order_by=>"$order DESC"});
     my %kernels;
     my @dates;
     foreach my $kernel (@kernels){
-        my $date = $kernel->created->mdy;
+        my $date = $kernel->$order->mdy;
         unless($kernels{$date}){
             $kernels{$date} = [];
             push @dates, $date;
