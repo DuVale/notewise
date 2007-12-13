@@ -50,10 +50,6 @@ sub _deflate_dt {
     }
 }
 
-sub strf_format {
-    return '%Y-%m-%d %H:%M:%S';
-}
-
 =head1 NAME
 
 Notewise::M::DBIC - Catalyst DBIC Schema Model
