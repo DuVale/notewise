@@ -19,11 +19,11 @@ sub object {
 
     my $object;
     if($self->type eq 'kernel'){
-        $object = $self->resultset('Kernel')->retrieve($self->id);
+        $object = $self->result_source->schema->resultset('Kernel')->find($self->id);
     } elsif($self->type eq 'note'){
-        $object = $self->resultset('Note')->retrieve($self->id);
+        $object = $self->result_source->schema->resultset('Note')->find($self->id);
     } elsif($self->type eq 'relationship'){
-        $object = $self->resultset('Relationship')->retrieve($self->id);
+        $object = $self->result_source->schema->resultset('Relationship')->find($self->id);
     } elsif($self->type eq 'sandbox'){
         $object = $self;
     } else {
