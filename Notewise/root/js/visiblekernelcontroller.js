@@ -320,6 +320,8 @@ VisibleKernelController.prototype.extend({
 
         WiseObject.prototype.registerHandlers.call(this);
 
+        // TODO(scotty): move this into realize()
+        this.namefield_object = new ExpandingTextField(this.namefield);
         this.namefield_object.registerResizeListener(function() {
           this.setFixedSize(this.collapsed());
         }.bind(this));
