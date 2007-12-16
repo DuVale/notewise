@@ -8,7 +8,10 @@ ViewKernel.prototype.extend( {
     initialize: function(id, htmlElement) {
         NonMovingKernel.prototype.initialize.call(this,id,htmlElement);
         window.onresize = this.layoutResize.bindAsEventListener(this);
-        this.layoutNamefield();
+        // TODO(scotty): this is a horrible hack to get around the fact that
+        // ExpandingTextField doesn't do what we want - we want the namefield
+        // for the view kernel to be the full width of the bar.  Fix this when we refactor ViewKernel.
+        this.namefield_object.__layout = this.layoutNamefield.bind(this);
     },
 
     fetchElements: function () {
@@ -115,7 +118,7 @@ ViewKernel.finishMakeView = function(kernel_id){
     // setup new view
     view = new ViewKernel(kernel_id, $('viewkernel'));
     view.realize();
-    $('viewname').value = view.kernel().name();
+    view.namefield_object.setValue(view.kernel().name());
     document.title = view.kernel().name() + " - Notewise.com";
 
     date = new Date();

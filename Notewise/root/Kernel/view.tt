@@ -120,6 +120,7 @@
         <script type="text/javascript" src="[%base%]js/new_relationship.js"></script>
         <script type="text/javascript" src="[%base%]js/wiseobject.js"></script>
         <script type="text/javascript" src="[%base%]js/relationship.js"></script>
+        <script type="text/javascript" src="[%base%]js/expandingtextfield.js"></script>
         <script type="text/javascript" src="[%base%]js/kernelobject.js"></script>
         <script type="text/javascript" src="[%base%]js/visiblekernelcontroller.js"></script>
         <script type="text/javascript" src="[%base%]js/nonmovingkernel.js"></script>

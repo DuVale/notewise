@@ -28,7 +28,7 @@ KernelObject.prototype = {
                       function() { dndMgr.clearSelection(); dndMgr.giveSearchBoxFocus(); } );
         
         // setup the namefield actions
-        this.observe(this.namefield,'keyup', this.layoutNamefield.bind(this));
+        this.namefield_object = new ExpandingTextField(this.namefield);
 //        Event.observe(this.namefield,'keypress', this.loseFocusOnEnter.bindAsEventListener(this));
 
         // drag in namefield should select text, not drag object
@@ -92,21 +92,6 @@ KernelObject.prototype = {
             // Update the link url
             this.namelink.href = this.kernel().object_url();
         }
-    },
-
-    // causes the namefield to relayout
-    layoutNamefield: function() {
-        var width = this.getNameFieldWidth();
-        this.namefield.style.width = width+'px';
-        if(this.namelink != undefined){
-            this.namelink.style.width = width+'px';
-        }
-
-        // scroll the text field all the way to the left again - apparently
-        // setting the value of a text input field again causes it to properly
-        // scroll all the way to the left
-        this.namefield.value = this.namefield.value;
-        return width;
     },
 
     loseFocusOnEnter: function(e) {

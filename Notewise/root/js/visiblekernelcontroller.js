@@ -170,7 +170,7 @@ VisibleKernelController.prototype.extend({
         var old_contained_object = this.contained_object();
         var old_id_string = this.idString();
         this.model().contained_object(kernel);
-        this.namefield.value = kernel.name();
+        this.namefield_object.setValue(kernel.name());
         this.layout();
         this.updateNamelink();
         this.model().update();
@@ -244,7 +244,7 @@ VisibleKernelController.prototype.extend({
         this.htmlElement.innerHTML = innerHTML;
         WiseObject.prototype.realize.call(this,parent);
 
-        this.namefield.value = this.kernel().name();
+        this.namefield_object.setValue(this.kernel().name());
         this.layout();
         this.updateContains();
 
@@ -253,6 +253,7 @@ VisibleKernelController.prototype.extend({
             this.model().collapsed() == "0") {
             this.collapsed(0);
         }
+        this.setFixedSize(this.collapsed());
     },
 
     // create html elements for the child objects
@@ -319,6 +320,10 @@ VisibleKernelController.prototype.extend({
 
         WiseObject.prototype.registerHandlers.call(this);
 
+        this.namefield_object.registerResizeListener(function() {
+          this.setFixedSize(this.collapsed());
+        }.bind(this));
+
         // TODO check to see if all these terminate event listeners are necessary
 
         // setup the click handlers
@@ -376,7 +381,6 @@ VisibleKernelController.prototype.extend({
     // performs internal visual layout of the html elements for this kernel
     layout: function(){
         WiseObject.prototype.layout.call(this);
-        this.layoutNamefield();
     },
 
     // causes the internal elements to resize if necessary
@@ -391,17 +395,13 @@ VisibleKernelController.prototype.extend({
         }
     },
 
-    // Size the namefield appropriate
-    layoutNamefield: function() {
-        var width = KernelObject.prototype.layoutNamefield.call(this);
-        this.setFixedSize(this.collapsed());
-    },
-
     // Toggles whether the kernel is fixed width or not, and updates the width if it is.
     // Accepts:
     //   fixed - a boolean indicating whether the kernel should be fixed width
     setFixedSize: function(fixed){
-        width = (this.getNameFieldWidth()+50);
+        width = this.namefield_object.getWidth() + 50;
+        console.log("VisibleKernelController: width for %s is %d", this.model().contained_object().name(), width);
+        console.log("got width %d", width);
         if(fixed){
             this.htmlElement.style.width = width+'px';
             this.htmlElement.style.height = '';
@@ -469,7 +469,7 @@ VisibleKernelController.prototype.extend({
     },
 
     getMinWidth: function() {
-        var nameFieldWidth =  this.getNameFieldWidth()+50;
+        var nameFieldWidth =  this.namefield_object.getWidth() + 50;
         return Math.max(nameFieldWidth,100);
     },
 
