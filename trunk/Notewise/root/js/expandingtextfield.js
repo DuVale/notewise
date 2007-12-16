@@ -33,7 +33,6 @@ ExpandingTextField.prototype.setValue = function(value) {
 // Causes the namefield to size itself
 ExpandingTextField.prototype.__layout = function() {
   var width = this.__getContentWidth();
-  console.log("ExpandingTextField: width for %s is %d", this.field_element.value, width);
   this.field_element.style.width = width + 'px';
   this.field_element.value = this.field_element.value;
   this.__current_width = width;
