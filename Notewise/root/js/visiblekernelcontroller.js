@@ -400,8 +400,6 @@ VisibleKernelController.prototype.extend({
     //   fixed - a boolean indicating whether the kernel should be fixed width
     setFixedSize: function(fixed){
         width = this.namefield_object.getWidth() + 50;
-        console.log("VisibleKernelController: width for %s is %d", this.model().contained_object().name(), width);
-        console.log("got width %d", width);
         if(fixed){
             this.htmlElement.style.width = width+'px';
             this.htmlElement.style.height = '';
