@@ -249,7 +249,7 @@ Utils = {
     },
 
     // Gets the size of the given text, in the given font
-    getTextWidth: function(text,size){
+    getTextWidth: function(text, font_size, font_family, font_style){
         // Create the dummy span we will use for checking the size of the text.
         // The idea is that spans size themselves automatically, so it should
         // be possible to set the text in the span (and set the font of the
@@ -260,9 +260,15 @@ Utils = {
             Utils.__getTextWidthCache = {};
         }
 
+        // Replace spaces with &nbsp; so that the browser doesn't collapse the
+        // spaces, and thus, stops counting the spaces in the overall width.
 
-        if(Utils.__getTextWidthCache[size+":"+text] !== undefined ){
-            return Utils.__getTextWidthCache[size+":"+text];
+        text = text.replace(/ /g, "&nbsp;");
+
+        var cache_key = text + "|" + font_size + "|" + font_family + "|" + font_style;
+
+        if(Utils.__getTextWidthCache[cache_key] !== undefined ){
+            return Utils.__getTextWidthCache[cache_key];
         }
 
         if(Utils.textSizingBox === undefined){
@@ -272,20 +278,25 @@ Utils = {
             var body = document.getElementsByTagName('body')[0];
             body.appendChild(Utils.textSizingBox);
             Utils.textSizingBox.style.position = 'absolute';
-            Utils.textSizingBox.style.left = '-2000px';
-            Utils.textSizingBox.style.bottom = '20px';
+            Utils.textSizingBox.style.right = '-100px';
+            Utils.textSizingBox.style.top = '-500px';
+            Utils.textSizingBox.style.border = '1px solid red';
         }
-        Utils.textSizingBox.style.fontSize = size;
-        Utils.textSizingBox.firstChild.data = text;
+        Utils.textSizingBox.style.fontSize = font_size;
+        Utils.textSizingBox.style.fontFamily = font_family;
+        Utils.textSizingBox.style.fontStyle = font_style;
+        Utils.textSizingBox.innerHTML = text;
         var width = Utils.textSizingBox.offsetWidth;
-        Utils.__getTextWidthCache[size+":"+text] = width;
+        Utils.__getTextWidthCache[cache_key] = width;
         return width;
     },
 
-    // returns the widht of the tex tin a given input field
-    getInputTextWidth: function(field){
-        return Utils.getTextWidth(field.value, Utils.getStyle(field,
-                                                            'font-size'))*1.15+10;
+    // returns the widht of the text in a given input field
+    getInputTextWidth: function(field, value){
+        return Utils.getTextWidth(value || field.value,
+                                  Utils.getStyle(field, 'font-size'),
+                                  Utils.getStyle(field, 'font-family'),
+                                  Utils.getStyle(field, 'font-style'));
     },
 
     get_agent: function () {
@@ -367,4 +378,14 @@ function stack_trace(skip) {
 
 function cluck(message) {
     printfire("Error - "+message+"\n"+stack_trace(1));
+}
+
+if (!window.console || !console.firebug)
+{
+    var names = ["log", "debug", "info", "warn", "error", "assert", "dir", "dirxml",
+    "group", "groupEnd", "time", "timeEnd", "count", "trace", "profile", "profileEnd"];
+
+    window.console = {};
+    for (var i = 0; i < names.length; ++i)
+        window.console[names[i]] = function() {}
 }
