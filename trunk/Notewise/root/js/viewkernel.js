@@ -11,7 +11,6 @@ ViewKernel.prototype.extend( {
         // TODO(scotty): this is a horrible hack to get around the fact that
         // ExpandingTextField doesn't do what we want - we want the namefield
         // for the view kernel to be the full width of the bar.  Fix this when we refactor ViewKernel.
-        this.namefield_object.__layout = this.layoutNamefield.bind(this);
     },
 
     fetchElements: function () {
@@ -81,7 +80,6 @@ ViewKernel.prototype.extend( {
 
 
     destroy: function() {
-        printfire("deleteing view "+this.kernel_id());
         this.unregisterHandlers();
         this.kernel().destroy();
         window.history.back();
@@ -91,7 +89,6 @@ ViewKernel.prototype.extend( {
 
 // make this kernel into the current view (ie, switch the url to this kernel)
 ViewKernel.makeView = function(kernel_id){
-    printfire("makeView("+kernel_id+")");
     dhtmlHistory.add(''+kernel_id,{}); // TODO add in username or kernel title here
     ViewKernel.doMakeView(kernel_id);
 }
@@ -118,11 +115,10 @@ ViewKernel.finishMakeView = function(kernel_id){
     // setup new view
     view = new ViewKernel(kernel_id, $('viewkernel'));
     view.realize();
-    view.namefield_object.setValue(view.kernel().name());
+    $('viewname').value = view.kernel().name();
     document.title = view.kernel().name() + " - Notewise.com";
 
     date = new Date();
-    printfire("switching took: "+(date.getTime() - time));
     $('mysearchfield').focus();
 };
 

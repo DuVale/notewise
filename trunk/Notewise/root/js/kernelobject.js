@@ -28,7 +28,6 @@ KernelObject.prototype = {
                       function() { dndMgr.clearSelection(); dndMgr.giveSearchBoxFocus(); } );
         
         // setup the namefield actions
-        this.namefield_object = new ExpandingTextField(this.namefield);
 //        Event.observe(this.namefield,'keypress', this.loseFocusOnEnter.bindAsEventListener(this));
 
         // drag in namefield should select text, not drag object
