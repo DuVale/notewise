@@ -244,6 +244,8 @@ VisibleKernelController.prototype.extend({
         this.htmlElement.innerHTML = innerHTML;
         WiseObject.prototype.realize.call(this,parent);
 
+        this.body = new KernelBody(this.bodyElement, this.contained_object());
+
         this.namefield_object.setValue(this.kernel().name());
         this.layout();
         this.updateContains();
@@ -264,7 +266,7 @@ VisibleKernelController.prototype.extend({
 
     insertChildren: function(t) {
 
-        this.body.innerHTML = t.responseText;
+        this.bodyElement.innerHTML = t.responseText;
         this.updateContains();
 
         var match    = new RegExp(Ajax.Updater.ScriptFragment, 'img');
@@ -393,7 +395,7 @@ VisibleKernelController.prototype.extend({
                                                  this.leftbackground.clientWidth -
                                                  this.rightbackground.clientWidth -
                                                  this.midrightbackground.clientWidth + 1) + 'px';
-            this.resizeChildren();
+//            this.resizeChildren();
         }
     },
 
@@ -451,8 +453,8 @@ VisibleKernelController.prototype.extend({
                 this.setFixedSize(false);
                 dndMgr.moveToFront(this.htmlElement);
 
-                var vkernels = Utils.getElementsByClassName(this.body,'vkernel');
-                var notes = Utils.getElementsByClassName(this.body,'note');
+                var vkernels = Utils.getElementsByClassName(this.bodyElement,'vkernel');
+                var notes = Utils.getElementsByClassName(this.bodyElement,'note');
                 if(this.kernel().has_children() &&
                    vkernels.length == 0 && notes.length == 0){        
                     this.hydrateChildren();

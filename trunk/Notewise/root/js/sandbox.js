@@ -1,3 +1,5 @@
+//TODO(scotty) Convert this to use KernelBody
+
 var Sandbox = Class.create();
 
 Sandbox.prototype = (new Dropzone()).extend( {
@@ -5,7 +7,7 @@ Sandbox.prototype = (new Dropzone()).extend( {
    initialize: function( htmlElement, id ) {
         this.type        = 'Sandbox';
         this.htmlElement = htmlElement;
-        this.body = htmlElement;
+        this.bodyElement = htmlElement;
         this.id          = id;
         dndMgr.registerDropZone( this );
    },

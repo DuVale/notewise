@@ -122,6 +122,7 @@
         <script type="text/javascript" src="[%base%]js/relationship.js"></script>
         <script type="text/javascript" src="[%base%]js/expandingtextfield.js"></script>
         <script type="text/javascript" src="[%base%]js/kernelobject.js"></script>
+        <script type="text/javascript" src="[%base%]js/kernelbody.js"></script>
         <script type="text/javascript" src="[%base%]js/visiblekernelcontroller.js"></script>
         <script type="text/javascript" src="[%base%]js/nonmovingkernel.js"></script>
         <script type="text/javascript" src="[%base%]js/viewkernel.js"></script>
@@ -153,7 +154,6 @@
         } else {
             viewKernelId = [%lastviewed.get_column('object_id')%];
         }
-        printfire("starting at "+viewKernelId);
         var view = null;
         ViewKernel.makeView(viewKernelId);
 

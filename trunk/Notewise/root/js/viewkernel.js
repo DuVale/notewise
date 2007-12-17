@@ -7,14 +7,12 @@ ViewKernel.prototype = new NonMovingKernel();
 ViewKernel.prototype.extend( {
     initialize: function(id, htmlElement) {
         NonMovingKernel.prototype.initialize.call(this,id,htmlElement);
+        this.__kernel_id = id;
         window.onresize = this.layoutResize.bindAsEventListener(this);
-        // TODO(scotty): this is a horrible hack to get around the fact that
-        // ExpandingTextField doesn't do what we want - we want the namefield
-        // for the view kernel to be the full width of the bar.  Fix this when we refactor ViewKernel.
     },
 
     fetchElements: function () {
-        this.body = this.htmlElement;
+        this.bodyElement = this.htmlElement;
         this.namefield = $('viewname');
     },
 
@@ -67,6 +65,8 @@ ViewKernel.prototype.extend( {
             rel.realize(this.kernel().id());
         }
 
+        this.body = new KernelBody(this.bodyElement, this.kernel());
+
         var kernel_id = this.kernel_id();
         window.setTimeout(function () {new Ajax.Updater('parents_content',
                          '/kernel/parentshtml/' + kernel_id,
@@ -78,11 +78,14 @@ ViewKernel.prototype.extend( {
 
     },
 
-
     destroy: function() {
         this.unregisterHandlers();
         this.kernel().destroy();
         window.history.back();
+    },
+
+    kernel_id: function() {
+        return this.__kernel_id;
     }
 });
 
