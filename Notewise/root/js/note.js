@@ -99,27 +99,27 @@ Note.prototype.extend({
         WiseObject.prototype.registerHandlers.call(this);
         
         // setup the blur handler for the textarea
-        this.body.__hasFocus = false;
-        this.body.onfocus = this.bodyFocus.bindAsEventListener(this);
-        this.body.onblur = this.contentChanged.bindAsEventListener(this);
+        this.bodyElement.__hasFocus = false;
+        this.bodyElement.onfocus = this.bodyFocus.bindAsEventListener(this);
+        this.bodyElement.onblur = this.contentChanged.bindAsEventListener(this);
 
         // TODO DRY - consolidate these into a big list of element/event pairs
         // Setup action terminators
 
         // dragging on the body shouldn't drag the object
-        Event.observe(this.body, 'mousedown',
+        Event.observe(this.bodyElement, 'mousedown',
                                     Utils.terminateEvent.bindAsEventListener(this));
 
         Event.observe(this.htmlElement, 'dblclick',
                                     Utils.terminateEvent.bindAsEventListener(this));
                                     
-        Event.observe(this.body, 'click',
+        Event.observe(this.bodyElement, 'click',
                                     Utils.terminateEvent.bindAsEventListener(this));
 
         // handles problem with firefox/gecko not rendering scrollbars properly on mac - see bug #224
         if(Utils.is_mac() && Utils.is_gecko()) {
-            Event.observe(this.corner, 'mouseover', function () { this.body.style.overflow = "hidden"; }.bind(this));
-            Event.observe(this.corner, 'mouseout', function () { this.body.style.overflow = ""; }.bind(this));
+            Event.observe(this.corner, 'mouseover', function () { this.bodyElement.style.overflow = "hidden"; }.bind(this));
+            Event.observe(this.corner, 'mouseout', function () { this.bodyElement.style.overflow = ""; }.bind(this));
         }
     },
 
@@ -136,22 +136,22 @@ Note.prototype.extend({
     },
 
     bodyFocus: function (e) {
-      this.body.__hasFocus = true;
+      this.bodyElement.__hasFocus = true;
       dndMgr.updateSelection(this,false);
     },
     
     contentChanged: function (e) {
-        var text = this.body.value;
+        var text = this.bodyElement.value;
         if(text != this.content()) {
             this.content(text);
             this.model().update();
         }
-        this.body.__hasFocus = false;
+        this.bodyElement.__hasFocus = false;
     },
 
     // Select this kernel
     select: function () {
-        if (this.body.__hasFocus) this.retainFocus = true;
+        if (this.bodyElement.__hasFocus) this.retainFocus = true;
         else this.retainFocus = false;
   
         WiseObject.prototype.select.call(this,parent);
@@ -159,15 +159,15 @@ Note.prototype.extend({
 
     // Mark this kernel as not selected
     deselect: function () {
-        this.body.retainFocus = false;
+        this.bodyElement.retainFocus = false;
         WiseObject.prototype.deselect.call(this,parent);
     },
 
     startDrag: function() {
-        if (this.body.__hasFocus) { 
-          this.body.retainFocus = true; 
+        if (this.bodyElement.__hasFocus) { 
+          this.bodyElement.retainFocus = true; 
         } else { 
-          this.body.retainFocus = false; 
+          this.bodyElement.retainFocus = false; 
         }
         WiseObject.prototype.startDrag.call(this,parent);
     },
@@ -176,7 +176,7 @@ Note.prototype.extend({
         WiseObject.prototype.endDrag.call(this,parent);
 
         if(this.retainFocus) {
-          this.body.focus();
+          this.bodyElement.focus();
         }
     },
  
@@ -184,7 +184,7 @@ Note.prototype.extend({
         WiseObject.prototype.cancelDrag.call(this,parent);
         
         if(this.retainFocus)
-          this.body.focus();
+          this.bodyElement.focus();
     },
 
     // makes notes compatible with visible ojbects for relationships
@@ -216,7 +216,7 @@ Note.prototype.extend({
         this.rightbackground = Utils.getElementsByClassName(this.htmlElement, 'note-right')[0];
         this.leftbackground = Utils.getElementsByClassName(this.htmlElement, 'note-left')[0];
         var bodycontainer = Utils.getElementsByClassName(this.htmlElement, 'bodycontainer')[0];
-        this.body = Utils.getElementsByClassName(bodycontainer, 'notebody')[0];
+        this.bodyElement = Utils.getElementsByClassName(bodycontainer, 'notebody')[0];
         this.corner = Utils.getElementsByClassName(bodycontainer, 'corner')[0];
     },
 

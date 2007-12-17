@@ -44,7 +44,7 @@ WiseObject.prototype.extend({
     // retrieves references to all the relevant html elements and stores them
     // as properties in this object
     fetchElements: function () {
-        this.body = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
+        this.bodyElement = Utils.getElementsByClassName(this.htmlElement, 'body')[0];
         this.corner = Utils.getElementsByClassName(this.htmlElement, 'corner')[0];
         this.removebutton = Utils.getElementsByClassName(this.htmlElement, 'removebutton')[0];
         this.relationshiphalo = Utils.getElementsByClassName(this.htmlElement, 'relationshiphalo')[0];
@@ -265,7 +265,7 @@ WiseObject.prototype.extend({
 
     // causes the internal elements to resize if necessary
     layoutResize: function() {
-      if(this.body != undefined){
+      if(this.bodyElement != undefined){
           // The -1 is to compensate for problems with calculating the width of
           // html elements that are set via a percentage.  It seems that
           // firefox always rounds up to the nearest integer for things like
@@ -273,8 +273,8 @@ WiseObject.prototype.extend({
           // Instead, we compensate by always subtracting one, and setting the
           // right and bottom in the css to be 1px rather than 0px, for both
           // the body, and the right header image (so they line up)
-          this.body.style.width = Math.max(0,this.htmlElement.clientWidth - 1) + 'px';
-          this.body.style.height = Math.max(0,this.htmlElement.clientHeight - this.body.offsetTop - 1) + 'px';
+          this.bodyElement.style.width = Math.max(0,this.htmlElement.clientWidth - 1) + 'px';
+          this.bodyElement.style.height = Math.max(0,this.htmlElement.clientHeight - this.bodyElement.offsetTop - 1) + 'px';
       }
       // XXX could change this to only do this if the halo is visible, for speed.  We'd need to make sure this gets called when the object gets expanded though
       if(this.relationshiphalo != undefined){
@@ -485,9 +485,9 @@ WiseObject.prototype.extend({
         }
     },
 
-    // accepts the vkernel to reparent to, and whether or not to notify the server about it
-    reparent: function(vkernel, do_update) {
-        var parentElement = vkernel.body;
+    // accepts the kernel body to reparent to, and whether or not to notify the server about it
+    reparent: function(body, do_update) {
+        var parentElement = body.bodyElement;
 
         var oldParent = this.oldParentNode.parentNode.kernel;
         if (oldParent == null){
@@ -545,7 +545,7 @@ WiseObject.prototype.extend({
 
         // this is a hack to avoid having to retrieve the kernel object
         // itself, since we don't really need it right now
-        this.model().container_object(vkernel.kernel_id());
+        this.model().container_object(body.kernel.id());
         this.model().update();
 
         // add the object back into the object cache
@@ -555,9 +555,10 @@ WiseObject.prototype.extend({
         if(oldParent && oldParent.updateContains){
             oldParent.updateContains();
         }
-        if(vkernel.updateContains){
-            vkernel.updateContains();
-        }
+        // TODO(scotty): figure out how this gets called
+//        if(vkernel.updateContains){
+//            vkernel.updateContains();
+//        }
 
         // delete all the old relationships and create new ones
         if(parentElement != this.oldParentNode){
