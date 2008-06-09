@@ -235,23 +235,34 @@ Ajax.Request.prototype = (new Ajax.Base()).extend({
     var parameters = this.options.parameters || '';
     if (parameters.length > 0) parameters += '&_=';
 
+    if (url == '' || url == undefined) {
+      alert("Ajax.Request.request: url was empty");
+      return;
+    }
+
     try {
-      if (this.options.method == 'get')
-        url += '?' + parameters;
+        if (this.options.method == 'get')
+          url += '?' + parameters;
 
-      this.transport.open(this.options.method, url,
-        this.options.asynchronous);
+        try {
+          this.transport.open(this.options.method, url,
+            this.options.asynchronous);
 
-      if (this.options.asynchronous) {
-        this.transport.onreadystatechange = this.onStateChange.bind(this);
-        setTimeout((function() {this.respondToReadyState(1)}).bind(this), 10);
-      }
+        } catch (e) {
+          alert('Ajax.Request.request - transport.open error: '+
+                e.name+' - '+e.message);
+        }
 
-      this.setRequestHeaders();
+        if (this.options.asynchronous) {
+          this.transport.onreadystatechange = this.onStateChange.bind(this);
+          setTimeout((function() {this.respondToReadyState(1)}).bind(this), 10);
+        }
 
-      var body = this.options.postBody ? this.options.postBody : parameters;
-      this.transport.send((this.options.method == 'post'
-                           || this.options.method == 'put') ? body : null);
+        this.setRequestHeaders();
+
+        var body = this.options.postBody ? this.options.postBody : parameters;
+        this.transport.send((this.options.method == 'post'
+                             || this.options.method == 'put') ? body : null);
 
     } catch (e) {
         alert('Ajax.Request generated an error: '+e.name+' - '+e.message);

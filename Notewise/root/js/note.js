@@ -48,6 +48,18 @@ Note.prototype.extend({
         return this;
     },
 
+    // Creates the note on the server, asynchronously.
+    // TODO(scotty): maybe rename this to insert once we split out the model.
+    create: function() {
+        this.insert({asynchronous:true,
+                     onSuccess: function(){
+                       objectCache[this.idString()]=this;
+                       if (this.htmlElement) {
+                           this.htmlElement.id="note"+this.id();
+                       }
+                     }.bind(this)});
+    },
+
     setup: function () {
         WiseObject.prototype.setup.call(this);
 
@@ -62,9 +74,10 @@ Note.prototype.extend({
     // in root/Kernel/kernel.tt.  Maybe think about shipping the html as part
     // of the xml?  Or maybe a seperate ajax call?
     realize: function(parent) {
-        
         this.htmlElement = document.createElement('div');
-        this.htmlElement.id="note"+this.id();
+        if (this.id() != undefined) {
+          this.htmlElement.id="note"+this.id();
+        }
         this.htmlElement.className="note note-notselected";
         var innerHTML =
            "<a title='Delete note' class=\"removebutton\"></a>"
@@ -91,7 +104,7 @@ Note.prototype.extend({
            +"</div>"
         this.htmlElement.innerHTML = innerHTML;
         this.htmlElement.note=this;
-        WiseObject.prototype.realize.call(this,parent);
+        WiseObject.prototype.realize.call(this, parent);
     },
 
     // setup all the event listeners

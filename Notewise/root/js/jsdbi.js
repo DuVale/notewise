@@ -76,6 +76,7 @@ JSDBI.prototype = {
             // only do this if the class has been properly initialized
             this.__internalUrl = this.url();
         }
+        this.__fieldsChanged = [];
     },
 
     // Returns the primary key(s) for this object
@@ -123,21 +124,53 @@ JSDBI.prototype = {
     },
 
     onInsertFinish: function (options,transport){
-        if(!transport.responseXML){
-            alert("Got bogus xml response to insert: "+request.transport.responseText);
-        }
-        this.__populate(transport.responseXML);
-        if(options.onSuccess){
-            options.onSuccess();
-        }
+      if(!transport.responseXML){
+          alert("Got bogus xml response to insert: " + transport.responseText);
+      }
+      this.__populate(transport.responseXML);
+      if(options.onSuccess){
+          options.onSuccess();
+      }
     },
 
+    // Marks a field as changed.
+    __setFieldChanged: function(field_name) {
+        this.__fieldsChanged.push(field_name);
+    },
+
+    // Returns true if any of the fields have changed since we last sent the
+    // values to the server.
+    __isChanged: function() {
+        return this.__fieldsChanged.length > 0;
+    },
+
+    // Returns true if the field has changed since we last sent the values to
+    // the server.
+    __isFieldChanged: function(field_name) {
+        for (var i = 0; i < this.__fieldsChanged.length; i++) {
+            if (field_name == this.__fieldsChanged[i]) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    // Resets the lists of fields that have changed.
+    __clearChanged: function() {
+        this.__fieldsChanged = [];
+    },
 
     // Sends any updated fields in the object to the server.
     update: function(callback) {
-        if(!this.__updated){
+        if(!this.__isChanged()){
             // don't update if we don't need to
             return;
+        }
+        if (this.internalUrl() == undefined) {
+          // Not yet ready to update: no url was received yet.  This object
+          // must have been just created.
+          this.__needs_update = true;
+          return;
         }
         var params = this.__getParams();
         if(JSDBI.__updates_in_progress == 0){
@@ -151,7 +184,8 @@ JSDBI.prototype = {
                                                      asynchronous: true,
                                                      onComplete: this.afterUpdate.bindWithParams(this,callback) } );
         this.internalUrl(this.url());
-        this.__updated = false;
+        this.__clearChanged();
+        this.__needs_update = false;
         return;
     },
 
@@ -201,9 +235,16 @@ JSDBI.prototype = {
             elements = elements[0].getElementsByTagName(this.__elementTag);
             xml = elements[0];
         }
-        for(var i=0;i<this.__fields.length;i++){
+        for (var i=0;i<this.__fields.length;i++){
             var field = this.__fields[i];
-            if(field == this.__contentField){
+            if (this.__isFieldChanged(field)) {
+                // Skip fields that have changed since we sent them to the
+                // server.  This helps prevent __populate from overwriting
+                // fields that were updated after an insert request was sent,
+                // but before it was received.
+                continue;
+            }
+            if (field == this.__contentField){
                 this[field](xml.textContent);
             } else {
                 this[field](xml.getAttribute(field));
@@ -251,6 +292,10 @@ JSDBI.prototype = {
         }
 
         this.internalUrl(this.url());
+
+        if (this.__needs_update) {
+          this.update();
+        }
     },
 
     // returns a string containing all the fields for this object joined together as cgi parameters
@@ -265,7 +310,8 @@ JSDBI.prototype = {
             if(paramList){
                 paramList = paramList + '&';
             }
-            paramList = paramList + escape(fieldName)+'='+escape(this.__getField(fieldName));
+            paramList = paramList + escape(fieldName) + '=' +
+                        escape(this.__getField(fieldName));
         }
         return paramList;
     },
@@ -392,7 +438,7 @@ JSDBI.__createAccessor = function (field){
         var thisfield = field;
         // XXX add a unit test to make sure this works with false and 0 as values
         if(value !== undefined){
-            this.__updated = true;
+            this.__setFieldChanged(thisfield);
             return this.__setField(thisfield,value);
         } else {
             return this.__getField(thisfield);
