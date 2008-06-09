@@ -10,6 +10,7 @@
 <tr><td><b>Test Suite</b></td></tr>
 <tr><td><a href="kernel_view/create_new_note">kernel_view/create_new_note</a></td></tr>
 <tr><td><a href="kernel_view/note_saving">kernel_view/note_saving</a></td></tr>
+<tr><td><a href="kernel_view/verify_new_view_state">kernel_view/verify_new_view_state</a></td></tr>
 </tbody></table>
 </body>
 </html>
