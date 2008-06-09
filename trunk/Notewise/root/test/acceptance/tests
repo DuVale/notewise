@@ -8,6 +8,10 @@
 <body>
 <table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
 <tr><td><b>Test Suite</b></td></tr>
+<tr><td><a href="homepage/homepage_search_field_starts_out_selected">homepage/homepage_search_field_starts_out_selected</a></td></tr>
+<tr><td><a href="homepage/clicking_search_field_should_make_it_appear_selected">homepage/clicking_search_field_should_make_it_appear_selected</a></td></tr>
+<tr><td><a href="homepage/typing_new_kernel_name_in_search_should_show_new_option">homepage/typing_new_kernel_name_in_search_should_show_new_option</a></td></tr>
+
 <tr><td><a href="kernel_view/create_new_note">kernel_view/create_new_note</a></td></tr>
 <tr><td><a href="kernel_view/note_saving">kernel_view/note_saving</a></td></tr>
 <tr><td><a href="kernel_view/verify_new_view_state">kernel_view/verify_new_view_state</a></td></tr>
