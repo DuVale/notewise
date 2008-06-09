@@ -60,8 +60,9 @@ KernelBody.prototype.gotClick = function(e) {
         this.addNewNote(e);
         // block note creation, so we don't create two notes on a double click
         this.blockObjectCreation = true;
-        window.setTimeout(function () { this.blockObjectCreation = false; },
-                          1000);
+        window.setTimeout(function () {
+            this.blockObjectCreation = false;
+        }.bind(this), 1000);
     }
 };
 
@@ -108,7 +109,7 @@ KernelBody.prototype.addNewNote = function(e) {
     note.width(15);
     note.height(15);
     note.content('');
-    note.insert({asynchronous:true, onSuccess: function(){objectCache[this.idString()]=this;}.bind(note)});
+    note.create();
 
     note.realize(this.bodyElement);
     dndMgr.updateSelection(note, false);
