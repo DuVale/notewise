@@ -8,7 +8,8 @@ JSDBI.inherit(VisibleKernelController,new WiseObject());
 JSDBI.inherit(VisibleKernelController,new KernelObject());
 
 VisibleKernelController.prototype.extend({
-    initialize: function(container_object,contained_object,htmlElement,x,y,width,height,collapsed) {
+    initialize: function(container_object, contained_object, htmlElement, 
+                         x, y, width, height, collapsed) {
         this.type = 'vkernel';
         model = new VisibleKernelModel();
         model.container_object(container_object);
