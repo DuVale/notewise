@@ -1249,6 +1249,7 @@ div.search {
 
 .kernelview div.search {
     margin-top: 30px;
+    float: left;
 }
 
 div.search input {
