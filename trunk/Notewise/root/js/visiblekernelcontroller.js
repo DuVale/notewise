@@ -19,7 +19,9 @@ VisibleKernelController.prototype.extend({
         model.width(width);
         model.height(height);
         model.collapsed(collapsed);
-        // TODO(scotty): It's not quite clear why internalUrl is required in the first place, or why we need to set it here.  This should be removed.
+        // TODO(scotty): It's not quite clear why internalUrl is required in
+        // the first place, or why we need to set it here.  This should be
+        // removed.
         model.internalUrl(model.url());
         this.__model = model;
         this.superclass = VisibleKernelController.superclass;
@@ -29,7 +31,8 @@ VisibleKernelController.prototype.extend({
 
         var func_names = [];
 
-        // Note that destroy() is inherited from wiseobject, which calls JSDBI.prototype.destroy.call(this).  Ewww....
+        // Note that destroy() is inherited from wiseobject, which calls
+        // JSDBI.prototype.destroy.call(this).  Ewww....
         for (var i = 0; i < func_names.length; i++) {
             this.addProxyFunction(this, func_names[i]);
             this.addProxyFunction(this.superclass, func_names[i]);
