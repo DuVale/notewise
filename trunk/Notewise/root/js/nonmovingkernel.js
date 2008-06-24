@@ -10,10 +10,6 @@ NonMovingKernel.prototype.extend( {
         KernelObject.prototype.initialize.call(this,htmlElement);
     },
 
-    layoutResize: function() {
-        this.resizeChildren();
-    },
-
     // dummy method - this is used by resizeChildren.
     collapsed: function() {
         return false;

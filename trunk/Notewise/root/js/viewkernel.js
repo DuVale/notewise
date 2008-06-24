@@ -27,8 +27,8 @@ ViewKernel.prototype.extend( {
     },
 
     layoutResize: function() {
-        NonMovingKernel.prototype.layoutResize.call(this);
         this.layoutNamefield();
+        this.body.layoutChildren();
     },
 
     layoutNamefield: function() {
