@@ -124,7 +124,6 @@
         <script type="text/javascript" src="[%base%]js/kernelobject.js"></script>
         <script type="text/javascript" src="[%base%]js/kernelbody.js"></script>
         <script type="text/javascript" src="[%base%]js/visiblekernelcontroller.js"></script>
-        <script type="text/javascript" src="[%base%]js/nonmovingkernel.js"></script>
         <script type="text/javascript" src="[%base%]js/viewkernel.js"></script>
         <script type="text/javascript" src="[%base%]js/kernelthumbnail.js"></script>
         <script type="text/javascript" src="[%base%]js/kernel.js"></script>

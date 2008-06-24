@@ -9,7 +9,6 @@
 [% INCLUDE 'js/wiseobject.js' %]
 [% INCLUDE 'js/relationship.js' %]
 [% INCLUDE 'js/kernelobject.js' %]
-[% INCLUDE 'js/nonmovingkernel.js' %]
 [% INCLUDE 'js/viewkernel.js' %]
 [% INCLUDE 'js/kernelthumbnail.js' %]
 [% INCLUDE 'js/kernel.js' %]
