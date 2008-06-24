@@ -345,6 +345,12 @@ Utils = {
     }
 };
 
+function log() {
+  // TODO(scotty): Change this to pass any number of arguments using apply()
+  printfire(arguments[0]);
+}
+
+// XXX: DEPRECATED
 function printfire() {
     if (window.console) {
         console.debug(arguments[0]);
