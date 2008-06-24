@@ -22,19 +22,19 @@ AjaxRequestStub.prototype = (new Ajax.Base()).extend({
   request: function(url) {
     this.requested_url = url;
     this.request_called_count += 1;
-    console.log("request(%s)", url);
+    log("request(%s)", url);
   },
 
   setRequestHeaders: function() {
-    console.log("setRequestHeaders");
+    log("setRequestHeaders");
   },
 
   onStateChange: function() {
-    console.log("onStateChange");
+    log("onStateChange");
   },
 
   respondToReadyState: function(readyState) {
-    console.log("respondToReadyState");
+    log("respondToReadyState");
   },
 
   fireOnSuccess: function() {
