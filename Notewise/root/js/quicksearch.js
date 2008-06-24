@@ -43,3 +43,16 @@ new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '/s',
                          }
 });
 $('mysearchfield').focus();
+
+function new_view(kernel_name){
+    var kernel;
+    if(kernel_name){
+        kernel = Kernel.insert({name: kernel_name});
+    } else {
+        kernel = Kernel.insert({});
+    }
+    ViewKernel.makeView(kernel.id());
+    if(!kernel_name){
+        window.setTimeout(function(){$('viewname').focus();},500);
+    }
+}

@@ -40,3 +40,7 @@ new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '/s',
                          }
 });
 $('mysearchfield').focus();
+
+function new_view(kernel_name){
+  window.location = '/kernel/add?name=' + escape(kernel_name);
+}

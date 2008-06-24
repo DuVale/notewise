@@ -91,10 +91,10 @@ ViewKernel.prototype.extend( {
 
 
 // make this kernel into the current view (ie, switch the url to this kernel)
-ViewKernel.makeView = function(kernel_id){
+ViewKernel.makeView = function(kernel_id) {
     dhtmlHistory.add(''+kernel_id,{}); // TODO add in username or kernel title here
     ViewKernel.doMakeView(kernel_id);
-}
+};
 
 // make this kernel into the current view (ie, switch the url to this kernel),
 // but don't add it to the history.  Should only be called when we were
