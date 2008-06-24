@@ -4,21 +4,21 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://rackham.corp.google.com:3000" />
-<title>create_new_note</title>
+<title>note_saving</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">create_new_note</td></tr>
+<tr><td rowspan="1" colspan="3">note_saving</td></tr>
 </thead><tbody>
-<tr>
-	<td>windowFocus</td>
-	<td></td>
-	<td></td>
-</tr>
 <tr>
 	<td>open</td>
 	<td>/kernel/add?name=</td>
+	<td></td>
+</tr>
+<tr>
+	<td>windowFocus</td>
+	<td></td>
 	<td></td>
 </tr>
 <tr>
@@ -42,14 +42,24 @@
 	<td></td>
 </tr>
 <tr>
-	<td>assertXpathCount</td>
-	<td>//div[@id='viewkernel']/div[contains(@class, 'note')]</td>
-	<td>1</td>
+	<td>click</td>
+	<td>//div[@id='viewkernel']/div[contains(@class, 'note')]//*[@class='notebody']</td>
+	<td></td>
 </tr>
 <tr>
-	<td>verifyAttribute</td>
-	<td>//div[@id='viewkernel']/div[contains(@class, 'note')]@class</td>
-	<td>regexp:.*note-selected.*</td>
+	<td>typeKeys</td>
+	<td>//div[@id='viewkernel']/div[contains(@class, 'note')]//*[@class='notebody']</td>
+	<td>This is a test</td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>viewkernel</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseUp</td>
+	<td>viewkernel</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForCondition</td>
@@ -57,9 +67,34 @@
 	<td>5000</td>
 </tr>
 <tr>
-	<td>verifyAttribute</td>
+	<td>storeAttribute</td>
 	<td>//div[@id='viewkernel']/div[contains(@class, 'note')]@id</td>
-	<td>regexp:note\d+</td>
+	<td>note_id</td>
+</tr>
+<tr>
+	<td>runScript</td>
+	<td>console.info(&quot;note_id: ${note_id}&quot;);</td>
+	<td></td>
+</tr>
+<tr>
+	<td>runScript</td>
+	<td>window.location.reload()</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForPageToLoad</td>
+	<td>60000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='${note_id}']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>//div[@id='${note_id}']//*[contains(@class, 'notebody')]</td>
+	<td>This is a test</td>
 </tr>
 
 </tbody></table>
