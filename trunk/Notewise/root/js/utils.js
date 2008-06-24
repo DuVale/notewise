@@ -347,18 +347,13 @@ Utils = {
 
 function log() {
   // TODO(scotty): Change this to pass any number of arguments using apply()
-  printfire(arguments[0]);
+  printfire.apply(null, arguments);
 }
 
 // XXX: DEPRECATED
 function printfire() {
     if (window.console) {
-        console.debug(arguments[0]);
-    } else if (document.createEvent) {
-        printfire.args = arguments;
-        var ev = document.createEvent("Events");
-        ev.initEvent("printfire", false, true);
-        dispatchEvent(ev);
+        console.debug.apply(this, arguments);
     }
 }
 

@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <script src="../../jsunit/app/jsUnitCore.js"></script>
+    <script src="../prototype.js"></script>
+    <script src="../utils.js"></script>
+    <script src="../test_utils.js"></script>
+    <script src="../jsdbi.js"></script>
+  </head>
+  <body>
+    <script>
+      function testLog() {
+        var results = {};
+        window.printfire = function (arg1, arg2, arg3) {
+          results.arg1 = arg1;
+          results.arg2 = arg2;
+          results.arg3 = arg3;
+        }
+        log(1, 2, 3);
+        assertEquals(1, results.arg1);
+        assertEquals(2, results.arg2);
+        assertEquals(3, results.arg3);
+      }
+    </script>
+  </body>
+</html>
