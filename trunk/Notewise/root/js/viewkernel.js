@@ -3,12 +3,26 @@
 // is).
 
 var ViewKernel = Class.create();
-ViewKernel.prototype = new NonMovingKernel();
+ViewKernel.prototype = new KernelObject();
 ViewKernel.prototype.extend( {
     initialize: function(id, htmlElement) {
-        NonMovingKernel.prototype.initialize.call(this,id,htmlElement);
+        this.__kernel_id = id;
+        KernelObject.prototype.initialize.call(this,htmlElement);
         this.__kernel_id = id;
         window.onresize = this.layoutResize.bindAsEventListener(this);
+    },
+
+    // dummy method - this is used by resizeChildren.
+    collapsed: function() {
+        return false;
+    },
+
+    kernel: function() {
+        if(!this.__kernel && this.__kernel_id){
+            this.__kernel = Kernel.retrieve(this.__kernel_id.toString());
+        }
+
+        return this.__kernel;
     },
 
     fetchElements: function () {
@@ -17,7 +31,7 @@ ViewKernel.prototype.extend( {
     },
 
     registerHandlers: function() {
-        NonMovingKernel.prototype.registerHandlers.call(this);
+        KernelObject.prototype.registerHandlers.call(this);
         this.observe(this.namefield,'blur', this.updateName.bind(this));
     },
 
