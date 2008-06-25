@@ -8,17 +8,32 @@
   </head>
   <body>
     <script>
+      var originalConsole;
+      var debugArgs;
+
+      function setUp() {
+        originalConsole = window.console;
+        window.console = {};
+        window.console.debug = function() {
+          debugArgs = arguments;
+        };
+      }
+
+      function tearDown() {
+        window.console = originalConsole;
+      }
+
       function testLog() {
-        var results = {};
-        window.printfire = function (arg1, arg2, arg3) {
-          results.arg1 = arg1;
-          results.arg2 = arg2;
-          results.arg3 = arg3;
-        }
         log(1, 2, 3);
-        assertEquals(1, results.arg1);
-        assertEquals(2, results.arg2);
-        assertEquals(3, results.arg3);
+        assertEquals(1, debugArgs[0]);
+        assertEquals(2, debugArgs[1]);
+        assertEquals(3, debugArgs[2]);
+      }
+
+      function testLogNoConsole() {
+        delete window.console;
+        log(1, 2, 3);
+        assertUndefined(debugArgs);
       }
     </script>
   </body>

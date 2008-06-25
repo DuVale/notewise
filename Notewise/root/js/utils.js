@@ -347,14 +347,9 @@ Utils = {
 
 function log() {
   // TODO(scotty): Change this to pass any number of arguments using apply()
-  printfire.apply(null, arguments);
-}
-
-// XXX: DEPRECATED
-function printfire() {
-    if (window.console) {
-        console.debug.apply(this, arguments);
-    }
+  if (window.console) {
+      console.debug.apply(this, arguments);
+  }
 }
 
 function stack_trace(skip) {
@@ -375,10 +370,6 @@ function stack_trace(skip) {
         if (i > 4) break;
     }
     return s;
-}
-
-function cluck(message) {
-    printfire("Error - "+message+"\n"+stack_trace(1));
 }
 
 if (!window.console || !console.firebug)

@@ -6,7 +6,6 @@ new Ajax.Autocompleter('mysearchfield', 'mysearchresults', '/s',
                             value = Element.collectTextNodesIgnoreClass(selected_element, 'informal').unescapeHTML();
                             var link=selected_element.getElementsByTagName('a')[0];
                             var matches=link.href.match(/^http:\/\/.*\/(\d+)$/);
-                            printfire(matches);
                             if(matches && matches[1] == 0){
                                 name = $('mysearchfield').value;
                                 new_view(name);
