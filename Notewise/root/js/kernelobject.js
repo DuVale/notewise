@@ -27,8 +27,8 @@ KernelObject.prototype = {
                                    Utils.terminateEvent.bindAsEventListener(this));
         // double click in namefield should select text, not create kernel
         this.observe(this.namefield,
-                                   'dblclick',
-                                   Utils.terminateEvent.bindAsEventListener(this));
+                     'dblclick',
+                     Utils.terminateEvent.bindAsEventListener(this));
 
         if(this.namelink){
             var model = this.model();
