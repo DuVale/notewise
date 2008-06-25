@@ -3,6 +3,7 @@
 var KernelThumbnail = function(id, htmlElement) {
     this.htmlElement = htmlElement;
     this.fetchElements();
+    this.registerHandlers();
 
     this.model = Kernel.retrieve(id);
     this.body = new KernelBody(this.bodyElement);
@@ -16,11 +17,12 @@ KernelThumbnail.prototype.fetchElements = function () {
 };
 
 KernelThumbnail.prototype.registerHandlers = function() {
+    var thumbnail = this;
     Event.observe(this.htmlElement,'dblclick', function (e) {
         e = e || window.event;
         Utils.terminateEvent(e);
         Utils.preventDefault(e);
-        ViewKernel.makeView(model.kernel_id());
+        ViewKernel.makeView(thumbnail.model.id());
     });
 },
 
