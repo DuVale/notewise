@@ -497,12 +497,12 @@ WiseObject.prototype.extend({
 
         // Can't make element child of it's own child
         if(Utils.hasAncestor(parentElement,this.htmlElement)){
-            printfire("!!! SHOULDN'T GET THIS !!! - Can't reparent to it's own child");
+            log("!!! SHOULDN'T GET THIS !!! - Can't reparent to it's own child");
             return;
         }
         // and don't reparent it if it's already in the right element
         if(this.htmlElement.parentNode == parentElement){
-            printfire("Not reparenting - already in that parent");
+            log("Not reparenting - already in that parent");
             return;
         }
 
