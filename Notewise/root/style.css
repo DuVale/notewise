@@ -3,7 +3,7 @@ body.kernelview {
     top: 0; left: 0;
     padding: 0; margin: 0;
     overflow: hidden;
-    background: url('/images/background-gradient.png');
+    background: url('/images/background-gradient.png') #d4d4d4 repeat-x;
 }
 
 .vkernel {
