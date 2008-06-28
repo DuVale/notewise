@@ -18,9 +18,7 @@ use Catalyst qw/FormValidator
 
 our $VERSION = '0.01';
 
-#use Data::Dumper;
-#die Dumper(YAML::LoadFile( __PACKAGE__->path_to('config.yml') ) );
-__PACKAGE__->config( YAML::LoadFile( __PACKAGE__->path_to('config.yml') ) );
+__PACKAGE__->config( YAML::LoadFile( __PACKAGE__->path_to('config/config.yml') ) );
 
 __PACKAGE__->config->{authentication}->{dbic} = {
                user_class           => 'DBIC::User',
@@ -43,22 +41,7 @@ if(__PACKAGE__->config->{Static}){
     __PACKAGE__->setup();
 }
 
-#use Carp;
-#__PACKAGE__->model('DBIC')->schema->storage->debugcb(sub {
-#        my $message = $_[1];
-#        my @lines = split /\n/,Carp::longmess($message);
-#        @lines = grep !/^\s*DBIx/, @lines;
-#        @lines = grep !/^\s*Catalyst/, @lines;
-#        $message = join "\n",@lines[0..4];
-#        #$message = join "\n",@lines;
-#        warn "$message\n\n";
-##        open TRACE, '>>/tmp/trace.out';
-##        print TRACE "$message\n\n";
-##        close TRACE;
-#    });
-
 use Data::Dumper;
-#$Data::Dumper::Freezer = '_dumper_hook';
 $Data::Dumper::Maxdepth = 3;
 sub _dumper_hook {
     $_[0] = bless {
