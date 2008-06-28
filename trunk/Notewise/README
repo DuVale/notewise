@@ -14,18 +14,18 @@ To run notewise:
 
   Import the database schema:
 
-    mysql -uroot -p notewise < schema.sql
+    mysql -uroot -p notewise < schema/base_schema.sql
 
   Create a test user and starting kernel:
-    ./create_user.pl
+    scripts/create_user.pl
 
-  Copy config-sample.yml to config.yml and edit as appropriate.
+  Copy config/config-sample.yml to config/config.yml and edit as appropriate.
 
           set Static to 1
           set Debug to 1
           set BaseUrl to /
 
-  Run 'script/notewise_server.pl -k -r' to test the application.  The default port number is 3000.  To change the port number, use 'script/notewise_server.pl -k -r -p 3005'.
+  Run 'scripts/notewise_server.pl -k -r' to test the application.  The default port number is 3000.  To change the port number, use 'scripts/notewise_server.pl -k -r -p 3005'.
 
 
 To run the command line unit tests, do:
