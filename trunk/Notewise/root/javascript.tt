@@ -16,7 +16,6 @@
 [% INCLUDE 'js/visiblekernelmodel.js' %]
 [% INCLUDE 'js/kernelbody.js' %]
 [% INCLUDE 'js/expandingtextfield.js' %]
-[% INCLUDE 'js/nonmovingkernel.js' %]
 [% INCLUDE 'js/note.js' %]
 [% INCLUDE 'js/controls.js' %]
 [% INCLUDE 'js/effects.js' %]
