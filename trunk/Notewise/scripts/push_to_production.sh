@@ -7,14 +7,14 @@ CONFIG=/var/www/configs/production-config.yml
 
 LIVE_DIRECTORY_NUM=`ls -ld $SYMLINK | perl -pe 's/.*-> \S+(\d+).*/\1/'`
 NEXT_DIRECTORY_NUM=$(( $LIVE_DIRECTORY_NUM + 1 ))
+HTTP_SERVICE=httpd
 
 if (( $NEXT_DIRECTORY_NUM > 2 ));
 then
     NEXT_DIRECTORY_NUM=0
 fi
 
-#NEXT_DIRECTORY="$SYMLINK.$NEXT_DIRECTORY_NUM"
-NEXT_DIRECTORY="$SYMLINK.1"
+NEXT_DIRECTORY="$SYMLINK.$NEXT_DIRECTORY_NUM"
 
 echo "NEXT_DIRECTORY: $NEXT_DIRECTORY"
 
@@ -42,10 +42,11 @@ cp $CONFIG $NEXT_DIRECTORY/config/config.yml
 
 # move the sym link
 
-#rm $SYMLINK && ln -s $NEXT_DIRECTORY $SYMLINK
-#echo "Updated symlink $SYMLINK to point to $NEXT_DIRECTORY"
+rm $SYMLINK && ln -s $NEXT_DIRECTORY $SYMLINK
+
+echo "Updated symlink $SYMLINK to point to $NEXT_DIRECTORY"
 
 # restart apache
 
 echo "Restarting apache"
-sudo service httpd restart
+sudo service $HTTP_SERVICE restart
