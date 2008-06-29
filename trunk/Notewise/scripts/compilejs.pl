@@ -14,12 +14,12 @@ sub compile_javascript {
     my $pwd = $FindBin::Bin;
 
     my $template = Template->new({
-        INCLUDE_PATH => "$pwd/root",
+        INCLUDE_PATH => "$pwd/../root",
         EVAL_PERL => 1
     });
 
     warn "Compiling javascript to javascript.js\n";
     $template->process('javascript.tt', {}, 'root/js/javascript.js') or die $template->error();
     warn "Minifying to javascript-min.js\n";
-    system('java -jar utils/custom_rhino.jar -c js/javascript.js > js/javascript-min.js');
+    system("java -jar $pwd/custom_rhino.jar -c js/javascript.js > js/javascript-min.js");
 }
