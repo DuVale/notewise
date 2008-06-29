@@ -1,6 +1,7 @@
 package Notewise;
 
 use Carp;
+use Cwd;
 
 #$SIG{__DIE__} = sub {
 #    Carp::confess(shift);
@@ -18,7 +19,19 @@ use Catalyst qw/FormValidator
 
 our $VERSION = '0.01';
 
-__PACKAGE__->config( YAML::LoadFile( __PACKAGE__->path_to('config/config.yml') ) );
+#__PACKAGE__->config( YAML::LoadFile( __PACKAGE__->path_to("../../../config/config.yml") ) );
+#__PACKAGE__->config( YAML::LoadFile( __PACKAGE__->path_to("config/config.yml") ) );
+
+my $config_file;
+if (-f __PACKAGE__->path_to("config/config.yml")) {
+    $config_file = __PACKAGE__->path_to("config/config.yml");
+} elsif (-f __PACKAGE__->path_to("../../../config/config.yml")) {
+    # we use this one if we unpack the par files
+    $config_file = __PACKAGE__->path_to("../../../config/config.yml");
+} else {
+    die "Couldn't find config file: " . __PACKAGE__->path_to("config/config.yml");
+}
+__PACKAGE__->config( YAML::LoadFile($config_file) );
 
 __PACKAGE__->config->{authentication}->{dbic} = {
                user_class           => 'DBIC::User',
