@@ -22,7 +22,7 @@ Note.prototype.extend({
             this.setup();
         }
         
-        this.type        = 'note';
+        this.type = 'note';
         this.id(id);
         this.model().container_object(container_object);
         this.__x=x;
