@@ -414,9 +414,6 @@ jsUnitTestManager.prototype._handleTestException = function (excep)
   }
   var listField = this.problemsListField;
   var problemDocument = this.mainFrame.frames.mainErrors.document;
-  if (console && console.warn) {
-    console.warn(problemMessage + "\n\n" + this._problemDetailMessageFor(excep));
-  }
   if (typeof(problemDocument.createElement) != 'undefined') {
     // DOM Level 2 HTML method.
     // this is required for Opera 7 since appending to the end of the 
