@@ -8,9 +8,9 @@ scripts/notewise_server.pl -p 3000 -k 2>/dev/null >/dev/null&
 SERVER_PID=$!
 
 # start framebuffer
-#Xvfb :2 -screen 0 1024x768x24 >/dev/null 2>/dev/null &
-#XVFB_PID=$!
-vncserver :2
+Xvfb :2 -screen 0 1024x768x24 >/dev/null 2>/dev/null &
+XVFB_PID=$!
+#vncserver :2
 export DISPLAY=:2
 
 # wait for everything to startup
@@ -39,9 +39,10 @@ cd ../..
 firefox "http://localhost:3000/test/selenium/core/TestRunner.html?test=..%2F..%2Facceptance%2Ftests.html&auto=true&close=true&resultsUrl=http://localhost:8000/postResults" &
 scripts/selenium_results_server.pl /tmp/selenium-$$
 
-echo "killing $SERVER_PID $XVFB_PID"
+echo "kill $SERVER_PID $XVFB_PID"
 kill $SERVER_PID $XVFB_PID
 pkill gconfd-2
+sleep 5
 pkill firefox
 
 echo
