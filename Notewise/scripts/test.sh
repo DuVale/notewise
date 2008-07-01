@@ -39,6 +39,13 @@ cd ../..
 firefox "http://localhost:3000/test/selenium/core/TestRunner.html?test=..%2F..%2Facceptance%2Ftests.html&auto=true&close=true&resultsUrl=http://localhost:8000/postResults" &
 scripts/selenium_results_server.pl /tmp/selenium-$$
 
+echo "killing $SERVER_PID $XVFB_PID"
+kill $SERVER_PID $XVFB_PID
+pkill gconfd-2
+pkill firefox
+
+echo
+echo
 if (( $ANT_EXIT_CODE == 0 ))
 then
     echo "JsUnit tests PASSED"
@@ -53,10 +60,5 @@ then
     echo "Selenium PASSED: $PASSES tests"
 else
     echo "Selenium FAILED: $FAILURES/$PASSES"
+    echo "Selenium log: /tmp/selenium-$$"
 fi
-echo "Full log: /tmp/selenium-$$"
-
-echo "killing $SERVER_PID $XVFB_PID"
-kill $SERVER_PID $XVFB_PID
-pkill gconfd-2
-pkill firefox
