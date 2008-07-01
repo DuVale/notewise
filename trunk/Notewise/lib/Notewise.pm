@@ -45,6 +45,8 @@ __PACKAGE__->config->{session}->{cookie_expires} = 0;
 
 __PACKAGE__->config->{session}->{expires} = 60*60*24*7; # set session to expire after a week
 
+__PACKAGE__->config->{session}->{storage} = "/tmp/session-$$-" . time();
+
 # Allow us to use catalyst to serve static content, or serve it via apache, with a Static config toggle
 if(__PACKAGE__->config->{Static}){
     __PACKAGE__->setup( qw/Static::Simple/ );
