@@ -10,6 +10,7 @@ ViewKernel.prototype.extend( {
         KernelObject.prototype.initialize.call(this,htmlElement);
         this.__kernel_id = id;
         window.onresize = this.layoutResize.bindAsEventListener(this);
+        this.layoutNamefield();
     },
 
     // dummy method - this is used by resizeChildren.
