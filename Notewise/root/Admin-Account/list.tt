@@ -1,9 +1,7 @@
 [% INCLUDE 'Admin/header.tt' %]
 
-[% USE table_class = Class('Notewise::M::CDBI::User') %]
 <a href="[% base _ 'admin/account/add' %]">Add New User</a>
 <table>
-    <tr>
         <th>Username</th>
         <th>Name</th>
         <th>Email</th>
@@ -13,19 +11,19 @@
         <th>Relationships</th>
         <th/>
     </tr>
-    [% FOR object = table_class.retrieve_all %]
+    [% FOR user = users %]
         <tr>
-            <td>[% object.username %]</td>
-            <td>[% object.name %]</td>
-            <td>[% object.email %]</td>
-            <td>[% object.user_type.name | replace('_',' ') %]</td>
-            <td>[% object.kernel_count %]</td>
-            <td>[% object.note_count %]</td>
-            <td>[% object.relationship_count %]</td>
+            <td>[% user.username %]</td>
+            <td>[% user.name %]</td>
+            <td>[% user.email %]</td>
+            <td>[% user.user_type.name | replace('_',' ') %]</td>
+            <td>[% user.kernel_count %]</td>
+            <td>[% user.note_count %]</td>
+            <td>[% user.relationship_count %]</td>
             <td>
-                <a href="[% base _ 'admin/account/edit/' _ object.id %]">Edit</a>
-                <a href="[% base _ 'admin/account/delete/' _ object.id %]">Delete</a>
-                <a href="[% base _ 'admin/account/clear/' _ object.id %]">Clear</a>
+                <a href="[% base _ 'admin/account/edit/' _ user.id %]">Edit</a>
+                <a href="[% base _ 'admin/account/delete/' _ user.id %]">Delete</a>
+                <a href="[% base _ 'admin/account/clear/' _ user.id %]">Clear</a>
             </td>
         </tr>
     [% END %]

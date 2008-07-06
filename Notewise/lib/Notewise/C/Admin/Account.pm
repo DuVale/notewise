@@ -167,6 +167,7 @@ Sets a template.
 
 sub list : Local {
     my ( $self, $c ) = @_;
+    $c->stash->{users} = [ $c->model('DBIC::User')->all ];
     $c->stash->{template} = 'Admin-Account/list.tt';
 }
 
