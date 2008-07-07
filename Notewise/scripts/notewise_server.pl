@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 use PAR 'par_files/*.par';
-use lib qw(blib/lib blib/arch DBD-mysql/blib/lib DBD-mysql/blib/arch);
+use lib qw(DBD-mysql/blib/lib DBD-mysql/blib/arch blib/lib blib/arch);
 
 use Catalyst;
 
@@ -14,7 +14,7 @@ use strict;
 use Getopt::Long;
 use Pod::Usage;
 use FindBin;
-use lib "$FindBin::Bin/../lib";
+#use lib "$FindBin::Bin/../lib";
 
 my $debug         = 0;
 my $fork          = 0;
