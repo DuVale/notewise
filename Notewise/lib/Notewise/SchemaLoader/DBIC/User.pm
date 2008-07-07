@@ -15,12 +15,12 @@ sub insert {
     my $result =  $self->next::method( @_ );
 
     # create starting kernel
-    my $kernel = $self->resultset('Kernel')->insert({name=>''});
+    my $kernel = $self->resultset('Kernel')->create({name=>''});
     $kernel->user($self->id);
     $kernel->update();
 
     # Create sandbox
-    my $sandbox = $self->resultset('ObjectId')->insert({type=>'sandbox',
+    my $sandbox = $self->resultset('ObjectId')->create({type=>'sandbox',
                                                        user=>$self->id});
 
     return $result;
@@ -77,8 +77,9 @@ sub clear {
 
 sub set_column {
     my ($self,$name,$value)=@_;
-    warn("name: $name value: $value");
-    $value = Digest::MD5::md5_hex($value);
+    if ($name eq 'password') {
+        $value = Digest::MD5::md5_hex($value);
+    }
     my $result =  $self->next::method( $name, $value );
     return $result;
 }

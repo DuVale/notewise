@@ -87,7 +87,7 @@ sub do_clear : Local {
     my ( $self, $c, $id ) = @_;
     my $user = $c->model('DBIC::User')->find($id);
     $user->clear;
-    my $kernel = $c->model('DBIC::Kernel')->create({name=>'',
+    my $kernel = $c->model('DBIC::Kernel')->insert({name=>'',
                                                     user=>$user});
     $c->res->redirect($c->req->base . 'admin/account/');
 }
@@ -113,7 +113,7 @@ sub do_add : Local {
     } elsif ($c->req->params->{password} ne $c->req->params->{confirm_password}) {
         $c->stash->{message}="Sorry, those passwords don't match";
     } else {
-	my $user = $c->model('DBIC::User')->create({username => $c->form->param('username')});
+	my $user = $c->model('DBIC::User')->create_from_form( $c->form );
         return $c->res->redirect($c->req->base . 'admin/account/list');
     }
     return $c->forward('add');
