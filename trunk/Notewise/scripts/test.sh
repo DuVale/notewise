@@ -2,22 +2,22 @@
 
 # Runs all the jsunit tests, acceptance tests, and perl unit tests.
 
-# start notewise dev server on port 3000
+# start notewise dev server on port 4000
 echo "Starting notewise development server"
-scripts/notewise_server.pl -p 3000 -k 2>/dev/null >/dev/null&
+scripts/notewise_server.pl -p 4000 -k &
 SERVER_PID=$!
 
 # start framebuffer
-Xvfb :2 -screen 0 1024x768x24 >/dev/null 2>/dev/null &
-XVFB_PID=$!
-#vncserver :2
+#Xvfb :2 -screen 0 1024x768x24 >/dev/null 2>/dev/null &
+#XVFB_PID=$!
+vncserver :2
 export DISPLAY=:2
 
 # wait for everything to startup
 READY=0
 while (( $READY == 0 ))
 do
-    curl http://localhost:3000 >/dev/null 2>/dev/null
+    curl http://localhost:4000 >/dev/null 2>/dev/null
     RETURN=$?
     if (( $RETURN == 0 ))
     then
@@ -36,7 +36,7 @@ ANT_EXIT_CODE=$?
 # setup server to receive results from selenium
 
 cd ../..
-firefox "http://localhost:3000/test/selenium/core/TestRunner.html?test=..%2F..%2Facceptance%2Ftests.html&auto=true&close=true&resultsUrl=http://localhost:8000/postResults" &
+firefox "http://localhost:4000/test/selenium/core/TestRunner.html?test=..%2F..%2Facceptance%2Ftests.html&auto=true&close=true&resultsUrl=http://localhost:8000/postResults" &
 scripts/selenium_results_server.pl /tmp/selenium-$$
 
 echo "kill $SERVER_PID $XVFB_PID"
