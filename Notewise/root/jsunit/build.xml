@@ -1,7 +1,7 @@
 <project name="JsUnit" default="create_distribution" basedir=".">
 
     <property name="browserFileNames" value="/usr/bin/firefox"/>
-    <property name="url" value="http://localhost:3000/jsunit/testRunner.html?testPage=http://localhost:3000/js/tests/suite.html&amp;autoRun=true&amp;submitresults=localhost:8000/jsunit/acceptor"/>
+    <property name="url" value="http://localhost:4000/jsunit/testRunner.html?testPage=http://localhost:4000/js/tests/suite.html&amp;autoRun=true&amp;submitresults=localhost:8000/jsunit/acceptor"/>
     <property name="remoteMachineURLs" value=""/>
     <property name="port" value="8000"/>
     <property name="resourceBase" value=""/>
