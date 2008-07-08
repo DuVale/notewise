@@ -199,11 +199,11 @@ sub do_register : Local {
             email => Data::FormValidator::Constraints::email(),
             password => [
                 {
-                    constraint => qr/^.{5,}/,
+                    constraint_method => qr/^.{5,}/,
                     name => 'password_length'
                 },
                 {
-                    constraint => sub {
+                    constraint_method => sub {
                         my ($self, $pw, $pw2) = @_;
                         return $pw eq $pw2;
                     },
