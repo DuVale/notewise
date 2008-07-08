@@ -37,5 +37,17 @@
     <input type="submit" value="Register"/>
     <input type="button" value="Cancel" onclick="Bugs.close_window()"/>
     </form>
+    <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    [% IF c.config.AnalyticsId %]
+        <script type="text/javascript">
+            var pageTracker = _gat._getTracker("UA-4835321-1");
+            pageTracker._setDomainName("notewise.com");
+            pageTracker._initData();
+            pageTracker._trackPageview();
+        </script>
+    [% END %]
 </body>
 </html>

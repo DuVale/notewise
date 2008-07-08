@@ -138,6 +138,15 @@ ViewKernel.finishMakeView = function(kernel_id){
 
     date = new Date();
     $('mysearchfield').focus();
+
+    // Track action using analytics
+    if (window.pageTracker) {
+        if (user_type == 'tutorial_user') {
+            pageTracker._trackPageview('/tracking/tutorial_user/kernel/view/' + view.kernel().name());
+        } else {
+            pageTracker._trackPageview('/tracking/' + (user_type || 'unknown_user_type') + '/kernel/view');
+        }
+    }
 };
 
 JSDBI.on_start_update = function () {

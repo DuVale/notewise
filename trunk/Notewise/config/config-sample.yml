@@ -11,6 +11,8 @@ debug_js: 1
 # Serve static files from within catalyst.  This should only be off in
 # production, when apache handles it.
 Static: 1
+# Google analytics account id
+#AnalyticsId: UA-1111111-1
 # Database connection info
 M::DBIC:
     schema_class: Notewise::SchemaLoader::DBIC
