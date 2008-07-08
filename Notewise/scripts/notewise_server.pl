@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-use PAR 'par_files/*.par';
+#use PAR 'par_files/*.par';
 use lib qw(DBD-mysql/blib/lib DBD-mysql/blib/arch lib blib/lib blib/arch);
 
 use Catalyst;

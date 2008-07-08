@@ -137,6 +137,19 @@
     [% ELSE %]
         <script type="text/javascript" src="[%base%]js/javascript-min.js"></script>
     [% END %]
+
+    [% IF c.config.AnalyticsId %]
+        <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script type="text/javascript">
+            var pageTracker = _gat._getTracker("[% c.config.AnalyticsId %]");
+            pageTracker._setDomainName("notewise.com");
+            pageTracker._initData();
+        </script>
+    [% END %]
+
     <script>
         // configure the base url for jsdbi
         JSDBI.base_url('[% base %]');
@@ -195,6 +208,7 @@
                          });}, 100);
 
         var sandbox = new Sandbox($('sandbox'),[%sandbox.id%]);
+        var user_type = "[% user_type %]";
     </script>
 </body>
 </html>

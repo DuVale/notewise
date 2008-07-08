@@ -114,6 +114,7 @@ sub interface : Path('/notewise') {
     my ( $self, $c ) = @_;
     ($c->stash->{lastviewed})=$c->model('DBIC::Kernel')->most_recently_viewed_kernel($c->user_object->id,1);
     $c->stash->{sandbox} = $c->model('DBIC::ObjectId')->search({type=>'sandbox',user=>$c->user->obj->id})->first;
+    $c->stash->{user_type} = $c->user_object->user_type->name;
     $c->stash->{template} = 'Kernel/view.tt';
 }
 
