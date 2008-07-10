@@ -24,6 +24,9 @@
                 <a href="[% base _ 'admin/account/edit/' _ user.id %]">Edit</a>
                 <a href="[% base _ 'admin/account/delete/' _ user.id %]">Delete</a>
                 <a href="[% base _ 'admin/account/clear/' _ user.id %]">Clear</a>
+                [% IF user.user_type.name == 'tutorial_user' %]
+                    <a href="[% base _ 'admin/account/peek/' _ user.id %]">Peek</a>
+                [% END %]
             </td>
         </tr>
     [% END %]

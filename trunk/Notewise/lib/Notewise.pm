@@ -151,12 +151,11 @@ sub auto : Local {
 
 sub logout : Local {
     my ($self, $c) = @_;
-    use Data::Dumper;
-    $Data::Dumper::Maxdepth=2;
-    warn Dumper($c);
 
     # $c->logout is borked
     delete @{ $c->session }{qw/__user __user_store/};
+
+    $c->session->{dont_set_view_timestamps} = 0;
 
     $c->res->cookies->{persistent_auth} = { value => '',
                                           expires => '-1d' };

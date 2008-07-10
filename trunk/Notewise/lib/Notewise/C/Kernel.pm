@@ -104,7 +104,9 @@ sub view_kernel : Private {
         return $c->res->output('You do not have access to this kernel');
     }
     if($kernel->user->id == $c->user->obj->id){
-        $kernel->lastViewed(DateTime->now());
+        if (!$c->session->{dont_set_view_timestamps}) {
+            $kernel->lastViewed(DateTime->now());
+        }
         $kernel->update();
     }
     $c->res->redirect($c->req->base . "notewise#".$kernel->get_column('object_id'));

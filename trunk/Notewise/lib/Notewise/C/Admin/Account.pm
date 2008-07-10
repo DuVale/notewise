@@ -171,6 +171,16 @@ sub list : Local {
     $c->stash->{template} = 'Admin-Account/list.tt';
 }
 
+sub peek : Local {
+    my ( $self, $c, $id ) = @_;
+    my $user = $c->model('DBIC::User')->find($id);
+    my $username = $user->username;
+    my $auth_user = $c->get_user($user->username);
+    $c->set_authenticated($auth_user);
+    $c->session->{dont_set_view_timestamps} = 1;
+    return $c->res->redirect($c->uri_for("/$username"));
+}
+
 =back
 
 =head1 AUTHOR
